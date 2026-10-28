@@ -25,27 +25,81 @@
         <a class="link reveal d2" href="capacity.html">How capacity works <span class="arrow"></span></a>
       </div>
     </div>
-    <div class="pillars" style="margin-top:clamp(48px,7vw,88px)">
-      <div class="reveal">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M25 4 11 25h10l-3 15 15-22H23z"/></svg>
+    <div class="circ" data-circ style="margin-top:clamp(64px,8vw,104px)">
+      <svg class="circ-wires" aria-hidden="true"></svg>
+      <div class="circ-card c-pow">
+        <svg class="picon" viewBox="0 0 96 96" aria-hidden="true">
+          <circle class="dim" cx="48" cy="40" r="27"/>
+          <circle class="rotor" cx="48" cy="40" r="33" stroke-dasharray="2 6"/>
+          <path class="bolt-glow" d="M53 17 36 44h11l-4 19 18-28H50z"/>
+          <path class="bolt" d="M53 17 36 44h11l-4 19 18-28H50z"/>
+          <path class="dim" d="M48 73v8"/>
+          <path class="dim" d="M6 86c6 0 6-6 12-6s6 6 12 6 6-6 12-6 6 6 12 6 6-6 12-6 6 6 12 6 6-6 12-6"/>
+          <path class="flow" d="M6 86c6 0 6-6 12-6s6 6 12 6 6-6 12-6 6 6 12 6 6-6 12-6 6 6 12 6 6-6 12-6"/>
+        </svg>
         <h3>Power</h3>
         <p>Firm energy generated on site, sized to the load, with redundancy designed in.</p>
       </div>
-      <div class="reveal d1">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/><circle cx="22" cy="22" r="3"/><path d="M22 19c-2-5 0-10 6-11-1 5-3 8-6 11zM25 23c5-1 9 2 9 8-5-2-7-5-9-8zM19 24c-3 4-8 5-12 1 4-3 8-3 12-1z"/></svg>
+      <div class="circ-card c-cool">
+        <svg class="picon" viewBox="0 0 96 96" aria-hidden="true">
+          <rect class="dim" x="14" y="6" width="68" height="68" rx="8"/>
+          <circle cx="48" cy="40" r="27"/>
+          <g class="fan">
+            <path d="M48 36c-3-8-1-16 7-19 2 8 0 14-7 19z"/>
+            <path d="M48 36c-3-8-1-16 7-19 2 8 0 14-7 19z" transform="rotate(90 48 40)"/>
+            <path d="M48 36c-3-8-1-16 7-19 2 8 0 14-7 19z" transform="rotate(180 48 40)"/>
+            <path d="M48 36c-3-8-1-16 7-19 2 8 0 14-7 19z" transform="rotate(270 48 40)"/>
+          </g>
+          <circle class="fill" cx="48" cy="40" r="3.5"/>
+          <circle class="dot" cx="20" cy="12" r="1.4"/><circle class="dot" cx="76" cy="12" r="1.4" style="animation-delay:-.75s"/><circle class="dot" cx="76" cy="68" r="1.4" style="animation-delay:-1.5s"/><circle class="dot" cx="20" cy="68" r="1.4" style="animation-delay:-2.25s"/>
+          <path class="dim" d="M6 81h84M6 91h84"/>
+          <path class="flow cool" d="M6 86h84"/>
+        </svg>
         <h3>Cooling</h3>
         <p>Designed for the heat density of modern accelerators, including liquid cooling.</p>
       </div>
-      <div class="reveal d2">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><rect x="9" y="4" width="26" height="36"/><path d="M9 13h26M9 22h26M9 31h26"/><circle cx="29" cy="8.5" r="1"/><circle cx="29" cy="17.5" r="1"/><circle cx="29" cy="26.5" r="1"/><circle cx="29" cy="35.5" r="1"/></svg>
+      <div class="circ-card c-space">
+        <svg class="picon" viewBox="0 0 96 96" aria-hidden="true">
+          <rect x="24" y="4" width="48" height="84" rx="2"/>
+          <path class="dim" d="M28 88v4M68 88v4"/>
+          <g class="units">
+            <rect x="30" y="10" width="36" height="10"/><path class="dim" d="M34 13.5h16M34 16.5h16"/><circle class="led" cx="61" cy="15" r="1.6"/>
+            <rect x="30" y="23" width="36" height="10"/><path class="dim" d="M34 26.5h16M34 29.5h16"/><circle class="led" cx="61" cy="28" r="1.6"/>
+            <rect x="30" y="36" width="36" height="10"/><path class="dim" d="M34 39.5h16M34 42.5h16"/><circle class="led" cx="61" cy="41" r="1.6"/>
+            <rect x="30" y="49" width="36" height="10"/><path class="dim" d="M34 52.5h16M34 55.5h16"/><circle class="led" cx="61" cy="54" r="1.6"/>
+            <rect x="30" y="62" width="36" height="10"/><path class="dim" d="M34 65.5h16M34 68.5h16"/><circle class="led" cx="61" cy="67" r="1.6"/>
+            <rect x="30" y="75" width="36" height="9"/><path class="dim" d="M34 78.5h16M34 81.5h16"/><circle class="led" cx="61" cy="79.5" r="1.6"/>
+          </g>
+          <rect class="scan" x="26" y="6" width="44" height="1.2"/>
+        </svg>
         <h3>Space</h3>
         <p>Secure halls built to the tenant's specification, with room to grow on the same site.</p>
       </div>
-      <div class="reveal d3">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><circle cx="8" cy="22" r="4"/><circle cx="36" cy="10" r="4"/><circle cx="36" cy="34" r="4"/><circle cx="22" cy="22" r="3"/><path d="M12 22h7M25 20l8-8M25 24l8 8"/></svg>
+      <div class="circ-card c-conn">
+        <svg class="picon" viewBox="0 0 96 96" aria-hidden="true">
+          <path class="dim" d="M14 22 82 16M82 16l6 46M88 62 56 88M56 88 10 70M10 70 14 22"/>
+          <path d="M48 46 14 22M48 46 82 16M48 46l40 16M48 46l8 42M48 46 10 70"/>
+          <path class="flow net" d="M48 46 14 22M48 46 82 16M48 46l40 16M48 46l8 42M48 46 10 70"/>
+          <circle class="ping" cx="48" cy="46" r="6"/>
+          <circle class="node" cx="48" cy="46" r="6"/><circle class="fill" cx="48" cy="46" r="2"/>
+          <circle class="node n1" cx="14" cy="22" r="4"/><circle class="node n2" cx="82" cy="16" r="4"/><circle class="node n3" cx="88" cy="62" r="4"/><circle class="node n4" cx="56" cy="88" r="4"/><circle class="node n5" cx="10" cy="70" r="4"/>
+        </svg>
         <h3>Connectivity</h3>
         <p>Sites chosen with fiber in reach, so data moves as freely as the power does.</p>
       </div>
+      <div class="circ-hw">
+        <p class="you-tag">You bring</p>
+        <svg class="picon hw" viewBox="0 0 96 96" aria-hidden="true">
+          <rect x="22" y="22" width="52" height="52" rx="4"/>
+          <rect class="dim" x="32" y="32" width="32" height="32"/>
+          <path class="pins" d="M32 22v-10M44 22v-10M52 22v-10M64 22v-10M32 74v10M44 74v10M52 74v10M64 74v10M22 32h-10M22 44h-10M22 52h-10M22 64h-10M74 32h10M74 44h10M74 52h10M74 64h10"/>
+          <rect class="fill hw-core" x="41" y="41" width="14" height="14"/>
+          <circle class="hw-ring" cx="48" cy="48" r="10"/>
+        </svg>
+        <h3>Your hardware</h3>
+        <p>Your accelerators, your racks, your workloads. You own them; we power, cool, house and connect them.</p>
+      </div>
+      <p class="circ-we">We bring</p>
     </div>
   </div>
 </section>

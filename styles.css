@@ -241,6 +241,8 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 .alogo { position: relative; width: min(440px, 70vw, 46vh); margin: 0 auto; }
 .alogo .hero-logo { width: 100%; }
 .alogo .sym { position: relative; z-index: 1; display: block; width: 37.95%; margin: 0 auto; overflow: visible; }
+@media (max-width: 719.98px) { .alogo .sym { width: 29%; } }
+.alogo .sym .r1, .alogo .sym .r2, .alogo .sym .r3 { opacity: .85; } /* the hero's event horizon sits a little quieter than its disk */ /* a smaller black hole on phones */
 /* the wordmark is wider than the symbol's box and sits just under the ring, centred */
 .alogo .wm { width: min(480px, 88vw); aspect-ratio: 1320 / 122; margin: 2px 0 0 50%; translate: -50% 0;
   -webkit-mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / contain no-repeat;
@@ -347,6 +349,41 @@ a.card:hover { border-color: var(--fg-strong); transform: translateY(-3px); }
   .pillars > div, .pillars > div:nth-child(odd) { border-bottom: 0; border-left: 1px solid var(--line); padding-left: 32px; }
   .pillars > div:first-child { border-left: 0; padding-left: 0; }
 }
+
+/* What we do: live icons. Each one runs slowly on its own and speeds up while its card is lit or hovered (site.js). */
+.picon { display: block; width: 76px; height: 76px; margin-bottom: 28px; color: var(--fg-strong); fill: none; stroke: currentColor; stroke-width: 1.3;
+  stroke-linecap: round; stroke-linejoin: round; overflow: visible; transition: transform .5s var(--ease); }
+.picon .dim { opacity: .35; }
+.picon .fill, .picon .led, .picon .dot, .picon .scan { fill: currentColor; stroke: none; }
+.picon .node { fill: var(--bg); }
+.picon .rotor, .picon .fan, .picon .ping, .picon .node, .picon .bolt, .picon .bolt-glow { transform-box: fill-box; transform-origin: center; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .picon .flow { stroke-dasharray: 3 14; animation: pil-flow 1.6s linear infinite; stroke-width: 2; }
+  .picon .flow.cool { stroke-dasharray: 5 9; animation-duration: 2.2s; }
+  .picon .flow.net { stroke-dasharray: 2 11; animation-duration: 1.8s; }
+  .picon .rotor { animation: pil-spin 16s linear infinite; }
+  .picon .fan { animation: pil-spin 5s linear infinite; }
+  .picon .bolt { animation: pil-bolt 4s ease-in-out infinite; }
+  .picon .bolt-glow { stroke-width: 6; opacity: 0; animation: pil-glow 4s ease-in-out infinite; }
+  .picon .dot { animation: pil-blink 3s ease-in-out infinite; }
+  .picon .led { animation: pil-blink 2.4s steps(2, jump-none) infinite; }
+  .picon .units > :nth-child(6) { animation-delay: -.4s; } .picon .units > :nth-child(9) { animation-delay: -1.1s; }
+  .picon .units > :nth-child(12) { animation-delay: -.2s; } .picon .units > :nth-child(15) { animation-delay: -1.7s; } .picon .units > :nth-child(18) { animation-delay: -.9s; }
+  .picon .scan { transform-box: view-box; animation: pil-scan 3.2s ease-in-out infinite; opacity: .5; }
+  .picon .ping { animation: pil-ping 2.4s ease-out infinite; }
+  .picon .n1 { animation: pil-node 2.4s ease-in-out infinite; } .picon .n2 { animation: pil-node 2.4s ease-in-out -.5s infinite; }
+  .picon .n3 { animation: pil-node 2.4s ease-in-out -1s infinite; } .picon .n4 { animation: pil-node 2.4s ease-in-out -1.5s infinite; }
+  .picon .n5 { animation: pil-node 2.4s ease-in-out -2s infinite; }
+}
+@keyframes pil-flow { to { stroke-dashoffset: -17; } }
+@keyframes pil-spin { to { transform: rotate(360deg); } }
+@keyframes pil-bolt { 0%, 70%, 100% { opacity: 1; } 74% { opacity: .35; } 78% { opacity: 1; } 82% { opacity: .5; } }
+@keyframes pil-glow { 0%, 66%, 100% { opacity: 0; } 76% { opacity: .22; } 84% { opacity: .08; } }
+@keyframes pil-blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes pil-scan { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: .5; } 90% { opacity: .5; } 100% { transform: translateY(80px); opacity: 0; } }
+@keyframes pil-ping { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3.2); opacity: 0; } }
+@keyframes pil-node { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
 
 .ticks { list-style: none; padding: 0; margin: 0 0 24px; }
 .ticks li { position: relative; padding: 14px 0 14px 32px; border-bottom: 1px solid var(--line); color: var(--fg); }
@@ -621,3 +658,53 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .fit-out .form-note a { color: var(--fg-strong); }
 html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-area: auto; margin-bottom: 40px; }
 .fit-cta { margin: 36px 0 0; }
+
+.you-tag { font-family: var(--head); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--fg-dim); margin: 0 0 14px; }
+
+/* the hardware chip lights when the energy arrives */
+.picon.hw .pins { opacity: .35; transition: opacity .6s; }
+.picon.hw .hw-core, .picon.hw .hw-ring { transform-box: fill-box; transform-origin: center; }
+.picon.hw .hw-ring { opacity: 0; }
+.hit .picon.hw .pins { opacity: 1; }
+.hit .picon.hw .hw-core { animation: hw-pop 1.4s var(--ease) 1; }
+.hit .picon.hw .hw-ring { animation: hw-ring 1.4s ease-out 1; }
+.lit .picon, .hit .picon { transform: scale(1.06); }
+
+/* What we do (Circuit): four cards wired into the hardware in the middle; on phones, two above and two below. */
+.circ { position: relative; display: grid; gap: 30px 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "p c" "h h" "s n"; }
+.c-pow { grid-area: p; } .c-cool { grid-area: c; } .c-space { grid-area: s; } .c-conn { grid-area: n; } .circ-hw { grid-area: h; }
+@media (max-width: 999.98px) {
+  .circ.circ .circ-card { padding: 14px 12px 16px; }
+  .circ.circ .circ-card .picon { width: 44px; height: 44px; margin: 0 0 10px; }
+  .circ.circ h3 { font-size: 11px; letter-spacing: .14em; margin: 0 0 6px; }
+  .circ.circ p:not(.you-tag) { font-size: 13.5px; line-height: 1.45; }
+  .circ.circ .circ-hw { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; align-items: center; text-align: left; padding: 14px 14px; }
+  .circ.circ .circ-hw .picon { grid-row: 1 / span 3; width: 56px; height: 56px; margin: 0; }
+  .circ.circ .circ-hw > * { grid-column: 2; }
+  .circ.circ .circ-hw > .picon { grid-column: 1; }
+  .circ.circ .circ-hw .you-tag { margin: 0 0 3px; font-size: 9px; }
+}
+
+.circ-wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.circ-wires path { fill: none; stroke: var(--fg-strong); stroke-width: 1; opacity: .2; transition: opacity .6s; }
+.circ-wires path.on { opacity: .7; }
+.circ-wires .dot { fill: var(--fg-strong); }
+.circ-wires .halo { fill: rgba(var(--aura), .18); }
+.circ-card, .circ-hw { position: relative; padding: 26px 26px 28px; border: 1px solid var(--line); transition: border-color .5s, background .5s; }
+.circ-card .picon, .circ-hw .picon { margin-bottom: 20px; transition: transform .5s var(--ease); }
+.circ-card h3, .circ-hw h3 { margin: 0 0 8px; }
+.circ-card p, .circ-hw p { color: var(--fg-dim); margin: 0; font-size: 16px; }
+.circ-card.lit, .circ-card.kept { border-color: rgba(var(--aura), .5); }
+.circ-card.lit { background: rgba(var(--aura), .04); }
+.circ-hw { border-color: rgba(var(--aura), .35); background: rgba(var(--aura), .025); text-align: center; }
+.circ-hw .picon { margin: 0 auto 20px; width: 110px; height: 110px; }
+.circ-hw.hit { border-color: var(--fg-strong); background: rgba(var(--aura), .06); }
+.circ-we { display: none; }
+@media (min-width: 1000px) {
+  .circ { grid-template-columns: 1fr minmax(260px, .9fr) 1fr; grid-template-areas: "p h c" "s h n"; column-gap: 96px; row-gap: 40px; }
+  .circ-hw { grid-area: h; align-self: center; }
+  .c-pow, .c-space { text-align: right; } .c-pow .picon, .c-space .picon { margin-left: auto; }
+  .circ-we { display: block; position: absolute; left: 0; top: -30px; margin: 0; font-family: var(--head); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--fg-dim); }
+}
+@keyframes hw-pop { 0% { transform: scale(1); } 20% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes hw-ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(3.4); opacity: 0; } }

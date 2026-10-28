@@ -149,7 +149,7 @@ var acSymbol = (function () {
     // Sizes are in symbol widths (S). Every point is pushed outward by a point-mass lens,
     // so the horizon and the dust bend around the logo instead of passing through it.
     var INK = { dark: [243, 244, 246], light: [11, 12, 14] };
-    var LINES = [0, -0.1, 0.1], REACH = 2.6, GRAINS = 5;
+    var LINES = [0, -0.1, 0.1], REACH = 2.6, GRAINS = innerWidth < 720 ? 110 : 240;
     var w, h, cx, cy, S, E, ink, on = false, last = 0, energy = 0, halo, core, glows;
     // The visitor's pointer acts as a small second mass; clicks make the core flare.
     var ptr = { x: 0, y: 0, tx: 0, ty: 0, inf: 0, want: 0 }, sym;
@@ -157,7 +157,7 @@ var acSymbol = (function () {
     function grain(fresh) {
       var life = 6 + Math.random() * 8;
       return { r: 0.5 + Math.random() * (fresh ? 1.1 : 0.35), a: Math.random() * 6.2832, v: 0.02 + Math.random() * 0.05,
-        y: (Math.random() - 0.5) * 0.05, s: 0.7 + Math.random() * 0.8, o: 0.3 + Math.random() * 0.4, life: life, t: fresh ? Math.random() * life : 0 };
+        y: (Math.random() - 0.5) * 0.05, s: 0.3 + Math.random() * 0.4, o: 0.4 + Math.random() * 0.5, life: life, t: fresh ? Math.random() * life : 0 };
     }
     var dust = [];
     for (var i = 0; i < GRAINS; i++) dust.push(grain(true));
@@ -165,7 +165,14 @@ var acSymbol = (function () {
     var motes = [];
     for (i = 0; i < (innerWidth < 720 ? 80 : 175); i++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 0.8 + Math.random() * 1.25 });
     var runners = [];
-    for (i = 0; i < 4; i++) runners.push({ u: Math.random(), sp: 0.12 + Math.random() * 0.06, o: 0.25 + Math.random() * 0.15 });
+    for (i = 0; i < 8; i++) runners.push({ u: Math.random(), sp: 0.2 + Math.random() * 0.1, o: 0.4 + Math.random() * 0.2 });
+    // A few fine particles fall in from around the hero, spiral down and join the orbit as dust.
+    function faller(wait) {
+      var far = Math.max(w || innerWidth, h || 600) * 0.6 / (S || 200);
+      return { r: far * (0.7 + Math.random() * 0.3), rt: 0.5 + Math.random() * 0.35, a: Math.random() * 6.2832,
+        s: 0.5 + Math.random() * 0.3, o: 0.7 + Math.random() * 0.3, t: -wait, trail: [] };
+    }
+    var fallers = [];
 
     function mount() {
       logo.innerHTML = symbol(theme) + '<div class="wm"></div>';
@@ -217,11 +224,11 @@ var acSymbol = (function () {
         return g;
       };
       LINES.forEach(function (off) {
-        var main = off === 0, base = (main ? 0.9 : 0.4) * glow * (theme === 'dark' ? 1 : 0.8);
+        var main = off === 0, base = (main ? 0.5 : 1) * glow * (theme === 'dark' ? 1 : 0.85);
         ctx.beginPath();
         for (var x = -L, n = 0; x <= L; x += 3, n++) { var p = pull(lens(x, off * S), 0.035); n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
-        if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(base * 0.35); ctx.lineWidth = main ? 7 : 4; ctx.filter = 'blur(4px)'; ctx.stroke(); ctx.restore(); }
-        ctx.strokeStyle = grad(base); ctx.lineWidth = main ? 1.2 : 0.8; ctx.stroke();
+        if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(Math.min(1, base * 3.6)); ctx.lineWidth = main ? 1.3 : 1; ctx.filter = 'blur(0.8px)'; ctx.stroke(); ctx.restore(); }
+        ctx.strokeStyle = grad(base * 3.5); ctx.lineWidth = main ? 0.25 : 0.18; for (var pass = 0; pass < 4; pass++) ctx.stroke(); // a hairline is drawn faint, so it is laid down several times
       });
       energy = Math.max(energy, 0.45 * breathe);
 
@@ -230,12 +237,34 @@ var acSymbol = (function () {
       ctx.fillStyle = rgba(1);
       dust.forEach(function (p, k) {
         p.t += dt; if (p.t > p.life) { p = dust[k] = grain(false); }
-        p.a -= dt * 0.42 / Math.pow(p.r, 1.5); p.r += dt * p.v;
+        p.a -= dt * 0.8 / Math.pow(p.r, 1.5); p.r += dt * p.v;
         var q = pull(lens(Math.cos(p.a) * p.r * S, Math.sin(p.a) * p.r * S * 0.22 + p.y * S), 0.1);
         var edge = Math.max(0, 1 - Math.abs(q[0] - cx) / L);
         var a = Math.sin(Math.PI * p.t / p.life) * p.o * edge * clearAt(q[1]) * dim * (0.8 + 0.2 * breathe);
         if (a < 0.01) return;
         ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(q[0], q[1], p.s, 0, 6.2832); ctx.fill();
+      });
+      if (!fallers.length) for (i = 0; i < (innerWidth < 720 ? 4 : 7); i++) fallers.push(faller(Math.random() * 4));
+      fallers.forEach(function (p, k) {
+        p.t += dt; if (p.t < 0) return;
+        // Round paths far out (so they come from every side), flattening onto the disk as they arrive.
+        p.r -= dt * (0.35 + 0.35 * (p.r - p.rt)); p.a -= dt * 0.8 / Math.pow(Math.max(p.r, 0.3), 1.5);
+        var f = 0.22 + 0.78 * smooth((p.r - p.rt) / 1.6);
+        var q = pull(lens(Math.cos(p.a) * p.r * S, Math.sin(p.a) * p.r * S * f), 0.1);
+        p.trail.unshift(q); if (p.trail.length > 12) p.trail.pop();
+        if (p.r - p.rt < 0.02) {
+          // Arrived: it becomes one of the orbiting grains, replacing whichever grain is faintest right now.
+          var j = 0, lo = 2;
+          dust.forEach(function (g, n) { var v = Math.sin(Math.PI * g.t / g.life); if (v < lo) { lo = v; j = n; } });
+          var g = grain(false); g.r = p.rt; g.a = p.a; g.s = p.s; g.o = p.o; g.t = g.life * 0.5; dust[j] = g;
+          fallers[k] = faller(1 + Math.random() * 5); return;
+        }
+        var a0 = p.o * Math.min(1, p.t / 1.2) * dim * (0.8 + 0.2 * breathe);
+        for (var m = 0; m < p.trail.length; m += 2) {
+          var c = p.trail[m], a = a0 * (1 - m / 12) * clearAt(c[1]);
+          if (a < 0.01) continue;
+          ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(c[0], c[1], m ? p.s * 0.6 : p.s, 0, 6.2832); ctx.fill();
+        }
       });
       // A few dim runners orbit on the two outer horizon lines, all the same way round (anticlockwise):
       // right to left along the top line, out at the left tip, back in on the bottom line at the
@@ -256,9 +285,9 @@ var acSymbol = (function () {
       // The logo answers the breath: its core and glow brighten with it.
       energy *= Math.exp(-dt * 1.4);
       var e = Math.min(1, energy + 0.12 * breathe);
-      halo.style.opacity = (0.3 + 0.55 * e).toFixed(3); halo.style.transform = 'scale(' + (1 + 0.7 * e).toFixed(3) + ')';
+      halo.style.opacity = (0.22 + 0.45 * e).toFixed(3); halo.style.transform = 'scale(' + (1 + 0.6 * e).toFixed(3) + ')';
       core.style.transform = 'scale(' + (1 + 0.25 * e).toFixed(3) + ')';
-      glows.forEach(function (g) { g.style.opacity = (0.08 + 0.18 * e).toFixed(3); });
+      glows.forEach(function (g) { g.style.opacity = (0.05 + 0.12 * e).toFixed(3); });
       // The symbol tips gently toward the pointer.
       var nx = Math.max(-1, Math.min(1, (ptr.x - cx) / (w * 0.5))), ny = Math.max(-1, Math.min(1, (ptr.y - cy) / (h * 0.5)));
       sym.style.transform = ptr.inf < 0.002 ? '' : 'perspective(700px) rotateX(' + (-ny * 2 * ptr.inf * calm()).toFixed(2) + 'deg) rotateY(' + (nx * 2 * ptr.inf * calm()).toFixed(2) + 'deg)';
@@ -1651,4 +1680,72 @@ var acSymbol = (function () {
     form.reset(); A = {}; at = 0; show(); out.hidden = true; form.hidden = false;
   });
   show();
+})();
+
+// What we do (Circuit): the four things we bring are wired into the tenant's hardware. A dot of energy runs
+// down each wire in turn, each card lights as its dot runs, and the hardware lights when all four arrive.
+// Hovering a card speeds its icon up. Wires are measured from the layout, so they redraw on resize.
+(function () {
+  if (!document.querySelector('[data-circ]')) return;
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function speed(el, r) { el.querySelectorAll('.picon').forEach(function (s) { if (s.getAnimations) s.getAnimations({ subtree: true }).forEach(function (a) { a.playbackRate = r; }); }); }
+  function hit(el) { el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); speed(el, 2.6); setTimeout(function () { speed(el, 1); }, 1600); }
+  // ---- B. Circuit: wires from each card into the hardware; a dot of energy runs down each in turn ----
+  var circ = document.querySelector('[data-circ]');
+  if (circ) {
+    var svg = circ.querySelector('.circ-wires'), cards = [].slice.call(circ.querySelectorAll('.circ-card')), hwB = circ.querySelector('.circ-hw');
+    var NS = 'http://www.w3.org/2000/svg', paths = [], dots = [];
+    function layout() {
+      svg.innerHTML = ''; paths = []; dots = [];
+      var c = circ.getBoundingClientRect(), chip = hwB.querySelector('.picon').getBoundingClientRect();
+      svg.setAttribute('viewBox', '0 0 ' + c.width + ' ' + c.height);
+      var narrow = innerWidth < 1000, hr = hwB.getBoundingClientRect();
+      cards.forEach(function (card, k) {
+        var r = card.getBoundingClientRect(), ic = card.querySelector('.picon').getBoundingClientRect();
+        if (narrow) {
+          // Phone: two cards above the hardware, two below; a short wire drops from each card straight into it.
+          var wx = r.left + r.width / 2 - c.left, top = k < 2;
+          var q = document.createElementNS(NS, 'path');
+          q.setAttribute('d', 'M' + wx + ' ' + ((top ? r.bottom : r.top) - c.top) + 'V' + ((top ? hr.top : hr.bottom) - c.top));
+          svg.appendChild(q); paths.push(q); return;
+        }
+        var left = k === 0 || k === 2, y0 = ic.top + ic.height / 2 - c.top;
+        var x0 = (left ? r.right + 6 : r.left - 6) - c.left;
+        var x1 = (left ? chip.left - 6 : chip.right + 6) - c.left, y1 = chip.top + chip.height / 2 - c.top + (k < 2 ? -14 : 14);
+        var mx = (x0 + x1) / 2;
+        var p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', 'M' + x0 + ' ' + y0 + 'H' + mx + 'V' + y1 + 'H' + x1);
+        svg.appendChild(p); paths.push(p);
+      });
+      paths.forEach(function () {
+        var g = document.createElementNS(NS, 'g'), h = document.createElementNS(NS, 'circle'), d = document.createElementNS(NS, 'circle');
+        h.setAttribute('r', 9); h.setAttribute('class', 'halo'); d.setAttribute('r', 2.6); d.setAttribute('class', 'dot');
+        g.appendChild(h); g.appendChild(d); g.style.opacity = 0; svg.appendChild(g); dots.push(g);
+      });
+    }
+    var TB = 7, lastB = -1, hitB = false;
+    function tickB(now) {
+      var s = now / 1000, cyc = Math.floor(s / TB), t = s - cyc * TB, wide = innerWidth >= 1000;
+      if (cyc !== lastB) { lastB = cyc; hitB = false; cards.forEach(function (c) { c.classList.remove('lit', 'kept'); }); paths.forEach(function (p) { p.classList.remove('on'); }); }
+      cards.forEach(function (card, k) {
+        var a = k * 0.9, f = (t - a) / 1.2, on = f >= 0 && f < 1;
+        if (on !== card.classList.contains('lit')) { card.classList.toggle('lit', on); speed(card, on ? 2.6 : 1); if (on) card.classList.add('kept'); }
+        if (paths[k]) {
+          var g = dots[k];
+          if (on) { var L = paths[k].getTotalLength(), pt = paths[k].getPointAtLength(L * (f * f * (3 - 2 * f))); g.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')'); g.style.opacity = Math.min(1, f * 8, (1 - f) * 8); }
+          else g.style.opacity = 0;
+          if (f >= 1) paths[k].classList.add('on');
+        }
+      });
+      if (!hitB && t > 3 * 0.9 + 1.2) { hitB = true; hit(hwB); }
+      requestAnimationFrame(tickB);
+    }
+    layout(); addEventListener('resize', layout); addEventListener('load', layout); setTimeout(layout, 600);
+    cards.concat(hwB).forEach(function (el) {
+      el.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') speed(el, 3); });
+      el.addEventListener('pointerleave', function (e) { if (e.pointerType !== 'touch') speed(el, 1); });
+    });
+    if (!still) requestAnimationFrame(tickB);
+  }
+
 })();
