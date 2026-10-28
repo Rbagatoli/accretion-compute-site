@@ -7,7 +7,7 @@ One-page brand site for Accretion Compute (Ion Group). Static HTML and CSS, no b
 - `assets/logos/`: final logo SVGs from the brand kit. Never retype the wordmark in a font; use these files.
 - `assets/og-image.png`: 1200x630 link-preview image.
 - Favicons and `site.webmanifest` sit at the root.
-- `CNAME`: the custom domain for GitHub Pages.
+- No `CNAME` yet: add one containing `accretioncompute.com` once the domain is registered.
 
 ## Preview locally
 
