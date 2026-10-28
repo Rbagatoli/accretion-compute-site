@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,9 +26,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
-  <link rel="stylesheet" href="styles.css?v=a7365367">
-  <script src="site.js?v=a7365367" defer></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="styles.css?v=94b35985">
+  <script src="site.js?v=94b35985" defer></script>
 </head>
 <body class="page-privacy">
   <a class="skip" href="#main">Skip to content</a>
@@ -36,8 +37,13 @@
   <header class="bar" data-bar>
     <div class="bar-in">
       <a class="bar-mark" href="./" aria-label="Accretion Compute home">
-        <img src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+        <img class="for-light" src="assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
       </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
       <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
         <span class="sr">Menu</span><i></i><i></i>
       </button>
@@ -90,7 +96,8 @@
   <footer class="foot">
     <div class="foot-in">
       <div class="foot-brand">
-        <img src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-light" src="assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
         <p>AI compute, built at the source of energy.</p>
       </div>
       <nav class="foot-nav" aria-label="Footer">

@@ -2,7 +2,7 @@
 <section class="hero dark" data-hero>
   <canvas class="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-in">
-    <div class="alogo" role="img" aria-label="Accretion Compute"><img class="hero-logo" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560"></div>
+    <div class="alogo" role="img" aria-label="Accretion Compute"><img class="hero-logo for-light" src="assets/logos/accretion-compute-stacked-no-descriptor-black.svg" alt="" width="1000" height="560"><img class="hero-logo for-dark" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560"></div>
     <h1>AI compute, built at the source of&nbsp;energy.</h1>
     <p class="lede">We build and run AI-ready capacity where energy is already produced, so AI companies are not left waiting in the grid queue.</p>
     <div class="actions">
@@ -50,61 +50,38 @@
   </div>
 </section>
 
-<section class="band dark" aria-labelledby="flow-h">
-  <div class="wrap">
-    <div class="head-block center">
-      <p class="eyebrow">From energy to compute</p>
-      <h2 id="flow-h" class="reveal">We gather energy and concentrate it into&nbsp;compute</h2>
-      <p class="lede reveal d1">Every Accretion site follows the same path: energy that is already there, turned into power on site, delivered into halls built for AI.</p>
+<section class="dark ps" aria-labelledby="flow-h" data-story data-mode="pan">
+  <div class="ps-track">
+    <div class="ps-stick">
+      <canvas class="ps-canvas" aria-hidden="true"></canvas>
+      <div class="ps-text">
+        <div class="ps-step now" data-i="0">
+          <p class="eyebrow">From energy to compute</p>
+          <h2 id="flow-h">We gather energy and concentrate it into&nbsp;compute</h2>
+          <p class="ps-p">Every Accretion site follows the same chain. Scroll to follow it.</p>
+        </div>
+        <div class="ps-step" data-i="1">
+          <p class="eyebrow">01 &middot; Energy source</p>
+          <p class="ps-h">Energy that is already&nbsp;there</p>
+          <p class="ps-p">Gas, landfill gas and industrial sites, often producing more than anyone uses.</p>
+        </div>
+        <div class="ps-step" data-i="2">
+          <p class="eyebrow">02 &middot; On-site power</p>
+          <p class="ps-h">Turned into power on&nbsp;site</p>
+          <p class="ps-p">Generated behind the meter, without waiting on a grid connection.</p>
+        </div>
+        <div class="ps-step" data-i="3">
+          <p class="eyebrow">03 &middot; AI-ready hall</p>
+          <p class="ps-h">Delivered into halls built for&nbsp;AI</p>
+          <p class="ps-p">Power, cooling, space and fiber, built around the generation.</p>
+        </div>
+        <div class="ps-step" data-i="4">
+          <p class="eyebrow">04 &middot; Your workloads</p>
+          <p class="ps-h">Concentrated into&nbsp;compute</p>
+          <p class="ps-p">Tenants bring their hardware. The energy ends up as training and inference.</p>
+        </div>
+      </div>
     </div>
-    <figure class="diagram reveal">
-      <svg class="only-wide" viewBox="0 0 1100 250" role="img" aria-labelledby="flow-t">
-        <title id="flow-t">Energy source, on-site power, AI-ready hall, tenant workloads, connected in sequence</title>
-        <g>
-          <path class="d-soft" d="M150 105h800"/>
-          <path class="d-flow" d="M170 105h170"/>
-          <path class="d-flow" d="M445 105h170"/>
-          <path class="d-flow" d="M720 105h170"/>
-        </g>
-        <g transform="translate(110 105)">
-          <circle class="d-fill" r="58"/>
-          <path class="d-strong" d="M0-24c12 12 16 22 8 32-4 5-12 6-16 0-6-8 4-14 8-32zM-14 18h28"/>
-        </g>
-        <g transform="translate(385 105)">
-          <circle class="d-fill" r="58"/>
-          <path class="d-strong" d="M4-26-12 4h12l-4 22 16-30H0z"/>
-        </g>
-        <g transform="translate(660 105)">
-          <circle class="d-fill" r="58"/>
-          <path class="d-strong" d="M-20-24h40v48h-40zM-20-8h40M-20 8h40"/>
-        </g>
-        <g transform="translate(935 105)">
-          <circle class="d-fill" r="58"/>
-          <path class="d-strong" d="M-18-18h36v36h-36zM-8-8h16v16h-16zM-18-6h-8M-18 6h-8M18-6h8M18 6h8M-6-18v-8M6-18v-8M-6 18v8M6 18v8"/>
-        </g>
-        <text class="d-text d-mid" x="110" y="200">Energy source</text>
-        <text class="d-small d-mid" x="110" y="224">Gas, landfill gas, industrial sites</text>
-        <text class="d-text d-mid" x="385" y="200">On-site power</text>
-        <text class="d-small d-mid" x="385" y="224">Generated behind the meter</text>
-        <text class="d-text d-mid" x="660" y="200">AI-ready hall</text>
-        <text class="d-small d-mid" x="660" y="224">Power, cooling, space, fiber</text>
-        <text class="d-text d-mid" x="935" y="200">Your workloads</text>
-        <text class="d-small d-mid" x="935" y="224">Training and inference</text>
-      </svg>
-      <svg class="only-narrow" viewBox="0 0 340 620" role="img" aria-labelledby="flow-tn">
-        <title id="flow-tn">Energy source, on-site power, AI-ready hall, tenant workloads, connected in sequence</title>
-        <path class="d-soft" d="M60 60v480"/>
-        <path class="d-flow" d="M60 110v60"/><path class="d-flow" d="M60 270v60"/><path class="d-flow" d="M60 430v60"/>
-        <g transform="translate(60 60)"><circle class="d-fill" r="40"/><path class="d-strong" d="M0-17c8 8 11 15 6 22-3 4-9 4-12 0-4-5 3-10 6-22zM-10 12h20"/></g>
-        <g transform="translate(60 220)"><circle class="d-fill" r="40"/><path class="d-strong" d="M3-18-8 3h8l-3 15 11-21H0z"/></g>
-        <g transform="translate(60 380)"><circle class="d-fill" r="40"/><path class="d-strong" d="M-14-17h28v34h-28zM-14-6h28M-14 6h28"/></g>
-        <g transform="translate(60 540)"><circle class="d-fill" r="40"/><path class="d-strong" d="M-13-13h26v26h-26zM-6-6h12v12h-12zM-13-4h-6M-13 4h-6M13-4h6M13 4h6M-4-13v-6M4-13v-6M-4 13v6M4 13v6"/></g>
-        <text class="d-text" x="122" y="56">Energy source</text><text class="d-small" x="122" y="78">Gas, landfill gas, industry</text>
-        <text class="d-text" x="122" y="216">On-site power</text><text class="d-small" x="122" y="238">Behind the meter</text>
-        <text class="d-text" x="122" y="376">AI-ready hall</text><text class="d-small" x="122" y="398">Power, cooling, space</text>
-        <text class="d-text" x="122" y="536">Your workloads</text><text class="d-small" x="122" y="558">Training and inference</text>
-      </svg>
-    </figure>
   </div>
 </section>
 
