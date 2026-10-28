@@ -84,6 +84,17 @@
   });
 })();
 
+// Can canvas blur("filter") really blur here? Some browsers accept the property but ignore it, which turns the
+// soft glow passes into hard white shapes. So blur one pixel and check that it spread; if not, skip those passes.
+var acCanBlur = (function () {
+  try {
+    var c = document.createElement("canvas"); c.width = c.height = 9;
+    var x = c.getContext("2d"); if (typeof x.filter !== "string") return false;
+    x.filter = "blur(2px)"; x.fillRect(4, 4, 1, 1);
+    return x.getImageData(2, 4, 1, 1).data[3] > 0;
+  } catch (e) { return false; }
+})();
+
 // The brand symbol (same geometry as the logo SVGs), with slowly turning rings. Used by the hero and "Three ways in".
 var acSymbol = (function () {
   var uid = 0;
@@ -202,7 +213,7 @@ var acSymbol = (function () {
         var main = off === 0, base = (main ? 0.9 : 0.4) * glow * (theme === 'dark' ? 1 : 0.8);
         ctx.beginPath();
         for (var x = -L, n = 0; x <= L; x += 3, n++) { var p = pull(lens(x, off * S), 0.035); n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
-        ctx.save(); ctx.strokeStyle = grad(base * 0.35); ctx.lineWidth = main ? 7 : 4; ctx.filter = 'blur(4px)'; ctx.stroke(); ctx.restore();
+        if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(base * 0.35); ctx.lineWidth = main ? 7 : 4; ctx.filter = 'blur(4px)'; ctx.stroke(); ctx.restore(); }
         ctx.strokeStyle = grad(base); ctx.lineWidth = main ? 1.2 : 0.8; ctx.stroke();
       });
       energy = Math.max(energy, 0.45 * breathe);
@@ -487,6 +498,8 @@ var acSymbol = (function () {
   var canvas = art && art.querySelector(".cb-scene");
   if (!track || !canvas || !canvas.getContext) return;
   var ctx = canvas.getContext("2d");
+  // where canvas blur does not work (see acCanBlur) the soft glow passes are skipped, not drawn hard
+  var BLUR = acCanBlur;
   var fx = art.querySelector(".cb-fx"), fctx = fx && fx.getContext && fx.getContext("2d");
   var holeBox = art.querySelector(".cb-hole");
   var slides = sec.querySelectorAll(".mz-slide");
@@ -650,8 +663,10 @@ var acSymbol = (function () {
   var K = 1, W = 0, H = 0, dpr = 1, phone = false, U = 1;
   function setT(t) { K = t.k; ctx.setTransform(t.k * dpr, 0, 0, t.k * dpr, t.ox * dpr, t.oy * dpr); }
   function lw(px) { ctx.lineWidth = px / K; }
-  function ink(a) { a = Math.min(1, a * LKA); ctx.strokeStyle = "rgba(" + INKC + "," + a + ")"; ctx.fillStyle = "rgba(" + INKC + "," + a + ")"; }
-  function glow(b, a) { ctx.shadowColor = "rgba(" + INKC + "," + ((a == null ? 0.8 : a) * GLK) + ")"; ctx.shadowBlur = b * dpr; }
+  // Alphas are rounded to 3 places: a tiny value prints as "2e-7", which Safari rejects as a colour and then keeps
+  // the last one (often opaque white), so the drawing turns into white blobs after scrolling back up.
+  function ink(a) { var s = "rgba(" + INKC + "," + Math.min(1, Math.max(0, a * LKA)).toFixed(3) + ")"; ctx.strokeStyle = s; ctx.fillStyle = s; }
+  function glow(b, a) { ctx.shadowColor = "rgba(" + INKC + "," + Math.min(1, Math.max(0, (a == null ? 0.8 : a) * GLK)).toFixed(3) + ")"; ctx.shadowBlur = b * dpr; }
   function noGlow() { ctx.shadowBlur = 0; ctx.shadowColor = "transparent"; }
   function dash(on, off) { ctx.setLineDash(on ? [on / K, off / K] : []); }
   function circle(x, y, r, fill) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); fill ? ctx.fill() : ctx.stroke(); }
@@ -1114,7 +1129,7 @@ var acSymbol = (function () {
     if (st.glow > 0.01) {
       ctx.beginPath();
       for (var g = 0; g < list.length; g++) { var go = list[g].src; if (go.glow && visOf(go, st) > 0.5) outline(list[g].o); }
-      ctx.save(); ctx.globalAlpha = sceneA * st.glow * GLK; ctx.setLineDash([]); ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 5; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore();
+      if (BLUR) { ctx.save(); ctx.globalAlpha = sceneA * st.glow * GLK; ctx.setLineDash([]); ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 5; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore(); }
     }
     ctx.lineWidth = 1;
     for (var j = 0; j < list.length; j++) {
@@ -1299,7 +1314,7 @@ var acSymbol = (function () {
     }
   }
   function pulse(x, y, a) {
-    ctx.save(); ctx.globalAlpha = a * 0.6 * GLK; ctx.fillStyle = "rgb(" + INKC + ")"; ctx.filter = "blur(5px)"; ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fill(); ctx.restore();
+    if (BLUR) { ctx.save(); ctx.globalAlpha = a * 0.6 * GLK; ctx.fillStyle = "rgb(" + INKC + ")"; ctx.filter = "blur(5px)"; ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fill(); ctx.restore(); }
     ctx.globalAlpha = a; ctx.fillStyle = light ? "rgb(" + INKC + ")" : "#fff"; ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1;
   }
   // Risers: gas up from the ground to the generator yard, power up from the yard to the hall.
@@ -1328,7 +1343,7 @@ var acSymbol = (function () {
     ctx.lineWidth = 1; ctx.strokeStyle = "rgba(" + INKC + ",.22)"; ctx.setLineDash([2, 6]); ctx.stroke(); ctx.setLineDash([]);
     // the riser itself, with a glow
     ctx.beginPath(); pl([e[0], e[1]]);
-    ctx.save(); ctx.globalAlpha = sceneA * up * 0.5 * GLK; ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 6; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore();
+    if (BLUR) { ctx.save(); ctx.globalAlpha = sceneA * up * 0.5 * GLK; ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 6; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore(); }
     ctx.globalAlpha = sceneA * up; ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 1.3; ctx.stroke();
     ctx.globalAlpha = 1; ctx.lineWidth = 1;
   }
@@ -1433,7 +1448,7 @@ var acSymbol = (function () {
       var main = off === 0, base = (main ? 0.9 : 0.4) * gw;
       fctx.beginPath();
       for (var x = -Lr, n = 0; x <= Lr; x += 3, n++) { var q = lens(x, off * Ss); n ? fctx.lineTo(q[0], q[1]) : fctx.moveTo(q[0], q[1]); }
-      fctx.save(); fctx.strokeStyle = grad(base * 0.35); fctx.lineWidth = main ? 7 : 4; fctx.filter = "blur(4px)"; fctx.stroke(); fctx.restore();
+      if (BLUR) { fctx.save(); fctx.strokeStyle = grad(base * 0.35); fctx.lineWidth = main ? 7 : 4; fctx.filter = "blur(4px)"; fctx.stroke(); fctx.restore(); }
       fctx.strokeStyle = grad(base); fctx.lineWidth = main ? 1.2 : 0.8; fctx.stroke();
     });
     energy = Math.max(energy, 0.45 * breathe);

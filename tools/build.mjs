@@ -32,7 +32,9 @@ for (const file of readdirSync(join(root, 'src/pages')).filter((f) => f.endsWith
   for (const k of ['title', 'description']) if (!meta[k]) throw new Error(`${file}: missing ${k}`);
 
   const out = meta.out || `${id}.html`;
-  const canonical = out === 'index.html' ? '' : out;
+  // Cloudflare Pages serves pages without ".html" (and redirects the .html address there), so canonicals,
+  // the sitemap and internal links all use the short address. GitHub Pages serves the short address too.
+  const canonical = out === 'index.html' ? '' : out.replace(/\.html$/, '');
   // <!--include:name--> pulls in src/partials/name.html
   const include = (text, depth = 0) => {
     if (depth > 5) throw new Error(`${file}: includes nested too deep`);
@@ -50,6 +52,10 @@ for (const file of readdirSync(join(root, 'src/pages')).filter((f) => f.endsWith
     .replaceAll('{{version}}', version)
     .replace('{{robots}}', meta.noindex ? '<meta name="robots" content="noindex">' : '');
   for (const n of NAV) html = html.replace(`{{nav:${n}}}`, meta.nav === n ? ' aria-current="page"' : '');
+
+  // internal page links: href="capacity.html#x" -> href="capacity#x" (only local page names, never assets)
+  html = html.replace(/href="([a-z0-9-]+)\.html(#[^"]*)?"/g, (_, name, hash) => `href="${name === 'index' ? './' : name}${hash || ''}"`);
+  if (/href="[a-z0-9-]+\.html/.test(html)) throw new Error(`${file}: an internal .html link survived`);
 
   const left = html.match(/\{\{[^}]+\}\}/);
   if (left) throw new Error(`${file}: unfilled placeholder ${left[0]}`);
