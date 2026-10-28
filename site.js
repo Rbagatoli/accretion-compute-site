@@ -23,10 +23,10 @@
       var t = root.getAttribute('data-theme');
       modeButtons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-set') === t)); });
     };
-    modeButtons.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var t = b.getAttribute('data-theme-set');
-        if (root.getAttribute('data-theme') === t) return;
+    // A click anywhere on the switch (either dot, the gap or the rim) flips to the other colour.
+    [].slice.call(document.querySelectorAll('.mode')).forEach(function (m) {
+      m.addEventListener('click', function () {
+        var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', t);
         try { localStorage.setItem('ac-theme', t); } catch (e) {}
         var meta = document.querySelector('meta[name=theme-color]');
