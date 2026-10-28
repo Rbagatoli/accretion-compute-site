@@ -94,6 +94,13 @@ var acCanBlur = (function () {
     return x.getImageData(2, 4, 1, 1).data[3] > 0;
   } catch (e) { return false; }
 })();
+// Safari (every iPhone browser is Safari underneath) can draw a soft canvas shadow as a solid white box,
+// so the story's shadow glow is switched off there and the lines stay crisp.
+var acNoShadow = (function () {
+  var ua = navigator.userAgent || "";
+  return /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+    (/Safari\//.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua));
+})();
 
 // The brand symbol (same geometry as the logo SVGs), with slowly turning rings. Used by the hero and "Three ways in".
 var acSymbol = (function () {
@@ -156,7 +163,7 @@ var acSymbol = (function () {
     for (var i = 0; i < GRAINS; i++) dust.push(grain(true));
     // Background dust drifting across the whole hero, like the story section's, but sparser.
     var motes = [];
-    for (i = 0; i < (innerWidth < 720 ? 90 : 190); i++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 1 + Math.random() * 1.4 });
+    for (i = 0; i < (innerWidth < 720 ? 80 : 175); i++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 0.8 + Math.random() * 1.25 });
     var runners = [];
     for (i = 0; i < 4; i++) runners.push({ u: Math.random(), sp: 0.12 + Math.random() * 0.06, o: 0.25 + Math.random() * 0.15 });
 
@@ -194,7 +201,7 @@ var acSymbol = (function () {
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = rgba(1);
       motes.forEach(function (m) {
-        var a = (0.4 + 0.55 * m.o * (0.6 + 0.4 * Math.sin(t * 1.3 + m.ph * 40))) * (theme === 'dark' ? 1 : 0.85);
+        var a = (0.27 + 0.48 * m.o * (0.6 + 0.4 * Math.sin(t * 1.3 + m.ph * 40))) * (theme === 'dark' ? 1 : 0.78);
         ctx.globalAlpha = a;
         ctx.fillRect(m.x * w + Math.sin(t * 0.15 + m.ph * 6) * 16, m.y * h + Math.cos(t * 0.12 + m.ph * 5) * 16, m.s, m.s);
       });
@@ -666,7 +673,7 @@ var acSymbol = (function () {
   // Alphas are rounded to 3 places: a tiny value prints as "2e-7", which Safari rejects as a colour and then keeps
   // the last one (often opaque white), so the drawing turns into white blobs after scrolling back up.
   function ink(a) { var s = "rgba(" + INKC + "," + Math.min(1, Math.max(0, a * LKA)).toFixed(3) + ")"; ctx.strokeStyle = s; ctx.fillStyle = s; }
-  function glow(b, a) { ctx.shadowColor = "rgba(" + INKC + "," + Math.min(1, Math.max(0, (a == null ? 0.8 : a) * GLK)).toFixed(3) + ")"; ctx.shadowBlur = b * dpr; }
+  function glow(b, a) { if (acNoShadow) return; ctx.shadowColor = "rgba(" + INKC + "," + Math.min(1, Math.max(0, (a == null ? 0.8 : a) * GLK)).toFixed(3) + ")"; ctx.shadowBlur = b * dpr; }
   function noGlow() { ctx.shadowBlur = 0; ctx.shadowColor = "transparent"; }
   function dash(on, off) { ctx.setLineDash(on ? [on / K, off / K] : []); }
   function circle(x, y, r, fill) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); fill ? ctx.fill() : ctx.stroke(); }
@@ -1237,8 +1244,8 @@ var acSymbol = (function () {
     var arr = 1 - Math.pow(1 - c01((p - T.hall0) / (T.hall1 - 0.01 - T.hall0)), 3);
     var Yh = Y1 + G + (1 - arr) * 1.15, Y3 = Yh + G;
     // the hall building on the plan never moves: it stays on the ground, roof on, until the full hall drops in
-    // from above, then fades to its dashed footprint as the full hall lights up (so a hall is always in view)
-    var tileA = 1 - smooth(arr * 1.6);
+    // from above, and stays there for the rest of the story (the owner wants the ground hall always in view)
+    var tileA = 1;
 
     // camera: from the plan transform (straight down) to the stack view
     var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;
