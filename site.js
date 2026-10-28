@@ -282,550 +282,1091 @@
   });
 })();
 
-// Energy-to-compute chain drawn in particles: a wellsite, an on-site generator, a data hall and the
-// Accretion black hole. data-mode="pan" pans a camera across them; data-mode="all" shows the whole chain.
+// Energy-to-compute story (home): one scroll-driven camera from the map to the stack and the black hole.
+/* "Map to stack" (preview): one continuous camera, driven by scroll.
+   1. The contour map, with the chosen site glowing.
+   2. The camera dives into the marker until the site plan fills the view from straight above.
+   3. The camera tilts from straight down to the stack view while the plan lifts apart: the ground stays,
+      the generator yard rises off it in the same place it had on the plan; the hall stays on the ground and fades
+      to its dashed footprint (nothing rises and vanishes).
+   4. Power grows into a full layer, then the full hall drops in from above while the stack turns at a constant rate.
+   5. The home hero's black hole forms at the top, facing the viewer.
+   The plan and the stack are the same 3D drawing (an orthographic camera whose pitch goes from 90 to 30
+   degrees), so the handoff is one camera move, not a swap of pictures. Redraws on scroll, resize and the theme toggle;
+   the ambient dust and the black hole animate gently while on screen (never with reduced motion). */
 (function () {
-  var sec = document.querySelector('[data-story]');
+  "use strict";
+  var sec = document.querySelector(".ps-alt");
   if (!sec) return;
-  var MODE = sec.getAttribute('data-mode') || 'pan';
-  var canvas = sec.querySelector('.ps-canvas'), ctx = canvas.getContext && canvas.getContext('2d');
-  if (!ctx) { sec.classList.add('no-ps'); return; }
-  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var steps = sec.querySelectorAll('.ps-step'), track = sec.querySelector('.ps-track'), textEl = sec.querySelector('.ps-text');
-  var bl = document.createElement('canvas'), bctx = bl.getContext('2d');
-  var w, h, dpr, R, wide, P = [], N, bg, light, ox = 0, oy = 0, cx, cy, POS, BHS, BHL;
-  var v = 0, vs = 0, T = 0, last = 0, raf = 0, visible = false, shown = 0;
-  var o = { x: 0, y: 0, a: 0, z: 1 };
+  var track = sec.querySelector(".mz-track"), art = sec.querySelector(".mz-art");
+  var canvas = art && art.querySelector(".cb-scene");
+  if (!track || !canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+  var fx = art.querySelector(".cb-fx"), fctx = fx && fx.getContext && fx.getContext("2d");
+  var holeBox = art.querySelector(".cb-hole");
+  var slides = sec.querySelectorAll(".mz-slide");
+  var ticks = sec.querySelectorAll(".mz-rail li");
+  var reduce = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  var dustC = sec.querySelector(".cb-dust"), dctx = dustC && dustC.getContext && dustC.getContext("2d");
+  // Theme: the section follows the site's black/white toggle (data-theme on <html>, 'ac-theme' on document).
+  var light, BG, BGC, INKC, GLK, LKA;
+  function readTheme() {
+    light = document.documentElement.getAttribute("data-theme") === "light";
+    BG = light ? "#ffffff" : "#050506"; BGC = light ? "255,255,255" : "5,5,6";
+    INKC = light ? "11,12,14" : "236,238,241";
+    GLK = light ? 0.4 : 1; // glows become a soft dark halo on white
+    LKA = light ? 1.3 : 1; // dark lines on white read lighter than light lines on black: lift the faint ones
+  }
+  readTheme();
 
-  function rnd() { return Math.random(); }
-  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
-  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-
-  // ---------- 3D line work, in units of R. y points down (ground at y = G), z points toward the viewer.
-  // A segment is [x1, y1, z1, x2, y2, z2, brightness]; each scene is seen through its own camera ----------
-  var G = 0.62;
-  function L(s, x1, y1, z1, x2, y2, z2, b) { s.push([x1, y1, z1, x2, y2, z2, b == null ? 1 : b]); }
-  function box(s, x0, y0, z0, x1, y1, z1, b) {
-    L(s, x0, y0, z0, x1, y0, z0, b); L(s, x1, y0, z0, x1, y1, z0, b); L(s, x1, y1, z0, x0, y1, z0, b); L(s, x0, y1, z0, x0, y0, z0, b);
-    L(s, x0, y0, z1, x1, y0, z1, b); L(s, x1, y0, z1, x1, y1, z1, b); L(s, x1, y1, z1, x0, y1, z1, b); L(s, x0, y1, z1, x0, y0, z1, b);
-    L(s, x0, y0, z0, x0, y0, z1, b); L(s, x1, y0, z0, x1, y0, z1, b); L(s, x1, y1, z0, x1, y1, z1, b); L(s, x0, y1, z0, x0, y1, z1, b);
-  }
-  function rp(cx, cy, cz, r, ax, u) { var c = Math.cos(u) * r, d = Math.sin(u) * r; return ax === 'y' ? [cx + c, cy, cz + d] : ax === 'z' ? [cx + c, cy + d, cz] : [cx, cy + d, cz + c]; }
-  function ring(s, cx, cy, cz, r, ax, n, b, a0, a1) { // ax: the ring's axis ('y' lies flat, 'z' faces the viewer, 'x' faces sideways)
-    a0 = a0 || 0; a1 = a1 == null ? 6.2832 : a1;
-    for (var i = 0; i < n; i++) { var p = rp(cx, cy, cz, r, ax, a0 + (a1 - a0) * i / n), q = rp(cx, cy, cz, r, ax, a0 + (a1 - a0) * (i + 1) / n); L(s, p[0], p[1], p[2], q[0], q[1], q[2], b); }
-  }
-  function vcyl(s, cx, cz, r, y0, y1, n, b, bands) { // upright cylinder, y0 top to y1 bottom
-    ring(s, cx, y0, cz, r, 'y', n, b); ring(s, cx, y1, cz, r, 'y', n, b * 0.8);
-    for (var i = 0; i < 6; i++) { var u = i * 1.0472 + 0.3; L(s, cx + Math.cos(u) * r, y0, cz + Math.sin(u) * r, cx + Math.cos(u) * r, y1, cz + Math.sin(u) * r, b * 0.55); }
-    for (var j = 1; j <= (bands || 0); j++) ring(s, cx, y0 + (y1 - y0) * j / (bands + 1), cz, r, 'y', n, b * 0.4);
-  }
-  function xcyl(s, x0, x1, cy, cz, r, n, b, bands) { // lying cylinder along x
-    ring(s, x0, cy, cz, r, 'x', n, b); ring(s, x1, cy, cz, r, 'x', n, b);
-    for (var i = 0; i < 6; i++) { var u = i * 1.0472 + 0.3; L(s, x0, cy + Math.sin(u) * r, cz + Math.cos(u) * r, x1, cy + Math.sin(u) * r, cz + Math.cos(u) * r, b * 0.55); }
-    for (var j = 1; j <= (bands || 0); j++) ring(s, x0 + (x1 - x0) * j / (bands + 1), cy, cz, r, 'x', n, b * 0.4);
-  }
-  function dome(s, cx, cy, cz, r, dir, b) { // a dished head on an upright vessel; dir -1 up, 1 down
-    ring(s, cx, cy + dir * r * 0.35, cz, r * 0.8, 'y', 12, b * 0.6); ring(s, cx, cy + dir * r * 0.6, cz, r * 0.4, 'y', 8, b * 0.5);
-    for (var i = 0; i < 4; i++) { var u = i * 1.5708 + 0.3; L(s, cx + Math.cos(u) * r, cy, cz + Math.sin(u) * r, cx + Math.cos(u) * r * 0.4, cy + dir * r * 0.6, cz + Math.sin(u) * r * 0.4, b * 0.45); }
-  }
-  function wheel(s, x, y, z, r, ax, b) { ring(s, x, y, z, r, ax, 8, b); var p = rp(x, y, z, r, ax, 0), q = rp(x, y, z, r, ax, 3.1416); L(s, p[0], p[1], p[2], q[0], q[1], q[2], b * 0.5); }
-
-  // Cameras: look from a point at a target; the target lands at the scene origin (plus sx, sy)
-  function lookAt(px, py, pz, tx, ty, tz, f, sx, sy) {
-    var yaw = -Math.atan2(px - tx, pz - tz), hd = Math.hypot(px - tx, pz - tz), pit = Math.atan2(ty - py, hd);
-    return { px: px, py: py, pz: pz, cy: Math.cos(yaw), sy: Math.sin(yaw), cp: Math.cos(pit), sp: Math.sin(pit), f: f || Math.hypot(hd, ty - py), sx: sx || 0, sy0: sy || 0 };
-  }
-  function proj(c, x, y, z) {
-    var rx = x - c.px, ry = y - c.py, rz = z - c.pz;
-    var x1 = rx * c.cy + rz * c.sy, z1 = -rx * c.sy + rz * c.cy;
-    var y2 = ry * c.cp + z1 * c.sp, z2 = z1 * c.cp - ry * c.sp, d = -z2;
-    if (d < 0.05) { o.a = 0; o.z = 0; return; }
-    var k = c.f / d; o.x = x1 * k + c.sx; o.y = y2 * k + c.sy0; o.z = k * (c.k0 || 1);
-  }
-  var CAM = [
-    lookAt(1.5, -0.85, 4.6, 0, 0.12, 0, 0, 0, 0.12),
-    lookAt(1.4, -0.9, 4.6, 0, 0.12, 0, 0, 0, 0.12),
-    { px: 0, py: 0, pz: 0, cy: 1, sy: 0, cp: 1, sp: 0, f: 1.5, sx: 0, sy0: -0.05, k0: 1 / 0.6 } // straight down the aisle
-  ];
-  CAM[0].k0 = 1; CAM[1].k0 = 1;
-
-  // 1. Wellsite: a pumpjack nodding over the well, a separator, a knockout drum, a flare stack and a tank battery
-  function energySegs(T) {
-    var s = [], i, z;
-    for (i = 0; i <= 10; i++) L(s, -1.15, G, -0.5 + i * 0.1, 1.15, G, -0.5 + i * 0.1, i % 5 === 0 ? 0.3 : 0.1); // pad
-    L(s, -1.15, G, -0.5, -1.15, G, 0.5, 0.3); L(s, 1.15, G, -0.5, 1.15, G, 0.5, 0.3);
-    // skid: two rails with cross members
-    for (z = -1; z <= 1; z += 2) { box(s, -1.12, G - 0.05, z * 0.14, -0.12, G, z * 0.1, 0.8); }
-    for (i = 0; i <= 8; i++) L(s, -1.1 + i * 0.12, G - 0.05, -0.1, -1.1 + i * 0.12, G - 0.05, 0.1, 0.35);
-    // samson post: four legs to the saddle, braced
-    var px = -0.55, py = -0.02;
-    for (z = -1; z <= 1; z += 2) {
-      L(s, -0.8, G - 0.05, z * 0.12, px - 0.02, py + 0.04, z * 0.035, 1); L(s, -0.3, G - 0.05, z * 0.12, px + 0.02, py + 0.04, z * 0.035, 1);
-      L(s, -0.74, 0.42, z * 0.107, -0.36, 0.42, z * 0.107, 0.55); L(s, -0.68, 0.22, z * 0.085, -0.42, 0.22, z * 0.085, 0.55);
-      L(s, -0.74, 0.42, z * 0.107, -0.42, 0.22, z * 0.085, 0.3); L(s, -0.36, 0.42, z * 0.107, -0.68, 0.22, z * 0.085, 0.3);
-    }
-    L(s, -0.74, 0.42, -0.107, -0.74, 0.42, 0.107, 0.4); L(s, -0.36, 0.42, -0.107, -0.36, 0.42, 0.107, 0.4);
-    box(s, px - 0.035, py, -0.045, px + 0.035, py + 0.04, 0.045, 0.9);
-    // walking beam, an I-beam that rocks
-    var th = 0.16 * Math.sin(T * 0.9), ca = Math.cos(th), sa = Math.sin(th);
-    function bp(d, n) { return [px + ca * d - sa * n, py + sa * d + ca * n]; }
-    function bl(d1, n1, z1, d2, n2, z2, b) { var a = bp(d1, n1), c = bp(d2, n2); L(s, a[0], a[1], z1, c[0], c[1], z2, b); }
-    for (z = -1; z <= 1; z += 2) { bl(-0.44, -0.03, z * 0.035, 0.44, -0.03, z * 0.035, 1); bl(-0.44, 0.03, z * 0.035, 0.44, 0.03, z * 0.035, 0.75); }
-    bl(-0.44, 0, 0, 0.44, 0, 0, 0.35);
-    for (i = 0; i <= 10; i++) bl(-0.42 + i * 0.084, -0.03, 0, -0.42 + i * 0.084, 0.03, 0, 0.25);
-    bl(-0.44, -0.03, -0.035, -0.44, -0.03, 0.035, 0.6); bl(0.44, -0.03, -0.035, 0.44, -0.03, 0.035, 0.6);
-    // equalizer at the tail
-    bl(-0.48, 0.03, -0.11, -0.38, 0.03, -0.11, 0.8); bl(-0.48, 0.03, 0.11, -0.38, 0.03, 0.11, 0.8); bl(-0.43, 0.06, -0.11, -0.43, 0.06, 0.11, 0.9);
-    // horsehead, a curved plate with two faces
-    var hc = bp(0.44, 0);
-    for (z = -1; z <= 1; z += 2) { ring(s, hc[0], hc[1], z * 0.05, 0.16, 'z', 10, 1, -Math.PI / 2 + th, Math.PI / 2 + th); ring(s, hc[0], hc[1], z * 0.05, 0.12, 'z', 8, 0.4, -Math.PI / 2 + th, Math.PI / 2 + th); }
-    for (i = 0; i <= 6; i++) { var an = -Math.PI / 2 + th + i * Math.PI / 6; L(s, hc[0] + Math.cos(an) * 0.16, hc[1] + Math.sin(an) * 0.16, -0.05, hc[0] + Math.cos(an) * 0.16, hc[1] + Math.sin(an) * 0.16, 0.05, 0.45); }
-    // bridle, carrier bar, polished rod, stuffing box and wellhead
-    var bx = 0.05, cb = hc[1] + 0.22;
-    L(s, bx, hc[1], -0.02, bx, cb, -0.02, 0.55); L(s, bx, hc[1], 0.02, bx, cb, 0.02, 0.55);
-    L(s, bx - 0.01, cb, -0.045, bx - 0.01, cb, 0.045, 0.9); L(s, bx, cb, 0, bx, G - 0.26, 0, 0.85);
-    vcyl(s, bx, 0, 0.018, G - 0.26, G - 0.22, 8, 0.9);
-    vcyl(s, bx, 0, 0.03, G - 0.22, G - 0.12, 10, 0.8, 2);
-    ring(s, bx, G - 0.2, 0, 0.042, 'y', 10, 0.6); ring(s, bx, G - 0.14, 0, 0.042, 'y', 10, 0.6);
-    xcyl(s, bx + 0.03, 0.25, G - 0.17, 0, 0.012, 6, 0.75);
-    wheel(s, 0.14, G - 0.21, 0, 0.022, 'y', 0.85); L(s, 0.14, G - 0.18, 0, 0.14, G - 0.21, 0, 0.6);
-    xcyl(s, bx - 0.12, bx - 0.03, G - 0.17, 0, 0.012, 6, 0.6); wheel(s, bx - 0.09, G - 0.21, 0, 0.02, 'y', 0.7);
-    box(s, bx - 0.06, G - 0.05, -0.06, bx + 0.06, G, 0.06, 0.6);
-    vcyl(s, bx, 0, 0.022, G - 0.12, G - 0.05, 8, 0.6);
-    // gearbox, crank arms, counterweights and pitman arms on both sides
-    var kx = -0.97, ky = G - 0.3, ph = T * 0.9 + Math.PI / 2, c = Math.cos(ph), sn = Math.sin(ph);
-    box(s, kx - 0.08, ky + 0.03, -0.07, kx + 0.08, G - 0.05, 0.07, 0.75);
-    L(s, kx, ky, -0.14, kx, ky, 0.14, 0.7);
-    for (z = -1; z <= 1; z += 2) {
-      var zz = z * 0.13;
-      ring(s, kx, ky, zz, 0.03, 'z', 6, 0.9);
-      L(s, kx, ky, zz, kx + c * 0.17, ky + sn * 0.17, zz, 0.9);
-      ring(s, kx, ky, zz, 0.17, 'z', 5, 0.9, ph - 0.45, ph + 0.45); ring(s, kx, ky, zz, 0.11, 'z', 4, 0.6, ph - 0.45, ph + 0.45);
-      L(s, kx + Math.cos(ph - 0.45) * 0.11, ky + Math.sin(ph - 0.45) * 0.11, zz, kx + Math.cos(ph - 0.45) * 0.17, ky + Math.sin(ph - 0.45) * 0.17, zz, 0.7);
-      L(s, kx + Math.cos(ph + 0.45) * 0.11, ky + Math.sin(ph + 0.45) * 0.11, zz, kx + Math.cos(ph + 0.45) * 0.17, ky + Math.sin(ph + 0.45) * 0.17, zz, 0.7);
-      var pin = [kx + c * 0.13, ky + sn * 0.13], eq = bp(-0.43, 0.06);
-      L(s, pin[0], pin[1], zz, eq[0], eq[1], z * 0.11, 0.9);
-    }
-    // motor and belt guard behind the gearbox
-    xcyl(s, -1.1, -1.0, G - 0.12, -0.17, 0.05, 10, 0.7, 2);
-    box(s, -1.04, ky - 0.03, -0.11, kx + 0.02, G - 0.1, -0.08, 0.45);
-    // separator: an upright vessel with dished heads, legs, a sight glass and a ladder
-    var sx = 0.31, sz = 0.02;
-    vcyl(s, sx, sz, 0.06, G - 0.42, G - 0.12, 12, 1, 3);
-    dome(s, sx, G - 0.42, sz, 0.06, -1, 1); dome(s, sx, G - 0.12, sz, 0.06, 1, 0.7);
-    for (i = 0; i < 4; i++) { var la = i * 1.5708 + 0.785; L(s, sx + Math.cos(la) * 0.05, G - 0.1, sz + Math.sin(la) * 0.05, sx + Math.cos(la) * 0.07, G, sz + Math.sin(la) * 0.07, 0.6); }
-    L(s, sx + 0.075, G - 0.36, sz, sx + 0.075, G - 0.16, sz, 0.45);
-    xcyl(s, sx, sx + 0.21, G - 0.52, sz, 0.01, 5, 0.6); L(s, 0.52, G - 0.52, sz, 0.52, G - 0.14, sz, 0.6);
-    // knockout drum on saddles
-    xcyl(s, 0.45, 0.62, G - 0.09, 0, 0.05, 12, 0.85, 2);
-    box(s, 0.47, G - 0.05, -0.04, 0.49, G, 0.04, 0.5); box(s, 0.58, G - 0.05, -0.04, 0.6, G, 0.04, 0.5);
-    xcyl(s, 0.62, 0.7, G - 0.09, 0, 0.01, 5, 0.6);
-    // flare stack with tip, ladder, platform and three guy wires
-    var fx = 0.7, fz = -0.05;
-    vcyl(s, fx, fz, 0.022, -0.45, G, 8, 1, 6);
-    vcyl(s, fx, fz, 0.035, -0.5, -0.45, 10, 1);
-    for (z = -1; z <= 1; z += 2) L(s, fx + 0.04, G, fz + z * 0.015, fx + 0.04, -0.36, fz + z * 0.015, 0.45);
-    for (i = 0; i < 17; i++) L(s, fx + 0.04, G - 0.03 - i * 0.055, fz - 0.015, fx + 0.04, G - 0.03 - i * 0.055, fz + 0.015, 0.3);
-    ring(s, fx, -0.1, fz, 0.11, 'y', 16, 0.7); ring(s, fx, -0.17, fz, 0.11, 'y', 16, 0.45);
-    for (i = 0; i < 6; i++) { var ra = i * 1.0472; L(s, fx + Math.cos(ra) * 0.11, -0.1, fz + Math.sin(ra) * 0.11, fx + Math.cos(ra) * 0.11, -0.17, fz + Math.sin(ra) * 0.11, 0.35); }
-    for (i = 0; i < 3; i++) { var ga = 0.5 + i * 2.094; L(s, fx, -0.3, fz, fx + Math.cos(ga) * 0.42, G, fz + Math.sin(ga) * 0.42, 0.22); }
-    // tank battery behind, with a catwalk and stairs
-    for (i = 0; i < 2; i++) { var tx = 0.24 + i * 0.25; vcyl(s, tx, -0.42, 0.1, G - 0.46, G, 16, 0.6, 3); ring(s, tx, G - 0.49, -0.42, 0.04, 'y', 8, 0.4);
-      for (var t = 0; t < 4; t++) { var ta = t * 1.5708 + 0.4; L(s, tx + Math.cos(ta) * 0.1, G - 0.46, -0.42 + Math.sin(ta) * 0.1, tx, G - 0.49, -0.42, 0.35); } }
-    box(s, 0.2, G - 0.49, -0.44, 0.53, G - 0.47, -0.4, 0.45);
-    L(s, 0.53, G - 0.48, -0.36, 0.7, G, -0.36, 0.45); L(s, 0.53, G - 0.48, -0.32, 0.7, G, -0.32, 0.45);
-    for (i = 1; i < 8; i++) L(s, 0.53 + i * 0.021, G - 0.48 + i * 0.06, -0.36, 0.53 + i * 0.021, G - 0.48 + i * 0.06, -0.32, 0.3);
-    box(s, 0.1, G - 0.06, -0.58, 0.66, G, -0.26, 0.3); // berm
-    return s;
-  }
-
-  // 2. On-site power: a containerised gas generator with roof radiators and silencers, a gas train,
-  // a pad-mounted transformer, a utility pole and a perimeter fence
-  function powerSegs(T) {
-    var s = [], i, x, z;
-    for (i = 0; i <= 9; i++) L(s, -1.15, G, -0.45 + i * 0.1, 1.15, G, -0.45 + i * 0.1, i % 3 === 0 ? 0.28 : 0.1);
-    // fence along the back and the left side
-    for (x = -1.1; x <= 1.11; x += 0.2) L(s, x, G, -0.5, x, G - 0.28, -0.5, 0.55);
-    L(s, -1.1, G - 0.28, -0.5, 1.1, G - 0.28, -0.5, 0.6); L(s, -1.1, G - 0.15, -0.5, 1.1, G - 0.15, -0.5, 0.25);
-    for (x = -1.1; x < 1.1; x += 0.05) { L(s, x, G, -0.5, x + 0.05, G - 0.28, -0.5, 0.07); L(s, x + 0.05, G, -0.5, x, G - 0.28, -0.5, 0.07); }
-    for (z = -0.5; z <= 0.41; z += 0.2) L(s, -1.12, G, z, -1.12, G - 0.28, z, 0.5);
-    L(s, -1.12, G - 0.28, -0.5, -1.12, G - 0.28, 0.4, 0.5);
-    // the container
-    var x0 = -0.95, x1 = 0.35, y0 = 0.05, y1 = G - 0.02, zf = 0.22, zb = -0.22;
-    box(s, x0, y0, zb, x1, y1, zf, 1);
-    L(s, x0, y0 + 0.035, zf, x1, y0 + 0.035, zf, 0.45); L(s, x0, y1 - 0.04, zf, x1, y1 - 0.04, zf, 0.35);
-    for (x = x0 + 0.03; x < x1 - 0.01; x += 0.035) if (!(x > -0.92 && x < -0.43) && !(x > -0.38 && x < -0.1) && !(x > -0.01 && x < 0.27)) L(s, x, y0 + 0.05, zf, x, y1 - 0.05, zf, 0.18);
-    for (z = zb + 0.03; z < zf - 0.01; z += 0.035) L(s, x1, y0 + 0.05, z, x1, y1 - 0.05, z, 0.22);
-    for (i = 0; i < 8; i++) { var cx = i & 1 ? x1 - 0.03 : x0, cyy = i & 2 ? y1 - 0.03 : y0, czz = i & 4 ? zf - 0.03 : zb; box(s, cx, cyy, czz, cx + 0.03, cyy + 0.03, czz + 0.03, 0.7); }
-    // louvres, doors with hinges and handles, a control panel with a window
-    box(s, -0.9, 0.14, zf, -0.45, 0.5, zf + 0.01, 0.75);
-    for (i = 1; i < 12; i++) L(s, -0.9, 0.14 + i * 0.03, zf + 0.01, -0.45, 0.14 + i * 0.03 + 0.008, zf + 0.012, 0.45);
-    for (i = 0; i < 2; i++) { var dx = i * 0.13; box(s, dx, 0.13, zf, dx + 0.13, y1 - 0.05, zf + 0.008, 0.75);
-      for (var hh = 0; hh < 3; hh++) L(s, dx + (i ? 0.125 : 0.005), 0.17 + hh * 0.13, zf + 0.01, dx + (i ? 0.125 : 0.005), 0.2 + hh * 0.13, zf + 0.01, 0.6); }
-    L(s, 0.11, 0.3, zf + 0.012, 0.11, 0.4, zf + 0.012, 0.95); L(s, 0.15, 0.3, zf + 0.012, 0.15, 0.4, zf + 0.012, 0.95);
-    box(s, -0.36, 0.16, zf, -0.12, 0.3, zf + 0.01, 0.55); box(s, -0.33, 0.18, zf + 0.01, -0.22, 0.26, zf + 0.012, 0.45);
-    for (i = 0; i < 4; i++) L(s, -0.19, 0.19 + i * 0.022, zf + 0.012, -0.15, 0.19 + i * 0.022, zf + 0.012, 0.5);
-    // roof radiator with two fans that turn
-    box(s, -0.26, -0.1, -0.18, 0.28, y0, 0.18, 0.8);
-    for (x = -0.24; x < 0.27; x += 0.025) L(s, x, -0.09, 0.18, x, y0 - 0.005, 0.18, 0.28);
-    for (i = 0; i < 2; i++) { var fx = -0.12 + i * 0.27; ring(s, fx, -0.1, 0, 0.11, 'y', 16, 0.85); ring(s, fx, -0.1, 0, 0.025, 'y', 6, 0.7);
-      for (var bb = 0; bb < 5; bb++) { var an = T * 5 + bb * 1.2566 + i; L(s, fx, -0.1, 0, fx + Math.cos(an) * 0.1, -0.1, Math.sin(an) * 0.1, 0.65); } }
-    // silencers and stacks with rain caps that flap
-    var st = [[-0.72, -0.4, -0.06], [-0.48, -0.34, 0.07]];
-    for (i = 0; i < 2; i++) {
-      var sx = st[i][0], top = st[i][1], sz = st[i][2], fl = 0.35 + 0.2 * Math.sin(T * 9 + i * 2);
-      vcyl(s, sx, sz, 0.06, -0.2, y0, 12, 0.75, 1); dome(s, sx, -0.2, sz, 0.06, -1, 0.6);
-      vcyl(s, sx, sz, 0.02, top, -0.23, 8, 1);
-      L(s, sx - 0.02, top, sz, sx - 0.02 + Math.cos(fl) * 0.05, top - Math.sin(fl) * 0.05, sz, 0.8);
-      L(s, sx - 0.02, top, sz - 0.02, sx - 0.02 + Math.cos(fl) * 0.05, top - Math.sin(fl) * 0.05, sz - 0.02, 0.5);
-    }
-    // gas train coming in from the left: pipe, valves and a meter
-    xcyl(s, -1.12, x0, G - 0.1, 0.12, 0.014, 6, 0.75);
-    for (i = 0; i < 2; i++) { var vx = -1.06 + i * 0.07; L(s, vx, G - 0.1, 0.12, vx, G - 0.15, 0.12, 0.6); wheel(s, vx, G - 0.155, 0.12, 0.022, 'y', 0.85); }
-    box(s, -1.09, G - 0.06, 0.06, -1.0, G, 0.18, 0.5);
-    // transformer with cooling fins and bushings
-    var t0 = 0.47, t1 = 0.7, tz = 0.12;
-    box(s, t0, G - 0.27, -tz, t1, G, tz, 0.9);
-    for (x = t0 + 0.02; x < t1 - 0.01; x += 0.025) L(s, x, G - 0.2, tz, x, G - 0.03, tz, 0.3);
-    for (z = -tz + 0.02; z < tz; z += 0.03) { L(s, t1, G - 0.22, z, t1 + 0.04, G - 0.22, z, 0.4); L(s, t1 + 0.04, G - 0.22, z, t1 + 0.04, G - 0.04, z, 0.4); L(s, t1, G - 0.04, z, t1 + 0.04, G - 0.04, z, 0.4); }
-    for (i = 0; i < 3; i++) { var bx2 = 0.52 + i * 0.065; vcyl(s, bx2, 0, 0.01, G - 0.34, G - 0.27, 6, 0.8);
-      for (var sh = 0; sh < 3; sh++) ring(s, bx2, G - 0.32 + sh * 0.02, 0, 0.02, 'y', 6, 0.7); }
-    box(s, t0 + 0.02, G - 0.24, tz, t0 + 0.08, G - 0.18, tz + 0.01, 0.6);
-    // utility pole with two crossarms, insulators, braces and a riser
-    var pl = 0.95, pz = -0.1;
-    for (i = 0; i < 4; i++) { var pa = i * 1.5708 + 0.785; L(s, pl + Math.cos(pa) * 0.022, G, pz + Math.sin(pa) * 0.022, pl + Math.cos(pa) * 0.012, -0.62, pz + Math.sin(pa) * 0.012, 0.85); }
-    for (i = 0; i < 6; i++) ring(s, pl, G - i * 0.24, pz, 0.02 - i * 0.0015, 'y', 6, 0.35);
-    box(s, 0.76, -0.535, pz - 0.015, 1.14, -0.51, pz + 0.015, 0.9); box(s, 0.8, -0.415, pz - 0.015, 1.1, -0.39, pz + 0.015, 0.7);
-    L(s, 0.85, -0.51, pz, pl, -0.44, pz, 0.4); L(s, 1.05, -0.51, pz, pl, -0.44, pz, 0.4);
-    var ins = [0.79, 0.95, 1.1];
-    for (i = 0; i < 3; i++) { vcyl(s, ins[i], pz, 0.008, -0.575, -0.535, 5, 0.9); ring(s, ins[i], -0.55, pz, 0.016, 'y', 6, 0.7); ring(s, ins[i], -0.565, pz, 0.016, 'y', 6, 0.7); }
-    L(s, pl + 0.035, G, pz + 0.02, pl + 0.035, -0.38, pz + 0.02, 0.45);
-    L(s, t1, G - 0.05, 0, pl + 0.035, G - 0.05, pz + 0.02, 0.35);
-    return s;
-  }
-
-  // 3. A data hall seen straight down the cold aisle. Cabinets stand in rows with gaps between them;
-  // every cabinet holds servers with handles, drive bays and two status lights, a patch panel on top
-  // and cables dropping in from the ladder above. Old depth convention: z runs 2 (near) to 11 (far).
-  function H(s, x1, y1, z1, x2, y2, z2, b) { s.push([x1, y1, -z1, x2, y2, -z2, b]); }
-  var SRV = 11, SY0 = -0.66, SH = 0.145; // servers per cabinet, first server top, server height
-  var HALL = (function () {
-    var s = [], z, k, j, y, r, b;
-    for (k = -1; k <= 1; k += 2) {
-      var X = 0.9 * k, N2 = X + 0.6 * k;
-      H(s, X, -0.85, 2, X, -0.85, 11, 1); H(s, X, 1, 2, X, 1, 11, 1); H(s, X, 0.95, 2, X, 0.95, 11, 0.5);
-      for (r = 2; r < 11; r++) {
-        var near = r < 5, mid = r < 7, z0 = r + 0.04, z1 = r + 0.96;
-        // the cabinet: its own frame, a gap to the next one, a top cap and a vented door edge
-        H(s, X, -0.85, z0, X, 1, z0, 0.9); H(s, X, -0.85, z1, X, 1, z1, 0.9);
-        H(s, X, -0.85, z0, X + 0.08 * k, -0.85, z0, 0.6); H(s, X, -0.85, z1, X + 0.08 * k, -0.85, z1, 0.6);
-        H(s, X, -0.85, z0, X, -0.85, z1, 1); H(s, X, -0.8, z0, X, -0.8, z1, 0.5);
-        // patch panel with ports
-        H(s, X, -0.77, z0 + 0.04, X, -0.77, z1 - 0.04, 0.6); H(s, X, -0.7, z0 + 0.04, X, -0.7, z1 - 0.04, 0.6);
-        if (near) for (j = 0; j < 12; j++) { var pz = z0 + 0.08 + j * 0.065; H(s, X, -0.755, pz, X, -0.715, pz, 0.35); }
-        // servers
-        for (j = 0; j < SRV; j++) {
-          y = SY0 + j * SH; b = near ? 1 : 0.7;
-          if (!mid) { H(s, X, y, z0 + 0.03, X, y, z1 - 0.03, 0.4); continue; }
-          H(s, X, y, z0 + 0.03, X, y, z1 - 0.03, 0.55 * b);
-          H(s, X, y + SH - 0.012, z0 + 0.03, X, y + SH - 0.012, z1 - 0.03, 0.3 * b);
-          H(s, X, y + 0.015, z0 + 0.05, X, y + SH - 0.027, z0 + 0.05, 0.7 * b); // handles
-          H(s, X, y + 0.015, z1 - 0.05, X, y + SH - 0.027, z1 - 0.05, 0.7 * b);
-          if (near) for (var d = 0; d < 8; d++) { var dz = z0 + 0.2 + d * 0.085; H(s, X, y + 0.03, dz, X, y + SH - 0.04, dz, 0.22); } // drive bays
-        }
-        // cables from the ladder into the cabinet top
-        H(s, X - 0.08 * k, -1.12, r + 0.3, X - 0.02 * k, -0.85, r + 0.32, 0.4); H(s, X - 0.1 * k, -1.12, r + 0.6, X - 0.03 * k, -0.85, r + 0.62, 0.4);
+  /* ---------- helpers ---------- */
+  var seed = 11;
+  function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function c01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function sstep(a, b, v) { var t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+  function smooth(t) { t = c01(t); return t * t * (3 - 2 * t); }
+  function smoother(t) { t = c01(t); return t * t * t * (t * (t * 6 - 15) + 10); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function P(x, y) { return { x: x, y: y }; }
+  function catmull(pts, per) {
+    var out = [];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
+      for (var j = 0; j < per; j++) {
+        var t = j / per, t2 = t * t, t3 = t2 * t;
+        out.push(P(
+          0.5 * (2 * p1.x + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+          0.5 * (2 * p1.y + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
+        ));
       }
-      // end panels of the rows, nearest the viewer, with a row label
-      H(s, X, -0.85, 2, N2, -0.85, 2, 0.9); H(s, X, 1, 2, N2, 1, 2, 0.9); H(s, N2, -0.85, 2, N2, 1, 2, 0.7);
-      for (j = 1; j < 6; j++) H(s, X + 0.1 * j * k, -0.8, 2, X + 0.1 * j * k, 0.95, 2, 0.2);
-      H(s, X + 0.15 * k, -0.6, 2, X + 0.45 * k, -0.6, 2, 0.8); H(s, X + 0.15 * k, -0.45, 2, X + 0.45 * k, -0.45, 2, 0.8);
-      H(s, X + 0.15 * k, -0.6, 2, X + 0.15 * k, -0.45, 2, 0.8); H(s, X + 0.45 * k, -0.6, 2, X + 0.45 * k, -0.45, 2, 0.8);
-      // containment and cable ladder
-      H(s, X, -0.85, 2, X, -1.3, 2, 0.5); H(s, X, -1.3, 2, X, -1.3, 11, 0.45);
-      H(s, X - 0.12 * k, -1.12, 2, X - 0.12 * k, -1.12, 11, 0.5); H(s, X + 0.12 * k, -1.12, 2, X + 0.12 * k, -1.12, 11, 0.4);
-      for (z = 2.1; z < 11; z += 0.25) H(s, X - 0.12 * k, -1.12, z, X + 0.12 * k, -1.12, z, 0.25);
     }
-    for (z = 2; z <= 11; z++) {
-      H(s, -0.9, 1, z, 0.9, 1, z, 0.28); H(s, -0.9, -1.3, z, 0.9, -1.3, z, 0.22);
-      if (z < 11 && z % 2 === 0) for (j = -2; j < 2; j++) for (var dd = 0.08; dd < 0.3; dd += 0.075) H(s, j * 0.3 + dd, 1, z + 0.15, j * 0.3 + dd, 1, z + 0.85, 0.12);
+    out.push(pts[pts.length - 1]);
+    return out;
+  }
+  function spline(arr, per) { var pts = []; for (var i = 0; i < arr.length; i += 2) pts.push(P(arr[i], arr[i + 1])); return catmull(pts, per || 24); }
+  function polyLen(poly) { var L = [0]; for (var i = 1; i < poly.length; i++) L.push(L[i - 1] + Math.hypot(poly[i].x - poly[i - 1].x, poly[i].y - poly[i - 1].y)); return L; }
+  function pointAt(poly, L, t) {
+    var d = clamp(t, 0, 1) * L[L.length - 1], i = 1;
+    while (i < L.length - 1 && L[i] < d) i++;
+    var seg = L[i] - L[i - 1] || 1, u = (d - L[i - 1]) / seg;
+    return P(lerp(poly[i - 1].x, poly[i].x, u), lerp(poly[i - 1].y, poly[i].y, u));
+  }
+  function dirAt(poly, L, t) { var a = pointAt(poly, L, t - 0.003), b = pointAt(poly, L, t + 0.003), l = Math.hypot(b.x - a.x, b.y - a.y) || 1; return P((b.x - a.x) / l, (b.y - a.y) / l); }
+  function feature(poly) { return { p: poly, L: polyLen(poly) }; }
+  function mapPoly(poly, A, S) { return poly.map(function (p) { return P(500 + (p.x - A.x) * S, 500 + (p.y - A.y) * S); }); }
+  function yAt(poly, x) {
+    for (var i = 1; i < poly.length; i++) if ((poly[i].x - x) * (poly[i - 1].x - x) <= 0) {
+      var u = (x - poly[i - 1].x) / ((poly[i].x - poly[i - 1].x) || 1);
+      return lerp(poly[i - 1].y, poly[i].y, u);
     }
-    for (j = -2; j <= 2; j++) H(s, j * 0.3, 1, 2, j * 0.3, 1, 11, 0.22);
-    H(s, -0.45, -1.3, 2, -0.45, -1.3, 11, 0.2); H(s, 0.45, -1.3, 2, 0.45, -1.3, 11, 0.2);
-    for (z = 2.3; z < 11; z += 1) {
-      H(s, -0.06, -1.24, z, -0.06, -1.24, z + 0.45, 1); H(s, 0.06, -1.24, z, 0.06, -1.24, z + 0.45, 1);
-      H(s, -0.06, -1.24, z, 0.06, -1.24, z, 0.6); H(s, -0.06, -1.24, z + 0.45, 0.06, -1.24, z + 0.45, 0.6);
+    return poly[poly.length - 1].y;
+  }
+
+  /* =====================================================================
+     THE MAP (level 0, from the map preview). The site plan sits inside it at A1, 10x closer.
+     ===================================================================== */
+  var A1 = P(560, 480), S1 = 10;
+  var hills = [];
+  for (var h0 = 0; h0 < 18; h0++) hills.push({ x: -600 + rnd() * 2200, y: -600 + rnd() * 2200, s: 70 + rnd() * 260, a: (rnd() < 0.35 ? -0.6 : 1) * (0.25 + rnd() * 0.7) });
+  function field(x, y) {
+    var v = 0.2 * Math.sin(x * 0.0042 + 1.3) * Math.cos(y * 0.0036 - 0.7) + 0.08 * Math.sin((x + y) * 0.0072) + 0.05 * Math.sin(x * 0.013 - y * 0.009);
+    for (var i = 0; i < hills.length; i++) { var g = hills[i], dx = x - g.x, dy = y - g.y; v += g.a * Math.exp(-(dx * dx + dy * dy) / (2 * g.s * g.s)); }
+    return v;
+  }
+  // Marching squares over a grid of field values; calls out(a, b, level) for every segment.
+  function march(vals, n, m, X, Y, th, out) {
+    for (var cj = 0; cj < m; cj++) for (var ci = 0; ci < n; ci++) {
+      var a = vals[cj * (n + 1) + ci], b = vals[cj * (n + 1) + ci + 1], c = vals[(cj + 1) * (n + 1) + ci + 1], d = vals[(cj + 1) * (n + 1) + ci];
+      var code = (a > th ? 8 : 0) | (b > th ? 4 : 0) | (c > th ? 2 : 0) | (d > th ? 1 : 0);
+      if (code === 0 || code === 15) continue;
+      var x0 = X(ci), x1 = X(ci + 1), y0 = Y(cj), y1 = Y(cj + 1);
+      var top = P(lerp(x0, x1, (th - a) / (b - a)), y0), right = P(x1, lerp(y0, y1, (th - b) / (c - b)));
+      var bottom = P(lerp(x0, x1, (th - d) / (c - d)), y1), left = P(x0, lerp(y0, y1, (th - a) / (d - a)));
+      var segs;
+      switch (code) {
+        case 1: case 14: segs = [left, bottom]; break;
+        case 2: case 13: segs = [bottom, right]; break;
+        case 3: case 12: segs = [left, right]; break;
+        case 4: case 11: segs = [top, right]; break;
+        case 5: segs = [left, top, bottom, right]; break;
+        case 6: case 9: segs = [top, bottom]; break;
+        case 7: case 8: segs = [left, top]; break;
+        case 10: segs = [left, bottom, top, right]; break;
+      }
+      for (var s = 0; s < segs.length; s += 2) out(segs[s], segs[s + 1]);
     }
-    H(s, -0.9, -1.3, 11.5, 0.9, -1.3, 11.5, 0.4); H(s, -0.9, 1, 11.5, 0.9, 1, 11.5, 0.4);
-    H(s, -0.25, -0.5, 11.5, 0.25, -0.5, 11.5, 0.6); H(s, -0.25, -0.5, 11.5, -0.25, 1, 11.5, 0.6); H(s, 0.25, -0.5, 11.5, 0.25, 1, 11.5, 0.6);
-    H(s, 0, -0.5, 11.5, 0, 1, 11.5, 0.35); H(s, -0.12, -0.68, 11.5, 0.12, -0.68, 11.5, 0.8);
-    return s;
+  }
+  var contours = [], fLo = 1e9, fHi = -1e9;
+  (function buildContours() {
+    var x0 = -900, y0 = -900, step = 14, n = 208, vals = new Float32Array((n + 1) * (n + 1));
+    for (var j = 0; j <= n; j++) for (var i = 0; i <= n; i++) {
+      var v = field(x0 + i * step, y0 + j * step); vals[j * (n + 1) + i] = v; if (v < fLo) fLo = v; if (v > fHi) fHi = v;
+    }
+    for (var l = 1; l < 30; l++) {
+      var p = new Path2D();
+      march(vals, n, n, function (i) { return x0 + i * step; }, function (j) { return y0 + j * step; }, fLo + (fHi - fLo) * l / 30,
+        function (a, b) { p.moveTo(a.x, a.y); p.lineTo(b.x, b.y); });
+      contours.push({ path: p, major: l % 5 === 0 });
+    }
+  })();
+  var grid = new Path2D(), gridTicks = new Path2D();
+  for (var g0 = -1000; g0 <= 2000; g0 += 125) {
+    grid.moveTo(g0, -1000); grid.lineTo(g0, 2000); grid.moveTo(-1000, g0); grid.lineTo(2000, g0);
+    for (var tk = -1000; tk <= 2000; tk += 25) {
+      var big = tk % 125 === 0 ? 7 : 3;
+      gridTicks.moveTo(g0 - big, tk); gridTicks.lineTo(g0 + big, tk); gridTicks.moveTo(tk, g0 - big); gridTicks.lineTo(tk, g0 + big);
+    }
+  }
+  var pipeMain = feature(spline([-800, 700, -300, 615, 140, 560, 360, 500, 560, 452, 790, 425, 1020, 330, 1320, 300, 1900, 170], 60));
+  var pipeB = feature(spline([-800, 120, -250, 200, 150, 250, 420, 360, 540, 450], 50));
+  var pipeC = feature(spline([600, 1900, 760, 1300, 860, 950, 930, 640, 1020, 330], 50));
+  var pipes = [pipeMain, pipeB, pipeC];
+  var river = feature(spline([-800, 920, -420, 830, -120, 900, 140, 770, 330, 800, 470, 690, 700, 730, 900, 640, 1100, 720, 1400, 610, 1900, 660], 30));
+  var creeks = [
+    feature(spline([330, 800, 290, 980, 380, 1180, 300, 1500], 24)), feature(spline([700, 730, 770, 900, 700, 1100, 760, 1400], 24)),
+    feature(spline([-120, 900, -160, 660, -60, 470, -140, 260], 24)), feature(spline([1100, 720, 1180, 860, 1130, 1050], 24))
+  ];
+  var roads0 = [
+    feature(spline([-800, 400, -250, 470, 200, 520, 520, 545, 820, 570, 1200, 520, 1900, 560], 30)),
+    feature(spline([260, -800, 220, -100, 300, 250, 230, 520, 260, 900, 180, 1700], 30)),
+    feature(spline([1500, -600, 1250, 0, 1150, 400, 1240, 800, 1200, 1700], 30))
+  ];
+  var track0 = feature(spline([880, -600, 870, 100, 980, 320, 1010, 520, 1100, 720], 20));
+  var rail = feature(spline([-800, -40, -100, 40, 500, 110, 1000, 190, 1900, 260], 40));
+  var railTies = new Path2D();
+  for (var rt = 0; rt <= 1; rt += 7 / rail.L[rail.L.length - 1]) {
+    var rp = pointAt(rail.p, rail.L, rt), rd = dirAt(rail.p, rail.L, rt);
+    railTies.moveTo(rp.x - rd.y * 4, rp.y + rd.x * 4); railTies.lineTo(rp.x + rd.y * 4, rp.y - rd.x * 4);
+  }
+  var valves0 = [];
+  pipes.forEach(function (f, fi) {
+    [0.18, 0.37, 0.62, 0.83].forEach(function (t) {
+      var p = pointAt(f.p, f.L, t + fi * 0.03);
+      if (Math.hypot(p.x - A1.x, p.y - A1.y) > 90) valves0.push({ p: p, d: dirAt(f.p, f.L, t + fi * 0.03) });
+    });
+  });
+  var wells = [];
+  (function placeWells() {
+    var tries = 0;
+    while (wells.length < 38 && tries++ < 600) {
+      var w = P(-350 + rnd() * 1700, -350 + rnd() * 1700);
+      if (Math.hypot(w.x - A1.x, w.y - A1.y) < 80) continue;
+      if (wells.some(function (o) { return Math.hypot(o.x - w.x, o.y - w.y) < 40; })) continue;
+      var best = null, bd = 1e9;
+      pipes.forEach(function (f) { f.p.forEach(function (q) { var d = Math.hypot(q.x - w.x, q.y - w.y); if (d < bd) { bd = d; best = q; } }); });
+      w.kind = rnd() < 0.18 ? 2 : rnd() < 0.4 ? 1 : 0;
+      if (bd < 140 && w.kind !== 2) { w.lx = best.x; w.ly = best.y; }
+      wells.push(w);
+    }
   })();
 
-  function len3(l, i) { var g = l[i]; return Math.hypot(g[3] - g[0], g[4] - g[1], g[5] - g[2]) || 0.001; }
-  function lenH(l, i) { var g = l[i], z1 = -g[2], z2 = -g[5]; return Math.hypot(g[3] / z2 - g[0] / z1, g[4] / z2 - g[1] / z1) * 1.5 + 0.001; } // on-screen length
-  function picker(list, len) {
-    var acc = [], tot = 0;
-    for (var i = 0; i < list.length; i++) { tot += len(list, i); acc.push(tot); }
-    return function () { var r = rnd() * tot, i = 0; while (acc[i] < r) i++; return i; };
+  /* ---------- map drawing (level units, line widths in screen px) ---------- */
+  var K = 1, W = 0, H = 0, dpr = 1, phone = false, U = 1;
+  function setT(t) { K = t.k; ctx.setTransform(t.k * dpr, 0, 0, t.k * dpr, t.ox * dpr, t.oy * dpr); }
+  function lw(px) { ctx.lineWidth = px / K; }
+  function ink(a) { a = Math.min(1, a * LKA); ctx.strokeStyle = "rgba(" + INKC + "," + a + ")"; ctx.fillStyle = "rgba(" + INKC + "," + a + ")"; }
+  function glow(b, a) { ctx.shadowColor = "rgba(" + INKC + "," + ((a == null ? 0.8 : a) * GLK) + ")"; ctx.shadowBlur = b * dpr; }
+  function noGlow() { ctx.shadowBlur = 0; ctx.shadowColor = "transparent"; }
+  function dash(on, off) { ctx.setLineDash(on ? [on / K, off / K] : []); }
+  function circle(x, y, r, fill) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); fill ? ctx.fill() : ctx.stroke(); }
+  function dot(x, y, px) { circle(x, y, px / K, true); }
+  function line(pts) { ctx.beginPath(); ctx.moveTo(pts[0], pts[1]); for (var i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]); ctx.stroke(); }
+  function poly2(p, upto) {
+    var n = upto == null ? p.length : Math.max(2, Math.floor(upto));
+    ctx.beginPath(); ctx.moveTo(p[0].x, p[0].y);
+    for (var i = 1; i < n && i < p.length; i++) ctx.lineTo(p[i].x, p[i].y);
+    ctx.stroke();
   }
-  var ES = energySegs(0), WS = powerSegs(0);
-  var pickE = picker(ES, len3), pickW = picker(WS, len3), pickH = picker(HALL, lenH);
-  function onSeg(list, i, u, c) {
-    var g = list[i]; proj(c, g[0] + (g[3] - g[0]) * u, g[1] + (g[4] - g[1]) * u, g[2] + (g[5] - g[2]) * u);
-    if (o.z) o.a = 0.45 + 0.55 * g[6];
+  function bowtie(x, y, dx, dy, s) {
+    var nx = -dy, ny = dx;
+    ctx.beginPath();
+    ctx.moveTo(x - dx * s + nx * s, y - dy * s + ny * s); ctx.lineTo(x + dx * s - nx * s, y + dy * s - ny * s);
+    ctx.lineTo(x + dx * s + nx * s, y + dy * s + ny * s); ctx.lineTo(x - dx * s - nx * s, y - dy * s - ny * s); ctx.closePath();
+    ctx.fillStyle = BG; ctx.fill(); ctx.stroke();
   }
-  function hallLed(p) { // two status lights on the left of each server; nearer cabinets get more
-    var k = p.r1 < 0.5 ? -1 : 1, r = 2 + Math.floor(Math.pow(p.r2, 1.6) * 9), j = Math.floor(p.r3 * SRV);
-    p.lx = 0.9 * k; p.ly = SY0 + j * SH + SH * 0.45; p.lz = -(r + 0.04 + 0.1 + (p.ph < 0.5 ? 0 : 0.035));
+  function road2(p, unitsWide, a) {
+    ink(a); ctx.lineWidth = unitsWide; poly2(p);
+    ctx.strokeStyle = BG; ctx.lineWidth = Math.max(unitsWide - 2.2 / K, unitsWide * 0.5); poly2(p);
   }
-
-  // 4. The Accretion black hole, as in the hero: three turning rings, a breathing core with a cross
-  // flare, horizon lines bent by a point-mass lens, and a lensed disk turning around it
-  var RINGS = [[0, -0.027, 0.55, 26, 1], [0.023, 0.015, 1, 34, -1], [-0.023, 0.015, 0.55, 30, 1]];
-  function lensR(x, y, E) { var b = Math.hypot(x, y) || 0.001, k = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b; return [x * k, y * k]; }
-  function hole(p) {
-    var S = BHS, E = 0.44 * S, q = p.r3, pt, rr, ang;
-    if (q < 0.32) { // three rings, thick and glowing like the hero's, with a sheen that turns
-      var g = RINGS[q < 0.09 ? 0 : q < 0.21 ? 1 : 2], th = (p.r1 - 0.5) * (p.r2 < 0.6 ? 0.012 : 0.07);
-      ang = p.ph * 6.2832 + g[4] * T * 6.2832 / g[3];
-      o.x = (g[0] + Math.cos(ang) * (0.385 + th)) * S; o.y = (g[1] + Math.sin(ang) * (0.385 + th)) * S;
-      o.a = g[2] * (p.r2 < 0.6 ? 1.3 : 0.4) * (0.6 + 0.4 * (0.5 + 0.5 * Math.cos(Math.atan2(o.y, o.x) + 2.36 - T * 0.449)));
-    } else if (q < 0.37) {
-      var br = 0.5 + 0.5 * Math.sin(T * 1.142);
-      rr = Math.pow(p.r1, 2) * 0.07 * S * (1 + 0.5 * br); ang = p.ph * 6.2832;
-      o.x = Math.cos(ang) * rr; o.y = Math.sin(ang) * rr; o.a = 0.75 + 0.25 * br;
-    } else if (q < 0.41) {
-      var u = p.r2 * 2 - 1;
-      if (p.r1 < 0.65) { o.x = u * 0.27 * S; o.y = 0; o.a = Math.pow(1 - Math.abs(u), 1.5) * 0.95; }
-      else { o.x = 0; o.y = u * 0.115 * S; o.a = Math.pow(1 - Math.abs(u), 1.5) * 0.85; }
-    } else {
-      // The disk, seen almost edge-on on the hero's three horizon lines. Each particle orbits, so the
-      // near side sweeps one way and the far side the other; the lens bends the inner orbits around
-      // the ring exactly as the hero's lines bend.
-      var lane = p.r2 < 0.55 ? 0 : (p.r2 < 0.775 ? -0.1 : 0.1), Lr = BHL / S;
-      rr = 0.62 + Math.pow(p.r1, 1.25) * (Lr - 0.62); ang = p.ph * 6.2832 - T * 0.5 / Math.pow(rr, 1.5);
-      var dx = Math.cos(ang) * rr, ax = Math.abs(dx) / Lr;
-      pt = lensR(dx * S, (Math.sin(ang) * rr * 0.012 + lane) * S, E);
-      o.x = pt[0]; o.y = pt[1];
-      o.a = (lane === 0 ? 1 : 0.5) * (ax < 0.4 ? 1 - ax / 0.4 * 0.6 : 0.4 * (1 - (ax - 0.4) / 0.6)) * (0.75 + 0.25 * Math.cos(ang));
-    }
-  }
-
-  var SCN = [
-    function (p) { // flame on the flare tip
-      if (p.sub) {
-        proj(CAM[0], 0.7, -0.5, -0.05); var bx = o.x, by = o.y, l = (T * 0.55 * (0.7 + p.r3 * 0.6) + p.ph) % 1;
-        o.x = bx + (p.r1 - 0.5) * 0.08 * (1 - l * 0.6) + Math.sin(l * 7 + p.ph * 20 + T * 2.2) * 0.03 * l;
-        o.y = by - l * 0.5 * (0.7 + p.r2 * 0.6); o.a = Math.pow(1 - l, 0.8); o.z = 1;
-      } else onSeg(ES, p.i, p.u, CAM[0]);
-    },
-    function (p) { // exhaust rising from the stacks
-      if (p.sub) {
-        var k = p.r3 < 0.5, l = (T * 0.15 + p.ph) % 1;
-        proj(CAM[1], k ? -0.72 : -0.48, k ? -0.4 : -0.34, k ? -0.06 : 0.07);
-        o.x += Math.sin(l * 5 + p.ph * 10) * 0.04 * (0.3 + l) + l * 0.18; o.y -= l * 0.45; o.a = (1 - l) * 0.4; o.z = 1;
-      } else onSeg(WS, p.i, p.u, CAM[1]);
-    },
-    function (p) { // the hall; status lights blink, activity lights flicker faster
-      if (p.led) {
-        proj(CAM[2], p.lx, p.ly, p.lz);
-        if (o.z) o.a = Math.sin(T * (1 + p.d * 3) * (p.ph < 0.5 ? 1 : 4) + p.c * 30) > -0.2 ? 1.1 : 0.15;
-      } else onSeg(HALL, p.i, p.u, CAM[2]);
-    },
-    hole
-  ];
-
-  // ---------- The stream: one route through every scene, in world units ----------
-  var RT = [];
-  function buildRoute() {
-    var r = [], i, S = BHS, E = 0.44 * S;
-    function add(x1, y1, x2, y2, vv) { r.push([x1, y1, x2, y2, vv]); }
-    function W(k, p) { if (p.length === 3) { proj(CAM[k], p[0], p[1], p[2]); return [POS[k][0] + o.x, POS[k][1] + o.y]; } return [POS[k][0] + p[0], POS[k][1] + p[1]]; }
-    function poly(k, pts, vv) { for (var j = 0; j < pts.length - 1; j++) { var a = W(k, pts[j]), b = W(k, pts[j + 1]); add(a[0], a[1], b[0], b[1], vv == null ? 1 : vv * (1 - j / pts.length)); } }
-    function jump(k, a, b) { var p = W(k, a), q = W(k, b); add(p[0], p[1], q[0], q[1], 0); }
-    function qb(a, m, b, t) { var n = 1 - t; return n * n * a + 2 * n * t * m + t * t * b; }
-    function link(k, ex, en) {
-      var a = W(k, ex), b = W(k + 1, en), j;
-      if (Math.abs(POS[k + 1][1] - POS[k][1]) < 0.01) {
-        var my = Math.max(a[1], b[1]) + (Math.abs(a[1] - b[1]) < 0.05 ? 0 : 0.2), mx = (a[0] + b[0]) / 2;
-        for (j = 0; j < 14; j++) add(qb(a[0], mx, b[0], j / 14), qb(a[1], my, b[1], j / 14), qb(a[0], mx, b[0], (j + 1) / 14), qb(a[1], my, b[1], (j + 1) / 14), 1);
-      } else {
-        var gy = POS[k][1] + 0.8, sx = POS[k][0] + 1.3, tx = POS[k + 1][0] - 1.3;
-        var pts = [a, [sx, a[1]], [sx, gy], [tx, gy], [tx, b[1]], b];
-        for (j = 0; j < pts.length - 1; j++) add(pts[j][0], pts[j][1], pts[j + 1][0], pts[j + 1][1], 1);
-      }
-    }
-    var cab = [[0.65, G - 0.34, 0], [0.985, G - 0.05, -0.08], [0.985, -0.38, -0.08], [1.1, -0.575, -0.1], [1.3, -0.6, -0.1]];
-    poly(0, [[0.08, G - 0.17, 0], [0.25, G - 0.17, 0]]);
-    jump(0, [0.25, G - 0.17, 0], [0.31, G - 0.04, 0.02]);
-    poly(0, [[0.31, G - 0.04, 0.02], [0.31, G, 0.02], [1.15, G, 0.02]]);
-    link(0, [1.15, G, 0.02], [-1.12, G - 0.1, 0.12]);
-    poly(1, [[-1.12, G - 0.1, 0.12], [-0.95, G - 0.1, 0.12]]);
-    jump(1, [-0.95, G - 0.1, 0.12], [0.35, 0.4, 0]);
-    poly(1, [[0.35, 0.4, 0], [0.42, 0.4, 0], [0.42, G, 0], [0.47, G, 0]]);
-    jump(1, [0.47, G, 0], cab[0]);
-    poly(1, cab);
-    link(1, cab[4], [-1.0, -1.12, -2]);
-    poly(2, [[-1.0, -1.12, -2], [-0.9, -1.12, -2.3], [-0.9, -1.12, -10.8], [0.9, -1.12, -10.8], [0.9, -1.12, -2.3], [1.0, -1.12, -2]]);
-    link(2, [1.0, -1.12, -2], [-BHL, 0]);
-    poly(3, [[-BHL, 0], [-BHL * 0.75, 0]], 0.8); // the stream fades into the outer disk
-    var tot = 0;
-    r.forEach(function (g) { tot += Math.hypot(g[2] - g[0], g[3] - g[1]); g.push(tot); });
-    r.total = tot; RT = r;
-  }
-  function routeAt(d) {
-    d = ((d % RT.total) + RT.total) % RT.total;
-    var lo = 0, hi = RT.length - 1;
-    while (lo < hi) { var m = (lo + hi) >> 1; if (RT[m][5] < d) lo = m + 1; else hi = m; }
-    var g = RT[lo], l = Math.hypot(g[2] - g[0], g[3] - g[1]) || 1, u = 1 - (g[5] - d) / l;
-    o.x = g[0] + (g[2] - g[0]) * u; o.y = g[1] + (g[3] - g[1]) * u; o.a = g[4];
-  }
-
-  // ---------- Particles ----------
-  function kOf(r) { return r < 0.24 ? 0 : r < 0.46 ? 1 : r < 0.86 ? 2 : r < 0.991 ? 3 : 4; }
-  function build() {
-    N = innerWidth < 720 ? 12000 : 26000;
-    P = [];
-    for (var i = 0; i < N; i++) {
-      var k = kOf(rnd()), p = { k: k, r1: rnd(), r2: rnd(), r3: rnd(), ph: rnd(), d: rnd(), c: rnd() * 2 - 1, u: rnd(), sub: 0, i: 0,
-        s: k === 4 ? 1.2 + rnd() * 0.5 : k === 3 ? 1.1 + rnd() * 1.2 : 0.7 + rnd() * 0.8, sx: rnd(), sy: rnd() };
-      if (k === 0) { p.sub = rnd() < 0.2 ? 1 : 0; p.i = pickE(); }
-      if (k === 1) { p.sub = rnd() < 0.08 ? 1 : 0; p.i = pickW(); }
-      if (k === 2) { p.led = rnd() < 0.2; if (p.led) hallLed(p); else p.i = pickH(); }
-      P.push(p);
-    }
-    for (var b = 0, nb = innerWidth < 720 ? 700 : 1600; b < nb; b++) P.push({ k: 5, r3: rnd(), ph: rnd(), sx: rnd(), sy: rnd(), s: 0.8 + rnd() * 1.2 });
-    N = P.length;
-  }
-
-  function size() {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    w = canvas.clientWidth; h = canvas.clientHeight;
-    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    bl.width = Math.max(1, Math.round(w / 3)); bl.height = Math.max(1, Math.round(h / 3));
-    wide = w >= 900;
-    if (MODE === 'pan') {
-      POS = [[0, 0], [2.9, 0], [5.8, 0], [8.95, 0]]; BHS = 0.6; BHL = 1.5;
-      if (wide) { cx = w * 0.7; cy = h * 0.55; R = Math.min(w * 0.19, h * 0.3); }
-      else { cx = w * 0.5; cy = h * 0.66; R = Math.min(w * 0.4, h * 0.22); }
-    } else if (w >= 720) {
-      POS = [[0, 0], [2.6, 0], [5.2, 0], [8.0, 0]]; BHS = 0.5; BHL = 1.3;
-      var span = 8.0 + 1.35 + 1.15;
-      R = Math.min((w * 0.94) / span, h * 0.17);
-      cx = w / 2 - ((8.0 + 1.35 - 1.15) / 2) * R; cy = h * 0.67;
-    } else {
-      POS = [[0, 0], [0, 1.95], [0, 3.95], [0, 5.35]]; BHS = 0.45; BHL = 1.15;
-      var top = textEl.getBoundingClientRect().bottom + 16, avail = Math.max(h * 0.45, h - top - 16); top = Math.min(top, h * 0.55);
-      R = Math.min(w * 0.38, avail / 7.4); cx = w / 2; cy = top + 1.1 * R;
-    }
-    buildRoute();
-    var c = (getComputedStyle(sec).backgroundColor.split('(')[1] || '0,0,0)').split(')')[0].split(',');
-    bg = 'rgba(' + (+c[0]) + ',' + (+c[1]) + ',' + (+c[2]) + ',';
-    light = (+c[0] + +c[1] + +c[2]) / 3 > 128;
-    ctx.fillStyle = bg + '1)'; ctx.fillRect(0, 0, w, h);
-  }
-
-  function scatter(p) {
-    o.x = p.sx * w + Math.sin(T * 0.15 + p.ph * 6) * 16; o.y = p.sy * h + Math.cos(T * 0.12 + p.ph * 5) * 16;
-    o.a = 0.2 + 0.5 * p.r3 * (0.6 + 0.4 * Math.sin(T * 1.3 + p.ph * 40));
-  }
-
-  function draw() {
-    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
-    ctx.fillStyle = bg + '1)'; ctx.fillRect(0, 0, w, h);
-    var s = Math.min(3, Math.floor(vs)), f = vs - s, t = smooth((f - 0.2) / 0.6);
-    if (vs >= 4) { s = 3; t = 1; }
-    var gather = s === 0 ? t : 1, cam = Math.max(0, s - 1 + t);
-    if (MODE === 'pan') {
-      var c0 = Math.min(2, Math.floor(cam)), cf = cam - c0;
-      ox = cx - (POS[c0][0] + (POS[c0 + 1][0] - POS[c0][0]) * cf) * R; oy = cy;
-    } else { ox = cx; oy = cy; }
-    var wk = [1, 1, 1, 1];
-    if (MODE === 'all') {
-      var mix = smooth((vs - 0.75) / 0.5);
-      for (var q = 0; q < 4; q++) wk[q] = 1 - mix * 0.5 * (1 - smooth(1 - Math.abs(vs - (q + 1.1)) * 1.4));
-    }
-    var hx = ox + POS[3][0] * R, hy = oy + POS[3][1] * R, gs = MODE === 'pan' ? smooth((cam - 2.2) / 0.8) : 0.7 * wk[3] * gather;
-    if (gs > 0.01) {
-      var gr = ctx.createRadialGradient(hx, hy, 0, hx, hy, R * 1.2);
-      gr.addColorStop(0, (light ? 'rgba(0,0,0,' : 'rgba(255,255,255,') + (0.05 * gs).toFixed(3) + ')'); gr.addColorStop(1, light ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0)');
-      ctx.fillStyle = gr; ctx.fillRect(hx - R * 1.3, hy - R * 1.3, R * 2.6, R * 2.6);
-    }
-    ctx.globalCompositeOperation = light ? 'source-over' : 'lighter';
-    ctx.fillStyle = light ? '#000' : '#fff';
-    ES = energySegs(T); WS = powerSegs(T);
-    var tr = wide && MODE === 'pan' ? textEl.getBoundingClientRect().right : -1e9, fw = R * 0.6, am = light ? 0.85 : 1;
-    var sp = 0.5, flowing = gather >= 1;
-    for (var i = 0; i < N; i++) {
-      var p = P[i], k = p.k, x, y, a, edge = true, sz = p.s;
-      if (k >= 4) {
-        if (k === 4) {
-          if (!flowing) continue;
-          var d0 = T * sp + p.ph * RT.total;
-          for (var j = 1; j >= 0; j--) {
-            routeAt(d0 - j * 0.035);
-            if (!o.a) continue;
-            var tx = ox + o.x * R, ty = oy + o.y * R;
-            if (tx < -4 || tx > w + 4 || ty < -4 || ty > h + 4) continue;
-            var ta = (1 - j * 0.5) * 0.45;
-            if (tx < tr + fw) ta *= Math.max(0, (tx - tr) / fw);
-            if (ta < 0.02) continue;
-            ctx.globalAlpha = ta * am; ctx.fillRect(tx, ty, p.s, p.s);
-          }
-          continue;
-        }
-        scatter(p); x = o.x; y = o.y; a = o.a * 0.8; edge = false; // background dust, always drifting
-      } else {
-        SCN[k](p); x = ox + (POS[k][0] + o.x) * R; y = oy + (POS[k][1] + o.y) * R; a = o.a * wk[k];
-        if (k < 3) { if (!o.z) continue; sz *= Math.max(0.6, Math.min(1.4, o.z)); a *= Math.max(0.4, Math.min(1.15, Math.pow(o.z, 0.45))); }
-        if (gather < 1 && (MODE === 'all' || k === 0)) {
-          var gx = x, gy = y, ga = a, e = ease(Math.max(0, Math.min(1, (gather - p.d * 0.35) / 0.65)));
-          scatter(p);
-          var dx = gx - o.x, dy = gy - o.y, cu = Math.sin(Math.PI * e) * p.c * 0.3;
-          x = o.x + dx * e - dy * cu; y = o.y + dy * e + dx * cu; a = o.a + (ga - o.a) * e;
-          edge = e > 0.5;
-        } else if (gather < 1) continue;
-      }
-      if (x < -4 || x > w + 4 || y < -4 || y > h + 4) continue;
-      if (edge && x < tr + fw) a *= Math.max(0, (x - tr) / fw);
-      if (a < 0.02) continue;
-      ctx.globalAlpha = Math.min(1, a * 1.25) * am;
-      ctx.fillRect(x, y, sz, sz);
-    }
+  function drawMap(al, p) {
+    var draw = sstep(0.0, 0.035, p);
+    ctx.globalAlpha = al * (0.4 + 0.6 * sstep(0, 0.04, p));
+    ink(0.05); lw(0.8); ctx.stroke(grid);
+    ink(0.13); lw(0.8); ctx.stroke(gridTicks);
+    for (var i = 0; i < contours.length; i++) { ink(contours[i].major ? 0.26 : 0.1); lw(contours[i].major ? 1 : 0.7); ctx.stroke(contours[i].path); }
+    ink(0.5); lw(1.6); poly2(river.p);
+    ink(0.32); lw(0.9); creeks.forEach(function (c) { poly2(c.p); });
+    roads0.forEach(function (r) { road2(r.p, 4.5 / K, 0.42); });
+    ink(0.3); lw(0.9); dash(5, 4); poly2(track0.p); dash();
+    ink(0.45); lw(1); poly2(rail.p); ink(0.35); lw(0.8); ctx.stroke(railTies);
+    ctx.globalAlpha = al;
+    ink(0.62); lw(1); dash(10, 3); poly2(pipeB.p, pipeB.p.length * draw); poly2(pipeC.p, pipeC.p.length * draw); dash();
+    glow(10, 0.7); ink(0.92); lw(1.5); poly2(pipeMain.p, pipeMain.p.length * draw); noGlow();
+    ink(0.8); lw(0.9);
+    valves0.forEach(function (v) { bowtie(v.p.x, v.p.y, v.d.x, v.d.y, 4.5); });
+    wells.forEach(function (w, i) {
+      var a = sstep((i % 10) * 0.002, 0.02 + (i % 10) * 0.002, p);
+      if (a <= 0) return;
+      ctx.globalAlpha = al * a;
+      if (w.lx != null) { ink(0.35); lw(0.7); dash(2, 3); line([w.lx, w.ly, w.x, w.y]); dash(); }
+      ink(0.85); lw(1); circle(w.x, w.y, 4);
+      if (w.kind === 0) dot(w.x, w.y, 1.3);
+      else if (w.kind === 1) line([w.x - 7, w.y, w.x - 4, w.y, w.x + 4, w.y, w.x + 7, w.y, w.x, w.y - 7, w.x, w.y - 4, w.x, w.y + 4, w.x, w.y + 7]);
+      else line([w.x - 3, w.y + 3, w.x + 3, w.y - 3]);
+    });
+    // the chosen site: its parcel (exactly the plan's fence) and a glowing marker
+    var m = sstep(0.012, 0.035, p);
+    ctx.globalAlpha = al * m;
+    ink(0.45); lw(0.9); dash(3, 3); ctx.strokeRect(A1.x - 37, A1.y - 19, 74, 51); dash();
+    glow(18, 1); ink(1); lw(1.5); circle(A1.x, A1.y, 7); dot(A1.x, A1.y, 2.6); noGlow();
+    var ph = (p * 14) % 1;
+    ink(0.55 * (1 - ph)); lw(1); circle(A1.x, A1.y, 7 + ph * 18);
     ctx.globalAlpha = 1;
-    // Bloom: a blurred, scaled-down copy laid over the frame so the particles glow
-    if (!light) {
-      bctx.globalCompositeOperation = 'copy'; bctx.drawImage(canvas, 0, 0, bl.width, bl.height);
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.85; ctx.filter = 'blur(3px)';
-      ctx.drawImage(bl, 0, 0, w, h); ctx.restore();
+  }
+
+  /* =====================================================================
+     THE SITE IN 3D. World units: x right, z down the plan (south), y up.
+     Plan coordinates (the map preview's 0..1000 site plan) map to the ground as
+     x = (u - 500) / 400, z = (v - 530) / 400. The ground plate is x in [-1, 1], z in [-0.8, 0.8].
+     ===================================================================== */
+  var ZP = 0.8, G = 0.72, HOLE_LIFT = 0.12, SYM = 0.62;
+  function QX(u) { return (u - 500) / 400; }
+  function QZ(v) { return (v - 530) / 400; }
+  function Q(u, v, y) { return [QX(u), y || 0, QZ(v)]; }
+  function D(n) { return n / 400; }
+
+  var cam = { s: 1, ox: 0, oy: 0, sp: 1, cp: 0, sF: 0, cF: 1, mid: 0 };
+  var LT = { k: 1, ax: 0, az: 0, px: 0, pz: 0, Y: 0 };
+  function pj(x, y, z) {
+    var X = LT.ax + LT.k * (x - LT.px), Z = LT.az + LT.k * (z - LT.pz), Hh = LT.Y + LT.k * y;
+    var c = X * cam.cF - Z * cam.sF, d = X * cam.sF + Z * cam.cF;
+    return [cam.ox + c * cam.s, cam.oy - (Hh - cam.mid) * cam.s * cam.cp + d * cam.s * cam.sp];
+  }
+  function pl(pts, close) {
+    for (var i = 0; i < pts.length; i++) { var q = pj(pts[i][0], pts[i][1], pts[i][2]); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+    if (close) ctx.closePath();
+  }
+
+  // ---------- geometry helpers ----------
+  function ring(cx, cy, cz, r, n, plane) {
+    var out = [];
+    for (var i = 0; i <= n; i++) {
+      var a = i / n * Math.PI * 2, c = r * Math.cos(a), s = r * Math.sin(a);
+      out.push(plane === "xz" ? [cx + c, cy, cz + s] : plane === "zy" ? [cx, cy + s, cz + c] : [cx + c, cy + s, cz]);
+    }
+    return out;
+  }
+  function box(b, o) { o = o || {}; o.t = "box"; o.b = b; return o; }
+  function lines(ls, o) { o = o || {}; o.t = "lines"; o.lines = ls; return o; }
+  function cyl(x, z, r, y0, y1, o) { o = o || {}; o.t = "cyl"; o.c = [x, z]; o.r = r; o.y0 = y0; o.y1 = y1; return o; }
+  function offset(pts, w) {
+    var out = [];
+    for (var i = 0; i < pts.length; i++) {
+      var a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
+      var dx = b[0] - a[0], dz = b[2] - a[2], l = Math.hypot(dx, dz) || 1;
+      out.push([pts[i][0] - dz / l * w, pts[i][1], pts[i][2] + dx / l * w]);
+    }
+    return out;
+  }
+  function ladder(p0, p1, y, w, post) {
+    var ls = [], c = [[p0[0], y, p0[1]], [p1[0], y, p1[1]]];
+    var r1 = offset(c, w), r2 = offset(c, -w);
+    ls.push(r1, r2);
+    var L = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), n = Math.max(2, Math.round(L / (w * 3.4)));
+    for (var i = 0; i <= n; i++) {
+      var t = i / n, a = [lerp(r1[0][0], r1[1][0], t), y, lerp(r1[0][2], r1[1][2], t)], b = [lerp(r2[0][0], r2[1][0], t), y, lerp(r2[0][2], r2[1][2], t)];
+      ls.push([a, b]);
+      if (post && i % post === 0) { var m = [(a[0] + b[0]) / 2, 0, (a[2] + b[2]) / 2]; ls.push([[m[0], y, m[2]], m]); }
+    }
+    return ls;
+  }
+  function rectPts(u, v, w, h, y) { return [Q(u, v, y), Q(u + w, v, y), Q(u + w, v + h, y), Q(u, v + h, y)]; }
+  function boxQ(u0, v0, u1, v1, y0, y1, o) { return box([QX(u0), QX(u1), y0, y1, QZ(v0), QZ(v1)], o); }
+  // Apply a point map to a list of items (boxes are re-sorted per axis, radii scaled by kr).
+  function mapItems(list, f, kr) {
+    return list.map(function (o) {
+      if (o.b) {
+        var a = f([o.b[0], o.b[2], o.b[4]]), c = f([o.b[1], o.b[3], o.b[5]]);
+        o.b = [Math.min(a[0], c[0]), Math.max(a[0], c[0]), Math.min(a[1], c[1]), Math.max(a[1], c[1]), Math.min(a[2], c[2]), Math.max(a[2], c[2])];
+      }
+      if (o.c) { var q0 = f([o.c[0], o.y0, o.c[1]]), q1 = f([o.c[0], o.y1, o.c[1]]); o.c = [q0[0], q0[2]]; o.y0 = q0[1]; o.y1 = q1[1]; o.r *= kr; }
+      if (o.lines) o.lines = o.lines.map(function (l) { return l.map(f); });
+      if (o.extra) o.extra = o.extra.map(function (l) { return l.map(f); });
+      if (o.at) { var t = f([o.at[0], 0, o.at[1]]); o.at = [t[0], t[2]]; }
+      return o;
+    });
+  }
+  function fence(runs, hgt, gap) {
+    var ls = [];
+    runs.forEach(function (r) {
+      var a = Q(r[0], r[1]), b = Q(r[2], r[3]), L = Math.hypot(b[0] - a[0], b[2] - a[2]), n = Math.max(1, Math.round(L / gap));
+      ls.push([[a[0], hgt, a[2]], [b[0], hgt, b[2]]], [[a[0], hgt * 0.5, a[2]], [b[0], hgt * 0.5, b[2]]]);
+      for (var i = 0; i <= n; i++) { var x = lerp(a[0], b[0], i / n), z = lerp(a[2], b[2], i / n); ls.push([[x, 0, z], [x, hgt, z]]); }
+    });
+    return ls;
+  }
+  function bow(u, v, dx, dy, s) { // a flat valve symbol
+    var nx = -dy, ny = dx;
+    return [[Q(u - dx * s + nx * s, v - dy * s + ny * s), Q(u + dx * s - nx * s, v + dy * s - ny * s), Q(u + dx * s + nx * s, v + dy * s + ny * s), Q(u - dx * s - nx * s, v - dy * s - ny * s), Q(u - dx * s + nx * s, v - dy * s + ny * s)]];
+  }
+  function clipRuns(pl1) { // keep the parts of a plan polyline that lie on the plate
+    var runs = [], cur = [];
+    pl1.forEach(function (p) {
+      var x = QX(p.x), z = QZ(p.y);
+      if (Math.abs(x) <= 1 && Math.abs(z) <= ZP) cur.push([x, 0, z]);
+      else { if (cur.length > 1) runs.push(cur); cur = []; }
+    });
+    if (cur.length > 1) runs.push(cur);
+    return runs;
+  }
+
+  /* ---------- GROUND: the site plan itself (plan positions, unscaled) ---------- */
+  var pipe1 = mapPoly(pipeMain.p, A1, S1), pipeB1 = mapPoly(pipeB.p, A1, S1);
+  var salesY = yAt(pipe1, 480);
+  var gens = [340, 382, 424, 466, 508];
+  var gasPlan = [P(222, 412), P(222, 380), P(420, 380), P(420, 406), P(445, 420), P(470, 420), P(545, 420), P(545, 357), P(560, 357)];
+  var gasPath = feature(gasPlan), powerPath = feature([P(690, 357), P(690, 400), P(735, 400), P(755, 470), P(755, 620)]);
+
+  // Local contours: the map's own terrain around the site, four times finer (every fourth line is a map line).
+  var cMinor = [], cMid = [], cMajor = [];
+  (function localContours() {
+    var n = 160, m = 128, st = 2 / n, vals = new Float32Array((n + 1) * (m + 1)), lo = 1e9, hi = -1e9;
+    for (var j = 0; j <= m; j++) for (var i = 0; i <= n; i++) {
+      var v = field(A1.x + (-1 + i * st) * 40, A1.y + 3 + (-ZP + j * st) * 40); vals[j * (n + 1) + i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
+    }
+    var stepL = (fHi - fLo) / 120;
+    for (var l = Math.ceil((lo - fLo) / stepL); l <= Math.floor((hi - fLo) / stepL); l++) {
+      var bucket = l % 20 === 0 ? cMajor : l % 4 === 0 ? cMid : cMinor;
+      march(vals, n, m, function (i) { return -1 + i * st; }, function (j) { return -ZP + j * st; }, fLo + l * stepL, function (a, b) {
+        var mx = (a.x + b.x) / 2, mz = (a.y + b.y) / 2, u = 500 + mx * 400, v = 530 + mz * 400;
+        if (u > 118 && u < 882 && v > 278 && v < 812) return; // graded inside the fence
+        if (Math.abs(u - 475) < 24 && v > 790) return; // access road
+        bucket.push([[a.x, 0, a.y], [b.x, 0, b.y]]);
+      });
+    }
+  })();
+
+  function pumpjackOld() { // built along x in the stacked-layers units (wellhead at x 0.77), then mapped onto the plan
+    var k = [], zp = 0, z1 = zp - 0.035, z2 = zp + 0.035;
+    [z1, z2].forEach(function (z) { k.push([[0.42, 0.025, z], [0.5, 0.24, zp], [0.6, 0.025, z]]); });
+    var hh = [], hh2 = [];
+    for (var i = 0; i <= 10; i++) { var a = -0.9 + 1.8 * i / 10; hh.push([0.72 + 0.05 * Math.cos(a), 0.25 + 0.1 * Math.sin(a), zp - 0.014]); hh2.push([0.72 + 0.05 * Math.cos(a), 0.25 + 0.1 * Math.sin(a), zp + 0.014]); }
+    k.push(hh, hh2, [[0.77, 0.16, zp], [0.77, 0.07, zp]]);
+    k.push([[0.3, 0.12, z1 - 0.01], [0.3, 0.235, zp]], [[0.3, 0.12, z2 + 0.01], [0.3, 0.235, zp]]);
+    k.push(ring(0.3, 0.085, z2 + 0.012, 0.05, 24), ring(0.3, 0.085, z1 - 0.012, 0.05, 24));
+    return [
+      box([0.2, 0.84, 0, 0.025, zp - 0.07, zp + 0.07], { sx: 6, glow: true }),
+      box([0.24, 0.36, 0.025, 0.1, zp - 0.03, zp + 0.03], {}),
+      box([0.28, 0.73, 0.235, 0.262, zp - 0.014, zp + 0.014], { glow: true }),
+      lines(k, { at: [0.52, zp + 0.01], glow: true }),
+      box([0.74, 0.8, 0.025, 0.07, zp - 0.03, zp + 0.03], {})
+    ];
+  }
+  var PJ = 0.55;
+  var pumpjack = mapItems(pumpjackOld(), function (p) { return [QX(222 + (0.77 - p[0]) * 400 * PJ), p[1] * PJ, QZ(420) + p[2] * PJ]; }, PJ);
+
+  var FL = Q(345, 340), FH = 0.3;
+  var gnd = [
+    lines(cMinor, { flat: true, faint: true, a: 0.32 }),
+    lines(cMid, { flat: true, faint: true, a: 0.6 }),
+    lines(cMajor, { flat: true, faint: true }),
+    lines(clipRuns(pipeB1), { flat: true, dash: true, a: 0.75 }),
+    lines(clipRuns(pipe1), { flat: true, glow: true }),
+    // access road and the inner road (both edges) with a faint centre line
+    lines([offset([Q(475, 850), Q(475, 610), Q(300, 610), Q(300, 575)], D(13)), offset([Q(475, 850), Q(475, 610), Q(300, 610), Q(300, 575)], -D(13)),
+      offset([Q(475, 690), Q(615, 690)], D(11)), offset([Q(475, 690), Q(615, 690)], -D(11))], { flat: true, a: 0.6 }),
+    lines([[Q(475, 850), Q(475, 610), Q(300, 610), Q(300, 590)]], { flat: true, dash: true, faint: true, a: 0.6 }),
+    // well pad, tank berm, transformer-yard fence, parking
+    lines([rectPts(160, 320, 220, 250)], { flat: true, closed: true, glow: true, a: 0.7 }),
+    lines([rectPts(172, 492, 108, 58)], { flat: true, closed: true, dash: true, faint: true }),
+    lines([rectPts(710, 330, 130, 140)], { flat: true, closed: true, dash: true, faint: true, a: 0.8 }),
+    lines([rectPts(520, 640, 92, 76)].concat([535, 550, 565, 580, 595].map(function (u) { return [Q(u, 640), Q(u, 664)]; }), [535, 550, 565, 580, 595].map(function (u) { return [Q(u, 692), Q(u, 716)]; })), { flat: true, closed: false, a: 0.55 }),
+    lines([[Q(520, 640), Q(612, 640)], [Q(520, 716), Q(612, 716)]], { flat: true, a: 0.55 }),
+    // flow lines on the ground: separator drain, flare line, flare radius, gas line, header, sales tie-in, power cable
+    lines([[Q(405, 440), Q(405, 521), Q(272, 521)]], { flat: true, dash: true, faint: true }),
+    lines([[Q(430, 400), Q(430, 340), Q(352, 340)]], { flat: true, faint: true, a: 0.9 }),
+    lines([ring(FL[0], 0, FL[2], D(34), 48, "xz")], { flat: true, dash: true, faint: true }),
+    lines([gasPlan.map(function (p) { return Q(p.x, p.y); }), [Q(545, 357), Q(545, 525)]], { flat: true, glow: true, a: 0.95 }),
+    lines([[Q(480, 412), Q(480, salesY)]].concat(bow(480, 300, 0, 1, 5), bow(515, 420, 1, 0, 6)), { flat: true, a: 0.8 }),
+    lines([[Q(755, 445), Q(755, 620)]], { flat: true, glow: true, a: 0.9 }),
+    lines([[Q(900, 700), Q(767, 700)]], { flat: true, dash: true, a: 0.8 }),
+    // what is left on the ground once the yard and the hall lift off (appears with the lift)
+    lines([rectPts(556, 336, 128, 210), rectPts(633, 620, 134, 100)], { flat: true, closed: true, dash: true, faint: true, vis: "ghost" }),
+    lines([[Q(545, 525), Q(545, 560), Q(876, 560), Q(876, 818)]], { flat: true, dash: true, glow: true, vis: "ghost" }),
+    // fence with posts and a gate
+    lines(fence([[462, 800, 130, 800], [130, 800, 130, 290], [130, 290, 870, 290], [870, 290, 870, 800], [870, 800, 488, 800]], 0.03, 0.09), { faint: true, at: [0, 0.82] }),
+    lines([[Q(462, 800), Q(462, 800, 0.045)], [Q(488, 800), Q(488, 800, 0.045)]], { at: [QX(475), QZ(800)] }),
+    // tanks, separator, meter, fibre handhole
+    cyl(QX(200), QZ(521), D(20), 0, 0.075, { extra: [ring(QX(200), 0.075, QZ(521), D(13), 28, "xz")] }),
+    cyl(QX(252), QZ(521), D(20), 0, 0.075, { extra: [ring(QX(252), 0.075, QZ(521), D(13), 28, "xz")] }),
+    boxQ(395, 400, 445, 440, 0, 0.012, { sx: 4 }),
+    cyl(QX(420), QZ(420), D(13), 0.012, 0.13, { glow: true, extra: [[Q(420, 420, 0.13), Q(420, 420, 0.16)]] }),
+    boxQ(470, 412, 490, 428, 0, 0.03, { extra: [[Q(470, 428, 0.03), Q(490, 412, 0.03)]] }),
+    boxQ(814, 694, 826, 706, 0, 0.008, {}),
+    // the flare stack with guy wires
+    cyl(FL[0], FL[2], D(3), 0, FH, { glow: true }),
+    cyl(FL[0], FL[2], D(5.5), FH, FH + 0.016, { glow: true }),
+    lines([[[FL[0], FH * 0.8, FL[2]], Q(345, 312)], [[FL[0], FH * 0.8, FL[2]], Q(321, 354)], [[FL[0], FH * 0.8, FL[2]], Q(369, 354)]], { faint: true, at: [FL[0], FL[2]] })
+  ].concat(pumpjack);
+
+  /* ---------- POWER: the generator yard, built at plan positions; it rises and grows 2.5x into a layer ---------- */
+  var KP = 2.5, PV = [0.48, -0.235];
+  var GH = 0.06; // generator height at plan scale
+  var pow = [];
+  gens.forEach(function (y, gi) {
+    var ex = [];
+    for (var gx = 664; gx <= 677; gx += 3) ex.push([Q(gx, y + 4, GH), Q(gx, y + 30, GH)]);
+    ex.push(rectPts(604, y + 5, 22, 24, GH), rectPts(630, y + 5, 22, 24, GH));
+    ex.push(ring(QX(615), GH, QZ(y + 17), D(7), 18, "xz"), ring(QX(641), GH, QZ(y + 17), D(7), 18, "xz"));
+    pow.push(boxQ(560, y, 680, y + 34, 0, GH, { sx: 6, sh: 2, inset: 0.008, extra: ex, glow: true }));
+    pow.push(cyl(QX(585), QZ(y + 17), D(6), GH, GH + 0.045, { extra: [ring(QX(585), GH + 0.045, QZ(y + 17), D(3.5), 14, "xz")] }));
+    pow.push(lines([[Q(545, y + 17), Q(560, y + 17)], [Q(680, y + 17), Q(690, y + 17)]], { flat: true, glow: true }));
+    pow.push(boxQ(556, y - 3, 684, y + 37, 0, 0.004, { vis: "lod", bias: -0.2 }));
+  });
+  [350, 405].forEach(function (ty) {
+    pow.push(boxQ(725, ty, 759, ty + 28, 0, 0.05, { sx: 6, sh: 3, glow: true, extra: [rectPts(728, ty + 4, 28, 20, 0.05)] }));
+    pow.push(boxQ(728, ty + 28, 756, ty + 35, 0, 0.038, { sx: 8 }));
+    pow.push(cyl(QX(734), QZ(ty + 8), D(2.6), 0.05, 0.075, {}));
+    pow.push(cyl(QX(750), QZ(ty + 8), D(2.6), 0.05, 0.075, {}));
+    pow.push(box([QX(727), QX(757), 0.05, 0.062, QZ(ty + 18), QZ(ty + 24)], { vis: "lod" }));
+  });
+  pow.push(boxQ(780, 345, 824, 445, 0, 0.055, { sz: 8, sx: 2, sh: 3, inset: 0.006, glow: true, extra: [[Q(790, 350, 0.055), Q(790, 440, 0.055)], [Q(814, 350, 0.055), Q(814, 440, 0.055)]] }));
+  pow.push(lines([[Q(690, 357), Q(690, 525)], [Q(690, 400), Q(722, 400)], [Q(759, 364), Q(780, 364)], [Q(759, 419), Q(780, 419)]], { flat: true, glow: true }));
+  // power out: a short tray from the switchgear to the riser that feeds the hall
+  pow.push(lines(ladder([QX(802), QZ(345)], [QX(802), QZ(311)], 0.04, D(4), 0).concat(ladder([QX(802), QZ(311)], [QX(815), QZ(311)], 0.04, D(4), 0), [[Q(815, 311, 0.04), Q(815, 311, 0)]]), { at: [QX(808), QZ(330)], glow: true }));
+  // gas into the yard from its riser, the manifold along the generators, and a conditioning skid (closer detail)
+  pow.push(lines([[Q(842.4, 551.2), Q(552, 551.2), Q(552, 352)]], { flat: true, glow: true, vis: "lod" }));
+  pow.push(boxQ(712, 486, 830, 530, 0, 0.022, { sx: 7, vis: "lod" }));
+  pow.push(cyl(QX(736), QZ(508), D(9), 0.022, 0.08, { vis: "lod" }));
+  pow.push(cyl(QX(762), QZ(508), D(9), 0.022, 0.08, { vis: "lod" }));
+  pow.push(lines([[Q(712, 508, 0.04), Q(700, 508, 0.04), Q(700, 551, 0.04), Q(700, 551, 0)], [Q(790, 498, 0.022), Q(790, 498, 0.05), Q(820, 498, 0.05), Q(820, 498, 0.022)]], { at: [QX(760), QZ(520)], vis: "lod" }));
+  pow.push(lines([[Q(842.4, 551.2), Q(842.4, 551.2, 0.03)]], { at: [QX(842), QZ(551)], vis: "lod" }));
+
+  /* ---------- HALL: the map preview's server hall (its 0..1000 hall plan), built at full size.
+     On the site plan it sits shrunk to the hall building's footprint, roof on; it grows into the full layer. ---------- */
+  var KH = 0.93 / 400, HPLAN = [0.5, 0.35], HK0 = (1 / 6) / 400 / KH; // 0.179
+  function HX(x) { return (x - 500) * KH; }
+  function HZ(y) { return (y - 500) * KH; }
+  function Hp(x, y, h) { return [HX(x), h || 0, HZ(y)]; }
+  function hrect(x, y, w, hh, h) { return [Hp(x, y, h), Hp(x + w, y, h), Hp(x + w, y + hh, h), Hp(x, y + hh, h)]; }
+  function hbox(x0, y0, x1, y1, h0, h1, o) { return box([HX(x0), HX(x1), h0, h1, HZ(y0), HZ(y1)], o); }
+  var WX0 = HX(100), WX1 = HX(900), WZ0 = HZ(200), WZ1 = HZ(800), WH = 0.27, WT = 0.02, RH = 0.16;
+  var pods = [280, 432, 584], RACKS = 22;
+  var hall = [];
+  (function () {
+    var tiles = [];
+    for (var gx = 156; gx < 900; gx += 48) tiles.push([Hp(gx, 208), Hp(gx, 792)]);
+    for (var gy = 256; gy < 800; gy += 48) tiles.push([Hp(108, gy), Hp(892, gy)]);
+    hall.push(lines(tiles, { flat: true, faint: true, a: 0.45, vis: "inner" }));
+    hall.push(lines([hrect(108, 208, 784, 584)], { flat: true, closed: true, faint: true }));
+    hall.push(lines([[Hp(830, 164), Hp(830, 200)]], { flat: true, glow: true }));
+    hall.push(lines([[Hp(930, 680), Hp(900, 680)]], { flat: true, dash: true, a: 0.8 }));
+    hall.push({ t: "wall", side: "x0" }, { t: "wall", side: "x1" }, { t: "wall", side: "z0" }, { t: "wall", side: "z1" });
+    // cooling units along both long walls
+    for (var c = 0; c < 5; c++) {
+      var cy = 248 + c * 98;
+      [[112, 142]].concat(c < 4 ? [[858, 888]] : []).forEach(function (xx) {
+        var fxc = (xx[0] + xx[1]) / 2;
+        hall.push(hbox(xx[0], cy, xx[1], cy + 66, 0, 0.15, { sz: 3, vis: "inner", extra: [ring(HX(fxc), 0.15, HZ(cy + 18), 9 * KH, 18, "xz"), ring(HX(fxc), 0.15, HZ(cy + 48), 9 * KH, 18, "xz")] }));
+      });
+    }
+    // pods: two rows of racks, a contained hot aisle between them, PDUs at the head of each row
+    pods.forEach(function (y0, pi) {
+      hall.push(lines([hrect(200, y0 - 4, 596, 94)], { flat: true, closed: true, faint: true, vis: "inner" }));
+      [y0, y0 + 56].forEach(function (ry) {
+        hall.push(hbox(236, ry, 764, ry + 30, 0, RH, { sx: RACKS, sh: 7, inset: 0.012, glow: pi === 1, vis: "inner" }));
+        hall.push(hbox(206, ry, 232, ry + 30, 0, RH, { sh: 3, vis: "inner" }));
+      });
+      hall.push(hbox(236, y0 + 30, 764, y0 + 56, RH, RH + 0.012, { tx: 11, bias: 0.12, vis: "inner" }));
+      hall.push(hbox(232, y0 + 30, 236, y0 + 56, 0, RH, { sz: 2, bias: 0.12, vis: "inner" }));
+      hall.push(hbox(764, y0 + 30, 768, y0 + 56, 0, RH, { sz: 2, bias: 0.12, vis: "inner" }));
+    });
+    // overhead: busway from the power entry round to the PDUs, cable ladders, fibre to the meet-me rack
+    var bus = [[Hp(830, 164, 0.22), Hp(830, 236, 0.22), Hp(172, 236, 0.22), Hp(172, 700, 0.22)], [Hp(830, 164, 0), Hp(830, 164, 0.22)]];
+    pods.forEach(function (y) { bus.push([Hp(172, y + 15, 0.22), Hp(219, y + 15, 0.22), Hp(219, y + 15, RH)], [Hp(172, y + 71, 0.22), Hp(219, y + 71, 0.22), Hp(219, y + 71, RH)]); });
+    hall.push(lines(bus, { front: 39, glow: true, vis: "inner" }));
+    var lad = [];
+    [330, 500, 670].forEach(function (lx) { lad = lad.concat(ladder([HX(lx), HZ(224)], [HX(lx), HZ(700)], 0.23, 4 * KH, 0)); });
+    hall.push(lines(lad, { front: 40, faint: true, vis: "inner" }));
+    hall.push(lines(ladder([HX(220), HZ(700)], [HX(840), HZ(700)], 0.23, 4 * KH, 0), { front: 41, faint: true, vis: "inner" }));
+    hall.push(lines([[Hp(900, 680, 0.1), Hp(854, 680, 0.1), Hp(854, 680, 0.16)]], { front: 38, dash: true, vis: "inner" }));
+    hall.push(hbox(838, 666, 854, 694, 0, RH, { sh: 4, vis: "inner" }));
+    // loading bay outside the south wall
+    hall.push(hbox(560, 806, 680, 832, 0, 0.02, { sx: 4 }));
+    // the roof, as the site plan shows it: inner line, ridge, two rows of roof units (fades away as the hall opens)
+    var roofEx = [hrect(118, 218, 764, 564, WH + 0.008), [Hp(118, 500, WH + 0.008), Hp(882, 500, WH + 0.008)]];
+    hall.push(box([WX0, WX1, WH, WH + 0.008, WZ0, WZ1], { vis: "roof", key: 900, extra: roofEx }));
+    for (var ru = 0; ru < 5; ru++) {
+      [272, 644].forEach(function (ry) {
+        var x0 = 176 + ru * 132;
+        hall.push(hbox(x0, ry, x0 + 96, ry + 72, WH + 0.008, WH + 0.04, { vis: "roof", key: 901 + ru * 0.01 + ry * 1e-5, extra: [ring(HX(x0 + 48), WH + 0.04, HZ(ry + 36), 21.6 * KH, 20, "xz")] }));
+      });
+    }
+  })();
+  function wallItem(side) {
+    var back = side === "x0" ? cam.sF > 0 : side === "x1" ? cam.sF < 0 : side === "z0" ? cam.cF > 0 : cam.cF < 0;
+    var h = back ? WH : 0.05, b;
+    if (side === "x0") b = [WX0, WX0 + WT, 0, h, WZ0, WZ1];
+    else if (side === "x1") b = [WX1 - WT, WX1, 0, h, WZ0, WZ1];
+    else if (side === "z0") b = [WX0, WX1, 0, h, WZ0, WZ0 + WT];
+    else b = [WX0, WX1, 0, h, WZ1 - WT, WZ1];
+    return { o: box(b, { faint: back }), key: back ? -50 : 60 };
+  }
+
+  var LAY = [
+    { items: gnd, plate: [-1, 1, -0.03, 0, -ZP, ZP] },
+    { items: pow, plate: [PV[0] - 1 / KP, PV[0] + 1 / KP, -0.03 / KP, 0, PV[1] - ZP / KP, PV[1] + ZP / KP] },
+    { items: hall, plate: [-1, 1, -0.03, 0, -ZP, ZP] },
+    { items: [], plate: null }
+  ];
+  // Per-layer transforms: x_world = ax + k * (x - px), same for z; y_world = Y + k * y.
+  function setLayer(i, w, Y) {
+    LT.Y = Y;
+    if (i === 1) { LT.k = lerp(1, KP, w); LT.px = PV[0]; LT.pz = PV[1]; LT.ax = lerp(PV[0], 0, w); LT.az = lerp(PV[1], 0, w); }
+    else if (i === 2) { LT.k = lerp(HK0, 1, w); LT.px = 0; LT.pz = 0; LT.ax = lerp(HPLAN[0], 0, w); LT.az = lerp(HPLAN[1], 0, w); }
+    else { LT.k = 1; LT.px = 0; LT.pz = 0; LT.ax = 0; LT.az = 0; }
+  }
+  function world(x, y, z) { return [LT.ax + LT.k * (x - LT.px), LT.Y + LT.k * y, LT.az + LT.k * (z - LT.pz)]; }
+
+  // ---------- item drawing on the canvas ----------
+  function boxFaces(b) {
+    var x0 = b[0], x1 = b[1], y0 = b[2], y1 = b[3], z0 = b[4], z1 = b[5], xf = cam.sF > 0 ? x1 : x0, zf = cam.cF > 0 ? z1 : z0;
+    pl([[xf, y0, z0], [xf, y0, z1], [xf, y1, z1], [xf, y1, z0]], true);
+    pl([[x0, y0, zf], [x1, y0, zf], [x1, y1, zf], [x0, y1, zf]], true);
+    pl([[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], true);
+  }
+  function boxExtras(o) {
+    var b = o.b, x0 = b[0], x1 = b[1], y0 = b[2], y1 = b[3], z0 = b[4], z1 = b[5], xf = cam.sF > 0 ? x1 : x0, zf = cam.cF > 0 ? z1 : z0, i, t, ins = o.inset || 0;
+    for (i = 1; i < (o.sx || 0); i++) { t = lerp(x0, x1, i / o.sx); pl([[t, y0 + ins, zf], [t, y1 - ins, zf]]); }
+    for (i = 1; i < (o.sz || 0); i++) { t = lerp(z0, z1, i / o.sz); pl([[xf, y0 + ins, t], [xf, y1 - ins, t]]); }
+    for (i = 1; i < (o.sh || 0); i++) { t = lerp(y0, y1, i / o.sh); pl([[x0 + ins, t, zf], [x1 - ins, t, zf]]); pl([[xf, t, z0 + ins], [xf, t, z1 - ins]]); }
+    for (i = 1; i < (o.tx || 0); i++) { t = lerp(x0, x1, i / o.tx); pl([[t, y1, z0], [t, y1, z1]]); }
+    if (o.extra) for (i = 0; i < o.extra.length; i++) pl(o.extra[i]);
+  }
+  function cylFaces(o) {
+    var x = o.c[0], z = o.c[1], r = o.r, n = 22, i, a, pts = [];
+    var a0 = Math.atan2(-cam.sF, cam.cF);
+    for (i = 0; i <= n; i++) { a = a0 + Math.PI + Math.PI * i / n; pts.push([x + r * Math.cos(a), o.y1, z + r * Math.sin(a)]); }
+    for (i = 0; i <= n; i++) { a = a0 + Math.PI * i / n; pts.push([x + r * Math.cos(a), o.y0, z + r * Math.sin(a)]); }
+    pl(pts, true);
+  }
+  function cylExtras(o) {
+    var x = o.c[0], z = o.c[1], r = o.r, n = 22, i, a, pts = [], a0 = Math.atan2(-cam.sF, cam.cF);
+    for (i = 0; i <= n; i++) { a = a0 + Math.PI * i / n; pts.push([x + r * Math.cos(a), o.y1, z + r * Math.sin(a)]); }
+    pl(pts);
+    if (o.extra) for (i = 0; i < o.extra.length; i++) pl(o.extra[i]);
+  }
+  function linesPath(o) { for (var i = 0; i < o.lines.length; i++) pl(o.lines[i], o.closed); }
+  function outline(o) { // the whole drawing of an item, for the glow pass
+    if (o.t === "box") { boxFaces(o.b); boxExtras(o); }
+    else if (o.t === "cyl") { cylFaces(o); cylExtras(o); }
+    else linesPath(o);
+  }
+  function stroke(a, faint, dashed) {
+    ctx.strokeStyle = "rgba(" + INKC + "," + Math.min(1, Math.max(0, a * (faint ? 0.55 : 1) * LKA)).toFixed(3) + ")";
+    ctx.setLineDash(dashed ? [4, 5] : []);
+    ctx.stroke();
+  }
+  function drawItem(o, a) {
+    if (o.t === "lines") { ctx.beginPath(); linesPath(o); stroke(a, o.faint, o.dash); return; }
+    ctx.beginPath();
+    if (o.t === "box") boxFaces(o.b); else cylFaces(o);
+    ctx.fillStyle = BG; ctx.fill(); stroke(a, o.faint, o.dash);
+    ctx.beginPath();
+    if (o.t === "box") boxExtras(o); else cylExtras(o);
+    stroke(a * 0.85, o.faint, false);
+  }
+  function itemCenter(o) {
+    if (o.t === "box") return [(o.b[0] + o.b[1]) / 2, (o.b[4] + o.b[5]) / 2, o.b[2]];
+    if (o.t === "cyl") return [o.c[0], o.c[1], o.y0];
+    if (o.at) return [o.at[0], o.at[1], 0];
+    var sx = 0, sz = 0, n = 0;
+    o.lines.forEach(function (l) { l.forEach(function (p) { sx += p[0]; sz += p[2]; n++; }); });
+    return [sx / n, sz / n, 0];
+  }
+  // Sort keys only change with the camera's yaw quadrant for flat/front items; compute per frame (cheap).
+  function sortedItems(items) {
+    var list = [];
+    for (var j = 0; j < items.length; j++) {
+      var o = items[j], key, d = o;
+      if (o.t === "wall") { var w = wallItem(o.side); d = w.o; key = w.key; }
+      else if (o.flat) key = -100 + j * 0.01;
+      else if (o.key != null) key = o.key;
+      else if (o.front) key = o.front;
+      else { if (!o._c) o._c = itemCenter(o); key = o._c[0] * cam.sF + o._c[1] * cam.cF + (o.bias || 0) + o._c[2] * 0.3 + j * 1e-4; }
+      list.push({ k: key, o: d, src: o });
+    }
+    list.sort(function (x, y) { return x.k - y.k; });
+    return list;
+  }
+  function visOf(o, st) {
+    if (!o.vis) return 1;
+    if (o.vis === "ghost") return st.lift;
+    if (o.vis === "lod") return smooth((st.e - 0.2) / 0.5);
+    if (o.vis === "inner") return smooth((st.e - 0.08) / 0.4);
+    if (o.vis === "roof") return 1 - smooth((st.e - 0.1) / 0.4);
+    return 1;
+  }
+
+  function drawLayer(i, st, sceneA) {
+    var Ly = LAY[i];
+    // plate
+    if (Ly.plate && st.plateA > 0.003) {
+      var b = Ly.plate;
+      ctx.globalAlpha = sceneA;
+      ctx.beginPath(); boxFaces(b);
+      ctx.fillStyle = "rgba(" + BGC + "," + (0.74 * st.fill).toFixed(3) + ")"; ctx.fill();
+      stroke(st.b * 0.9 * st.plateA, false, false);
+    } else if (!Ly.plate && st.plateA > 0.003) {
+      ctx.globalAlpha = sceneA;
+      ctx.beginPath(); pl([[-1, 0, -ZP], [1, 0, -ZP], [1, 0, ZP], [-1, 0, ZP]], true);
+      stroke(st.b * 0.55 * st.plateA, false, true);
+    }
+    if (!Ly.items.length) return;
+    var list = sortedItems(Ly.items);
+    // glow pass under the lines
+    if (st.glow > 0.01) {
+      ctx.beginPath();
+      for (var g = 0; g < list.length; g++) { var go = list[g].src; if (go.glow && visOf(go, st) > 0.5) outline(list[g].o); }
+      ctx.save(); ctx.globalAlpha = sceneA * st.glow * GLK; ctx.setLineDash([]); ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 5; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore();
+    }
+    ctx.lineWidth = 1;
+    for (var j = 0; j < list.length; j++) {
+      var src = list[j].src, v = visOf(src, st);
+      if (v < 0.01) continue;
+      ctx.globalAlpha = sceneA * v;
+      drawItem(list[j].o, st.b * (src.a || 0.9));
+    }
+    ctx.globalAlpha = 1; ctx.setLineDash([]);
+  }
+
+  /* ---------- labels (screen space): the map's, then the plan's (they fade as the camera tilts) ---------- */
+  var labels = [
+    { lv: 0, x: 880, y: 372, t: "Gas pipeline", m: 1 }, { lv: 0, x: 600, y: 760, t: "River", m: 1 },
+    { lv: 0, x: 120, y: 30, t: "Rail" }, { lv: 0, x: -60, y: 430, t: "Road" }, { lv: 0, x: A1.x + 16, y: A1.y + 24, t: "Site", m: 1 },
+    { lv: 1, x: 120, y: 0, t: "Gas pipeline", m: 1, pipe: 1 },
+    { lv: 1, x: 196, y: 448, t: "Pumpjack", m: 1 }, { lv: 1, x: 176, y: 566, t: "Tanks" },
+    { lv: 1, x: 395, y: 458, t: "Separator", m: 1 }, { lv: 1, x: 300, y: 312, t: "Flare", m: 1 },
+    { lv: 1, x: 462, y: 398, t: "Meter" }, { lv: 1, x: 560, y: 562, t: "Generators", m: 1 },
+    { lv: 1, x: 712, y: 488, t: "Transformers", m: 1 }, { lv: 1, x: 640, y: 738, t: "Server hall", m: 1 },
+    { lv: 1, x: 514, y: 732, t: "Parking" }, { lv: 1, x: 800, y: 688, t: "Fiber", m: 1 }, { lv: 1, x: 486, y: 830, t: "Access road" }
+  ];
+  labels[5].y = yAt(pipe1, 120) - 42;
+  function drawLabels(t0, a0, a1) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var fs = phone ? 10 : 11;
+    ctx.font = "500 " + fs + "px Jost, Futura, Arial, sans-serif";
+    if ("letterSpacing" in ctx) ctx.letterSpacing = phone ? "1.6px" : "2px";
+    ctx.textBaseline = "middle";
+    var minX = W * (phone ? 0.03 : 0.1);
+    setLayer(0, 0, 0);
+    labels.forEach(function (lb) {
+      if (phone && !lb.m) return;
+      var x, y, la;
+      if (lb.lv === 0) {
+        var zoom = t0.k / U;
+        la = a0 * sstep(0.5, 0.9, zoom) * (1 - sstep(1.5, 2.4, zoom));
+        x = lb.x * t0.k + t0.ox; y = lb.y * t0.k + t0.oy;
+      } else {
+        la = a1;
+        var q = pj(QX(lb.x), 0, QZ(lb.y)); x = q[0]; y = q[1];
+      }
+      if (la <= 0.01) return;
+      var txt = lb.t.toUpperCase(), tw = ctx.measureText(txt).width;
+      x = clamp(x, minX, W - tw - 6); y = clamp(y, 12, H - 12);
+      ctx.fillStyle = "rgba(" + INKC + "," + (0.8 * la).toFixed(3) + ")";
+      ctx.fillText(txt, x, y);
+    });
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+  }
+
+  /* ---------- the scroll timeline ---------- */
+  var T = {
+    dive0: 0.07, dive1: 0.25,      // map -> plan (straight down)
+    tilt0: 0.29, tilt1: 0.5,       // straight down -> stack view
+    lift0: 0.32, lift1: 0.48,      // the plan separates into tiles
+    pow0: 0.46, pow1: 0.62,        // 02: power rises into a full layer
+    hall0: 0.62, hall1: 0.79,      // 03: the hall rises and opens
+    hole0: 0.79, hole1: 0.91,      // 04: the black hole forms
+    yaw0: 0.3, yaw1: 0.42, RATE: 200 // degrees per unit of progress once turning (100 degrees over the stack portion)
+  };
+  // The track is 300vh (it was 500vh). Scroll progress is mapped onto the timeline above with a short
+  // hold on the map and at the end, so every phase keeps about the same share of the (shorter) scroll.
+  // The first 15% of the scroll holds the map still under the opening text, so it can be read before step 01.
+  var WARP = [[0, 0], [0.15, 0.065], [0.94, 0.93], [1, 1]];
+  function warp(q) {
+    for (var i = 1; i < WARP.length; i++) if (q <= WARP[i][0]) { var a = WARP[i - 1], b = WARP[i]; return a[1] + (b[1] - a[1]) * (q - a[0]) / (b[0] - a[0]); }
+    return 1;
+  }
+  function slideFor(p) { return p < 0.07 ? 0 : p < 0.45 ? 1 : p < 0.62 ? 2 : p < 0.8 ? 3 : 4; }
+  function yawAt(p) { // eases in, then constant: C1-continuous
+    var p0 = T.yaw0, p1 = T.yaw1;
+    if (p <= p0) return 0;
+    if (p < p1) return T.RATE * (p - p0) * (p - p0) / (2 * (p1 - p0));
+    return T.RATE * (p - (p0 + p1) / 2);
+  }
+
+  var lastIdx = null, hole = { x: 0, y: 0, a: 0, vis: false }, spx = 0;
+  function render(force) {
+    var still = reduce.matches;
+    var p = still ? 1 : warp(progress());
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+
+    // the dive (the map preview's nesting math, depth 0 -> 1 only)
+    var f = smoother((p - T.dive0) / (T.dive1 - T.dive0));
+    U = (phone ? Math.min(W * 1.15, H) : Math.min(W, H)) / 1000;
+    var cx = W / 2, cy = H * (phone ? 0.47 : 0.5);
+    var s = Math.pow(S1, f), gq = (1 - 1 / s) / (1 - 1 / S1);
+    var cc = P(lerp(500, A1.x, gq), lerp(500, A1.y, gq));
+    var t0 = { k: s * U }; t0.ox = cx - cc.x * t0.k; t0.oy = cy - cc.y * t0.k;
+    var t1 = { k: t0.k / S1 }; t1.ox = t0.ox + (A1.x - 500 / S1) * t0.k; t1.oy = t0.oy + (A1.y - 500 / S1) * t0.k;
+    var a0 = 1 - sstep(0.4, 0.8, f), a1 = sstep(0.2, 0.65, f);
+    if (a0 > 0.002) { setT(t0); drawMap(a0, p); noGlow(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+
+    // phases
+    var tilt = smoother((p - T.tilt0) / (T.tilt1 - T.tilt0));
+    var lift = smooth((p - T.lift0) / (T.lift1 - T.lift0));
+    var e2 = smoother((p - T.pow0) / (T.pow1 - T.pow0)), e3 = smoother((p - T.hall0) / (T.hall1 - T.hall0));
+    var a4 = smoother((p - T.hole0) / (T.hole1 - T.hole0));
+    var Y1 = G * (0.3 * lift + 0.7 * e2), Y2 = Y1 + G * (0.3 * lift + 0.7 * e3);
+    // 03: the full hall drops in from above the stage and settles one gap above the power layer.
+    // Its lowest point is always at or above Y1 + G, so it never passes through the generator yard.
+    var arr = 1 - Math.pow(1 - c01((p - T.hall0) / (T.hall1 - 0.01 - T.hall0)), 3);
+    var Yh = Y1 + G + (1 - arr) * 1.15, Y3 = Yh + G;
+    // the hall building on the plan never moves: it stays on the ground and calmly fades to its dashed
+    // footprint (the ground's "ghost" outline) while the generator yard lifts off
+    var tileA = 1 - smooth((lift - 0.1) / 0.75);
+
+    // camera: from the plan transform (straight down) to the stack view
+    var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;
+    // the camera makes room for the black hole while the hall rises, so step 04 never has to jump back
+    var topCam = Y2 + 0.27 * (1 - a4) + (G + HOLE_LIFT + 0.2) * smoother((p - 0.68) / 0.2);
+    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34));
+    var pitch = (90 - 60 * tilt) * Math.PI / 180, yaw = yawAt(p) * Math.PI / 180;
+    cam.sp = Math.sin(pitch); cam.cp = Math.cos(pitch); cam.sF = Math.sin(yaw); cam.cF = Math.cos(yaw);
+    cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.52 : 0.53), tilt);
+    cam.mid = topCam / 2;
+
+    // brightness: the whole site is lit on the plan, then each layer in its own step
+    var gl = [], i;
+    var on1 = smooth((p - 0.44) / 0.06), on2 = smooth((p - 0.6) / 0.06), on3 = smooth((p - 0.78) / 0.06);
+    gl[0] = 1 - on1; gl[1] = Math.max(on1 * (1 - on2), gl[0]); gl[2] = Math.max(on2 * (1 - on3), gl[0]); gl[3] = on3;
+    var fin = smooth((p - 0.86) / 0.14);
+    var es = [0, e2, 1, 0], Ys = [0, Y1, Yh, Y3], gate = [0, e2, arr];
+    var land = smooth((arr - 0.55) / 0.45);
+    gl[2] = land * (1 - on3);
+    var stOf = function (k) {
+      var b = 0.4 + 0.6 * gl[k]; b = b + (0.8 - b) * fin;
+      return {
+        b: b, e: es[k], lift: lift, glow: Math.max(gl[k] * 0.5, fin * 0.18) * (k === 0 ? 1 : lift),
+        plateA: k === 0 ? 0.45 + 0.55 * tilt : k === 3 ? a4 : lift, fill: k === 0 ? tilt : lift
+      };
+    };
+
+    // the scene, bottom layer first, each gap drawn just before the layer above it
+    for (i = 0; i < 4; i++) {
+      var st = stOf(i);
+      if (i > 0) drawGap(i - 1, es, Ys, a1, gate);
+      if (i === 3 && a4 < 0.003) break;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (i === 0) {
+        setLayer(0, 0, 0); drawLayer(0, st, a1);
+        if (tileA > 0.003) { // the hall building as the plan shows it, part of the ground: shrunk, roof on
+          var stT = stOf(2); stT.e = 0; stT.b = st.b; stT.glow = st.glow; stT.plateA = 0;
+          setLayer(2, 0, 0); drawLayer(2, stT, a1 * tileA);
+        }
+        continue;
+      }
+      if (i === 2) {
+        if (arr > 0.003) { // the full hall, arriving from above, lighting up as it lands
+          st.plateA = 1; st.fill = 1; st.glow = Math.max(gl[2] * 0.5, fin * 0.18);
+          setLayer(2, 1, Yh); drawLayer(2, st, a1 * smooth(arr * 1.6));
+        }
+        continue;
+      }
+      setLayer(i, es[i], Ys[i]);
+      drawLayer(i, st, a1 * (i === 3 ? a4 : 1));
+    }
+    // gas and power pulses on the plan (until it lifts apart)
+    var pa = a1 * (1 - lift);
+    if (pa > 0.01) {
+      setLayer(0, 0, 0);
+      var gp = pointAt(gasPath.p, gasPath.L, (p * 9) % 1), ep = pointAt(powerPath.p, powerPath.L, (p * 9 + 0.5) % 1);
+      [gp, ep].forEach(function (q) { var s2 = pj(QX(q.x), 0, QZ(q.y)); pulse(s2[0], s2[1], pa); });
+    }
+    drawSpinePulses(es, Ys, a1, p, gate);
+    drawLabels(t0, a0, a1 * (1 - smooth(tilt * 4)));
+
+    // the black hole sits above the top plane
+    setLayer(3, 0, Y3);
+    var hc = pj(0, HOLE_LIFT, 0);
+    hole.x = hc[0]; hole.y = hc[1]; hole.a = a4 * a1; spx = SYM * cam.s;
+    placeHole();
+
+    var idx = still ? -1 : slideFor(p);
+    if (idx !== lastIdx || force) {
+      lastIdx = idx;
+      for (var k = 0; k < slides.length; k++) slides[k].classList.toggle("on", idx === -1 || k === idx);
+      for (var m = 0; m < ticks.length; m++) ticks[m].classList.toggle("on", idx === -1 || m < idx);
+    }
+  }
+  function pulse(x, y, a) {
+    ctx.save(); ctx.globalAlpha = a * 0.6 * GLK; ctx.fillStyle = "rgb(" + INKC + ")"; ctx.filter = "blur(5px)"; ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fill(); ctx.restore();
+    ctx.globalAlpha = a; ctx.fillStyle = light ? "rgb(" + INKC + ")" : "#fff"; ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1;
+  }
+  // Risers: gas up from the ground to the generator yard, power up from the yard to the hall.
+  var RISERS = [
+    { lo: [0, [QX(876), QZ(818)]], hi: [1, [QX(842.4), QZ(551.2)]] },
+    { lo: [1, [QX(815), QZ(311)]], hi: [2, [HX(830), HZ(164)]] }
+  ];
+  function riserEnds(g, es, Ys) {
+    var r = RISERS[g];
+    setLayer(r.lo[0], es[r.lo[0]], Ys[r.lo[0]]); var a = world(r.lo[1][0], 0, r.lo[1][1]);
+    setLayer(r.hi[0], es[r.hi[0]], Ys[r.hi[0]]); var b = world(r.hi[1][0], 0, r.hi[1][1]);
+    return [a, b];
+  }
+  function drawGap(g, es, Ys, sceneA, gate) {
+    if (g > 1) return; // nothing rises from the hall but the black hole
+    var up = smooth((gate[g + 1] - 0.8) / 0.2);
+    if (up < 0.02) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    setLayer(0, 0, 0);
+    var e = riserEnds(g, es, Ys);
+    setLayer(0, 0, 0);
+    // faint corner columns
+    ctx.globalAlpha = sceneA * up;
+    ctx.beginPath();
+    [[-1, -ZP], [1, -ZP], [-1, ZP], [1, ZP]].forEach(function (q) { pl([[q[0], Ys[g], q[1]], [q[0], Ys[g + 1] - 0.03, q[1]]]); });
+    ctx.lineWidth = 1; ctx.strokeStyle = "rgba(" + INKC + ",.22)"; ctx.setLineDash([2, 6]); ctx.stroke(); ctx.setLineDash([]);
+    // the riser itself, with a glow
+    ctx.beginPath(); pl([e[0], e[1]]);
+    ctx.save(); ctx.globalAlpha = sceneA * up * 0.5 * GLK; ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 6; ctx.filter = "blur(4px)"; ctx.stroke(); ctx.restore();
+    ctx.globalAlpha = sceneA * up; ctx.strokeStyle = "rgb(" + INKC + ")"; ctx.lineWidth = 1.3; ctx.stroke();
+    ctx.globalAlpha = 1; ctx.lineWidth = 1;
+  }
+  function drawSpinePulses(es, Ys, sceneA, p, gate) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (var g = 0; g < 2; g++) {
+      var up = smooth((gate[g + 1] - 0.85) / 0.15);
+      if (up < 0.02) continue;
+      var e = riserEnds(g, es, Ys);
+      setLayer(0, 0, 0);
+      for (var k = 0; k < 2; k++) {
+        var tt = (p * 7 + k / 2 + g * 0.25) % 1, q = pj(lerp(e[0][0], e[1][0], tt), lerp(e[0][1], e[1][1], tt), lerp(e[0][2], e[1][2], tt));
+        pulse(q[0], q[1], sceneA * up * Math.sin(Math.PI * tt));
+      }
     }
   }
 
-  function target() {
-    var r = track.getBoundingClientRect(), room = r.height - innerHeight;
-    v = Math.max(0, Math.min(1, -r.top / room)) * 4.15;
-    var s = Math.min(3, Math.floor(v)), f = v - s, now = v >= 4 ? 4 : (f > 0.5 ? s + 1 : s);
-    if (now !== shown) { shown = now; steps.forEach(function (el, i) { el.classList.toggle('now', i === now); }); }
+  /* =====================================================================
+     THE BLACK HOLE: the home hero's symbol and its lensed horizon (ported from site.js via the layers preview)
+     ===================================================================== */
+  var symEl, halo, core, glows, symN = 0;
+  function symbol() {
+    // the hero's own two tones (site.js symbol(tone))
+    var id = "CB" + (symN++), c = light ? "#0B0C0E" : "#F3F4F6", coreC = light ? "#050506" : "#FFFFFF", glowC = light ? "#3A3D42" : "#D9DCE1";
+    var stops = light ? ["#050506", "#5A5E66", "#0B0C0E", "#3A3D42", "#1A1B1E", "#5A5E66"] : ["#FFFFFF", "#B9BDC4", "#F3F4F6", "#8E939B", "#E6E8EB", "#A9ADB4"];
+    var fade = function (d) {
+      return '<linearGradient id="' + id + d + '" x1="0" y1="0" x2="' + (d === "h" ? 1 : 0) + '" y2="' + (d === "h" ? 0 : 1) + '"><stop offset="0" stop-color="' + c + '" stop-opacity="0"/><stop offset=".5" stop-color="' + c + '"/><stop offset="1" stop-color="' + c + '" stop-opacity="0"/></linearGradient>';
+    };
+    var rg = function (cls, cx, cy, op, dur, rev) {
+      return '<g class="' + cls + '"><animateTransform attributeName="transform" type="rotate" from="' + (rev ? 360 : 0) + ' 0 0" to="' + (rev ? 0 : 360) + ' 0 0" dur="' + dur + 's" repeatCount="indefinite"/>' +
+        '<circle class="glow" cx="' + cx + '" cy="' + cy + '" r="100" stroke="' + glowC + '" stroke-width="32" filter="url(#' + id + 'b)"/>' +
+        '<circle class="ring" cx="' + cx + '" cy="' + cy + '" r="100" stroke="url(#' + id + 'p)" stroke-width="2.4" opacity="' + op + '"/></g>';
+    };
+    return '<svg class="sym" viewBox="-130 -130 260 260" aria-hidden="true"><defs>' + fade("h") + fade("v") +
+      '<filter id="' + id + 'b" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>' +
+      '<filter id="' + id + 's" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>' +
+      '<linearGradient id="' + id + 'p" gradientUnits="userSpaceOnUse" x1="-110" y1="-110" x2="110" y2="110">' +
+      stops.map(function (s, i) { return '<stop offset="' + (i / 5) + '" stop-color="' + s + '"/>'; }).join("") +
+      '<animateTransform attributeName="gradientTransform" type="rotate" from="0 0 0" to="360 0 0" dur="14s" repeatCount="indefinite"/></linearGradient></defs>' +
+      '<g fill="none">' + rg("r1", 0, -7, .55, 26) + rg("r2", 6, 4, 1, 34, true) + rg("r3", -6, 4, .55, 30) + "</g>" +
+      '<circle r="2.2" fill="' + coreC + '" opacity=".9"><animateMotion dur="9s" repeatCount="indefinite" path="M106 4a100 100 0 1 0-200 0a100 100 0 1 0 200 0"/></circle>' +
+      '<circle r="1.6" fill="' + coreC + '" opacity=".5"><animateMotion dur="14s" repeatCount="indefinite" path="M-106 4a100 100 0 1 1 200 0a100 100 0 1 1-200 0"/></circle>' +
+      '<rect class="fh" x="-70" y="-.8" width="140" height="1.6" fill="url(#' + id + 'h)"/>' +
+      '<rect class="fv" x="-.8" y="-30" width="1.6" height="60" fill="url(#' + id + 'v)"/>' +
+      '<circle class="halo" r="10" fill="' + coreC + '" filter="url(#' + id + 's)"/><circle class="core" r="3.5" fill="' + coreC + '"/></svg>';
   }
-  function frame(t) {
-    raf = 0;
-    var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
-    if (!still) T += dt;
-    vs += (v - vs) * (still ? 1 : 1 - Math.exp(-dt * 7));
-    draw();
-    if (visible) raf = requestAnimationFrame(frame);
+  function mountSymbol() {
+    if (!holeBox) return;
+    holeBox.innerHTML = symbol();
+    symEl = holeBox.querySelector(".sym"); halo = symEl.querySelector(".halo"); core = symEl.querySelector(".core");
+    glows = [].slice.call(symEl.querySelectorAll(".glow"));
+    if (reduce.matches && symEl.pauseAnimations) { symEl.pauseAnimations(); symEl.setCurrentTime(0); }
   }
-  function kick() { if (visible && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  var wasHidden = true;
+  function placeHole() {
+    if (!holeBox) return;
+    holeBox.style.width = spx.toFixed(1) + "px";
+    holeBox.style.transform = "translate(" + (hole.x - spx / 2).toFixed(1) + "px," + (hole.y - spx / 2).toFixed(1) + "px)";
+    holeBox.style.opacity = hole.a.toFixed(3);
+    var vis = hole.a > 0.003;
+    holeBox.style.visibility = vis ? "visible" : "hidden";
+    if (vis && wasHidden && !reduce.matches) mountSymbol(); // replay the rings drawing in, as on the hero
+    wasHidden = !vis;
+    hole.vis = vis;
+    loopCheck();
+    if (!running) drawHole(0, 0);
+  }
+  var INKS = { dark: [243, 244, 246], light: [11, 12, 14] }, INK = INKS.dark, LINES = [0, -0.1, 0.1], REACH = 2.6, energy = 0;
+  function rgba(al) { return "rgba(" + INK[0] + "," + INK[1] + "," + INK[2] + "," + Math.max(0, al).toFixed(3) + ")"; }
+  function grain(fresh) {
+    var life = 6 + Math.random() * 8;
+    return { r: 0.5 + Math.random() * (fresh ? 1.1 : 0.35), a: Math.random() * 6.2832, v: 0.02 + Math.random() * 0.05,
+      y: (Math.random() - 0.5) * 0.05, s: 0.7 + Math.random() * 0.8, o: 0.3 + Math.random() * 0.4, life: life, t: fresh ? Math.random() * life : 0 };
+  }
+  var dust = [], motes = [], runners = [], i0;
+  for (i0 = 0; i0 < 5; i0++) dust.push(grain(true));
+  for (i0 = 0; i0 < (innerWidth < 720 ? 50 : 110); i0++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 0.6 + Math.random() * 1.1 });
+  for (i0 = 0; i0 < 4; i0++) runners.push({ u: Math.random(), sp: 0.12 + Math.random() * 0.06, o: 0.25 + Math.random() * 0.15 });
 
-  build(); size(); target(); vs = v;
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { size(); kick(); });
-  new IntersectionObserver(function (en) { visible = en[0].isIntersecting; kick(); }).observe(sec);
-  addEventListener('scroll', function () { target(); if (still) kick(); }, { passive: true });
-  addEventListener('resize', function () { size(); target(); kick(); });
-  document.addEventListener('ac-theme', function () { requestAnimationFrame(function () { size(); kick(); }); });
+  function drawHole(dt, t) {
+    if (!fctx) return;
+    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    fctx.clearRect(0, 0, W, H);
+    var A = hole.a;
+    if (A < 0.003) return;
+    INK = light ? INKS.light : INKS.dark;
+    var cx = hole.x, cy = hole.y, Ss = spx, E = 0.44 * Ss;
+    function lens(x, y) { var b = Math.hypot(x, y) || 0.001, kk = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b; return [cx + x * kk, cy + y * kk]; }
+    var bg = fctx.createRadialGradient(cx, cy, 0, cx, cy, Ss * 1.05);
+    bg.addColorStop(0, "rgba(" + BGC + "," + A.toFixed(3) + ")"); bg.addColorStop(0.62, "rgba(" + BGC + "," + A.toFixed(3) + ")"); bg.addColorStop(1, "rgba(" + BGC + ",0)");
+    fctx.fillStyle = bg; fctx.fillRect(cx - Ss * 1.1, cy - Ss * 1.1, Ss * 2.2, Ss * 2.2);
+    fctx.fillStyle = rgba(1);
+    fctx.globalAlpha = A; // (the section-wide dust replaces the hole's own motes)
+    var breathe = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / 5.5);
+    var Lr = Math.min(REACH * Ss, W * 0.48), gw = 0.75 + 0.25 * breathe;
+    var grad = function (al) {
+      var g = fctx.createLinearGradient(cx - Lr, 0, cx + Lr, 0);
+      g.addColorStop(0, rgba(0)); g.addColorStop(0.3, rgba(al * 0.35)); g.addColorStop(0.5, rgba(al)); g.addColorStop(0.7, rgba(al * 0.35)); g.addColorStop(1, rgba(0));
+      return g;
+    };
+    LINES.forEach(function (off) {
+      var main = off === 0, base = (main ? 0.9 : 0.4) * gw;
+      fctx.beginPath();
+      for (var x = -Lr, n = 0; x <= Lr; x += 3, n++) { var q = lens(x, off * Ss); n ? fctx.lineTo(q[0], q[1]) : fctx.moveTo(q[0], q[1]); }
+      fctx.save(); fctx.strokeStyle = grad(base * 0.35); fctx.lineWidth = main ? 7 : 4; fctx.filter = "blur(4px)"; fctx.stroke(); fctx.restore();
+      fctx.strokeStyle = grad(base); fctx.lineWidth = main ? 1.2 : 0.8; fctx.stroke();
+    });
+    energy = Math.max(energy, 0.45 * breathe);
+    fctx.fillStyle = rgba(1);
+    dust.forEach(function (g, k) {
+      g.t += dt; if (g.t > g.life) { g = dust[k] = grain(false); }
+      g.a -= dt * 0.42 / Math.pow(g.r, 1.5); g.r += dt * g.v;
+      var q = lens(Math.cos(g.a) * g.r * Ss, Math.sin(g.a) * g.r * Ss * 0.22 + g.y * Ss);
+      var edge = Math.max(0, 1 - Math.abs(q[0] - cx) / Lr);
+      var al = Math.sin(Math.PI * g.t / g.life) * g.o * edge * (0.8 + 0.2 * breathe) * A;
+      if (al < 0.01) return;
+      fctx.globalAlpha = al; fctx.beginPath(); fctx.arc(q[0], q[1], g.s, 0, 6.2832); fctx.fill();
+    });
+    runners.forEach(function (g) {
+      g.u = (g.u + dt * g.sp) % 1;
+      for (var j = 0; j < 4; j++) {
+        var u = g.u - j * 0.006; if (u < 0) u += 1;
+        var tp = u < 0.5, fr = tp ? u * 2 : (u - 0.5) * 2, x = (tp ? 1 - 2 * fr : -1 + 2 * fr) * Lr * 0.95;
+        var q = lens(x, (tp ? -0.1 : 0.1) * Ss);
+        var al = (1 - j / 4) * g.o * smooth((1 - Math.abs(x) / (Lr * 0.95)) / 0.2) * A;
+        if (al < 0.01) continue;
+        fctx.globalAlpha = al; fctx.beginPath(); fctx.arc(q[0], q[1], j ? 0.8 : 1.1, 0, 6.2832); fctx.fill();
+      }
+    });
+    fctx.globalAlpha = 1;
+    energy *= Math.exp(-dt * 1.4);
+    var e = Math.min(1, energy + 0.12 * breathe);
+    if (halo) {
+      halo.style.opacity = (0.3 + 0.55 * e).toFixed(3); halo.style.transform = "scale(" + (1 + 0.7 * e).toFixed(3) + ")";
+      core.style.transform = "scale(" + (1 + 0.25 * e).toFixed(3) + ")";
+      glows.forEach(function (gl) { gl.style.opacity = (0.08 + 0.18 * e).toFixed(3); });
+    }
+  }
+  /* ---------- ambient dust over the whole section (the original particle story's background grains) ---------- */
+  var grains = [], DW = 1, DH = 1, ddpr = 1;
+  (function () {
+    for (var b = 0, nb = innerWidth < 720 ? 700 : 1600; b < nb; b++)
+      grains.push({ r3: Math.random(), ph: Math.random(), sx: Math.random(), sy: Math.random(), s: 0.6 + Math.random() * 1.1 });
+  })();
+  function sizeDust() {
+    if (!dustC) return;
+    var r = dustC.getBoundingClientRect();
+    ddpr = Math.min(window.devicePixelRatio || 1, 2); DW = Math.max(1, r.width); DH = Math.max(1, r.height);
+    dustC.width = Math.round(DW * ddpr); dustC.height = Math.round(DH * ddpr);
+  }
+  function drawDust(t) {
+    if (!dctx) return;
+    dctx.setTransform(ddpr, 0, 0, ddpr, 0, 0);
+    dctx.clearRect(0, 0, DW, DH);
+    // black: light specks as on the site; white: dark grey specks, a little stronger so they still show
+    dctx.fillStyle = light ? "rgb(58,61,66)" : "rgb(236,238,241)";
+    var k = light ? 1 : 0.8;
+    for (var i = 0; i < grains.length; i++) {
+      var g = grains[i];
+      dctx.globalAlpha = (0.2 + 0.5 * g.r3 * (0.6 + 0.4 * Math.sin(t * 1.3 + g.ph * 40))) * k;
+      dctx.fillRect(g.sx * DW + Math.sin(t * 0.15 + g.ph * 6) * 16, g.sy * DH + Math.cos(t * 0.12 + g.ph * 5) * 16, g.s, g.s);
+    }
+    dctx.globalAlpha = 1;
+  }
+
+  var inView = false, running = false, last = 0, lastT = 0;
+  function loop(tm) {
+    if (!running) return;
+    var dt = Math.min(0.05, (tm - last) / 1000 || 0); last = tm; lastT = tm / 1000;
+    drawDust(lastT);
+    drawHole(dt, lastT);
+    requestAnimationFrame(loop);
+  }
+  function loopCheck() {
+    var want = inView && !reduce.matches;
+    if (want && !running) { running = true; last = performance.now(); requestAnimationFrame(loop); }
+    else if (!want) running = false;
+  }
+
+  /* ---------- sizing and scroll wiring ---------- */
+  function resize() {
+    var r = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, r.width); H = Math.max(1, r.height); phone = W < 600;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    if (fx) { fx.style.width = W + "px"; fx.style.height = H + "px"; fx.width = canvas.width; fx.height = canvas.height; }
+    sizeDust(); drawDust(lastT);
+    render(true);
+  }
+  // the site's black/white toggle: redraw everything in the new tone at once, on screen or not
+  function onTheme() {
+    readTheme();
+    var shown = holeBox && holeBox.style.visibility === "visible";
+    mountSymbol();
+    if (!shown) wasHidden = true;
+    drawDust(lastT);
+    render(true);
+    drawHole(0, lastT);
+  }
+  document.addEventListener("ac-theme", onTheme);
+  if (window.MutationObserver) new MutationObserver(function () { if ((document.documentElement.getAttribute("data-theme") === "light") !== light) onTheme(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  function progress() {
+    var r = track.getBoundingClientRect(), span = r.height - window.innerHeight;
+    return span > 0 ? clamp(-r.top / span, 0, 1) : 0;
+  }
+  var queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; render(false); });
+  }
+  sec.classList.add("mz-live");
+  mountSymbol();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", resize);
+  if (window.ResizeObserver) { var ro = new ResizeObserver(resize); ro.observe(canvas); if (dustC) ro.observe(dustC); }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (en) { inView = en[0].isIntersecting; loopCheck(); if (inView) render(false); }).observe(track);
+  } else inView = true;
+  if (reduce.addEventListener) reduce.addEventListener("change", function () { mountSymbol(); resize(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { render(true); });
+  resize();
 })();
 
 // Site check (partners page): five questions, one at a time, then a verdict with the reasons.

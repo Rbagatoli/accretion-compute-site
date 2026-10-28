@@ -28,8 +28,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
   <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
-  <link rel="stylesheet" href="styles.css?v=94b35985">
-  <script src="site.js?v=94b35985" defer></script>
+  <link rel="stylesheet" href="styles.css?v=a8fad6c8">
+  <script src="site.js?v=a8fad6c8" defer></script>
 </head>
 <body class="page-index">
   <a class="skip" href="#main">Skip to content</a>
@@ -110,37 +110,38 @@
   </div>
 </section>
 
-<section class="dark ps" aria-labelledby="flow-h" data-story data-mode="pan">
-  <div class="ps-track">
-    <div class="ps-stick">
-      <canvas class="ps-canvas" aria-hidden="true"></canvas>
-      <div class="ps-text">
-        <div class="ps-step now" data-i="0">
+<section class="dark ps-alt" aria-labelledby="flow-h">
+  <div class="mz-track">
+    <div class="mz-stage"><canvas class="cb-dust" aria-hidden="true"></canvas>
+      <div class="mz-text">
+        <div class="mz-slide mz-intro on">
           <p class="eyebrow">From energy to compute</p>
-          <h2 id="flow-h">We gather energy and concentrate it into&nbsp;compute</h2>
-          <p class="ps-p">Every Accretion site follows the same chain. Scroll to follow it.</p>
+          <h2 id="flow-h" class="mz-title">We gather energy and concentrate <span style="white-space:nowrap">it into</span><br>compute</h2>
+          <p class="mz-body">Every Accretion site follows the same chain. Scroll to follow it.</p>
         </div>
-        <div class="ps-step" data-i="1">
-          <p class="eyebrow">01 &middot; Energy source</p>
-          <p class="ps-h">Energy that is already&nbsp;there</p>
-          <p class="ps-p">Gas, landfill gas and industrial sites, often producing more than anyone uses.</p>
+        <div class="mz-slide">
+          <p class="mz-num">01 · Energy source</p>
+          <h3 class="mz-title">Energy that is already&nbsp;there</h3>
+          <p class="mz-body">Gas, landfill gas and industrial sites, often producing more than anyone uses.</p>
         </div>
-        <div class="ps-step" data-i="2">
-          <p class="eyebrow">02 &middot; On-site power</p>
-          <p class="ps-h">Turned into power on&nbsp;site</p>
-          <p class="ps-p">Generated behind the meter, without waiting on a grid connection.</p>
+        <div class="mz-slide">
+          <p class="mz-num">02 · On-site power</p>
+          <h3 class="mz-title">Turned into power on&nbsp;site</h3>
+          <p class="mz-body">Generated behind the meter, without waiting on a grid connection.</p>
         </div>
-        <div class="ps-step" data-i="3">
-          <p class="eyebrow">03 &middot; AI-ready hall</p>
-          <p class="ps-h">Delivered into halls built for&nbsp;AI</p>
-          <p class="ps-p">Power, cooling, space and fiber, built around the generation.</p>
+        <div class="mz-slide">
+          <p class="mz-num">03 · AI-ready hall</p>
+          <h3 class="mz-title">Delivered into halls built for&nbsp;AI</h3>
+          <p class="mz-body">Power, cooling, space and fiber, built around the generation.</p>
         </div>
-        <div class="ps-step" data-i="4">
-          <p class="eyebrow">04 &middot; Your workloads</p>
-          <p class="ps-h">Concentrated into&nbsp;compute</p>
-          <p class="ps-p">Tenants bring their hardware. The energy ends up as training and inference.</p>
+        <div class="mz-slide">
+          <p class="mz-num">04 · Your workloads</p>
+          <h3 class="mz-title">Concentrated into&nbsp;compute</h3>
+          <p class="mz-body">Tenants bring their hardware. The energy ends up as training and inference.</p>
         </div>
+        <ol class="mz-rail" aria-hidden="true"><li>01</li><li>02</li><li>03</li><li>04</li></ol>
       </div>
+      <div class="mz-art" aria-hidden="true"><canvas class="cb-scene"></canvas><canvas class="cb-fx"></canvas><div class="cb-hole"></div></div>
     </div>
   </div>
 </section>
