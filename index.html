@@ -27,8 +27,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
-  <link rel="stylesheet" href="styles.css?v=bb42b5bc">
-  <script src="site.js?v=bb42b5bc" defer></script>
+  <link rel="stylesheet" href="styles.css?v=a7365367">
+  <script src="site.js?v=a7365367" defer></script>
 </head>
 <body class="page-index">
   <a class="skip" href="#main">Skip to content</a>
@@ -53,47 +53,10 @@
   </header>
 
   <main id="main">
-<section class="hero dark">
-  <div class="hero-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
-  <defs>
-    <radialGradient id="dk-glow">
-      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0.22"/>
-      <stop offset="0.18" stop-color="#f3f4f6" stop-opacity="0.08"/>
-      <stop offset="0.5" stop-color="#f3f4f6" stop-opacity="0.025"/>
-      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="dk-h" x1="0" x2="1">
-      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#f3f4f6"/>
-      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#f3f4f6"/>
-      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <circle r="500" fill="url(#dk-glow)"/>
-  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="#e8eaed">
-    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
-    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
-    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
-    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
-    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
-    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
-    <circle r="470" stroke-opacity="0.05"/>
-    <circle r="330" stroke-opacity="0.07"/>
-    <circle r="205" stroke-opacity="0.1"/>
-  </g>
-  <g class="pulse">
-    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
-    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
-    <circle r="9" fill="#f3f4f6" opacity="0.2"/>
-    <circle r="3.2" fill="#ffffff"/>
-  </g>
-</svg></div>
+<section class="hero dark" data-hero>
+  <canvas class="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-in">
-    <img class="hero-logo" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560">
+    <div class="alogo" role="img" aria-label="Accretion Compute"><img class="hero-logo" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560"></div>
     <h1>AI compute, built at the source of&nbsp;energy.</h1>
     <p class="lede">We build and run AI-ready capacity where energy is already produced, so AI companies are not left waiting in the grid queue.</p>
     <div class="actions">

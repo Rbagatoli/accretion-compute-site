@@ -186,6 +186,38 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 .hero-cue::after { content: ""; position: absolute; left: 50%; top: 8px; width: 2px; height: 6px; margin-left: -1px; background: var(--fg-dim); border-radius: 1px; animation: cue 2.4s ease-in-out infinite; }
 @keyframes cue { 0%, 100% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(10px); opacity: 0; } }
 
+/* Home hero: the living logo bends a glowing horizon around itself (drawn by site.js on the canvas) */
+.hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.alogo { position: relative; width: min(500px, 80vw); margin: 0 auto; }
+.alogo .hero-logo { width: 100%; }
+.alogo .sym { position: relative; z-index: 1; display: block; width: 34.5%; margin: 0 auto; overflow: visible; }
+.alogo .wm { width: 76%; aspect-ratio: 1320 / 122; margin: 13% auto 0;
+  -webkit-mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / contain no-repeat;
+          mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / contain no-repeat;
+  background: linear-gradient(100deg, #cfd2d7 0%, #cfd2d7 38%, #ffffff 50%, #cfd2d7 62%, #cfd2d7 100%);
+  background-size: 320% 100%; background-position: 100% 0;
+  animation: wm-in 1.6s 0.5s var(--ease) both, sheen 8s 2.2s ease-in-out infinite; }
+@keyframes sheen { 0% { background-position: 100% 0; } 45%, 100% { background-position: 0% 0; } }
+@keyframes wm-in { from { clip-path: inset(0 100% 0 0); opacity: 0.2; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+.sym .ring { stroke-dasharray: 640; animation: ring-in 2.2s var(--ease) both; }
+.sym .r2 .ring { animation-delay: 0.15s; } .sym .r3 .ring { animation-delay: 0.3s; }
+@keyframes ring-in { from { stroke-dashoffset: 640; } to { stroke-dashoffset: 0; } }
+.sym .fh, .sym .fv, .sym .halo, .sym .core { transform-box: fill-box; transform-origin: center; }
+.sym .fh { animation: flare-h 5.5s ease-in-out infinite; }
+.sym .fv { animation: flare-v 5.5s ease-in-out infinite; }
+@keyframes flare-h { 0%, 100% { transform: scaleX(0.78); opacity: 0.75; } 50% { transform: scaleX(1.18); opacity: 1; } }
+@keyframes flare-v { 0%, 100% { transform: scaleY(1.12); opacity: 1; } 50% { transform: scaleY(0.8); opacity: 0.7; } }
+
+/* Black / white switch for the home hero */
+.hero.light { --bg: var(--white); background: var(--white); color: var(--fg); }
+.hero.light .lede { color: var(--graphite-2); }
+.hero.light .alogo .wm { background-image: linear-gradient(100deg, #0b0c0e 0%, #0b0c0e 40%, #6b7078 50%, #0b0c0e 60%, #0b0c0e 100%); }
+.hero.light .btn { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.hero.light .btn.ghost { background: transparent; color: var(--ink); border-color: rgba(11, 12, 14, 0.2); }
+.hero-theme { position: absolute; right: var(--gutter); bottom: 32px; display: inline-flex; border: 1px solid var(--line); }
+.hero-theme button { font: 400 11px/1 var(--body); letter-spacing: 0.16em; text-transform: uppercase; padding: 9px 12px; border: 0; cursor: pointer; background: transparent; color: var(--fg-dim); }
+.hero-theme button[aria-pressed="true"] { background: var(--fg-strong); color: var(--bg); }
+
 /* Accretion disk animation (SVG in hero, page heads and CTA bands) */
 .spin { transform-box: fill-box; transform-origin: center; animation: spin 80s linear infinite; }
 .spin.rev { animation-direction: reverse; animation-duration: 120s; }
@@ -398,7 +430,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .spin, .pulse, .d-flow, .hero-cue::after { animation: none !important; }
+  .spin, .pulse, .d-flow, .hero-cue::after, .alogo *, .alogo .wm { animation: none !important; }
   .js .reveal, .js .reveal .track span { opacity: 1; transform: none; transition: none; }
   .js .draw .d-strong { stroke-dashoffset: 0; transition: none; }
 }
