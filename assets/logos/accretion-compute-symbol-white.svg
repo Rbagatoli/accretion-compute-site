@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" width="260" height="260"><defs><linearGradient id="mh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F3F4F6" stop-opacity="0"/><stop offset="0.5" stop-color="#F3F4F6"/><stop offset="1" stop-color="#F3F4F6" stop-opacity="0"/></linearGradient>
+<linearGradient id="mv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F4F6" stop-opacity="0"/><stop offset="0.5" stop-color="#F3F4F6"/><stop offset="1" stop-color="#F3F4F6" stop-opacity="0"/></linearGradient><filter id="mb" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
+<filter id="ms" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>
+<g id="mtc" fill="none"><circle cx="0" cy="-7" r="100" opacity="0.55"/><circle cx="6" cy="4" r="100"/><circle cx="-6" cy="4" r="100" opacity="0.55"/></g><linearGradient id="mpl" gradientUnits="userSpaceOnUse" x1="-110" y1="-110" x2="110" y2="110">
+<stop offset="0" stop-color="#FFFFFF"/><stop offset="0.2" stop-color="#B9BDC4"/><stop offset="0.4" stop-color="#F3F4F6"/><stop offset="0.6" stop-color="#8E939B"/><stop offset="0.8" stop-color="#E6E8EB"/><stop offset="1" stop-color="#A9ADB4"/></linearGradient></defs><g transform="translate(130 130)"><use href="#mtc" filter="url(#mb)" opacity="0.13" stroke="#D9DCE1" stroke-width="32"/>
+<use href="#mtc" stroke="url(#mpl)" stroke-width="2.4"/>
+<rect x="-70" y="-0.8" width="140" height="1.6" fill="url(#mh)"/><rect x="-0.8" y="-30" width="1.6" height="60" fill="url(#mv)"/>
+<circle r="10" fill="#FFFFFF" opacity="0.4" filter="url(#ms)"/><circle r="3.5" fill="#FFFFFF"/></g></svg>
