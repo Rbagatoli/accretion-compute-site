@@ -21,6 +21,7 @@
   --fg-dim: var(--graphite-2);
   --line: rgba(11, 12, 14, 0.12);
   --line-soft: rgba(11, 12, 14, 0.07);
+  --aura: 11, 12, 14; /* the ink card glows are made of */
 
   --platinum: linear-gradient(135deg, #ffffff 0%, #b9bdc4 20%, #f3f4f6 40%, #8e939b 60%, #e6e8eb 80%, #a9adb4 100%);
   --head: "Michroma", "Eurostile", Arial, sans-serif;
@@ -44,6 +45,7 @@
   --fg-dim: var(--light-dim);
   --line: rgba(232, 234, 237, 0.14);
   --line-soft: rgba(232, 234, 237, 0.07);
+  --aura: 243, 244, 246;
   --bar-bg: rgba(5, 5, 6, 0.94);
   background: var(--bg);
   color: var(--fg);
@@ -56,6 +58,7 @@
   --fg-dim: var(--graphite-2);
   --line: rgba(11, 12, 14, 0.12);
   --line-soft: rgba(11, 12, 14, 0.07);
+  --aura: 11, 12, 14;
   --bar-bg: rgba(255, 255, 255, 0.96);
   background: var(--bg);
   color: var(--fg);
@@ -106,7 +109,7 @@ p { margin: 0 0 16px; }
 }
 .bar.scrolled .bar-in { height: 68px; }
 .bar-mark { flex: none; }
-.bar-mark img { width: clamp(190px, 20vw, 250px); }
+.bar-mark img { width: clamp(200px, 22vw, 300px); }
 .nav { display: flex; align-items: center; gap: clamp(18px, 2.2vw, 32px); margin-left: auto; }
 .nav a {
   font: 400 14px/1 var(--body); letter-spacing: 0.16em; text-transform: uppercase;
@@ -225,7 +228,7 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 .hero-disk { position: absolute; left: 50%; top: 50%; width: min(1500px, 170vw); transform: translate(-50%, -54%); z-index: -1; pointer-events: none; }
 .hero-in { max-width: 1240px; }
 .hero-logo { width: min(500px, 80vw); margin: 0 auto; }
-.hero h1 { margin: clamp(24px, 4vh, 40px) 0 0; font-size: clamp(32px, min(5.8vw, 8.4vh), 88px); line-height: 1.06; }
+.hero h1 { margin: clamp(48px, 7vw, 96px) 0 0; font-size: clamp(32px, min(5.8vw, 8.4vh), 88px); line-height: 1.06; }
 .hero .lede { max-width: 34em; }
 .hero .lede { margin: 20px auto 0; color: var(--fg-dim); }
 .hero .actions { justify-content: center; }
@@ -238,7 +241,8 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 .alogo { position: relative; width: min(440px, 70vw, 46vh); margin: 0 auto; }
 .alogo .hero-logo { width: 100%; }
 .alogo .sym { position: relative; z-index: 1; display: block; width: 37.95%; margin: 0 auto; overflow: visible; }
-.alogo .wm { width: 76%; aspect-ratio: 1320 / 122; margin: 13% auto 0;
+/* the wordmark is wider than the symbol's box and sits just under the ring, centred */
+.alogo .wm { width: min(480px, 88vw); aspect-ratio: 1320 / 122; margin: 2px 0 0 50%; translate: -50% 0;
   -webkit-mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / contain no-repeat;
           mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / contain no-repeat;
   background: linear-gradient(100deg, #cfd2d7 0%, #cfd2d7 38%, #ffffff 50%, #cfd2d7 62%, #cfd2d7 100%);
@@ -279,14 +283,50 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 /* ---------- Cards and lists ---------- */
 .card {
   position: relative; padding: clamp(28px, 3vw, 40px);
-  border: 1px solid var(--line); background: var(--bg);
+  border: 1px solid rgba(var(--aura), 0.16); background: var(--bg);
   transition: border-color 0.3s, transform 0.4s var(--ease);
+  isolation: isolate; /* keeps the glow below on top of whatever section the card sits in */
 }
+/* every card carries a faint glow hugging its edge with a wide haze beyond it, flickering slowly; it wakes up on hover */
+.card::after {
+  content: ""; position: absolute; inset: -1px; z-index: -1; pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(var(--aura), 0.05), 0 0 10px 1px rgba(var(--aura), 0.12), 0 0 46px 8px rgba(var(--aura), 0.07), 0 0 130px 30px rgba(var(--aura), 0.045);
+  transition: box-shadow 0.4s var(--ease);
+  animation: card-flicker 7s ease-in-out infinite;
+}
+.card:nth-child(3n+2)::after { animation-delay: -2.3s; }
+.card:nth-child(3n)::after { animation-delay: -4.7s; }
+a.card:hover::after { box-shadow: 0 0 0 1px rgba(var(--aura), 0.08), 0 0 14px 2px rgba(var(--aura), 0.16), 0 0 60px 12px rgba(var(--aura), 0.09), 0 0 160px 40px rgba(var(--aura), 0.06); }
+@keyframes card-flicker { 0%, 100% { opacity: 0.8; } 18% { opacity: 1; } 22% { opacity: 0.7; } 40% { opacity: 0.95; } 70% { opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) { .card::after { animation: none; } }
 a.card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
 a.card:hover { border-color: var(--fg-strong); transform: translateY(-3px); }
 .card p { color: var(--fg-dim); font-size: 17px; margin: 0; }
 .card .link { margin-top: auto; padding-top: 28px; }
 .card .num { font: 400 12px/1 var(--head); letter-spacing: 0.2em; color: var(--fg-dim); margin-bottom: 28px; display: block; }
+
+/* Home "Three ways in": the cards feed gas into a small black hole under the middle card (drawn by site.js).
+   Wide screens only; below 1000px it is the plain card grid. */
+.fl-cv, .fl-front, .fl-sym { display: none; }
+@media (min-width: 1000px) {
+  .fl { position: relative; overflow: hidden; isolation: isolate; }
+  .fl-cv, .fl-front { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .fl-cv { z-index: -1; }
+  .fl-front { z-index: 1; }
+  .fl-sym { display: block; position: absolute; width: 92px; z-index: 0; pointer-events: none; transform: translate(-50%, -50%); }
+  .fl-sym .sym { display: block; width: 100%; overflow: visible; }
+  .fl .wrap { position: relative; z-index: 2; padding-bottom: 60px; }
+  /* the first card (AI companies, 01) sits in the middle and higher, the other two lower and level either side;
+     phones keep the source order. The row reaches into the margins so the cards stay wide. */
+  .fl .grid.g3 { align-items: stretch; column-gap: clamp(48px, 5vw, 96px); margin-left: calc(-1 * clamp(0px, 14vw - 150px, 140px)); margin-right: calc(-1 * clamp(0px, 14vw - 150px, 140px)); }
+  .fl .grid.g3 > .card:nth-child(1) { order: 2; align-self: start; margin-top: -40px; }
+  .fl .grid.g3 > .card:nth-child(2) { order: 1; margin-top: 48px; }
+  .fl .grid.g3 > .card:nth-child(3) { order: 3; margin-top: 48px; }
+  .fl .card { padding: clamp(24px, 2.2vw, 32px) clamp(28px, 2.8vw, 42px); }
+  .fl .card .num { margin-bottom: 16px; }
+  .fl .card .link { padding-top: 20px; }
+}
+@media (min-width: 1200px) { .fl .card h3 { white-space: nowrap; } }
 .icon { width: 44px; height: 44px; margin-bottom: 28px; color: var(--fg-strong); fill: none; stroke: currentColor; stroke-width: 1.2; }
 
 .pillars { display: grid; border-top: 1px solid var(--line); }

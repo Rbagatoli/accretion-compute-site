@@ -84,6 +84,36 @@
   });
 })();
 
+// The brand symbol (same geometry as the logo SVGs), with slowly turning rings. Used by the hero and "Three ways in".
+var acSymbol = (function () {
+  var uid = 0;
+  return function symbol(tone) {
+    var id = 'L' + (uid++), lit = tone !== 'light';
+    var stops = lit ? ['#FFFFFF', '#B9BDC4', '#F3F4F6', '#8E939B', '#E6E8EB', '#A9ADB4'] : ['#050506', '#5A5E66', '#0B0C0E', '#3A3D42', '#1A1B1E', '#5A5E66'];
+    var c = lit ? '#F3F4F6' : '#0B0C0E', core = lit ? '#FFFFFF' : '#050506', glow = lit ? '#D9DCE1' : '#3A3D42';
+    var fade = function (d) {
+      return '<linearGradient id="' + id + d + '" x1="0" y1="0" x2="' + (d === 'h' ? 1 : 0) + '" y2="' + (d === 'h' ? 0 : 1) + '"><stop offset="0" stop-color="' + c + '" stop-opacity="0"/><stop offset=".5" stop-color="' + c + '"/><stop offset="1" stop-color="' + c + '" stop-opacity="0"/></linearGradient>';
+    };
+    var ring = function (cls, cx, cy, op, dur, rev) {
+      return '<g class="' + cls + '"><animateTransform attributeName="transform" type="rotate" from="' + (rev ? 360 : 0) + ' 0 0" to="' + (rev ? 0 : 360) + ' 0 0" dur="' + dur + 's" repeatCount="indefinite"/>' +
+        '<circle class="glow" cx="' + cx + '" cy="' + cy + '" r="100" stroke="' + glow + '" stroke-width="32" filter="url(#' + id + 'b)"/>' +
+        '<circle class="ring" cx="' + cx + '" cy="' + cy + '" r="100" stroke="url(#' + id + 'p)" stroke-width="2.4" opacity="' + op + '"/></g>';
+    };
+    return '<svg class="sym" viewBox="-130 -130 260 260" aria-hidden="true"><defs>' + fade('h') + fade('v') +
+      '<filter id="' + id + 'b" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>' +
+      '<filter id="' + id + 's" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>' +
+      '<linearGradient id="' + id + 'p" gradientUnits="userSpaceOnUse" x1="-110" y1="-110" x2="110" y2="110">' +
+      stops.map(function (s, i) { return '<stop offset="' + (i / 5) + '" stop-color="' + s + '"/>'; }).join('') +
+      '<animateTransform attributeName="gradientTransform" type="rotate" from="0 0 0" to="360 0 0" dur="14s" repeatCount="indefinite"/></linearGradient></defs>' +
+      '<g fill="none">' + ring('r1', 0, -7, .55, 26) + ring('r2', 6, 4, 1, 34, true) + ring('r3', -6, 4, .55, 30) + '</g>' +
+      '<circle r="2.2" fill="' + core + '" opacity=".9"><animateMotion dur="9s" repeatCount="indefinite" path="M106 4a100 100 0 1 0-200 0a100 100 0 1 0 200 0"/></circle>' +
+      '<circle r="1.6" fill="' + core + '" opacity=".5"><animateMotion dur="14s" repeatCount="indefinite" path="M-106 4a100 100 0 1 1 200 0a100 100 0 1 1-200 0"/></circle>' +
+      '<rect class="fh" x="-70" y="-.8" width="140" height="1.6" fill="url(#' + id + 'h)"/>' +
+      '<rect class="fv" x="-.8" y="-30" width="1.6" height="60" fill="url(#' + id + 'v)"/>' +
+      '<circle class="halo" r="10" fill="' + core + '" filter="url(#' + id + 's)"/><circle class="core" r="3.5" fill="' + core + '"/></svg>';
+  };
+})();
+
 // Home hero: a living logo with a glowing horizon bent around it and a few grains of dust. It follows the site colour theme.
 (function () {
   document.addEventListener('DOMContentLoaded', function () {
@@ -96,33 +126,7 @@
 
     var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 
-    // The brand symbol (same geometry as the logo SVGs), with slowly turning rings.
-    var uid = 0;
-    function symbol(tone) {
-      var id = 'L' + (uid++), lit = tone !== 'light';
-      var stops = lit ? ['#FFFFFF', '#B9BDC4', '#F3F4F6', '#8E939B', '#E6E8EB', '#A9ADB4'] : ['#050506', '#5A5E66', '#0B0C0E', '#3A3D42', '#1A1B1E', '#5A5E66'];
-      var c = lit ? '#F3F4F6' : '#0B0C0E', core = lit ? '#FFFFFF' : '#050506', glow = lit ? '#D9DCE1' : '#3A3D42';
-      var fade = function (d) {
-        return '<linearGradient id="' + id + d + '" x1="0" y1="0" x2="' + (d === 'h' ? 1 : 0) + '" y2="' + (d === 'h' ? 0 : 1) + '"><stop offset="0" stop-color="' + c + '" stop-opacity="0"/><stop offset=".5" stop-color="' + c + '"/><stop offset="1" stop-color="' + c + '" stop-opacity="0"/></linearGradient>';
-      };
-      var ring = function (cls, cx, cy, op, dur, rev) {
-        return '<g class="' + cls + '"><animateTransform attributeName="transform" type="rotate" from="' + (rev ? 360 : 0) + ' 0 0" to="' + (rev ? 0 : 360) + ' 0 0" dur="' + dur + 's" repeatCount="indefinite"/>' +
-          '<circle class="glow" cx="' + cx + '" cy="' + cy + '" r="100" stroke="' + glow + '" stroke-width="32" filter="url(#' + id + 'b)"/>' +
-          '<circle class="ring" cx="' + cx + '" cy="' + cy + '" r="100" stroke="url(#' + id + 'p)" stroke-width="2.4" opacity="' + op + '"/></g>';
-      };
-      return '<svg class="sym" viewBox="-130 -130 260 260" aria-hidden="true"><defs>' + fade('h') + fade('v') +
-        '<filter id="' + id + 'b" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>' +
-        '<filter id="' + id + 's" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>' +
-        '<linearGradient id="' + id + 'p" gradientUnits="userSpaceOnUse" x1="-110" y1="-110" x2="110" y2="110">' +
-        stops.map(function (s, i) { return '<stop offset="' + (i / 5) + '" stop-color="' + s + '"/>'; }).join('') +
-        '<animateTransform attributeName="gradientTransform" type="rotate" from="0 0 0" to="360 0 0" dur="14s" repeatCount="indefinite"/></linearGradient></defs>' +
-        '<g fill="none">' + ring('r1', 0, -7, .55, 26) + ring('r2', 6, 4, 1, 34, true) + ring('r3', -6, 4, .55, 30) + '</g>' +
-        '<circle r="2.2" fill="' + core + '" opacity=".9"><animateMotion dur="9s" repeatCount="indefinite" path="M106 4a100 100 0 1 0-200 0a100 100 0 1 0 200 0"/></circle>' +
-        '<circle r="1.6" fill="' + core + '" opacity=".5"><animateMotion dur="14s" repeatCount="indefinite" path="M-106 4a100 100 0 1 1 200 0a100 100 0 1 1-200 0"/></circle>' +
-        '<rect class="fh" x="-70" y="-.8" width="140" height="1.6" fill="url(#' + id + 'h)"/>' +
-        '<rect class="fv" x="-.8" y="-30" width="1.6" height="60" fill="url(#' + id + 'v)"/>' +
-        '<circle class="halo" r="10" fill="' + core + '" filter="url(#' + id + 's)"/><circle class="core" r="3.5" fill="' + core + '"/></svg>';
-    }
+    var symbol = acSymbol;
 
     // Sizes are in symbol widths (S). Every point is pushed outward by a point-mass lens,
     // so the horizon and the dust bend around the logo instead of passing through it.
@@ -279,6 +283,178 @@
       var was = on; on = en[0].isIntersecting;
       if (on && !was) { last = performance.now(); requestAnimationFrame(loop); }
     }).observe(hero);
+  });
+})();
+
+// Home "Three ways in": gas leaves the three cards and falls into a small, quiet copy of the brand symbol below
+// the middle card. Real accretion: each parcel starts with some spin, settles into a tipped disk, loses its spin
+// there and spirals in, dimming as it goes; the near side of the disk passes in front of the symbol.
+// Desktop only (the canvases are hidden below 1000px). Follows the site's black/white toggle.
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var sec = document.querySelector('.fl');
+    var cv = sec && sec.querySelector('.fl-cv'), fv = sec && sec.querySelector('.fl-front'), box = sec && sec.querySelector('.fl-sym');
+    var grid = sec && sec.querySelector('.grid');
+    if (!cv || !cv.getContext || !fv || !box || !grid) return;
+    var cards = [].slice.call(grid.querySelectorAll('.card'));
+    if (cards.length !== 3) return;
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var ctx = cv.getContext('2d'), ftx = fv.getContext('2d');
+    // Strength of the whole effect: the symbol, its horizon lines and the gas all turn down together.
+    var Q = +sec.getAttribute('data-q') || 1;
+    var NP = +sec.getAttribute('data-n') || 200;
+    function smooth(v) { v = Math.max(0, Math.min(1, v)); return v * v * (3 - 2 * v); }
+
+    var INK, halo, core, glows;
+    function tone() {
+      // the section takes the page background, which flips with the theme
+      var h = getComputedStyle(sec).getPropertyValue('--bg').trim().replace('#', '');
+      if (h.length === 3) h = h.replace(/./g, '$&$&');
+      var lum = (parseInt(h.slice(0, 2), 16) + parseInt(h.slice(2, 4), 16) + parseInt(h.slice(4, 6), 16)) / 3;
+      var T = isNaN(lum) || lum > 128 ? 'light' : 'dark';
+      INK = T === 'light' ? [11, 12, 14] : [243, 244, 246];
+      box.innerHTML = acSymbol(T);
+      box.style.opacity = Q >= 1 ? '' : Q >= 0.6 ? 0.55 + 0.45 * Q : 0.82 * Math.pow(Q / 0.6, 0.8);
+      halo = box.querySelector('.halo'); core = box.querySelector('.core'); glows = [].slice.call(box.querySelectorAll('.glow'));
+    }
+    function rgba(al) { return 'rgba(' + INK[0] + ',' + INK[1] + ',' + INK[2] + ',' + Math.max(0, al).toFixed(3) + ')'; }
+
+    var W, H, cx, cy, S, E, L, src = [], on = false, last = 0, energy = 0, seeded = false;
+    function size() {
+      if (getComputedStyle(cv).display === 'none') return false;
+      var r = sec.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height;
+      [cv, fv].forEach(function (c) { c.width = W * dpr; c.height = H * dpr; });
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ftx.setTransform(dpr, 0, 0, dpr, 0, 0); measure(); return true;
+    }
+    // The symbol sits centred under the middle card, clear of it by about its own width. Cards are taken
+    // left to right as they appear on screen (the CSS reorders them), not in source order.
+    function measure() {
+      var r = sec.getBoundingClientRect();
+      src = cards.map(function (c) { var k = c.getBoundingClientRect(); return { l: k.left - r.left, r: k.right - r.left, t: k.top - r.top, b: k.bottom - r.top }; })
+        .sort(function (a, b) { return a.l - b.l; });
+      var m = src[1];
+      S = box.querySelector('.sym').getBoundingClientRect().width;
+      cx = (m.l + m.r) / 2; cy = m.b + Math.max(100, S * 1.1);
+      box.style.left = cx + 'px'; box.style.top = cy + 'px';
+      E = 0.44 * S; L = Math.min(2.8 * S, W * 0.46);
+    }
+    // Point-mass lens: the far side of the disk is bent up and over the hole.
+    function lens(x, y, w) { var b = Math.hypot(x, y) || 0.001, k = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b; k = 1 + (k - 1) * w; return [cx + x * k, cy + y * k]; }
+
+    // Units are symbol widths. X right, Y up out of the disk, Z away from the viewer; the disk is tipped toward us a little.
+    var GM = 12, TILT = 0.22, CT = Math.sqrt(1 - TILT * TILT), RIN = 0.36;
+    function scr(X, Y, Z) { return [X * S, (-Y * CT - Z * TILT) * S]; }
+    // Where gas leaves each card, as [edge, from, to] in fractions along that edge: the left card's lower-right
+    // corner, the middle of the middle card's bottom, the right card's lower-left corner.
+    var ZONES = [[['b', 0.56, 1], ['r', 0.55, 1]], [['b', 0.13, 0.88]], [['b', 0, 0.44], ['l', 0.55, 1]]];
+    function spawn(delay) {
+      var ci = Math.floor(Math.random() * 3), k = src[ci], zones = ZONES[ci], sx, sy, nx = 0, ny = 0;
+      var len = zones.map(function (z) { return (z[2] - z[1]) * (z[0] === 'b' ? k.r - k.l : k.b - k.t); });
+      var pick = Math.random() * (len[0] + (len[1] || 0)), z = pick < len[0] ? zones[0] : zones[1], f = z[1] + Math.random() * (z[2] - z[1]);
+      if (z[0] === 'b') { sx = k.l + f * (k.r - k.l); sy = k.b + 4; ny = 1; }
+      else { sx = z[0] === 'r' ? k.r + 4 : k.l - 4; sy = k.t + f * (k.b - k.t); nx = z[0] === 'r' ? 1 : -1; }
+      var Z = (0.5 + Math.random() * 1.6) * (Math.random() < 0.5 ? -1 : 1), X = (sx - cx) / S, Y = ((cy - sy) / S - Z * TILT) / CT;
+      // each parcel carries some spin, all the same way round; capped below orbital speed so none is flung away
+      var rho = Math.hypot(X, Z), rc = 0.7 + Math.random() * 1.3, vt = Math.min(Math.sqrt(GM * rc) / rho, 0.8 * Math.sqrt(GM / Math.hypot(X, Y, Z)));
+      var push = 0.25 + Math.random() * 0.3;
+      return { X: X, Y: Y, Z: Z, vX: -Z / rho * vt + nx * push, vY: -ny * push / CT, vZ: X / rho * vt,
+        r0: Math.hypot(X, Y, Z), delay: delay, t: 0, s: 0.9 + Math.random() * 0.8, o: 0.55 + Math.random() * 0.4, px: null, py: null, pc: null };
+    }
+    function step(p, dt) {
+      var r2 = p.X * p.X + p.Y * p.Y + p.Z * p.Z + 0.02, r = Math.sqrt(r2), g = -GM / (r2 * r);
+      var flat = smooth((6 - r) / 3);
+      // the gas settles into the disk plane, and rubbing against itself there it slowly loses its spin
+      p.vX += g * p.X * dt; p.vZ += g * p.Z * dt;
+      p.vY += (g * p.Y - (0.4 + 5 * flat) * p.vY - 8 * flat * p.Y) * dt;
+      var drag = Math.exp(-dt * 0.1 * flat * smooth(1 - Math.abs(p.Y) / 0.4));
+      p.vX *= drag; p.vZ *= drag;
+      p.X += p.vX * dt; p.Y += p.vY * dt; p.Z += p.vZ * dt; p.t += dt;
+      return r;
+    }
+    var parts = [], runners = [];
+    function seed() {
+      parts = []; for (var n = 0; n < NP; n++) parts.push(spawn(Math.random() * 6));
+      runners = []; for (var k = 0; k < 10; k++) runners.push({ u: Math.random(), sp: 0.12 + Math.random() * 0.06, o: 0.3 + Math.random() * 0.2 });
+      for (var w = 0; w < 120; w++) advance(0.05);
+      seeded = true;
+    }
+    function advance(dt) {
+      // a smaller symbol runs its clock faster, so the gas crosses the screen at the same speed at any size
+      var ts = Math.max(1, 128 / S);
+      parts.forEach(function (p, k) {
+        if (p.delay > 0) { p.delay -= dt; return; }
+        var r;
+        for (var j = 0; j < 6; j++) r = step(p, dt * ts / 6);
+        if (r < RIN || r > 10 || p.t > 16) { if (r < RIN) energy = Math.min(1, energy + 0.015); parts[k] = spawn(0); }
+      });
+    }
+    function draw(p) {
+      if (p.delay > 0) return;
+      var r = Math.hypot(p.X, p.Y, p.Z), q0 = scr(p.X, p.Y, p.Z), q = lens(q0[0], q0[1], smooth((p.Z + 0.3) / 0.6));
+      // bright as it leaves the card, dimmer the closer it gets; quiet once it is part of the disk
+      var disk = smooth((2.4 - r) / 1.3) * smooth(1 - Math.abs(p.Y) / 0.6), vh = Math.hypot(p.vX, p.vZ) || 1;
+      var dop = Math.max(0.4, 1 + 0.5 * disk * (-p.vZ / vh));
+      var al = p.o * smooth(p.t / 0.25) * smooth((r - RIN) / 0.3) * (0.14 + 0.86 * smooth((r - RIN) / Math.max(0.5, p.r0 - RIN))) * dop * Q;
+      var c = p.Z < 0 && r < 1.4 ? ftx : ctx, x = q[0], y = q[1], sz = p.s * (1 - 0.4 * disk);
+      if (p.px !== null && p.pc === c && Math.hypot(x - p.px, y - p.py) < 40) {
+        c.globalAlpha = Math.min(1, al * (0.6 - 0.3 * disk)); c.strokeStyle = rgba(1); c.lineWidth = sz; c.beginPath(); c.moveTo(p.px, p.py); c.lineTo(x, y); c.stroke();
+      }
+      c.globalAlpha = Math.min(1, al); c.fillStyle = rgba(1); c.beginPath(); c.arc(x, y, sz * 0.8, 0, 6.2832); c.fill();
+      p.px = x; p.py = y; p.pc = c;
+    }
+    function frame(dt, t) {
+      measure();
+      ctx.clearRect(0, 0, W, H); ftx.clearRect(0, 0, W, H); ctx.lineCap = ftx.lineCap = 'round';
+      var breathe = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / 5.5);
+      // the horizon and its two outer lines, bent around the hole like the hero's
+      [0, -0.1, 0.1].forEach(function (off) {
+        var main = off === 0, base = (main ? 0.8 : 0.35) * (0.75 + 0.25 * breathe) * Q;
+        var gr = ctx.createLinearGradient(cx - L, 0, cx + L, 0);
+        gr.addColorStop(0, rgba(0)); gr.addColorStop(0.3, rgba(base * 0.35)); gr.addColorStop(0.5, rgba(base)); gr.addColorStop(0.7, rgba(base * 0.35)); gr.addColorStop(1, rgba(0));
+        ctx.beginPath();
+        for (var x = -L, k = 0; x <= L; x += 3, k++) { var q = lens(x, off * S, 1); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }
+        ctx.strokeStyle = gr; ctx.lineWidth = main ? 1.1 : 0.7; ctx.stroke();
+      });
+      // a few grains running round the outer lines, as on the hero
+      ctx.fillStyle = rgba(1);
+      runners.forEach(function (p) {
+        p.u = (p.u + dt * p.sp) % 1;
+        for (var j = 0; j < 4; j++) {
+          var u = p.u - j * 0.006; if (u < 0) u += 1;
+          var top = u < 0.5, f = top ? u * 2 : (u - 0.5) * 2, x = (top ? 1 - 2 * f : -1 + 2 * f) * L * 0.95;
+          var q = lens(x, (top ? -0.1 : 0.1) * S, 1);
+          var al = (1 - j / 4) * p.o * smooth((1 - Math.abs(x) / (L * 0.95)) / 0.2);
+          if (al < 0.01) continue;
+          ctx.globalAlpha = al * Q; ctx.beginPath(); ctx.arc(q[0], q[1], j ? 0.8 : 1.1, 0, 6.2832); ctx.fill();
+        }
+      });
+      advance(dt);
+      parts.forEach(draw);
+      ctx.globalAlpha = 1; ftx.globalAlpha = 1;
+      // the core flares a little whenever gas falls in
+      energy *= Math.exp(-dt * 1.2);
+      var e = Math.min(1, 0.3 + energy + 0.15 * breathe);
+      halo.style.opacity = (0.3 + 0.55 * e).toFixed(3); halo.style.transform = 'scale(' + (1 + 0.6 * e).toFixed(3) + ')';
+      core.style.transform = 'scale(' + (1 + 0.2 * e).toFixed(3) + ')';
+      glows.forEach(function (gl) { gl.style.opacity = (0.08 + 0.18 * e).toFixed(3); });
+    }
+    function loop(tm) { if (!on) return; var dt = Math.min(0.05, (tm - last) / 1000 || 0); last = tm; frame(dt, tm / 1000); requestAnimationFrame(loop); }
+    // Wide screens only: nothing is set up until the canvases are shown, and a resize up to desktop starts it then.
+    function ready() { if (!size()) return false; if (!seeded) seed(); return true; }
+    tone();
+    function start() {
+      if (!ready()) return;
+      if (still || !('IntersectionObserver' in window)) { frame(0, 0); return; }
+      new IntersectionObserver(function (en) {
+        var was = on; on = en[0].isIntersecting;
+        if (on && !was) { last = performance.now(); requestAnimationFrame(loop); }
+      }).observe(sec);
+    }
+    var started = false;
+    function boot() { if (!started && ready()) { started = true; start(); } }
+    window.addEventListener('resize', function () { if (!started) boot(); else if (size() && still) frame(0, 0); });
+    document.addEventListener('ac-theme', function () { tone(); if (started && still && size()) frame(0, 0); });
+    if (document.readyState === 'complete') boot(); else window.addEventListener('load', boot);
   });
 })();
 
@@ -1010,7 +1186,7 @@
   var lastIdx = null, hole = { x: 0, y: 0, a: 0, vis: false }, spx = 0;
   function render(force) {
     var still = reduce.matches;
-    var p = still ? 1 : warp(progress());
+    var p = still ? 1 : warp(shownP());
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.lineCap = "round"; ctx.lineJoin = "round";
@@ -1313,6 +1489,7 @@
   function loop(tm) {
     if (!running) return;
     var dt = Math.min(0.05, (tm - last) / 1000 || 0); last = tm; lastT = tm / 1000;
+    glide(dt);
     drawDust(lastT);
     drawHole(dt, lastT);
     requestAnimationFrame(loop);
@@ -1350,8 +1527,20 @@
     var r = track.getBoundingClientRect(), span = r.height - window.innerHeight;
     return span > 0 ? clamp(-r.top / span, 0, 1) : 0;
   }
+  // The drawing glides toward the scroll position (about a fifth of a second to catch up), so a wheel
+  // notch becomes a smooth move instead of a jump. Off screen it simply snaps to where the page is.
+  var shown = null;
+  function shownP() { if (shown === null) shown = progress(); return shown; }
+  function glide(dt) {
+    var target = progress(), d = target - shownP();
+    if (Math.abs(d) < 0.00005) { if (d !== 0) { shown = target; render(false); } return; }
+    shown += d * (1 - Math.exp(-dt * 11));
+    render(false);
+  }
   var queued = false;
   function onScroll() {
+    if (running) return; // the running loop eases toward the new position
+    shown = null;
     if (queued) return;
     queued = true;
     requestAnimationFrame(function () { queued = false; render(false); });
@@ -1362,7 +1551,7 @@
   window.addEventListener("resize", resize);
   if (window.ResizeObserver) { var ro = new ResizeObserver(resize); ro.observe(canvas); if (dustC) ro.observe(dustC); }
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (en) { inView = en[0].isIntersecting; loopCheck(); if (inView) render(false); }).observe(track);
+    new IntersectionObserver(function (en) { inView = en[0].isIntersecting; if (inView && !running) shown = null; loopCheck(); if (inView) render(false); }).observe(track);
   } else inView = true;
   if (reduce.addEventListener) reduce.addEventListener("change", function () { mountSymbol(); resize(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { render(true); });
