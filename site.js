@@ -143,9 +143,9 @@ var acSymbol = (function () {
     }
     var dust = [];
     for (var i = 0; i < GRAINS; i++) dust.push(grain(true));
-    // Faint background dust drifting across the whole hero, like the story section's, but sparser.
+    // Background dust drifting across the whole hero, like the story section's, but sparser.
     var motes = [];
-    for (i = 0; i < (innerWidth < 720 ? 70 : 160); i++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 0.6 + Math.random() * 1.1 });
+    for (i = 0; i < (innerWidth < 720 ? 90 : 190); i++) motes.push({ x: Math.random(), y: Math.random(), ph: Math.random(), o: Math.random(), s: 1 + Math.random() * 1.4 });
     var runners = [];
     for (i = 0; i < 4; i++) runners.push({ u: Math.random(), sp: 0.12 + Math.random() * 0.06, o: 0.25 + Math.random() * 0.15 });
 
@@ -183,7 +183,7 @@ var acSymbol = (function () {
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = rgba(1);
       motes.forEach(function (m) {
-        var a = (0.15 + 0.4 * m.o * (0.6 + 0.4 * Math.sin(t * 1.3 + m.ph * 40))) * (theme === 'dark' ? 1 : 0.7);
+        var a = (0.4 + 0.55 * m.o * (0.6 + 0.4 * Math.sin(t * 1.3 + m.ph * 40))) * (theme === 'dark' ? 1 : 0.85);
         ctx.globalAlpha = a;
         ctx.fillRect(m.x * w + Math.sin(t * 0.15 + m.ph * 6) * 16, m.y * h + Math.cos(t * 0.12 + m.ph * 5) * 16, m.s, m.s);
       });
@@ -289,7 +289,7 @@ var acSymbol = (function () {
 // Home "Three ways in": gas leaves the three cards and falls into a small, quiet copy of the brand symbol below
 // the middle card. Real accretion: each parcel starts with some spin, settles into a tipped disk, loses its spin
 // there and spirals in, dimming as it goes; the near side of the disk passes in front of the symbol.
-// Desktop only (the canvases are hidden below 1000px). Follows the site's black/white toggle.
+// On every screen size (stacked cards get the hole on top). Follows the site's black/white toggle.
 (function () {
   document.addEventListener('DOMContentLoaded', function () {
     var sec = document.querySelector('.fl');
@@ -319,22 +319,24 @@ var acSymbol = (function () {
     }
     function rgba(al) { return 'rgba(' + INK[0] + ',' + INK[1] + ',' + INK[2] + ',' + Math.max(0, al).toFixed(3) + ')'; }
 
-    var W, H, cx, cy, S, E, L, src = [], on = false, last = 0, energy = 0, seeded = false;
+    var stacked = false, W, H, cx, cy, S, E, L, src = [], on = false, last = 0, energy = 0, seeded = false;
     function size() {
       if (getComputedStyle(cv).display === 'none') return false;
       var r = sec.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height;
       [cv, fv].forEach(function (c) { c.width = W * dpr; c.height = H * dpr; });
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ftx.setTransform(dpr, 0, 0, dpr, 0, 0); measure(); return true;
     }
-    // The symbol sits centred under the middle card, clear of it by about its own width. Cards are taken
-    // left to right as they appear on screen (the CSS reorders them), not in source order.
+    // Side by side: the symbol sits centred under the middle card, clear of it by about its own width; cards are
+    // taken left to right as they appear on screen (the CSS reorders them), not in source order.
+    // Stacked (narrow screens): the symbol sits centred above the first card, in the gap under the heading.
     function measure() {
       var r = sec.getBoundingClientRect();
-      src = cards.map(function (c) { var k = c.getBoundingClientRect(); return { l: k.left - r.left, r: k.right - r.left, t: k.top - r.top, b: k.bottom - r.top }; })
-        .sort(function (a, b) { return a.l - b.l; });
-      var m = src[1];
+      src = cards.map(function (c) { var k = c.getBoundingClientRect(); return { l: k.left - r.left, r: k.right - r.left, t: k.top - r.top, b: k.bottom - r.top }; });
+      stacked = Math.abs(src[0].l - src[1].l) < 8;
+      src.sort(stacked ? function (a, b) { return a.t - b.t; } : function (a, b) { return a.l - b.l; });
+      var m = stacked ? src[0] : src[1];
       S = box.querySelector('.sym').getBoundingClientRect().width;
-      cx = (m.l + m.r) / 2; cy = m.b + Math.max(100, S * 1.1);
+      cx = (m.l + m.r) / 2; cy = stacked ? m.t - Math.max(72, S * 1.2) : m.b + Math.max(100, S * 1.1);
       box.style.left = cx + 'px'; box.style.top = cy + 'px';
       E = 0.44 * S; L = Math.min(2.8 * S, W * 0.46);
     }
@@ -347,16 +349,23 @@ var acSymbol = (function () {
     // Where gas leaves each card, as [edge, from, to] in fractions along that edge: the left card's lower-right
     // corner, the middle of the middle card's bottom, the right card's lower-left corner.
     var ZONES = [[['b', 0.56, 1], ['r', 0.55, 1]], [['b', 0.13, 0.88]], [['b', 0, 0.44], ['l', 0.55, 1]]];
+    // stacked: the top card sheds gas from its top edge and the upper part of its sides; the two below, up both side lanes
+    var ZSTACK = [[['t', 0, 1], ['l', 0, 0.7], ['r', 0, 0.7]], [['l', 0, 1], ['r', 0, 1]], [['l', 0, 1], ['r', 0, 1]]];
     function spawn(delay) {
-      var ci = Math.floor(Math.random() * 3), k = src[ci], zones = ZONES[ci], sx, sy, nx = 0, ny = 0;
-      var len = zones.map(function (z) { return (z[2] - z[1]) * (z[0] === 'b' ? k.r - k.l : k.b - k.t); });
-      var pick = Math.random() * (len[0] + (len[1] || 0)), z = pick < len[0] ? zones[0] : zones[1], f = z[1] + Math.random() * (z[2] - z[1]);
+      var ci = Math.floor(Math.random() * 3), k = src[ci], zones = (stacked ? ZSTACK : ZONES)[ci], sx, sy, nx = 0, ny = 0;
+      var len = zones.map(function (z) { return (z[2] - z[1]) * (z[0] === 'b' || z[0] === 't' ? k.r - k.l : k.b - k.t); });
+      var pick = Math.random() * len.reduce(function (a, b) { return a + b; }, 0), zi = 0;
+      while (zi < len.length - 1 && pick >= len[zi]) { pick -= len[zi]; zi++; }
+      var z = zones[zi], f = z[1] + Math.random() * (z[2] - z[1]);
       if (z[0] === 'b') { sx = k.l + f * (k.r - k.l); sy = k.b + 4; ny = 1; }
+      else if (z[0] === 't') { sx = k.l + f * (k.r - k.l); sy = k.t - 4; ny = -1; }
       else { sx = z[0] === 'r' ? k.r + 4 : k.l - 4; sy = k.t + f * (k.b - k.t); nx = z[0] === 'r' ? 1 : -1; }
       var Z = (0.5 + Math.random() * 1.6) * (Math.random() < 0.5 ? -1 : 1), X = (sx - cx) / S, Y = ((cy - sy) / S - Z * TILT) / CT;
       // each parcel carries some spin, all the same way round; capped below orbital speed so none is flung away
       var rho = Math.hypot(X, Z), rc = 0.7 + Math.random() * 1.3, vt = Math.min(Math.sqrt(GM * rc) / rho, 0.8 * Math.sqrt(GM / Math.hypot(X, Y, Z)));
       var push = 0.25 + Math.random() * 0.3;
+      // stacked, the lanes are narrow: little spin, and gas rises straight up them until it nears the hole
+      if (stacked) { vt *= 0.3; nx = 0; if (z[0] === 'l' || z[0] === 'r') ny = -0.6; }
       return { X: X, Y: Y, Z: Z, vX: -Z / rho * vt + nx * push, vY: -ny * push / CT, vZ: X / rho * vt,
         r0: Math.hypot(X, Y, Z), delay: delay, t: 0, s: 0.9 + Math.random() * 0.8, o: 0.55 + Math.random() * 0.4, px: null, py: null, pc: null };
     }
@@ -385,7 +394,7 @@ var acSymbol = (function () {
         if (p.delay > 0) { p.delay -= dt; return; }
         var r;
         for (var j = 0; j < 6; j++) r = step(p, dt * ts / 6);
-        if (r < RIN || r > 10 || p.t > 16) { if (r < RIN) energy = Math.min(1, energy + 0.015); parts[k] = spawn(0); }
+        if (r < RIN || r > (stacked ? 26 : 10) || p.t > (stacked ? 40 : 16)) { if (r < RIN) energy = Math.min(1, energy + 0.015); parts[k] = spawn(0); }
       });
     }
     function draw(p) {
@@ -1212,9 +1221,9 @@ var acSymbol = (function () {
     // Its lowest point is always at or above Y1 + G, so it never passes through the generator yard.
     var arr = 1 - Math.pow(1 - c01((p - T.hall0) / (T.hall1 - 0.01 - T.hall0)), 3);
     var Yh = Y1 + G + (1 - arr) * 1.15, Y3 = Yh + G;
-    // the hall building on the plan never moves: it stays on the ground and calmly fades to its dashed
-    // footprint (the ground's "ghost" outline) while the generator yard lifts off
-    var tileA = 1 - smooth((lift - 0.1) / 0.75);
+    // the hall building on the plan never moves: it stays on the ground, roof on, until the full hall drops in
+    // from above, then fades to its dashed footprint as the full hall lights up (so a hall is always in view)
+    var tileA = 1 - smooth(arr * 1.6);
 
     // camera: from the plan transform (straight down) to the stack view
     var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;

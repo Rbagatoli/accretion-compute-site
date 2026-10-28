@@ -305,17 +305,21 @@ a.card:hover { border-color: var(--fg-strong); transform: translateY(-3px); }
 .card .link { margin-top: auto; padding-top: 28px; }
 .card .num { font: 400 12px/1 var(--head); letter-spacing: 0.2em; color: var(--fg-dim); margin-bottom: 28px; display: block; }
 
-/* Home "Three ways in": the cards feed gas into a small black hole under the middle card (drawn by site.js).
-   Wide screens only; below 1000px it is the plain card grid. */
-.fl-cv, .fl-front, .fl-sym { display: none; }
+/* Home "Three ways in": the cards feed gas into a small black hole (drawn by site.js). Wide screens: under the
+   middle card. Narrower, where the cards stack: above the first card, the gas rising up the side lanes into it. */
+.fl { position: relative; overflow: hidden; isolation: isolate; }
+.fl-cv, .fl-front { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.fl-cv { z-index: -1; }
+.fl-front { z-index: 1; }
+.fl-sym { display: block; position: absolute; width: 64px; z-index: 0; pointer-events: none; transform: translate(-50%, -50%); }
+.fl-sym .sym { display: block; width: 100%; overflow: visible; }
+.fl .wrap { position: relative; z-index: 2; padding-bottom: 60px; }
+@media (max-width: 999.98px) {
+  .fl .head-block { margin-bottom: 190px; }
+  .fl .grid.g3 { grid-template-columns: 1fr; width: calc(100% - 28px); max-width: 560px; margin-left: auto; margin-right: auto; }
+}
 @media (min-width: 1000px) {
-  .fl { position: relative; overflow: hidden; isolation: isolate; }
-  .fl-cv, .fl-front { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .fl-cv { z-index: -1; }
-  .fl-front { z-index: 1; }
-  .fl-sym { display: block; position: absolute; width: 92px; z-index: 0; pointer-events: none; transform: translate(-50%, -50%); }
-  .fl-sym .sym { display: block; width: 100%; overflow: visible; }
-  .fl .wrap { position: relative; z-index: 2; padding-bottom: 60px; }
+  .fl-sym { width: 92px; }
   /* the first card (AI companies, 01) sits in the middle and higher, the other two lower and level either side;
      phones keep the source order. The row reaches into the margins so the cards stay wide. */
   .fl .grid.g3 { align-items: stretch; column-gap: clamp(48px, 5vw, 96px); margin-left: calc(-1 * clamp(0px, 14vw - 150px, 140px)); margin-right: calc(-1 * clamp(0px, 14vw - 150px, 140px)); }
