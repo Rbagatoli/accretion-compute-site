@@ -6,13 +6,12 @@
   <title>Accretion Compute | AI compute, built at the source of energy</title>
   <meta name="description" content="Accretion Compute is building AI-ready capacity (power, cooling, space and connectivity) where energy is produced, and leasing it to AI companies. Part of Ion Group.">
   <link rel="canonical" href="https://accretioncompute.com/">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light">
-
+  <meta name="theme-color" content="#050506">
+  
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Accretion Compute">
   <meta property="og:title" content="Accretion Compute">
-  <meta property="og:description" content="AI compute, built at the source of energy.">
+  <meta property="og:description" content="Accretion Compute is building AI-ready capacity (power, cooling, space and connectivity) where energy is produced, and leasing it to AI companies. Part of Ion Group.">
   <meta property="og:url" content="https://accretioncompute.com/">
   <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -28,103 +27,322 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
-  <link rel="stylesheet" href="styles.css?v=2">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Accretion Compute",
-    "url": "https://accretioncompute.com/",
-    "logo": "https://accretioncompute.com/icon-512.png",
-    "parentOrganization": { "@type": "Organization", "name": "Ion Group" }
-  }
-  </script>
+  <link rel="stylesheet" href="styles.css?v=bb42b5bc">
+  <script src="site.js?v=bb42b5bc" defer></script>
 </head>
-<body>
+<body class="page-index">
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="bar">
-    <a class="bar-mark" href="#top" aria-label="Accretion Compute, back to top">
-      <img src="assets/logos/accretion-compute-wordmark-black.svg" alt="" width="300" height="40">
-    </a>
-    <a class="bar-link" href="#contact">Contact</a>
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="./" aria-label="Accretion Compute home">
+        <img src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="capacity.html">Capacity</a>
+        <a href="energy.html">Energy</a>
+        <a href="sites.html">Site selection</a>
+        <a href="partners.html">Partners</a>
+        <a href="about.html">About</a>
+        <a class="nav-cta" href="contact.html">Contact</a>
+      </nav>
+    </div>
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
-      <div class="disk" aria-hidden="true"></div>
-      <h1 class="hero-logo">
-        <img src="assets/logos/accretion-compute-stacked-black.svg" alt="Accretion Compute" width="1000" height="640">
-      </h1>
-      <p class="hero-line">AI compute, built at the source of energy.</p>
-      <p class="hero-sub">We are building AI-ready capacity where energy is produced, not where the grid queue is.</p>
-      <a class="hero-cue" href="#what" aria-label="Read more"><span></span></a>
-    </section>
+<section class="hero dark">
+  <div class="hero-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="#f3f4f6" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="#f3f4f6" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#f3f4f6"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#f3f4f6"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="#e8eaed">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="#f3f4f6" opacity="0.2"/>
+    <circle r="3.2" fill="#ffffff"/>
+  </g>
+</svg></div>
+  <div class="hero-in">
+    <img class="hero-logo" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560">
+    <h1>AI compute, built at the source of&nbsp;energy.</h1>
+    <p class="lede">We build and run AI-ready capacity where energy is already produced, so AI companies are not left waiting in the grid queue.</p>
+    <div class="actions">
+      <a class="btn" href="capacity.html">For AI companies <span class="arrow"></span></a>
+      <a class="btn ghost" href="partners.html">For energy partners</a>
+    </div>
+  </div>
+  <a class="hero-cue" href="#what"><span class="sr">Scroll to read more</span></a>
+</section>
 
-    <section class="block" id="what" aria-labelledby="what-h">
-      <p class="label"><span>01</span>What we do</p>
-      <h2 id="what-h">Powered capacity for AI</h2>
-      <p class="lede">Accretion Compute builds and operates the physical layer AI runs on: power, cooling, space and connectivity. We lease it to AI companies on multi-year terms. Tenants bring their own hardware; we run the site.</p>
-      <ul class="cells">
-        <li>
-          <h3>Power</h3>
-          <p>Firm, on-site energy sized to the load, with backup designed in from day one.</p>
-        </li>
-        <li>
-          <h3>Cooling</h3>
-          <p>Built for the heat density of modern accelerators, not retrofitted for it.</p>
-        </li>
-        <li>
-          <h3>Space</h3>
-          <p>Secure, purpose-built halls with room to grow alongside the tenant.</p>
-        </li>
-        <li>
-          <h3>Connectivity</h3>
-          <p>Sites chosen with fiber in reach, so compute is close to where it is needed.</p>
-        </li>
-      </ul>
-    </section>
-
-    <section class="block" id="why" aria-labelledby="why-h">
-      <p class="label"><span>02</span>Why energy at the source</p>
-      <h2 id="why-h">The grid is the bottleneck. Energy is not.</h2>
-      <div class="split">
-        <p class="lede">New data centres wait years in line to connect to the grid. Meanwhile, energy is already being produced at sites where no one is using it fully.</p>
-        <div class="split-body">
-          <p>Accretion places compute next to that energy and runs it behind the meter, on sources such as:</p>
-          <ul class="ticks">
-            <li>Pipeline and gathering-system gas</li>
-            <li>Landfill gas</li>
-            <li>Existing industrial sites with power already in place</li>
-          </ul>
-          <p>That means capacity sooner and energy that would otherwise go unused put to work.</p>
-        </div>
+<section class="band" id="what" aria-labelledby="what-h">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">What we do</p>
+        <h2 id="what-h" class="reveal">Powered capacity for AI</h2>
       </div>
-    </section>
+      <div>
+        <p class="lede reveal d1">Accretion Compute builds and operates the physical layer AI runs on, and leases it to AI companies on multi-year terms. Tenants bring their own hardware. We bring the energy, the building and the people who run it.</p>
+        <a class="link reveal d2" href="capacity.html">How capacity works <span class="arrow"></span></a>
+      </div>
+    </div>
+    <div class="pillars" style="margin-top:clamp(48px,7vw,88px)">
+      <div class="reveal">
+        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M25 4 11 25h10l-3 15 15-22H23z"/></svg>
+        <h3>Power</h3>
+        <p>Firm energy generated on site, sized to the load, with redundancy designed in.</p>
+      </div>
+      <div class="reveal d1">
+        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/><circle cx="22" cy="22" r="3"/><path d="M22 19c-2-5 0-10 6-11-1 5-3 8-6 11zM25 23c5-1 9 2 9 8-5-2-7-5-9-8zM19 24c-3 4-8 5-12 1 4-3 8-3 12-1z"/></svg>
+        <h3>Cooling</h3>
+        <p>Designed for the heat density of modern accelerators, including liquid cooling.</p>
+      </div>
+      <div class="reveal d2">
+        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><rect x="9" y="4" width="26" height="36"/><path d="M9 13h26M9 22h26M9 31h26"/><circle cx="29" cy="8.5" r="1"/><circle cx="29" cy="17.5" r="1"/><circle cx="29" cy="26.5" r="1"/><circle cx="29" cy="35.5" r="1"/></svg>
+        <h3>Space</h3>
+        <p>Secure halls built to the tenant's specification, with room to grow on the same site.</p>
+      </div>
+      <div class="reveal d3">
+        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><circle cx="8" cy="22" r="4"/><circle cx="36" cy="10" r="4"/><circle cx="36" cy="34" r="4"/><circle cx="22" cy="22" r="3"/><path d="M12 22h7M25 20l8-8M25 24l8 8"/></svg>
+        <h3>Connectivity</h3>
+        <p>Sites chosen with fiber in reach, so data moves as freely as the power does.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section class="block name" aria-labelledby="name-h">
-      <p class="label"><span>03</span>The name</p>
-      <h2 id="name-h">Accretion</h2>
-      <p class="lede">In astrophysics, accretion is matter spiralling in and gathering around a central mass. An accretion disk is what makes quasars shine: one of the most efficient ways known to turn mass into light.</p>
-      <p class="name-note">We do the same on the ground: gather scattered, stranded energy and concentrate it into compute.</p>
-    </section>
+<section class="band dark" aria-labelledby="flow-h">
+  <div class="wrap">
+    <div class="head-block center">
+      <p class="eyebrow">From energy to compute</p>
+      <h2 id="flow-h" class="reveal">We gather energy and concentrate it into&nbsp;compute</h2>
+      <p class="lede reveal d1">Every Accretion site follows the same path: energy that is already there, turned into power on site, delivered into halls built for AI.</p>
+    </div>
+    <figure class="diagram reveal">
+      <svg class="only-wide" viewBox="0 0 1100 250" role="img" aria-labelledby="flow-t">
+        <title id="flow-t">Energy source, on-site power, AI-ready hall, tenant workloads, connected in sequence</title>
+        <g>
+          <path class="d-soft" d="M150 105h800"/>
+          <path class="d-flow" d="M170 105h170"/>
+          <path class="d-flow" d="M445 105h170"/>
+          <path class="d-flow" d="M720 105h170"/>
+        </g>
+        <g transform="translate(110 105)">
+          <circle class="d-fill" r="58"/>
+          <path class="d-strong" d="M0-24c12 12 16 22 8 32-4 5-12 6-16 0-6-8 4-14 8-32zM-14 18h28"/>
+        </g>
+        <g transform="translate(385 105)">
+          <circle class="d-fill" r="58"/>
+          <path class="d-strong" d="M4-26-12 4h12l-4 22 16-30H0z"/>
+        </g>
+        <g transform="translate(660 105)">
+          <circle class="d-fill" r="58"/>
+          <path class="d-strong" d="M-20-24h40v48h-40zM-20-8h40M-20 8h40"/>
+        </g>
+        <g transform="translate(935 105)">
+          <circle class="d-fill" r="58"/>
+          <path class="d-strong" d="M-18-18h36v36h-36zM-8-8h16v16h-16zM-18-6h-8M-18 6h-8M18-6h8M18 6h8M-6-18v-8M6-18v-8M-6 18v8M6 18v8"/>
+        </g>
+        <text class="d-text d-mid" x="110" y="200">Energy source</text>
+        <text class="d-small d-mid" x="110" y="224">Gas, landfill gas, industrial sites</text>
+        <text class="d-text d-mid" x="385" y="200">On-site power</text>
+        <text class="d-small d-mid" x="385" y="224">Generated behind the meter</text>
+        <text class="d-text d-mid" x="660" y="200">AI-ready hall</text>
+        <text class="d-small d-mid" x="660" y="224">Power, cooling, space, fiber</text>
+        <text class="d-text d-mid" x="935" y="200">Your workloads</text>
+        <text class="d-small d-mid" x="935" y="224">Training and inference</text>
+      </svg>
+      <svg class="only-narrow" viewBox="0 0 340 620" role="img" aria-labelledby="flow-tn">
+        <title id="flow-tn">Energy source, on-site power, AI-ready hall, tenant workloads, connected in sequence</title>
+        <path class="d-soft" d="M60 60v480"/>
+        <path class="d-flow" d="M60 110v60"/><path class="d-flow" d="M60 270v60"/><path class="d-flow" d="M60 430v60"/>
+        <g transform="translate(60 60)"><circle class="d-fill" r="40"/><path class="d-strong" d="M0-17c8 8 11 15 6 22-3 4-9 4-12 0-4-5 3-10 6-22zM-10 12h20"/></g>
+        <g transform="translate(60 220)"><circle class="d-fill" r="40"/><path class="d-strong" d="M3-18-8 3h8l-3 15 11-21H0z"/></g>
+        <g transform="translate(60 380)"><circle class="d-fill" r="40"/><path class="d-strong" d="M-14-17h28v34h-28zM-14-6h28M-14 6h28"/></g>
+        <g transform="translate(60 540)"><circle class="d-fill" r="40"/><path class="d-strong" d="M-13-13h26v26h-26zM-6-6h12v12h-12zM-13-4h-6M-13 4h-6M13-4h6M13 4h6M-4-13v-6M4-13v-6M-4 13v6M4 13v6"/></g>
+        <text class="d-text" x="122" y="56">Energy source</text><text class="d-small" x="122" y="78">Gas, landfill gas, industry</text>
+        <text class="d-text" x="122" y="216">On-site power</text><text class="d-small" x="122" y="238">Behind the meter</text>
+        <text class="d-text" x="122" y="376">AI-ready hall</text><text class="d-small" x="122" y="398">Power, cooling, space</text>
+        <text class="d-text" x="122" y="536">Your workloads</text><text class="d-small" x="122" y="558">Training and inference</text>
+      </svg>
+    </figure>
+  </div>
+</section>
 
-    <section class="block group" aria-label="Ion Group">
-      <p>Accretion Compute is part of <strong>Ion Group</strong>, alongside <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>.</p>
-    </section>
+<section class="band" aria-labelledby="why-h">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Why energy at the source</p>
+        <h2 id="why-h" class="reveal">The grid is the bottleneck. Energy is&nbsp;not.</h2>
+      </div>
+      <div>
+        <p class="lede reveal d1">New data centres can wait years for a grid connection. Meanwhile, energy is already being produced at sites where no one is using all of it.</p>
+        <p class="dim reveal d2">Building at the source skips the longest line in the industry. It also puts gas that is stranded, flared or under-used to productive work.</p>
+        <a class="link reveal d2" href="energy.html">Our approach to energy <span class="arrow"></span></a>
+      </div>
+    </div>
+    <div class="compare" style="margin-top:clamp(48px,7vw,80px)">
+      <div class="card reveal">
+        <h3>Waiting on the grid</h3>
+        <p>Apply for interconnection, join the queue, wait for studies and upgrades, then build.</p>
+        <div class="track queue"><span></span></div>
+        <div class="track-labels"><span>Apply</span><span>Queue and studies</span><span>Power</span></div>
+      </div>
+      <div class="card reveal d1">
+        <h3>Building at the source</h3>
+        <p>Start where fuel and land are already in place, generate on site, and build around it.</p>
+        <div class="track source"><span></span></div>
+        <div class="track-labels"><span>Site</span><span>Build</span><span>Power</span></div>
+      </div>
+    </div>
+    <p class="dim" style="font-size:14px;margin-top:20px">Illustrative only. Timelines vary by site and jurisdiction.</p>
+  </div>
+</section>
 
-    <section class="block contact" id="contact" aria-labelledby="contact-h">
-      <p class="label"><span>04</span>Contact</p>
-      <h2 id="contact-h">Let's talk</h2>
-      <p class="lede">We would like to hear from AI companies planning capacity, from energy producers and landowners with sites, and from investors.</p>
-      <a class="button" href="mailto:hello@accretioncompute.com">hello@accretioncompute.com</a>
-    </section>
+<section class="band mist" aria-labelledby="who-h">
+  <div class="wrap">
+    <div class="head-block">
+      <p class="eyebrow">Who we work with</p>
+      <h2 id="who-h" class="reveal">Three ways in</h2>
+    </div>
+    <div class="grid g3">
+      <a class="card reveal" href="capacity.html">
+        <span class="num">01</span>
+        <h3>AI companies</h3>
+        <p>Teams that need dedicated, power-dense capacity on multi-year terms, without waiting for a grid connection.</p>
+        <span class="link">Capacity <span class="arrow"></span></span>
+      </a>
+      <a class="card reveal d1" href="partners.html">
+        <span class="num">02</span>
+        <h3>Energy partners</h3>
+        <p>Gas producers, landfill operators and landowners with firm energy or land that could host a long-term tenant.</p>
+        <span class="link">Partners <span class="arrow"></span></span>
+      </a>
+      <a class="card reveal d2" href="contact.html">
+        <span class="num">03</span>
+        <h3>Investors</h3>
+        <p>Capital partners interested in contracted infrastructure built on low-cost energy.</p>
+        <span class="link">Get in touch <span class="arrow"></span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="band tight">
+  <div class="wrap">
+    <p class="strip">Accretion Compute is part of <strong>Ion Group</strong>, alongside <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>. <a href="about.html">About us</a></p>
+  </div>
+</section>
+
+<section class="band cta dark" aria-labelledby="cta-h">
+  <div class="cta-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="#f3f4f6" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="#f3f4f6" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#f3f4f6"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f3f4f6" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#f3f4f6"/>
+      <stop offset="1" stop-color="#f3f4f6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="#e8eaed">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="#f3f4f6" opacity="0.2"/>
+    <circle r="3.2" fill="#ffffff"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Start a conversation</p>
+    <h2 id="cta-h" class="reveal">Planning AI capacity, or sitting on energy?</h2>
+    <p class="lede reveal d1">We are talking with AI companies, energy producers, landowners and investors now. Tell us what you need or what you have.</p>
+    <div class="actions reveal d2">
+      <a class="btn" href="contact.html">Contact us <span class="arrow"></span></a>
+      <a class="btn ghost" href="partners.html">Partner with us</a>
+    </div>
+  </div>
+</section>
   </main>
 
   <footer class="foot">
-    <img src="assets/logos/accretion-compute-symbol-small-black.svg" alt="" width="24" height="24">
-    <p>&copy; 2026 Accretion Compute. An Ion Group company.</p>
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="about.html">About</a>
+          <a href="partners.html">Partners</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="capacity.html">Capacity</a>
+          <a href="energy.html">Energy</a>
+          <a href="sites.html">Site selection</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
   </footer>
 </body>
 </html>

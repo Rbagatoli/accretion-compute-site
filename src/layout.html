@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="https://accretioncompute.com/{{canonical}}">
+  <meta name="theme-color" content="#050506">
+  {{robots}}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="{{ogTitle}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:url" content="https://accretioncompute.com/{{canonical}}">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="styles.css?v={{version}}">
+  <script src="site.js?v={{version}}" defer></script>
+</head>
+<body class="page-{{id}}">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="./" aria-label="Accretion Compute home">
+        <img src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="capacity.html"{{nav:capacity}}>Capacity</a>
+        <a href="energy.html"{{nav:energy}}>Energy</a>
+        <a href="sites.html"{{nav:sites}}>Site selection</a>
+        <a href="partners.html"{{nav:partners}}>Partners</a>
+        <a href="about.html"{{nav:about}}>About</a>
+        <a class="nav-cta" href="contact.html"{{nav:contact}}>Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+{{content}}
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="about.html">About</a>
+          <a href="partners.html">Partners</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="capacity.html">Capacity</a>
+          <a href="energy.html">Energy</a>
+          <a href="sites.html">Site selection</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>
