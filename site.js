@@ -215,6 +215,8 @@ var acSymbol = (function () {
     var LINES = [0, -0.1, 0.1], REACH = 2.6, GRAINS = innerWidth < 720 ? 110 : 240;
     // The accretion disk (horizon lines and the grains on them) is kept dim so it sits behind the logo.
     var DISK = 0.5;
+    // The orbiting grains and the particles falling in are a little brighter than the lines.
+    var SPARK = 1.3;
     var w, h, cx, cy, S, E, ink, on = false, last = 0, energy = 0, halo, core, glows;
     // The visitor's pointer acts as a small second mass; clicks make the core flare.
     var ptr = { x: 0, y: 0, tx: 0, ty: 0, inf: 0, want: 0 }, sym;
@@ -314,7 +316,7 @@ var acSymbol = (function () {
         p.a -= dt * 0.8 / Math.pow(p.r, 1.5); p.r += dt * p.v;
         var q = pull(lens(Math.cos(p.a) * p.r * S, Math.sin(p.a) * p.r * S * 0.22 + p.y * S), 0.1);
         var edge = Math.max(0, 1 - Math.abs(q[0] - cx) / L);
-        var a = Math.sin(Math.PI * p.t / p.life) * p.o * edge * clearAt(q[1]) * dim * (0.8 + 0.2 * breathe);
+        var a = Math.sin(Math.PI * p.t / p.life) * p.o * edge * clearAt(q[1]) * dim * SPARK * (0.8 + 0.2 * breathe);
         if (a < 0.01) return;
         ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(q[0], q[1], p.s, 0, 6.2832); ctx.fill();
       });
@@ -333,7 +335,7 @@ var acSymbol = (function () {
           var g = grain(false); g.r = p.rt; g.a = p.a; g.s = p.s; g.o = p.o; g.t = g.life * 0.5; dust[j] = g;
           fallers[k] = faller(1 + Math.random() * 5); return;
         }
-        var a0 = p.o * Math.min(1, p.t / 1.2) * dim * (0.8 + 0.2 * breathe);
+        var a0 = p.o * Math.min(1, p.t / 1.2) * dim * SPARK * (0.8 + 0.2 * breathe);
         for (var m = 0; m < p.trail.length; m += 2) {
           var c = p.trail[m], a = a0 * (1 - m / 12) * clearAt(c[1]);
           if (a < 0.01) continue;
