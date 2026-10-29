@@ -35,7 +35,7 @@ for (const f of readdirSync(from).filter((n) => n.endsWith('.fragment.html')).so
   frag = frag.replaceAll(`"${SITE}/guides/"`, `"${SITE}/guides"`);
   const [article, ...after] = frag.split('</article>');
 
-  const header = { title: meta.title_tag, description: meta.meta_description, ogTitle: meta.og?.['og:title'] || meta.title_tag, nav: '' };
+  const header = { title: meta.title_tag, description: meta.meta_description, ogTitle: meta.og?.['og:title'] || meta.title_tag, nav: 'guides' };
   const page = `<!--${JSON.stringify(header)}-->
 <section class="pagehead guidehead dark">
   <div class="pagehead-disk"><!--include:disk--></div>

@@ -126,6 +126,12 @@ p { margin: 0 0 16px; }
 .nav .nav-cta::after { display: none; }
 .nav .nav-cta:hover, .nav .nav-cta[aria-current="page"] { background: var(--fg-strong); color: var(--bg); }
 .bar-toggle { display: none; }
+/* Seven menu items: tighten them a little on narrower desktops so the row still fits. */
+@media (min-width: 1100.02px) and (max-width: 1279.98px) {
+  .nav { gap: 16px; }
+  .nav a { letter-spacing: 0.12em; }
+  .nav .nav-cta { padding: 13px 16px; }
+}
 
 /* Colour switch: a white and a black swatch */
 .nav { order: 1; } .mode { order: 2; } .bar-toggle { order: 3; }
@@ -761,3 +767,8 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 .seo-guide .keep-reading li { border-bottom: 1px solid var(--line-soft); margin: 0; }
 .seo-guide .keep-reading a { display: block; padding: 16px 0; text-decoration: none; }
 .seo-guide .keep-reading a:hover { text-decoration: underline; }
+
+/* Links from product pages into the guides */
+.guide-links { margin-top: 28px; font-size: 15px; color: var(--fg-dim); }
+.guide-links a { color: var(--fg-strong); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.guide-links a:hover { text-decoration-thickness: 2px; }

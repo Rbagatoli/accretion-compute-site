@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const layout = readFileSync(join(root, 'src/layout.html'), 'utf8');
-const NAV = ['capacity', 'energy', 'sites', 'partners', 'about', 'contact'];
+const NAV = ['capacity', 'energy', 'sites', 'partners', 'about', 'guides', 'contact'];
 
 // Cache-busting stamp: changes whenever the stylesheet or script changes.
 const version = createHash('sha256')
