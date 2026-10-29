@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modular Data Center: Types, Limits and Costs | Accretion</title>
+  <meta name="description" content="What a modular data center really is: containers, skids, prefab halls and power blocks. What it speeds up, its limits at AI density, and what drives the cost.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/modular-data-centers">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Modular Data Centers: What Gets Faster and What Doesn't">
+  <meta property="og:description" content="What a modular data center really is: containers, skids, prefab halls and power blocks. What it speeds up, its limits at AI density, and what drives the cost.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/modular-data-centers">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/modular-data-centers.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=4c0a7f0a">
+  <script src="../site.js?v=4c0a7f0a" defer></script>
+</head>
+<body class="page-modular-data-centers">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Modular data centers</p>
+    <p class="eyebrow">AI tenants</p>
+    <h1>Modular Data Centers: What Gets Faster and What Doesn't</h1>
+    <p class="lede">Factory-built units can shorten the building work. They don't shorten the wait for power, and that is usually what sets the date.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-29">October 29, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>A modular data center is built from factory-made units that are shipped to site and connected: shipping-container data halls, prefabricated power and cooling skids, prefab halls or pods, and modular power blocks. Modular methods can shorten construction and make phased growth easier. They don't speed up getting power to the site, which usually sets the opening date.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-is-modular">What modular means</a></li><li><a href="#modular-vs-traditional">Modular vs traditional</a></li><li><a href="#ai-density">AI density</a></li><li><a href="#where-it-fits">Where modular fits</a></li><li><a href="#cost">Cost drivers</a></li><li><a href="#questions">Questions to ask</a></li><li><a href="#product-fit">Where does Accretion fit?</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Ask five suppliers what a modular data center is and you will get five answers. One means a shipping container full of racks. Another means a normal building whose electrical rooms arrived on trucks. All of them are called modular data centers, and they solve different problems.</p>
+<p>This guide separates the four main meanings, then looks at what each one actually speeds up, how well it handles AI rack density, where it fits and where it doesn't. We also explain what drives the cost. We don't quote prices: the public numbers are mostly suppliers' own claims, and none comes from an independent source we could check.</p>
+<h2 id="what-is-modular">What is a modular data center?</h2>
+<p>A modular data center is one where large parts are built and tested in a factory, shipped as finished units and joined on site, instead of being built piece by piece where they stand. The word covers a wide range. A <a href="https://journal.uptimeinstitute.com/facility-owners-see-modular-data-centers-as-efficient-way-deploy-capital/" rel="noopener" target="_blank">2014 industry journal article</a> noted that the industry had not settled on a clear definition. In practice, "modular" means one of four things:</p>
+<ul><li><strong>Containerized data centers.</strong> Racks, cooling and power distribution packed into a shipping container or a container-sized steel enclosure. It arrives ready to plug into power, water (if used) and fiber. This is the oldest and most literal form.</li><li><strong>Prefabricated power and cooling skids.</strong> Switchgear, UPS systems, transformers, pumps or chillers mounted on a steel frame in a factory, wired and tested, then set down next to a conventional building. The halls themselves may be stick-built.</li><li><strong>Prefabricated halls or pods.</strong> The data hall is made in sections, with floor, walls, roof, containment and cabling trays, and assembled on a prepared pad. Some designs repeat the same pod many times across a site.</li><li><strong>Modular power blocks.</strong> Power plant or substation capacity delivered as repeatable units, such as a set of generators or a packaged electrical block per phase, so power can grow in steps alongside the halls.</li></ul>
+<p>Most real projects mix these. A site might have a stick-built shell, skid-mounted electrical rooms and power added in blocks. When a supplier says "modular", ask which parts are actually factory-built.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Modular data center approaches compared with stick-built: use, speed, limits and fit for AI density</caption><thead><tr><th scope="col">Approach</th><th scope="col">Typical use</th><th scope="col">What drives its speed</th><th scope="col">Main limits</th><th scope="col">Fits AI density?</th></tr></thead><tbody><tr><th scope="row">Containerized data center</th><td>Edge sites, temporary or emergency capacity, small remote loads.</td><td>Units arrive built and tested; site work is mostly a pad and connections.</td><td>Road size and weight limits; tight aisles; little room for dense electrical and cooling gear.</td><td>Limited. Possible with liquid cooling at small scale, but space and service access run out quickly.</td></tr><tr><th scope="row">Prefabricated power and cooling skids</th><td>Electrical rooms and cooling plant beside a conventional or prefab hall.</td><td>Factory assembly and testing in parallel with building work.</td><td>Still depends on made-to-order transformers and switchgear; needs site connections.</td><td>Yes. The halls can be designed for density while the plant arrives on skids.</td></tr><tr><th scope="row">Prefabricated halls or pods</th><td>Repeatable halls on a large site that grows in steps.</td><td>Repeated design; sections built off site while the pad is prepared.</td><td>Design fixed early; permitting may treat units differently; large sections need road and crane access.</td><td>Depends on the design. Needs to be specified for the rack density and cooling from the start.</td></tr><tr><th scope="row">Modular power blocks</th><td>Adding power capacity in steps, on the grid side or on site.</td><td>Repeatable units that can be ordered and installed in phases.</td><td>Long-lead equipment and permits still apply; fuel or grid supply must be secured.</td><td>Yes, as a way to grow power with the halls, if each block is sized for the load.</td></tr><tr><th scope="row">Stick-built (traditional)</th><td>Large, custom halls and campuses built to one design.</td><td>Parallel work fronts on site; often combined with prefab skids.</td><td>More site labor; more work to coordinate in the field.</td><td>Yes. Most freedom to lay out dense racks, liquid cooling and service space.</td></tr></tbody></table></div>
+<h2 id="modular-vs-traditional">Modular data center vs traditional: what actually gets faster?</h2>
+<p>Modular methods mainly speed up construction and fit-out. Factory work runs in parallel with site work, in a controlled setting, so the building and its equipment can arrive close to ready.</p>
+<p>Construction is rarely the slowest step, though. For most new capacity, the date is set by power: the utility's studies and upgrades, long-lead electrical equipment and, where the grid needs new supply, the queue for new generation. A container that arrives early still waits for a powered pad. We cover the full sequence in <a href="/guides/how-long-does-it-take-to-build-a-data-center">how long it takes to build a data center</a>, and the grid side in <a href="/guides/data-center-interconnection-queue">the data center interconnection queue</a>.</p>
+<p>Modular also does not remove made-to-order parts. A skid still needs its transformer and switchgear from the same order books as everyone else.</p>
+<p>So the fair comparison is not modular versus traditional construction time. It is: once power is secured, how quickly can each approach turn it into usable, tested capacity? There, modular can help, especially when a site will grow in steps.</p>
+<aside class="callout"><p>A modular build can make the building ready sooner. If power isn't ready, the building waits.</p></aside>
+<h2 id="ai-density">Can modular data centers handle AI density?</h2>
+<p>Some can, but small enclosures get tight fast. AI racks draw far more power than traditional enterprise racks, which means more electrical gear, more heat and often liquid cooling. Each of those takes space, weight and service access that a container-sized box has little of.</p>
+<p>Four limits come up again and again:</p>
+<ul><li><strong>Transport.</strong> Every unit has to travel by road. The same 2014 journal article noted that shipping packages typically do not exceed 50 feet by 12 feet and 100,000 pounds. Heavy, dense racks, coolant and electrical gear eat into that envelope.</li><li><strong>Cooling.</strong> Air cooling in a narrow enclosure struggles at high density. Liquid cooling helps, but it adds piping, pumps and heat rejection outside the unit. We explain the options in <a href="/guides/liquid-cooling-for-ai-data-centers">liquid cooling for AI data centers</a>.</li><li><strong>Maintenance access.</strong> Technicians need room to swap servers, pumps and power supplies. Tight aisles in a container make routine work slower and some repairs awkward.</li><li><strong>Fit with the hardware.</strong> A factory design is fixed before it ships. If the next generation of hardware needs different power, cooling or floor loading, a fixed module can be harder to adapt than a hall designed for it.</li></ul>
+<p>This is why the parts of modular that have caught on are mostly power and cooling. <a href="https://intelligence.uptimeinstitute.com/resource/modular-data-centers-look-solve-challenges-ai" rel="noopener" target="_blank">Industry research published in May 2026</a> found that skidded and modularized electrical systems have become particularly popular with some large colocation operators and cloud providers, while fully prefabricated construction that includes the IT space has not become mainstream. The same work notes a new group of suppliers betting that AI demand will change that.</p>
+<h2 id="where-it-fits">Where do modular data centers fit best, and where don't they?</h2>
+<p>Modular fits best where building on site is hard or slow, and where capacity will grow in steps. It fits worst where the hall needs to be large, custom and dense from day one, or where local rules don't know what to do with it.</p>
+<p><strong>Good fits:</strong></p>
+<ul><li><strong>Remote energy sites.</strong> At a gas field, a landfill or an industrial site far from a city, skilled labor and supply yards are scarce. Shipping tested units can cut the amount of work done in the field. This is one reason modular power and electrical blocks show up at <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a>.</li><li><strong>Phased growth.</strong> Repeating the same block lets a site add capacity as demand and power grow, instead of building everything up front and leaving it empty.</li><li><strong>Edge and small sites.</strong> A few racks near users, at a telecom site or a factory, where a full building would be overkill.</li><li><strong>Temporary or emergency capacity.</strong> Disaster recovery, field operations and short-term needs, where the unit may move again.</li></ul>
+<p><strong>Weaker fits:</strong></p>
+<ul><li><strong>Large, dense AI halls built to one tenant's design.</strong> Big custom halls can be easier to lay out, cool and service when built for that load, even if some electrical and cooling gear arrives on skids.</li><li><strong>Tight or urban sites.</strong> Road access, crane space and setback rules can rule out large units.</li><li><strong>Unclear local rules.</strong> The 2014 journal article flagged that modularity may bring jurisdictional issues. Some permitting authorities treat a factory-built unit differently from a building, which can add steps.</li></ul>
+<h2 id="cost">What does a modular data center cost?</h2>
+<p>There is no reliable public figure for modular data center cost. The numbers you will find online are mostly suppliers' own estimates, built on their own designs and assumptions. We could not find an independent, current source to cite, so we explain what drives the price instead.</p>
+<ul><li><strong>Power and cooling content.</strong> As with any data center, electrical and cooling equipment usually outweigh the enclosure. Higher rack density means more of both.</li><li><strong>Rack density and cooling type.</strong> Liquid cooling changes piping, pumps and heat rejection, and it changes what fits in a module.</li><li><strong>Site work.</strong> Pads, foundations, roads, cranes, fencing, drainage and the connections between units.</li><li><strong>Power to the site.</strong> A grid connection with upgrades, or on-site generation with fuel supply and spare units. This can cost more than the modules themselves.</li><li><strong>Redundancy.</strong> Spare power and cooling paths add units and space.</li><li><strong>Transport and lifting.</strong> Oversize loads, escorts and cranes,.</li><li><strong>Number of repeats.</strong> A design built many times usually costs less per unit than a one-off.</li></ul>
+<p>When comparing modular with traditional quotes, check that both include the same scope: site work, power delivery, commissioning and spare capacity. A low modular price that leaves these out is not a cheaper data center.</p>
+<h2 id="questions">What should you ask before choosing modular capacity?</h2>
+<p>Ask what is factory-built, what power it will run on, and how it will be serviced.</p>
+<ul><li>Which parts are prefabricated: the hall, the electrical rooms, the cooling plant, the power supply, or a mix?</li><li>Is power secured for the site, and on what date? Is it from the grid, on-site generation or both?</li><li>What rack density and cooling type is each module designed for? Can it take liquid cooling, and where does the heat go?</li><li>How do technicians reach and replace equipment inside each unit?</li><li>How does the site add capacity later: more modules on the same pad, or a new site?</li><li>Have the local permitting authorities approved this kind of unit before?</li><li>Does the quote include site work, power delivery, spares and commissioning?</li></ul>
+<section class="product-fit" id="product-fit"><h2>Where does Accretion fit?</h2>
+<p>Accretion Compute plans to build AI data center capacity at the source of energy, with on-site, behind-the-meter power, and lease it to AI companies on multi-year terms. We build secure halls to the tenant's specification, with cooling designed for its density (air or liquid) and room to expand on the same site. We are early: Accretion is in development, no site is built or operating, and we are evaluating sites in Canada and the United States. We don't publish timelines.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an AI company planning dedicated, power-dense capacity on a multi-year lease and want halls built to your specification at a site with its own power.</li><li>You want room to grow on the same site rather than starting again somewhere else.</li><li>You own firm energy (pipeline or gathering-system gas, landfill gas) or land or an industrial site near energy and fiber, and want a long-term buyer and operator.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You want to buy a containerized or prefabricated data center unit. We lease capacity; we don't sell equipment.</li><li>You need capacity live today. None is built yet.</li><li>You want GPU-hours, cloud instances or rented GPUs. Accretion provides capacity, not a cloud.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=modular-data-centers&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>How much does a modular data center cost?</h3><p>There is no reliable independent figure. The cost is driven by the same things as any data center: the electrical and cooling equipment, rack density, site work, power delivery to the site, redundancy, transport and how many times the design is repeated. When you compare quotes, check that each one covers site work, power, spares and commissioning, not just the modules.</p>
+<h3>What is the difference between a modular and a containerized data center?</h3><p>A containerized data center is one type of modular data center. It puts racks, cooling and power distribution inside a shipping container or a container-sized enclosure. "Modular" is broader. It also covers prefabricated power and cooling skids beside a normal building, prefabricated halls assembled from sections, and power added in repeatable blocks. A modular site may contain no containers at all.</p>
+<h3>How long does it take to build a modular data center?</h3><p>The building part is usually quicker than a fully site-built project, because units are made and tested in a factory while the site is prepared. But the total time is set by the slowest step, and for most projects that is power: utility studies and upgrades, long-lead transformers, or on-site generation with its own fuel supply and permits. There is no reliable public figure for a typical modular build.</p>
+<h3>Are modular data centers good for AI workloads?</h3><p>Parts of modular design suit AI well, especially prefabricated electrical and cooling plant and power added in blocks. Small, container-sized data halls are harder. AI racks need more power, more cooling and often liquid cooling, plus room for technicians to service them. Large dense AI deployments usually need halls designed for that load, whether built on site or from larger prefabricated sections.</p>
+<h3>Can a modular data center use liquid cooling?</h3><p>Yes, and many newer designs are built for it. Liquid cooling adds pipes, pumps, coolant distribution and somewhere to reject the heat outside the unit, so it has to be designed in from the start. In a small enclosure, that equipment competes for space with the racks and service access.</p>
+<h3>What are the disadvantages of modular data centers?</h3><p>The main ones are size limits set by road transport, tight space for dense equipment and maintenance, designs that are fixed before they ship, and permitting authorities that may treat factory-built units differently from buildings. Modular units also still rely on made-to-order electrical equipment. And they don't solve the biggest delay for most sites, which is getting enough power.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://journal.uptimeinstitute.com/facility-owners-see-modular-data-centers-as-efficient-way-deploy-capital/" rel="noopener" target="_blank">Uptime Institute Journal, Data Center Facility Owners See Modules as Efficient Way to Deploy Capital, Kevin Heslin, 2014-09-04 (checked 2026-10-29)</a></li><li><a href="https://intelligence.uptimeinstitute.com/resource/modular-data-centers-look-solve-challenges-ai" rel="noopener" target="_blank">Uptime Institute Intelligence, Modular data centers look to solve the challenges of AI, Max Smolaks, 2026-05-06 (public introduction; checked 2026-10-29)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/how-long-does-it-take-to-build-a-data-center">How long it takes to build a data center, and why power sets the date</a></li><li><a href="/guides/gpu-colocation">GPU colocation: what AI tenants should look for</a></li><li><a href="/guides/data-center-site-selection">How data center sites are chosen</a></li><li><a href="/capacity">Accretion capacity for AI companies</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/modular-data-centers#article", "headline": "Modular Data Centers: What Gets Faster and What Doesn't", "description": "What a modular data center really is: containers, skids, prefab halls and power blocks. What it speeds up, its limits at AI density, and what drives the cost.", "datePublished": "2026-10-29", "dateModified": "2026-10-29", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/modular-data-centers"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Modular Data Centers: What Gets Faster and What Doesn't", "item": "https://accretioncompute.com/guides/modular-data-centers"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does a modular data center cost?", "acceptedAnswer": {"@type": "Answer", "text": "There is no reliable independent figure. The cost is driven by the same things as any data center: the electrical and cooling equipment, rack density, site work, power delivery to the site, redundancy, transport and how many times the design is repeated. When you compare quotes, check that each one covers site work, power, spares and commissioning, not just the modules."}}, {"@type": "Question", "name": "What is the difference between a modular and a containerized data center?", "acceptedAnswer": {"@type": "Answer", "text": "A containerized data center is one type of modular data center. It puts racks, cooling and power distribution inside a shipping container or a container-sized enclosure. \"Modular\" is broader. It also covers prefabricated power and cooling skids beside a normal building, prefabricated halls assembled from sections, and power added in repeatable blocks. A modular site may contain no containers at all."}}, {"@type": "Question", "name": "How long does it take to build a modular data center?", "acceptedAnswer": {"@type": "Answer", "text": "The building part is usually quicker than a fully site-built project, because units are made and tested in a factory while the site is prepared. But the total time is set by the slowest step, and for most projects that is power: utility studies and upgrades, long-lead transformers, or on-site generation with its own fuel supply and permits. There is no reliable public figure for a typical modular build."}}, {"@type": "Question", "name": "Are modular data centers good for AI workloads?", "acceptedAnswer": {"@type": "Answer", "text": "Parts of modular design suit AI well, especially prefabricated electrical and cooling plant and power added in blocks. Small, container-sized data halls are harder. AI racks need more power, more cooling and often liquid cooling, plus room for technicians to service them. Large dense AI deployments usually need halls designed for that load, whether built on site or from larger prefabricated sections."}}, {"@type": "Question", "name": "Can a modular data center use liquid cooling?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and many newer designs are built for it. Liquid cooling adds pipes, pumps, coolant distribution and somewhere to reject the heat outside the unit, so it has to be designed in from the start. In a small enclosure, that equipment competes for space with the racks and service access."}}, {"@type": "Question", "name": "What are the disadvantages of modular data centers?", "acceptedAnswer": {"@type": "Answer", "text": "The main ones are size limits set by road transport, tight space for dense equipment and maintenance, designs that are fixed before they ship, and permitting authorities that may treat factory-built units differently from buildings. Modular units also still rely on made-to-order electrical equipment. And they don't solve the biggest delay for most sites, which is getting enough power."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>
