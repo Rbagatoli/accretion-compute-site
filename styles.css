@@ -796,27 +796,18 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 /* How it works, as one line of energy: a pulse runs from the source to the tenant and lights each step as it passes */
 .hero-flow { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); width: min(900px, 100%); margin: clamp(44px, 6.5vh, 76px) auto 0; padding: 0; list-style: none; }
 .hero-flow::before { content: ""; position: absolute; left: 16.667%; right: 16.667%; top: 4px; height: 1px; background: var(--line); }
-.hero-flow::after { content: ""; position: absolute; top: 3px; left: 16.667%; width: 140px; height: 3px; margin-left: -70px; border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--fg-strong), transparent); opacity: 0; animation: hf-run 4.8s 2.4s cubic-bezier(.45, 0, .55, 1) infinite; }
-@keyframes hf-run { 0% { left: 16.667%; opacity: 0; } 8%, 92% { opacity: 1; } 100% { left: 83.333%; opacity: 0; } }
 .hero-flow li { position: relative; padding: 28px 14px 0; font: 400 12px/1.65 var(--body); letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-dim); text-align: center; }
 .hero-flow li::before { content: ""; position: absolute; left: 50%; top: 0; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
-  background: var(--bg); border: 1px solid var(--fg-strong); animation: hf-node 4.8s infinite; }
-.hero-flow li:nth-child(1)::before { animation-delay: 2.4s; }
-.hero-flow li:nth-child(2)::before { animation-delay: 4.55s; }
-.hero-flow li:nth-child(3)::before { animation-delay: 6.65s; }
-@keyframes hf-node { 0%, 22%, 100% { background: var(--bg); box-shadow: none; } 5% { background: var(--fg-strong); box-shadow: 0 0 14px var(--fg-strong); } }
+  background: var(--bg); border: 1px solid var(--fg-strong); }
 .hf-n { display: block; margin-bottom: 6px; color: var(--fg-strong); letter-spacing: 0.12em; }
 @media (max-width: 599.98px) {
   .hero-flow { grid-template-columns: 1fr; width: auto; margin-left: auto; margin-right: auto; max-width: 300px; text-align: left; }
   .hero-flow::before { left: 4px; right: auto; top: 6px; bottom: 34px; width: 1px; height: auto; }
-  .hero-flow::after { left: 3px; top: 6px; width: 3px; height: 60px; margin: -30px 0 0; background: linear-gradient(180deg, transparent, var(--fg-strong), transparent); animation-name: hf-run-v; }
-  @keyframes hf-run-v { 0% { top: 6px; opacity: 0; } 8%, 92% { opacity: 1; } 100% { top: calc(100% - 34px); opacity: 0; } }
   .hero-flow li { padding: 0 0 22px 30px; text-align: left; }
   .hero-flow li::before { left: 0; top: 2px; margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero h1, .hero .lede, .hero .actions, .hero-flow, .hero .glint, .hero-flow::after, .hero-flow li::before { animation: none !important; }
+  .hero h1, .hero .lede, .hero .actions, .hero-flow, .hero .glint { animation: none !important; }
   .hero .glint { background-position: 50% 0; }
 }
 /* Keep the black hole, headline, buttons and the energy line on one screen */
