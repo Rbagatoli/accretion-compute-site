@@ -165,6 +165,8 @@ var acSymbol = (function () {
     // so the horizon and the dust bend around the logo instead of passing through it.
     var INK = { dark: [243, 244, 246], light: [11, 12, 14] };
     var LINES = [0, -0.1, 0.1], REACH = 2.6, GRAINS = innerWidth < 720 ? 110 : 240;
+    // The accretion disk (horizon lines and the grains on them) is kept dim so it sits behind the logo.
+    var DISK = 0.5;
     var w, h, cx, cy, S, E, ink, on = false, last = 0, energy = 0, halo, core, glows;
     // The visitor's pointer acts as a small second mass; clicks make the core flare.
     var ptr = { x: 0, y: 0, tx: 0, ty: 0, inf: 0, want: 0 }, sym;
@@ -242,16 +244,16 @@ var acSymbol = (function () {
         var main = off === 0, base = (main ? 0.5 : 1) * glow * (theme === 'dark' ? 1 : 0.85);
         ctx.beginPath();
         for (var x = -L, n = 0; x <= L; x += 1.5, n++) { var p = pull(lens(x, off * S), 0.035); n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
-        if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(Math.min(1, base * 3.6)); ctx.lineWidth = main ? 1.3 : 1; ctx.filter = 'blur(0.8px)'; ctx.stroke(); ctx.restore(); }
+        if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(Math.min(1, base * 3.6) * DISK); ctx.lineWidth = main ? 1.3 : 1; ctx.filter = 'blur(0.8px)'; ctx.stroke(); ctx.restore(); }
         // The line is drawn soft, about two screen pixels wide and faint, so it never snaps from one pixel row to
         // the next (a hairline does, and shows as steps along the curve). Its strength matches the old hairline.
         var dp = Math.min(window.devicePixelRatio || 1, 2), hw = (main ? 0.32 : 0.23) * dp, a1 = Math.min(1, base * 2.8) * Math.min(1, hw);
-        ctx.strokeStyle = grad((1 - Math.pow(1 - a1, 4)) / 1.3); ctx.lineWidth = 1.8 / dp; ctx.stroke();
+        ctx.strokeStyle = grad((1 - Math.pow(1 - a1, 4)) / 1.3 * DISK); ctx.lineWidth = 1.8 / dp; ctx.stroke();
       });
       energy = Math.max(energy, 0.45 * breathe);
 
       // A few grains circle the logo on flat, lensed orbits, drift outward, fade and are reborn near the ring.
-      var dim = theme === 'dark' ? 1 : 0.8;
+      var dim = (theme === 'dark' ? 1 : 0.8) * DISK;
       ctx.fillStyle = rgba(1);
       dust.forEach(function (p, k) {
         p.t += dt; if (p.t > p.life) { p = dust[k] = grain(false); }
