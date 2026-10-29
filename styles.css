@@ -708,3 +708,56 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 }
 @keyframes hw-pop { 0% { transform: scale(1); } 20% { transform: scale(1.35); } 100% { transform: scale(1); } }
 @keyframes hw-ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(3.4); opacity: 0; } }
+
+/* ---------- Guides (/guides and /guides/<slug>, made by tools/import-guides.mjs) ---------- */
+.guide-group { font-size: clamp(22px, 2.6vw, 30px); margin: 64px 0 28px; }
+.guide-group:first-child { margin-top: 0; }
+.guide-cards .card h3 { font: 400 20px/1.35 var(--body); letter-spacing: 0; text-transform: none; margin-bottom: 14px; }
+.guidehead h1 { max-width: 22ch; font-size: clamp(30px, 4.6vw, 54px); }
+.guidehead .meta-row { margin: 28px 0 0; font-size: 14px; letter-spacing: 0.04em; color: var(--fg-dim); }
+.guidehead .meta-row a { color: var(--fg-dim); }
+.seo-guide { max-width: 760px; }
+.seo-guide p, .seo-guide li { color: var(--fg); }
+.seo-guide a { color: var(--fg-strong); text-underline-offset: 3px; }
+.seo-guide strong { color: var(--fg-strong); font-weight: 400; }
+.seo-guide h2 { font-size: clamp(24px, 3vw, 34px); margin: 80px 0 22px; }
+.seo-guide h3 { font: 400 20px/1.4 var(--body); letter-spacing: 0; text-transform: none; margin: 36px 0 10px; }
+.seo-guide ul, .seo-guide ol { padding-left: 22px; margin: 0 0 20px; }
+.seo-guide li { margin-bottom: 10px; }
+.seo-guide .label { font: 400 12px/1 var(--body); letter-spacing: 0.3em; text-transform: uppercase; color: var(--fg-dim); margin: 0 0 16px; }
+.seo-guide .quick-answer { border: 1px solid var(--line); padding: clamp(22px, 3vw, 32px); margin-bottom: 40px; }
+.seo-guide .quick-answer p:last-child { margin-bottom: 0; color: var(--fg-strong); }
+.seo-guide .toc { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0 14px; margin-bottom: 48px; }
+.seo-guide .toc ol { margin: 0; }
+.seo-guide .toc a { color: var(--fg-dim); text-decoration: none; }
+.seo-guide .toc a:hover { color: var(--fg-strong); }
+.seo-guide .callout { border-left: 1px solid var(--fg-strong); padding: 4px 0 4px 24px; margin: 32px 0; }
+.seo-guide .steps { counter-reset: st; list-style: none; padding: 0; }
+.seo-guide .steps li { counter-increment: st; position: relative; padding-left: 48px; margin-bottom: 18px; }
+.seo-guide .steps li::before { content: counter(st, decimal-leading-zero); position: absolute; left: 0; top: 4px; font: 400 12px/1 var(--head); letter-spacing: 0.14em; color: var(--fg-dim); }
+.seo-guide .table-wrap { overflow-x: auto; margin: 32px 0; border: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+.seo-guide table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; line-height: 1.5; }
+.seo-guide caption { caption-side: top; text-align: left; padding: 16px 18px; font-size: 14px; color: var(--fg-dim); border-bottom: 1px solid var(--line); }
+.seo-guide th, .seo-guide td { text-align: left; vertical-align: top; padding: 14px 18px; border-bottom: 1px solid var(--line-soft); }
+.seo-guide thead th { color: var(--fg-strong); font-weight: 400; border-bottom: 1px solid var(--line); }
+.seo-guide tbody th { color: var(--fg-strong); font-weight: 400; }
+.seo-guide tbody tr:last-child > * { border-bottom: 0; }
+.seo-guide .product-fit { border: 1px solid var(--line); padding: clamp(24px, 4vw, 44px); margin-top: 80px; }
+.seo-guide .product-fit h2 { margin-top: 0; }
+.seo-guide .fit-head { font: 400 12px/1 var(--body); letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-strong); margin: 32px 0 16px; }
+.seo-guide .fits, .seo-guide .not-a-fit { list-style: none; padding: 0; }
+.seo-guide .fits li, .seo-guide .not-a-fit li { position: relative; padding-left: 28px; }
+.seo-guide .fits li::before, .seo-guide .not-a-fit li::before { position: absolute; left: 0; top: 0; color: var(--fg-strong); }
+.seo-guide .fits li::before { content: "+"; }
+.seo-guide .not-a-fit li::before { content: "\2013"; }
+.seo-guide .cta-row { margin: 32px 0 0; }
+.seo-guide .cta-button { display: inline-flex; align-items: center; min-height: 52px; padding: 16px 24px; font: 400 12px/1 var(--body); letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--fg-strong); background: var(--fg-strong); color: var(--bg); transition: background 0.2s, color 0.2s; }
+.seo-guide .cta-button:hover { background: transparent; color: var(--fg-strong); }
+.seo-guide .sources { font-size: 15px; }
+.seo-guide .sources li, .seo-guide .sources a { color: var(--fg-dim); }
+.seo-guide .keep-reading { border-top: 1px solid var(--line); margin-top: 80px; padding-top: 8px; }
+.seo-guide .keep-reading h2 { margin-top: 32px; }
+.seo-guide .keep-reading ul { list-style: none; padding: 0; }
+.seo-guide .keep-reading li { border-bottom: 1px solid var(--line-soft); margin: 0; }
+.seo-guide .keep-reading a { display: block; padding: 16px 0; text-decoration: none; }
+.seo-guide .keep-reading a:hover { text-decoration: underline; }

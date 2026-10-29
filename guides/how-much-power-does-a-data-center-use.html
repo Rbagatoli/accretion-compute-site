@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Much Power Does a Data Center Use? | Accretion Compute</title>
+  <meta name="description" content="How much power does a data center use? Sourced figures per rack, per site in MW and for the US, plus MW vs MWh and what cooling adds.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/how-much-power-does-a-data-center-use">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="How Much Power Does a Data Center Use? Rack, Site and Nation">
+  <meta property="og:description" content="How much power does a data center use? Sourced figures per rack, per site in MW and for the US, plus MW vs MWh and what cooling adds.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/how-much-power-does-a-data-center-use">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=12edefdf">
+  <script src="../site.js?v=12edefdf" defer></script>
+</head>
+<body class="page-how-much-power-does-a-data-center-use">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Data center power use</p>
+    <p class="eyebrow">AI tenants</p>
+    <h1>How Much Power Does a Data Center Use? Rack, Site and Nation</h1>
+    <p class="lede">Sourced answers at three levels: one rack, one facility, and the whole country. Plus the two distinctions behind most of the disagreement online.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-28">October 28, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>It depends on size. The IEA puts a conventional data center at around 10-25 MW and a hyperscale AI site at 100 MW or more. Per rack, conventional servers drew about 3-5 kW, while AI racks reach 100 kW or more. In 2024, US data centers used 192 TWh, or 4.7% of US electricity.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#power-vs-energy">Power vs energy</a></li><li><a href="#per-rack">Per rack</a></li><li><a href="#per-facility">Per facility (MW)</a></li><li><a href="#it-vs-facility">IT vs facility load</a></li><li><a href="#national">US and global use</a></li><li><a href="#why-they-disagree">Why figures disagree</a></li><li><a href="#planning">Planning AI capacity</a></li><li><a href="#product-fit">Where Accretion Compute fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>How much power does a data center use? Search for it and you get a different answer on every page: 1 MW, 50 MW, 650 MW, 5 kW a rack, 120 kW a rack. Most of those numbers have no source. Some mix up power and energy. Others compare the servers alone with the whole building.</p>
+<p>This guide gives the answer at three levels, each tied to a public source: a single rack, a single facility, and data centers across the US and the world. Sources: Lawrence Berkeley National Laboratory (LBNL), the Department of Energy (DOE) and the International Energy Agency (IEA). We left out any number we could not verify there.</p>
+<h2 id="power-vs-energy">Power or energy: what does "how much" mean?</h2>
+<p>Data center power consumption is quoted in two different units, and mixing them is the most common reason figures don't line up. <strong>Power</strong> is the rate of draw at a moment, measured in kilowatts (kW) or megawatts (MW). <strong>Energy</strong> is power used over time, measured in kilowatt-hours (kWh), megawatt-hours (MWh) or terawatt-hours (TWh).</p>
+<p>A site that draws 1 MW for one hour uses 1 MWh. If it drew a steady 100 MW for a full year (8,760 hours), it would use 876,000 MWh, or about 0.88 TWh. Real sites rarely run flat out all year, so their annual energy is lower than that ceiling.</p>
+<ul><li><strong>MW answers</strong> "how big is the site?" It sizes the grid connection or on-site generation, the transformers and the cooling.</li><li><strong>MWh and TWh answer</strong> "how much electricity did it use?" National statistics, bills and emissions estimates use energy.</li><li>When someone says a data center "uses 100 MW", they almost always mean its capacity, not what it drew on an average day.</li></ul>
+<p>LBNL makes the same point in its 2025 update. It notes that converting between annual energy and power capacity is hard without data on average demand, peak demand and the size of the grid connection. It estimates that data centers use only around half of their interconnection capacity on average, because of redundancy and maintenance needs.</p>
+<h2 id="per-rack">How much power does a data center rack use?</h2>
+<p>A rack of conventional servers used about 3 to 5 kW, and a rack of AI servers can use as much as 100 kW. That is how Arman Shehabi, who leads LBNL's data center analysis team, described the shift in a 2024 Berkeley Lab interview.</p>
+<p>A December 2025 report from Pacific Northwest National Laboratory (PNNL), published by DOE, gives a similar picture for today's halls:</p>
+<ul><li>Modern racks are typically in the tens of kilowatts for traditional applications.</li><li>Racks for AI training run at over 100 kW.</li><li>Present-day GPU racks attain 120 kW.</li><li>Rack prototypes of up to 1 MW have been developed and are planned for 2027.</li></ul>
+<p>The exact figure matters less than the jump. A rack that draws twenty times more power also produces twenty times more heat in the same floor space. Air cooling struggles at those densities, which is why power-dense AI halls move to liquid cooling.</p>
+<h2 id="per-facility">How many megawatts does a data center use?</h2>
+<p>The IEA puts a conventional data center at around 10 to 25 MW, and a hyperscale, AI-focused data center at 100 MW or more. The IEA says a 100 MW AI site uses about as much electricity in a year as 100,000 households.</p>
+<p>To size a facility, start from the rack figures above. Multiply the rack count by the power per rack, then add the cooling and power losses covered in the next section. A rough illustration, not a real site:</p>
+<div class="table-wrap"><table class="compare-table"><thead><tr><th scope="col">Hall</th><th scope="col">Racks</th><th scope="col">Power per rack</th><th scope="col">IT load</th></tr></thead><tbody><tr><th scope="row">Conventional enterprise hall</th><td>200</td><td>5 kW</td><td>1 MW</td></tr><tr><th scope="row">Conventional hall, denser racks</th><td>500</td><td>20 kW</td><td>10 MW</td></tr><tr><th scope="row">AI training hall</th><td>1,000</td><td>100 kW</td><td>100 MW</td></tr></tbody></table></div>
+<p>Large sites are not one giant electrical system. PNNL describes large data centers as built from repeated power blocks, each rated for several megawatts, so a campus grows block by block.</p>
+<p>So when you read that a data center "uses" a certain number of megawatts, ask three questions. Is it the IT load or the whole facility? Is it the design capacity or the average draw? Is it one building or a whole campus?</p>
+<div class="table-wrap"><table class="compare-table"><caption>Data center power at three levels, with sources</caption><thead><tr><th scope="col">Level</th><th scope="col">What is measured</th><th scope="col">Figure</th><th scope="col">Source</th></tr></thead><tbody><tr><th scope="row">Conventional rack</th><td>Power per rack</td><td>About 3-5 kW</td><td>LBNL (2024)</td></tr><tr><th scope="row">Modern traditional rack</th><td>Power per rack</td><td>Tens of kW</td><td>PNNL for DOE (2025)</td></tr><tr><th scope="row">AI training rack</th><td>Power per rack</td><td>Over 100 kW; GPU racks attain 120 kW</td><td>PNNL for DOE (2025)</td></tr><tr><th scope="row">Power block in a large site</th><td>Electrical capacity</td><td>Several MW each</td><td>PNNL for DOE (2025)</td></tr><tr><th scope="row">Conventional data center</th><td>Facility size</td><td>Around 10-25 MW</td><td>IEA (2025)</td></tr><tr><th scope="row">Hyperscale AI data center</th><td>Facility size</td><td>100 MW or more</td><td>IEA (2025)</td></tr><tr><th scope="row">All US data centers, 2024</th><td>Annual energy</td><td>192 TWh (4.7% of US electricity)</td><td>LBNL 2025 update</td></tr><tr><th scope="row">All US data centers, 2030</th><td>Annual energy, reference case</td><td>649 TWh (11.8%)</td><td>LBNL 2025 update</td></tr><tr><th scope="row">All data centers worldwide, 2024</th><td>Annual energy</td><td>Around 415 TWh (about 1.5% of global electricity)</td><td>IEA (2025)</td></tr></tbody></table></div>
+<h2 id="it-vs-facility">IT load vs facility load: where cooling fits</h2>
+<p>The servers are not the only load. Cooling, power conversion, lighting and the rest of the building add overhead on top of the IT equipment, and cooling is the largest part of it.</p>
+<p>The standard measure is <strong>power usage effectiveness (PUE)</strong>: total facility energy divided by IT equipment energy. A PUE of 1.0 would mean every unit of power reaches the servers. LBNL's figures:</p>
+<ul><li>The US national average PUE improved from 1.55 in 2018 to 1.45 in 2024.</li><li>Over the same years, infrastructure fell from 36% to 31% of total data center electricity.</li><li>For facilities serving AI equipment, LBNL estimates an average PUE of 1.145 in 2024, helped by liquid cooling.</li><li>In its reference case, the aggregate PUE reaches 1.36 in 2030.</li></ul>
+<p>In practice: at a PUE of 1.45, a hall with 10 MW of IT load needs about 14.5 MW at the facility level. At 1.145, the same IT load needs about 11.5 MW. When two sources quote different megawatts for the same building, one is often counting IT load and the other the whole facility.</p>
+<h2 id="national">How much energy do data centers use in the US and worldwide?</h2>
+<p>US data centers used 192 TWh in 2024, or 4.7% of total US electricity, according to LBNL's 2025 update. That was a 14% increase on 2023.</p>
+<p>Most pages online still quote the earlier 2024 report. Its figures, as DOE summarized them:</p>
+<ul><li>58 TWh in 2014, rising to 176 TWh in 2023.</li><li>About 4.4% of total US electricity in 2023.</li><li>Load growth tripled over the past decade.</li><li>A projection of 325 to 580 TWh by 2028, or about 6.7 to 12% of US electricity.</li></ul>
+<p>The 2025 update looks further out. Its reference case has US data centers using 649 TWh in 2030, or 11.8% of forecast US electricity, within a range of 521 to 843 TWh (9.5 to 15.3%). It also estimates that 148 GW of interconnection capacity would be needed to serve them in 2030. AI servers make up 55% of all data center energy use in that 2030 reference case.</p>
+<p>Worldwide, the IEA estimates data centers used around 415 TWh in 2024, about 1.5% of global electricity. In its base case, that roughly doubles to around 945 TWh by 2030.</p>
+<h2 id="why-they-disagree">Why do the numbers online disagree?</h2>
+<p>Five things cause most of the conflict. Check them before you trust any figure, ours included:</p>
+<ol><li><strong>Power vs energy.</strong> A MW figure and a TWh figure answer different questions.</li><li><strong>IT vs facility.</strong> Some figures count only servers; others include cooling and power losses.</li><li><strong>Capacity vs actual draw.</strong> Design capacity and grid requests are well above average use. LBNL estimates average use at around half of interconnection capacity.</li><li><strong>Year of the data.</strong> The 2023 figure (4.4%) and the 2024 figure (4.7%) come from two different LBNL reports. Pages quoting one or the other can both be right for their year.</li><li><strong>Scope.</strong> LBNL leaves cryptocurrency mining out of its data center totals. Other estimates may include it, or count a whole campus as one site.</li></ol>
+<h2 id="planning">What this means if you are planning AI capacity</h2>
+<p>For AI capacity, the constraint is now power, not floor space. At 100 kW a rack, a modest AI deployment needs megawatts of firm power, plus the cooling to match. Data center power requirements for AI are set by the hardware's rated draw, so the questions to ask a site are about power first:</p>
+<ul><li>How many MW are available for IT load, and how many in total including cooling?</li><li>Can that power be delivered today, or is it waiting on a grid study or upgrade?</li><li>What backup or spare generation is in place if a unit fails?</li><li>Can the cooling handle your rack density, air or liquid?</li><li>Is there room to add more power blocks on the same site later?</li></ul>
+<p>The grid is where many projects wait. Large new loads need studies and upgrades before they connect, which is why the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a> is now a planning problem of its own. One response is to put generation on the site itself. Read how <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a> work, and how <a href="/guides/gas-powered-data-centers">gas-powered data centers</a> supply firm power on site.</p>
+<p>If you bring your own hardware, the model you are probably looking for is <a href="/guides/gpu-colocation">GPU colocation</a>: you own the servers and someone else provides the power, cooling and building.</p>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data center capacity at the source of energy, with on-site, behind-the-meter power, and leases it to AI companies on multi-year terms. We are early: no site is built or operating, and we have no capacity available today. We are evaluating sites in Canada and the United States and matching early tenants with sites. Each site is planned around firm energy, with backup units designed in and cooling designed for the tenant's density, air or liquid. See how we approach <a href="/capacity">capacity</a>, <a href="/energy">energy</a> and <a href="/sites">site selection</a>.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an AI company that needs dedicated, power-dense capacity on a multi-year lease and does not want to wait for a grid connection.</li><li>You bring and own your hardware and want the energy, building, power, cooling and connectivity handled for you.</li><li>You own firm gas supply, a landfill, an industrial site or land near energy and fiber, and want a long-term buyer or tenant. See <a href="/partners">partners</a>.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You want GPU-hours, cloud instances or rented GPUs. We are a capacity provider, not a cloud, and we do not own or rent out GPUs.</li><li>You need capacity live today. None is built yet.</li><li>Your gas is interruptible, declining or flared. That suits other uses better than a multi-year data center lease.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=how-much-power-does-a-data-center-use&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>How much electricity does a data center use per year?</h3><p>It depends on its size and how hard it runs. The IEA says a 100 MW hyperscale AI data center uses about as much electricity in a year as 100,000 households. As a ceiling, a site drawing a steady 100 MW for all 8,760 hours of a year would use 876,000 MWh. Across the whole US, data centers used 192 TWh in 2024.</p>
+<h3>What percentage of US electricity do data centers use?</h3><p>Data centers used 4.7% of total US electricity in 2024, according to LBNL's 2025 update (192 TWh). The earlier 2024 LBNL report put 2023 at about 4.4% (176 TWh), which is the figure many pages still quote. Looking ahead, the 2025 update's reference case reaches 11.8% of US electricity in 2030, within a range of 9.5 to 15.3%.</p>
+<h3>How much power does an AI data center use?</h3><p>The IEA describes hyperscale, AI-focused data centers as drawing 100 MW or more, compared with around 10-25 MW for a conventional data center. The difference starts at the rack: LBNL says conventional racks used about 3 to 5 kW, while AI racks can use as much as 100 kW, and PNNL reports present-day GPU racks at 120 kW. Add cooling and power losses on top of the IT load for the full facility figure.</p>
+<h3>What is PUE in a data center?</h3><p>Power usage effectiveness (PUE) is total facility energy divided by the energy used by IT equipment. It shows how much extra power goes to cooling, power conversion and the rest of the building. A PUE of 1.45, the US average in 2024 according to LBNL, means 1.45 units of energy for every 1 unit that reaches the servers. LBNL estimates an average of 1.145 for facilities serving AI equipment, many of which use liquid cooling.</p>
+<h3>Why do AI data centers use so much power?</h3><p>AI servers pack many accelerators into each machine and run them hard, so each rack draws far more than a conventional one: up to 100 kW or more against about 3 to 5 kW, according to LBNL and PNNL. LBNL found that US data center electricity use rose 14% from 2023 to 2024, driven mainly by more AI servers being shipped, each with higher rated power.</p>
+<h3>Will data center power demand keep growing?</h3><p>The public projections say yes. LBNL's reference case has US data center use rising from 192 TWh in 2024 to 649 TWh in 2030, with a range of 521 to 843 TWh. The IEA's base case has global data center use roughly doubling from around 415 TWh in 2024 to around 945 TWh in 2030. The spread reflects uncertainty about how many AI servers ship, how long they last and how hard they run.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, &quot;United States Data Center Energy Usage Report: 2025 Update&quot; (June 2026; published by DOE; checked 2026-10-28)</a></li><li><a href="https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers" rel="noopener" target="_blank">U.S. Department of Energy, &quot;DOE Releases New Report Evaluating Increase in Electricity Demand from Data Centers&quot; (2024-12-20; checked 2026-10-28)</a></li><li><a href="https://research.lbl.gov/2024/11/20/addressing-data-center-energy-efficiency-challenges-posed-by-the-growth-of-ai/" rel="noopener" target="_blank">Berkeley Lab Research, &quot;Addressing Data Center Energy Efficiency Challenges Posed by the Growth of AI&quot; (2024-11-20; checked 2026-10-28)</a></li><li><a href="https://www.energy.gov/sites/default/files/2026-01/Data_Center_EMT_Models.pdf" rel="noopener" target="_blank">Pacific Northwest National Laboratory for DOE, &quot;Electromagnetic Transient Modeling of Large Data Centers for Grid-Level Studies&quot; (PNNL-38817, December 2025; checked 2026-10-28)</a></li><li><a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" rel="noopener" target="_blank">International Energy Agency, &quot;Energy and AI: Energy demand from AI&quot; (April 2025; checked 2026-10-28)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/guides/how-long-does-it-take-to-build-a-data-center">How long it takes to build a data center</a></li><li><a href="/guides/gpu-colocation">GPU colocation: what it is and who it suits</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/how-much-power-does-a-data-center-use#article", "headline": "How Much Power Does a Data Center Use? Rack, Site and Nation", "description": "How much power does a data center use? Sourced figures per rack, per site in MW and for the US, plus MW vs MWh and what cooling adds.", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/how-much-power-does-a-data-center-use"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "How Much Power Does a Data Center Use? Rack, Site and Nation", "item": "https://accretioncompute.com/guides/how-much-power-does-a-data-center-use"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much electricity does a data center use per year?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on its size and how hard it runs. The IEA says a 100 MW hyperscale AI data center uses about as much electricity in a year as 100,000 households. As a ceiling, a site drawing a steady 100 MW for all 8,760 hours of a year would use 876,000 MWh. Across the whole US, data centers used 192 TWh in 2024."}}, {"@type": "Question", "name": "What percentage of US electricity do data centers use?", "acceptedAnswer": {"@type": "Answer", "text": "Data centers used 4.7% of total US electricity in 2024, according to LBNL's 2025 update (192 TWh). The earlier 2024 LBNL report put 2023 at about 4.4% (176 TWh), which is the figure many pages still quote. Looking ahead, the 2025 update's reference case reaches 11.8% of US electricity in 2030, within a range of 9.5 to 15.3%."}}, {"@type": "Question", "name": "How much power does an AI data center use?", "acceptedAnswer": {"@type": "Answer", "text": "The IEA describes hyperscale, AI-focused data centers as drawing 100 MW or more, compared with around 10-25 MW for a conventional data center. The difference starts at the rack: LBNL says conventional racks used about 3 to 5 kW, while AI racks can use as much as 100 kW, and PNNL reports present-day GPU racks at 120 kW. Add cooling and power losses on top of the IT load for the full facility figure."}}, {"@type": "Question", "name": "What is PUE in a data center?", "acceptedAnswer": {"@type": "Answer", "text": "Power usage effectiveness (PUE) is total facility energy divided by the energy used by IT equipment. It shows how much extra power goes to cooling, power conversion and the rest of the building. A PUE of 1.45, the US average in 2024 according to LBNL, means 1.45 units of energy for every 1 unit that reaches the servers. LBNL estimates an average of 1.145 for facilities serving AI equipment, many of which use liquid cooling."}}, {"@type": "Question", "name": "Why do AI data centers use so much power?", "acceptedAnswer": {"@type": "Answer", "text": "AI servers pack many accelerators into each machine and run them hard, so each rack draws far more than a conventional one: up to 100 kW or more against about 3 to 5 kW, according to LBNL and PNNL. LBNL found that US data center electricity use rose 14% from 2023 to 2024, driven mainly by more AI servers being shipped, each with higher rated power."}}, {"@type": "Question", "name": "Will data center power demand keep growing?", "acceptedAnswer": {"@type": "Answer", "text": "The public projections say yes. LBNL's reference case has US data center use rising from 192 TWh in 2024 to 649 TWh in 2030, with a range of 521 to 843 TWh. The IEA's base case has global data center use roughly doubling from around 415 TWh in 2024 to around 945 TWh in 2030. The spread reflects uncertainty about how many AI servers ship, how long they last and how hard they run."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guides | Accretion Compute</title>
+  <meta name="description" content="Plain guides to AI data center power: behind-the-meter and gas power, grid queues, how much power a data center uses, build times, GPU colocation and leasing land.">
+  <link rel="canonical" href="https://accretioncompute.com/guides">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Guides | Accretion Compute">
+  <meta property="og:description" content="Plain guides to AI data center power: behind-the-meter and gas power, grid queues, how much power a data center uses, build times, GPU colocation and leasing land.">
+  <meta property="og:url" content="https://accretioncompute.com/guides">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="styles.css?v=12edefdf">
+  <script src="site.js?v=12edefdf" defer></script>
+</head>
+<body class="page-guides">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="./" aria-label="Accretion Compute home">
+        <img class="for-light" src="assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="capacity">Capacity</a>
+        <a href="energy">Energy</a>
+        <a href="sites">Site selection</a>
+        <a href="partners">Partners</a>
+        <a href="about">About</a>
+        <a class="nav-cta" href="contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="./">Home</a> / Guides</p>
+    <p class="eyebrow">Guides</p>
+    <h1>Guides</h1>
+    <p class="lede">Plain answers on powering AI data centers: where the power comes from, how long it takes, and what to check. Every number links to its public source.</p>
+  </div>
+</section>
+
+<section class="band tight guide-hub">
+  <div class="wrap">
+<h2 class="guide-group">Power</h2>
+<div class="grid g3 guide-cards">
+  <a class="card" href="/guides/behind-the-meter-data-centers"><h3>Behind the Meter Data Centers: What It Means and the Trade-offs</h3><p>A plain explainer: what the term means, how it compares with a grid connection and with temporary bridge power, and what you take on when you make your own electricity.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+  <a class="card" href="/guides/data-center-interconnection-queue"><h3>The Data Center Interconnection Queue: Steps, Waits and Options</h3><p>How a large site asks the grid for power, why the answer takes years, and what you can do instead of waiting. Every number is sourced and dated.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+  <a class="card" href="/guides/gas-powered-data-centers"><h3>How a Gas Powered Data Center Works, From Fuel to Rack</h3><p>The headlines cover the deals. This guide covers the plant: where the gas comes from, how it reaches the rack, and what making your own power costs you.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+</div>
+<h2 class="guide-group">AI tenants</h2>
+<div class="grid g3 guide-cards">
+  <a class="card" href="/guides/gpu-colocation"><h3>GPU Colocation: What It Is and What to Check Before You Sign</h3><p>You bought the servers. Now they need power, cooling and a network. Here is how GPU colocation works, when it beats renting cloud GPUs or building your own, and when it doesn't.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+  <a class="card" href="/guides/how-long-does-it-take-to-build-a-data-center"><h3>How Long Does It Take to Build a Data Center? Power Sets the Date</h3><p>The building is the quick part. Getting enough electricity to the site is the slow part, and it is the step most timelines leave vague.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+  <a class="card" href="/guides/how-much-power-does-a-data-center-use"><h3>How Much Power Does a Data Center Use? Rack, Site and Nation</h3><p>Sourced answers at three levels: one rack, one facility, and the whole country. Plus the two distinctions behind most of the disagreement online.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+</div>
+<h2 class="guide-group">Land and energy partners</h2>
+<div class="grid g3 guide-cards">
+  <a class="card" href="/guides/sell-or-lease-land-to-a-data-center"><h3>How to Sell or Lease Land to a Data Center Developer</h3><p>The news covers the record land deals. This is the part it skips: what a developer checks, what powered land means, how a deal runs, and how to tell if your site is a fit.</p><span class="link">Read the guide <span class="arrow"></span></span></a>
+</div>
+  </div>
+</section>
+
+<section class="band cta dark" aria-labelledby="cta-h">
+  <div class="cta-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Start a conversation</p>
+    <h2 id="cta-h" class="reveal">Planning AI capacity, or sitting on energy?</h2>
+    <p class="lede reveal d1">We are talking with AI companies, energy producers, landowners and investors now. Tell us what you need or what you have.</p>
+    <div class="actions reveal d2">
+      <a class="btn" href="contact">Contact us <span class="arrow"></span></a>
+      <a class="btn ghost" href="partners">Partner with us</a>
+    </div>
+  </div>
+</section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="about">About</a>
+          <a href="partners">Partners</a>
+          <a href="contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="capacity">Capacity</a>
+          <a href="energy">Energy</a>
+          <a href="sites">Site selection</a>
+          <a href="guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>

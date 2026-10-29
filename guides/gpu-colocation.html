@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPU Colocation: An Honest Buyer's Guide | Accretion Compute</title>
+  <meta name="description" content="GPU colocation explained: what you own, what the provider supplies, how it compares to cloud GPUs and your own build, and what to check before you sign.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/gpu-colocation">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="GPU Colocation: What It Is and What to Check Before You Sign">
+  <meta property="og:description" content="GPU colocation explained: what you own, what the provider supplies, how it compares to cloud GPUs and your own build, and what to check before you sign.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/gpu-colocation">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=12edefdf">
+  <script src="../site.js?v=12edefdf" defer></script>
+</head>
+<body class="page-gpu-colocation">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / GPU colocation</p>
+    <p class="eyebrow">AI tenants</p>
+    <h1>GPU Colocation: What It Is and What to Check Before You Sign</h1>
+    <p class="lede">You bought the servers. Now they need power, cooling and a network. Here is how GPU colocation works, when it beats renting cloud GPUs or building your own, and when it doesn't.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-28">October 28, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="use_case">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>GPU colocation means you own the GPU servers and a data center provider supplies the space, power, cooling, network and on-site hands to run them, under a lease. It differs from cloud GPUs, where you rent the provider's hardware, and from building your own facility. It suits steady, power-dense AI work over several years.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-is-gpu-colocation">What GPU colocation is</a></li><li><a href="#high-density-colocation">High density colocation</a></li><li><a href="#colocation-vs-cloud-vs-build">Colocation vs cloud vs own build</a></li><li><a href="#checklist">Checklist before you sign</a></li><li><a href="#power">Why power is the hard part</a></li><li><a href="#wrong-choice">When colocation is wrong</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Most pages about GPU colocation are written by providers selling it. That is fine, but it leaves out the parts a buyer needs most: where the power comes from, how firm it is, and how the lease lines up with the life of your hardware.</p>
+<p>This guide covers what a colocation data center is, what changes when the racks are full of GPUs, how colocation compares with renting GPUs in a cloud and with building your own site, and a checklist to put to any provider. It ends with an honest note on where Accretion fits, which is not everywhere.</p>
+<h2 id="what-is-gpu-colocation">What is GPU colocation?</h2>
+<p>GPU colocation is renting room, power and cooling in someone else's data center for GPU servers you own. You buy the hardware, ship it in, and run your own software on it. The provider runs the building.</p>
+<p>To answer the wider question first: what is a colocation data center? It is a facility that houses many customers' equipment and supplies the physical layer around it. People shorten it to a colo data center, or just colo. The split of jobs usually looks like this:</p>
+<ul><li><strong>You supply:</strong> the servers, storage and network gear, the operating system and everything above it, and your own staff or contractors for anything beyond basic tasks.</li><li><strong>The provider supplies:</strong> the building and security, power delivered to your racks, backup power, cooling, connections to fiber carriers, and on-site staff who can do simple physical work for you (remote hands).</li></ul>
+<p>Colocation is sold in very different sizes. Some customers rent part of a rack or a single cabinet. Others lease a whole hall or a whole building, often called wholesale colocation. A colocation GPU server deployment for an AI company is usually at the larger end: many racks, sized as one cluster, on a multi-year contract.</p>
+<h2 id="high-density-colocation">What is high density colocation, and why do GPUs need it?</h2>
+<p>High density colocation is colocation built for racks that draw far more power, and give off far more heat, than ordinary servers. GPU servers for AI training and inference are the main reason it exists, which is why you also see it called AI colocation.</p>
+<p>A hall built for web servers and storage was designed around modest power per rack. Fill those racks with modern GPU servers and three things break at once:</p>
+<ul><li><strong>Power delivery.</strong> Each rack needs much more electricity than the busbars, breakers and feeds were sized for. Many older halls can only take a GPU rack by leaving the racks around it empty.</li><li><strong>Cooling.</strong> Air cooling reaches its limit. Dense GPU racks often need liquid cooling: cold plates on the chips (direct-to-chip), rear-door heat exchangers, or immersion. Each needs pipes, pumps and heat rejection designed in from the start.</li><li><strong>Floor and network.</strong> Dense racks are heavy, and GPU clusters need fast links between servers, so cable paths and floor loading matter more than in an ordinary hall.</li></ul>
+<p>There is no industry-standard line where "high density" starts. Providers use different thresholds, and the numbers keep moving as each hardware generation draws more. Ask for the per-rack figure the provider will put in the contract. The marketing figure doesn't count.</p>
+<h2 id="colocation-vs-cloud-vs-build">GPU colocation vs cloud GPUs vs building your own</h2>
+<p>There are three common ways to get GPUs running. They differ in who owns the hardware, how fast you start, and how long you are committed.</p>
+<p><strong>Cloud GPUs (GPU-as-a-service).</strong> A cloud provider owns the GPUs and the building. You rent instances by the hour, or reserve them for a term. You can be running today, and you can stop when the work stops. You pay a margin on the hardware for that flexibility, and you get the hardware, network and location the provider offers.</p>
+<p><strong>Colocation.</strong> You own the GPUs; the provider supplies the building, power and cooling. You pay for hardware upfront (or finance it) and pay the provider per unit of power per month. You control the hardware choice, the network design and the software. You need lead time for the space to be ready and for your hardware to arrive.</p>
+<p><strong>Building your own.</strong> You own the land, the building, the power supply and the hardware. You get the most control and carry all the risk: site selection, permits, a power connection, construction, and staff to run it. Read <a href="/guides/how-long-does-it-take-to-build-a-data-center">how long it takes to build a data center</a> before you plan around this option.</p>
+<p>You can mix them: cloud GPUs for bursts and experiments, colocation for the steady base load you know you will run for years.</p>
+<div class="table-wrap"><table class="compare-table"><caption>GPU colocation vs cloud GPUs vs building your own data center</caption><thead><tr><th scope="col">Question</th><th scope="col">GPU colocation</th><th scope="col">Cloud GPUs</th><th scope="col">Build your own</th></tr></thead><tbody><tr><th scope="row">Who owns the GPUs</th><td>You</td><td>The cloud provider</td><td>You</td></tr><tr><th scope="row">Who owns the building and power</th><td>The provider</td><td>The cloud provider</td><td>You</td></tr><tr><th scope="row">Upfront cost</th><td>Hardware only</td><td>Little or none</td><td>Hardware, land, building and power</td></tr><tr><th scope="row">Time until you are running</th><td>Depends on space being built and hardware arriving</td><td>Often the same day, if the GPUs you want are free</td><td>Longest: site, permits, power and construction</td></tr><tr><th scope="row">Typical commitment</th><td>Multi-year lease</td><td>Hourly to multi-year reservations</td><td>The life of the site</td></tr><tr><th scope="row">Control over hardware and network design</th><td>Full</td><td>Limited to what is offered</td><td>Full</td></tr><tr><th scope="row">Who handles power, cooling and the building</th><td>The provider</td><td>The cloud provider</td><td>You</td></tr><tr><th scope="row">Best fit</th><td>Steady, known load over several years</td><td>Short, bursty or uncertain work</td><td>Very large, long-lived needs with your own team</td></tr></tbody></table></div>
+<h2 id="checklist">What should you check before signing a GPU colocation lease?</h2>
+<p>Ask each provider the same questions in writing and compare the answers line by line.</p>
+<ol><li><strong>Power per rack, in the contract.</strong> What the provider commits to deliver to each rack, and what happens if you need more in year three when you refresh hardware.</li><li><strong>Cooling type.</strong> Air, liquid or both. If liquid: which method, who supplies and maintains the cooling equipment inside the rack, and what water or coolant spec your servers need.</li><li><strong>Power source and how firm it is.</strong> Where the electricity comes from (the grid, on-site generation, or both), whether supply can be interrupted or curtailed, and what backup is in place. Firm power means steady, contracted and backed up. Ask the same question about the fuel or supply contract behind it.</li><li><strong>Room to expand.</strong> Whether there is space and power on the same site for your next phase, and whether you get first right to it. Splitting one cluster across sites is expensive.</li><li><strong>Fiber.</strong> Which carriers reach the site, how many separate routes, and how cross-connects are priced.</li><li><strong>Remote hands.</strong> Who is on site, what hours, what tasks are included, and how fast they respond to a failed server or cable.</li><li><strong>Lease length vs hardware life.</strong> A lease much shorter than the useful life of your servers forces a move mid-life. A lease much longer leaves you paying for space after the hardware is retired. Aim to line them up, with options to extend.</li><li><strong>Delivery date and what happens if it slips.</strong> For space that is not built yet, ask what the provider's commitment is and what remedy you have if it is late.</li></ol>
+<p>Also read how power is billed. Some providers bundle energy into one rate; others charge for capacity and bill the energy you use separately. Know which you are comparing.</p>
+<h2 id="power">Why is power now the hard part of AI colocation?</h2>
+<p>Space and cooling can be built. Power is the slow part, because large new loads have to wait for a grid connection. That wait is the main reason high-density capacity is scarce in many markets.</p>
+<p>Demand is rising fast. A US Department of Energy summary of a Lawrence Berkeley National Laboratory report found that data centers used about 4.4% of total US electricity in 2023, or 176 TWh. The report expects that to reach roughly 6.7 to 12% by 2028, or 325 to 580 TWh (<a href="https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers" rel="noopener" target="_blank">DOE, December 2024</a>). For a sense of what that means at one site, see <a href="/guides/how-much-power-does-a-data-center-use">how much power a data center uses</a>.</p>
+<p>New grid connections for loads of this size join a line of other projects waiting for studies and upgrades. The <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a> explains how that line works and why it can take years.</p>
+<p>One response is to build where the energy already is and generate power on site, so the data center does not wait on the grid. That is called <a href="/guides/behind-the-meter-data-centers">behind-the-meter power</a>. For a colocation buyer, that adds questions. Beyond "when does the utility connect you?", ask what fuel runs the generators, under what contract, and what backs it up.</p>
+<h2 id="wrong-choice">When is GPU colocation the wrong choice?</h2>
+<p>Colocation is a long-term commitment to your own hardware. It is a poor fit in these cases.</p>
+<ul><li><strong>You need GPUs running this month.</strong> Rent them in a cloud, or take space in an existing colocation hall that is already built and powered.</li><li><strong>You need them for weeks or months, not years.</strong> Cloud GPUs let you stop paying when the project ends.</li><li><strong>Your demand is uncertain.</strong> If you can't forecast your load a few years out, owning hardware and signing a long lease adds risk you may not need.</li><li><strong>You have no one to run the hardware.</strong> Colocation hands you the building, not the servers. Someone on your side still installs, monitors and fixes the cluster, or you pay a managed service to do it.</li><li><strong>You need a small amount.</strong> A handful of servers is better served by retail colocation or the cloud than by a dedicated build.</li></ul>
+<p>If none of those apply and you know your load, owning the hardware and leasing power-dense space for its full life is often the steadier option.</p>
+<section class="product-fit" id="product-fit"><h2>Where does Accretion fit for AI tenants?</h2>
+<p>Accretion Compute is in development. No site is built or operating yet, and there is no capacity to lease today. We are evaluating sites in Canada and the United States and matching early tenants with sites. The model: we build data center capacity at the source of energy, with power generated on site (behind the meter), and lease it to AI companies on multi-year terms. You bring and own your hardware. We build and operate the energy, building, power, cooling, connectivity and on-site operations. Capacity is priced per kW per month, with energy billed separately.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You need dedicated, power-dense capacity on multi-year terms and don't want to wait for a grid connection.</li><li>You own your GPU servers, or plan to, and want space built to your specification with room to expand on the same site.</li><li>Your racks need liquid cooling, or a mix of air and liquid, designed for your density.</li><li>You want power from firm on-site generation (pipeline gas, gathering-system gas with backup supply, or landfill gas) with backup units designed in.</li><li>You can plan ahead and want a lease sized to the life of your hardware.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You want GPU-hours, cloud instances or rented GPUs. We don't own or rent out GPUs; a cloud provider fits better.</li><li>You need capacity live today. Nothing is built yet; existing colocation or cloud GPUs fit better.</li><li>You only need capacity for weeks or months. Our leases are multi-year.</li><li>You need a published uptime figure, tier rating or service level before you talk. We don't publish those.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=gpu-colocation&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>Is GPU colocation cheaper than renting cloud GPUs?</h3><p>It can be, over a long enough period, because you are not paying the cloud provider's margin on the hardware. But you pay for the hardware upfront or finance it, you sign a multi-year lease, and you carry the risk if your needs change. For short or uncertain workloads, cloud GPUs often cost less in total. Compare like for like: the full cost of owned hardware over its useful life, plus the lease and energy, against the cloud price for the same hours.</p>
+<h3>What are remote hands in a data center?</h3><p>Remote hands are the provider's on-site staff who do physical tasks for you, so your team doesn't have to travel. Typical tasks: power-cycling a server, swapping a drive or cable, checking indicator lights, racking new equipment and shipping old parts out. Ask what is included in the base price, what is billed per hour, the hours staff are on site, and how quickly they respond.</p>
+<h3>Does GPU colocation need liquid cooling?</h3><p>Not always, but more often each year. Lower-density GPU racks can still run on air. The densest current GPU systems are designed for liquid cooling, usually cold plates on the chips. If your roadmap includes those systems, choose a provider whose halls are built for liquid now, because adding it later to a hall designed for air is slow and costly.</p>
+<h3>How long is a typical GPU colocation lease?</h3><p>Small retail colocation contracts can be shorter. Larger dedicated deployments for AI clusters usually run several years, because the provider builds power and cooling for that customer. Match the lease to the life of your hardware, with options to extend or expand, so you are not moving a cluster mid-life.</p>
+<h3>What is the difference between retail and wholesale colocation?</h3><p>Retail colocation rents smaller units, such as part of a rack, a full cabinet or a caged area, inside a shared hall, usually with more services bundled in. Wholesale colocation leases a large block of power and space, such as a full hall or building, to one customer on a longer term. AI clusters often sit in the wholesale category because of the power they need.</p>
+<h3>Can I colocate a single GPU server?</h3><p>Yes. Many retail colocation providers will host one server or a few, priced per rack unit or per cabinet. Check that the hall can supply and cool even one dense GPU server; some ordinary halls cap power per cabinet below what one modern GPU server draws. For a single server, cloud GPUs are also worth pricing.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers" rel="noopener" target="_blank">US Department of Energy, DOE Releases New Report Evaluating Increase in Electricity Demand from Data Centers (LBNL report, December 2024; checked 2026-10-28)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers: how on-site power works</a></li><li><a href="/guides/data-center-interconnection-queue">Why data centers wait in the interconnection queue</a></li><li><a href="/guides/gas-powered-data-centers">How gas-powered data centers work</a></li><li><a href="/capacity">How Accretion capacity works</a></li><li><a href="/guides/sell-or-lease-land-to-a-data-center">selling or leasing land to a data center</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/gpu-colocation#article", "headline": "GPU Colocation: What It Is and What to Check Before You Sign", "description": "GPU colocation explained: what you own, what the provider supplies, how it compares to cloud GPUs and your own build, and what to check before you sign.", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/gpu-colocation"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "GPU Colocation: What It Is and What to Check Before You Sign", "item": "https://accretioncompute.com/guides/gpu-colocation"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is GPU colocation cheaper than renting cloud GPUs?", "acceptedAnswer": {"@type": "Answer", "text": "It can be, over a long enough period, because you are not paying the cloud provider's margin on the hardware. But you pay for the hardware upfront or finance it, you sign a multi-year lease, and you carry the risk if your needs change. For short or uncertain workloads, cloud GPUs often cost less in total. Compare like for like: the full cost of owned hardware over its useful life, plus the lease and energy, against the cloud price for the same hours."}}, {"@type": "Question", "name": "What are remote hands in a data center?", "acceptedAnswer": {"@type": "Answer", "text": "Remote hands are the provider's on-site staff who do physical tasks for you, so your team doesn't have to travel. Typical tasks: power-cycling a server, swapping a drive or cable, checking indicator lights, racking new equipment and shipping old parts out. Ask what is included in the base price, what is billed per hour, the hours staff are on site, and how quickly they respond."}}, {"@type": "Question", "name": "Does GPU colocation need liquid cooling?", "acceptedAnswer": {"@type": "Answer", "text": "Not always, but more often each year. Lower-density GPU racks can still run on air. The densest current GPU systems are designed for liquid cooling, usually cold plates on the chips. If your roadmap includes those systems, choose a provider whose halls are built for liquid now, because adding it later to a hall designed for air is slow and costly."}}, {"@type": "Question", "name": "How long is a typical GPU colocation lease?", "acceptedAnswer": {"@type": "Answer", "text": "Small retail colocation contracts can be shorter. Larger dedicated deployments for AI clusters usually run several years, because the provider builds power and cooling for that customer. Match the lease to the life of your hardware, with options to extend or expand, so you are not moving a cluster mid-life."}}, {"@type": "Question", "name": "What is the difference between retail and wholesale colocation?", "acceptedAnswer": {"@type": "Answer", "text": "Retail colocation rents smaller units, such as part of a rack, a full cabinet or a caged area, inside a shared hall, usually with more services bundled in. Wholesale colocation leases a large block of power and space, such as a full hall or building, to one customer on a longer term. AI clusters often sit in the wholesale category because of the power they need."}}, {"@type": "Question", "name": "Can I colocate a single GPU server?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Many retail colocation providers will host one server or a few, priced per rack unit or per cabinet. Check that the hall can supply and cool even one dense GPU server; some ordinary halls cap power per cabinet below what one modern GPU server draws. For a single server, cloud GPUs are also worth pricing."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>

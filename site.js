@@ -228,7 +228,7 @@ var acSymbol = (function () {
         ctx.beginPath();
         for (var x = -L, n = 0; x <= L; x += 3, n++) { var p = pull(lens(x, off * S), 0.035); n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
         if (acCanBlur) { ctx.save(); ctx.strokeStyle = grad(Math.min(1, base * 3.6)); ctx.lineWidth = main ? 1.3 : 1; ctx.filter = 'blur(0.8px)'; ctx.stroke(); ctx.restore(); }
-        ctx.strokeStyle = grad(base * 3.5); ctx.lineWidth = main ? 0.25 : 0.18; for (var pass = 0; pass < 4; pass++) ctx.stroke(); // a hairline is drawn faint, so it is laid down several times
+        ctx.strokeStyle = grad(base * 2.8); ctx.lineWidth = main ? 0.32 : 0.23; for (var pass = 0; pass < 4; pass++) ctx.stroke(); // a hairline is drawn faint, so it is laid down several times
       });
       energy = Math.max(energy, 0.45 * breathe);
 

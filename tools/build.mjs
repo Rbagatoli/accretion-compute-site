@@ -4,8 +4,9 @@
 // Each page starts with a one-line JSON header in an HTML comment:
 //   <!--{"title": "...", "description": "...", "nav": "capacity"}-->
 // Optional keys: "out" (file name, default <id>.html), "noindex": true, "ogTitle".
+// Guides (src/guides/*.html, made by tools/import-guides.mjs) are written to guides/<id>.html.
 
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,15 +24,17 @@ const version = createHash('sha256')
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 const sitemap = [];
 
-for (const file of readdirSync(join(root, 'src/pages')).filter((f) => f.endsWith('.html')).sort()) {
+const sources = [['src/pages', '']];
+if (existsSync(join(root, 'src/guides'))) sources.push(['src/guides', 'guides/']);
+for (const [dir, prefix] of sources) for (const file of readdirSync(join(root, dir)).filter((f) => f.endsWith('.html')).sort()) {
   const id = file.replace(/\.html$/, '');
-  const src = readFileSync(join(root, 'src/pages', file), 'utf8');
+  const src = readFileSync(join(root, dir, file), 'utf8');
   const m = src.match(/^<!--(\{.*?\})-->\r?\n/);
   if (!m) throw new Error(`${file}: missing JSON header`);
   const meta = JSON.parse(m[1]);
   for (const k of ['title', 'description']) if (!meta[k]) throw new Error(`${file}: missing ${k}`);
 
-  const out = meta.out || `${id}.html`;
+  const out = prefix + (meta.out || `${id}.html`);
   // Cloudflare Pages serves pages without ".html" (and redirects the .html address there), so canonicals,
   // the sitemap and internal links all use the short address. GitHub Pages serves the short address too.
   const canonical = out === 'index.html' ? '' : out.replace(/\.html$/, '');
@@ -57,8 +60,12 @@ for (const file of readdirSync(join(root, 'src/pages')).filter((f) => f.endsWith
   html = html.replace(/href="([a-z0-9-]+)\.html(#[^"]*)?"/g, (_, name, hash) => `href="${name === 'index' ? './' : name}${hash || ''}"`);
   if (/href="[a-z0-9-]+\.html/.test(html)) throw new Error(`${file}: an internal .html link survived`);
 
+  // a page one folder down reaches the shared files and pages through ../
+  if (prefix) html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="../');
+
   const left = html.match(/\{\{[^}]+\}\}/);
   if (left) throw new Error(`${file}: unfilled placeholder ${left[0]}`);
+  if (prefix) mkdirSync(join(root, prefix), { recursive: true });
   writeFileSync(join(root, out), html.replace(/\r\n/g, '\n'));
   if (!meta.noindex) sitemap.push(`https://accretioncompute.com/${canonical}`);
   console.log(`built ${out}`);
