@@ -29,8 +29,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
   <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
-  <link rel="stylesheet" href="styles.css?v=c89eb3c8">
-  <script src="site.js?v=c89eb3c8" defer></script>
+  <link rel="stylesheet" href="styles.css?v=90c01155">
+  <script src="site.js?v=90c01155" defer></script>
 </head>
 <body class="page-index">
   <a class="skip" href="#main">Skip to content</a>
@@ -71,12 +71,17 @@
   <canvas class="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-in">
     <div class="alogo" role="img" aria-label="Accretion Compute"><img class="hero-logo for-light" src="assets/logos/accretion-compute-stacked-no-descriptor-black.svg" alt="" width="1000" height="560"><img class="hero-logo for-dark" src="assets/logos/accretion-compute-stacked-no-descriptor-white.svg" alt="" width="1000" height="560"></div>
-    <h1>AI compute, built at the source of&nbsp;energy.</h1>
+    <h1>AI compute, built at <span class="glint">the source of&nbsp;energy.</span></h1>
     <p class="lede">We build and run AI-ready capacity where energy is already produced, so AI companies are not left waiting in the grid queue.</p>
     <div class="actions">
-      <a class="btn" href="capacity">For AI companies <span class="arrow"></span></a>
-      <a class="btn ghost" href="partners">For energy partners</a>
+      <a class="oc" href="capacity"><small>For AI companies</small><span>Lease capacity <span class="arrow"></span></span></a>
+      <a class="oc" href="partners"><small>For energy partners</small><span>Put your energy to work <span class="arrow"></span></span></a>
     </div>
+    <ol class="hero-flow" aria-label="How it works">
+      <li><span class="hf-n">01</span>Energy produced on site</li>
+      <li><span class="hf-n">02</span>Power, cooling and space built around it</li>
+      <li><span class="hf-n">03</span>Leased to AI companies</li>
+    </ol>
   </div>
   <a class="hero-cue" href="#what"><span class="sr">Scroll to read more</span></a>
 </section>

@@ -343,6 +343,10 @@ var acSymbol = (function () {
 
     mount(); size();
     window.addEventListener('resize', function () { size(); if (still) frame(0, 0); });
+    // Re-measure when anything in the hero changes height (fonts, text, layout), so the disk stays on the logo.
+    var refit = function () { size(); if (still) frame(0, 0); };
+    if ('ResizeObserver' in window) new ResizeObserver(refit).observe(hero.querySelector('.hero-in') || hero);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
     if (still || !('IntersectionObserver' in window)) { frame(0, 0); return; }
     new IntersectionObserver(function (en) {
       var was = on; on = en[0].isIntersecting;
