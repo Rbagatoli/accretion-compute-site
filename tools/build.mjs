@@ -53,6 +53,7 @@ for (const [dir, prefix] of sources) for (const file of readdirSync(join(root, d
     .replaceAll('{{canonical}}', canonical)
     .replaceAll('{{id}}', id)
     .replaceAll('{{version}}', version)
+    .replaceAll('{{ogImage}}', meta.ogImage || 'assets/og-image.png')
     .replace('{{robots}}', meta.noindex ? '<meta name="robots" content="noindex">' : '');
   for (const n of NAV) html = html.replace(`{{nav:${n}}}`, meta.nav === n ? ' aria-current="page"' : '');
 

@@ -58,6 +58,20 @@
       items.forEach(function (el) { el.classList.add('in'); });
     }
 
+    // Remember, for this tab only, the first page of the visit and the site that linked here. The contact form
+    // adds it to the email, where the visitor can see it before sending. Cleared when the tab closes.
+    var visit = null;
+    try {
+      visit = JSON.parse(sessionStorage.getItem('ac-visit') || 'null');
+      if (!visit) {
+        var ref = '';
+        try { var r = new URL(document.referrer); if (r.hostname !== location.hostname) ref = r.hostname.replace(/^www\./, ''); } catch (err) {}
+        var q = new URLSearchParams(location.search);
+        visit = { page: location.pathname, from: ref || (q.get('utm_source') || '') };
+        sessionStorage.setItem('ac-visit', JSON.stringify(visit));
+      }
+    } catch (err) { visit = null; }
+
     // Contact form: opens the visitor's email app with the message filled in. Nothing is sent or stored by this site.
     var form = document.querySelector('[data-mail-form]');
     if (form) {
@@ -74,6 +88,7 @@
           '',
           data.get('message') || ''
         ];
+        if (visit) lines.push('', '--', 'How you found us: ' + (visit.from || 'direct') + ', first page ' + visit.page);
         var to = form.getAttribute('data-mail-to');
         var subject = 'Accretion Compute enquiry: ' + about;
         window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
