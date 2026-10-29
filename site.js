@@ -315,17 +315,9 @@ var acSymbol = (function () {
     // Follow the site colour switch
     document.addEventListener('ac-theme', function (ev) { theme = ev.detail === 'dark' ? 'dark' : 'light'; mount(); size(); if (still) frame(0, 0); });
 
-    // Mouse: the horizon and dust lean toward the pointer. Click or tap: the core flares and the dust is pushed out.
+    // Click or tap: the core flares and the dust is pushed out. The mouse itself has no effect.
     // Phones that allow it without asking (most Android): tilting the phone moves the pull.
     if (!still) {
-      hero.addEventListener('pointermove', function (e) {
-        if (e.pointerType === 'touch') return;
-        var r = hero.getBoundingClientRect();
-        ptr.tx = e.clientX - r.left; ptr.ty = e.clientY - r.top;
-        if (ptr.inf < 0.05) { ptr.x = ptr.tx; ptr.y = ptr.ty; }
-        ptr.want = 1;
-      });
-      hero.addEventListener('pointerleave', function () { ptr.want = 0; });
       hero.addEventListener('pointerdown', function (e) {
         if (e.target.closest('a, button')) return;
         energy = 1;
