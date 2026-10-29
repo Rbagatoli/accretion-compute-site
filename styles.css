@@ -38,7 +38,7 @@
 
 /* Two themes, only black and white. Black (the default) is the original look: black hero, page heads,
    feature bands, top bar and footer, white sections between. White flips every one of them. */
-[data-theme="dark"] :is(.dark, .foot, .bar), [data-theme="light"] body {
+[data-theme="dark"] :is(.dark, .foot, .bar), [data-theme="light"] body, [data-theme="light"] .hero-alt {
   --bg: var(--void);
   --fg: var(--light);
   --fg-strong: var(--light-bright);
@@ -51,7 +51,7 @@
   color: var(--fg);
   color-scheme: dark;
 }
-[data-theme="light"] :is(.dark, .foot, .bar), [data-theme="dark"] body {
+[data-theme="light"] :is(.dark, .foot, .bar), [data-theme="dark"] body, [data-theme="dark"] .hero-alt {
   --bg: var(--white);
   --fg: var(--graphite);
   --fg-strong: var(--ink);
@@ -829,3 +829,29 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 .oc:hover .arrow { width: 24px; }
 @media (max-width: 599.98px) { .hero .oc { width: 100%; min-width: 0; } }
 @media (prefers-reduced-motion: reduce) { .hero .oc { animation: none; } }
+
+/* Hero: the opposite-colour copy, shown under a soft curve. --alt-mask is the curve. */
+.hero { --alt-mask: radial-gradient(ellipse 62% 100% at 50% -5%, transparent 55%, #000 100%); }
+.hero-alt { position: absolute; inset: 0; display: grid; place-items: center; padding: inherit; isolation: isolate; pointer-events: none;
+  -webkit-mask-image: var(--alt-mask); mask-image: var(--alt-mask); }
+[data-theme="dark"] .hero-alt { --gl-a: #44474d; --gl-b: #0b0c0e; }
+[data-theme="light"] .hero-alt { --gl-a: #c2c6cc; --gl-b: #ffffff; }
+[data-theme="dark"] .hero-alt .alogo .wm { background-image: linear-gradient(100deg, #0b0c0e 0%, #0b0c0e 40%, #6b7078 50%, #0b0c0e 60%, #0b0c0e 100%); }
+[data-theme="light"] .hero-alt .alogo .wm { background-image: linear-gradient(100deg, #cfd2d7 0%, #cfd2d7 38%, #ffffff 50%, #cfd2d7 62%, #cfd2d7 100%); }
+/* Dust in the copy thins out before the hero ends, so nothing is cut off at the edge into the next section. */
+.hero-alt .hero-canvas { -webkit-mask-image: var(--alt-dust, linear-gradient(#000 72%, transparent 97%)); mask-image: var(--alt-dust, linear-gradient(#000 72%, transparent 97%)); }
+/* Extra room under the hero content, so the fade into the next section has space to run. The content keeps its place. */
+.hero[data-hero-alt] { --hero-extra: 60px; min-height: calc(100svh - var(--bar-h) + var(--hero-extra));
+  padding-bottom: calc(clamp(72px, 10vh, 104px) + var(--hero-extra)); }
+/* The fade into the next section: a layer in the hero's colour across the seam, shaped by --veil (set in site.js),
+   so the hero's edge and the next section's top are never seen. It only shows once site.js has set it up. */
+.hero + .band.hero-veil { position: relative; }
+.hero + .band.hero-veil::before { content: ""; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none;
+  top: calc(-1 * var(--veil-up)); height: calc(var(--veil-up) + var(--veil-down));
+  background: var(--void); -webkit-mask-image: var(--veil); mask-image: var(--veil);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
+[data-theme="light"] .hero + .band.hero-veil::before { background: var(--white); }
+/* The scroll cue, moved above the fade layer by site.js. It keeps the hero's colours. */
+.hero + .band > .hero-cue { bottom: auto; z-index: 2; }
+[data-theme="dark"] .hero + .band > .hero-cue { --line: rgba(232, 234, 237, 0.14); --fg-dim: var(--light-dim); }
+[data-theme="light"] .hero + .band > .hero-cue { --line: rgba(11, 12, 14, 0.12); --fg-dim: var(--graphite-2); }

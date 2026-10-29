@@ -159,6 +159,54 @@ var acSymbol = (function () {
 
     var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 
+    // An opposite-colour copy of the hero, laid on top and shown only under a soft curve (the curve is the
+    // layer's CSS mask). It shares this canvas's drawing and the logo's pulse, so both copies move as one.
+    var alt = null, altCanvas = null, actx = null, altLogo = null, altParts = null;
+    if (hero.hasAttribute('data-hero-alt')) {
+      alt = document.createElement('div'); alt.className = 'hero-alt'; alt.setAttribute('aria-hidden', 'true'); alt.inert = true;
+      altCanvas = document.createElement('canvas'); altCanvas.className = 'hero-canvas'; alt.appendChild(altCanvas);
+      var inner = hero.querySelector('.hero-in').cloneNode(true); alt.appendChild(inner);
+      [].slice.call(alt.querySelectorAll('a, [id]')).forEach(function (n) { n.removeAttribute('id'); n.setAttribute('tabindex', '-1'); });
+      hero.appendChild(alt); actx = altCanvas.getContext('2d'); altLogo = inner.querySelector('.alogo');
+    }
+    function opposite(t) { return t === 'dark' ? 'light' : 'dark'; }
+
+    // The curve and the fade into the next section. w, d: the curve's size (% of the hero); s: its softness (%);
+    // y: its centre (% of the hero, above the top); u: where the fade starts (px above the hero's edge);
+    // t: how far it runs into the next section (px).
+    var CURVE = { w: 123, d: 211, s: 23, y: -61, u: 190, t: 310 };
+    var band = alt && hero.nextElementSibling, heroCue = hero.querySelector(':scope > .hero-cue');
+    function ss(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+    function sss(x) { x = Math.max(0, Math.min(1, x)); return x * x * x * (x * (x * 6 - 15) + 10); }
+    // Lightness L* (0-100) to a 0-1 screen value, so the fade looks even to the eye.
+    function lstar(L) { var Y = L > 8 ? Math.pow((L + 16) / 116, 3) : L / 903.3; return Y <= 0.0031308 ? 12.92 * Y : 1.055 * Math.pow(Y, 1 / 2.4) - 0.055; }
+    function bowl(inv, shape) {
+      var a = 100 - CURVE.s, st = [];
+      for (var i = 0; i <= 12; i++) { var e = ss(i / 12); st.push('rgba(0,0,0,' + (inv ? 1 - e : e).toFixed(4) + ') ' + (a + CURVE.s * i / 12).toFixed(2) + '%'); }
+      return 'radial-gradient(' + shape + ', ' + st.join(', ') + ')';
+    }
+    function curve() {
+      // On shorter screens the content sits nearer the edge, so the fade starts lower, just under the content.
+      var gap = hero.getBoundingClientRect().bottom - hero.querySelector('.hero-in').getBoundingClientRect().bottom;
+      var W = hero.offsetWidth, H = hero.offsetHeight, u = Math.round(Math.min(CURVE.u, Math.max(40, gap - 20))), t = CURVE.t, total = u + t, st = [];
+      // The copy shows under the curve, and is solid below u px (the fade layer covers that part).
+      hero.style.setProperty('--alt-mask', bowl(false, 'ellipse ' + CURVE.w + '% ' + CURVE.d + '% at 50% ' + CURVE.y + '%') + ', linear-gradient(to top, #000 ' + u + 'px, transparent ' + u + 'px)');
+      hero.style.setProperty('--alt-dust', 'linear-gradient(to top, transparent ' + (u + 40) + 'px, #000 ' + (u + 220) + 'px)');
+      if (!band) return;
+      // The fade layer: one curve, eased in lightness, from the hero's colour at u px above the edge
+      // to the next section's colour t px into it. Where the curve already shows the copy, it is cut away.
+      for (var i = 0; i <= 60; i++) { var p = total * i / 60; st.push('rgba(0,0,0,' + (1 - lstar(100 * sss(p / total))).toFixed(4) + ') ' + p.toFixed(1) + 'px'); }
+      var cy = CURVE.y / 100 * H - (H - u);
+      band.style.setProperty('--veil', 'linear-gradient(' + st.join(', ') + '), ' + bowl(true, 'ellipse ' + (CURVE.w / 100 * W).toFixed(1) + 'px ' + (CURVE.d / 100 * H).toFixed(1) + 'px at 50% ' + cy.toFixed(1) + 'px'));
+      band.style.setProperty('--veil-up', u + 'px'); band.style.setProperty('--veil-down', t + 'px');
+      band.classList.add('hero-veil');
+      // The scroll cue sits 30px under the hero content. It moves into the next section's layer so the fade can't cover it.
+      if (heroCue) {
+        if (heroCue.parentNode !== band) band.appendChild(heroCue);
+        heroCue.style.top = -Math.max(gap - 30, heroCue.offsetHeight + 16) + 'px';
+      }
+    }
+
     var symbol = acSymbol;
 
     // Sizes are in symbol widths (S). Every point is pushed outward by a point-mass lens,
@@ -195,11 +243,17 @@ var acSymbol = (function () {
       logo.innerHTML = symbol(theme) + '<div class="wm"></div>';
       var s = logo.querySelector('.sym');
       sym = s; halo = s.querySelector('.halo'); core = s.querySelector('.core'); glows = [].slice.call(s.querySelectorAll('.glow'));
+      if (altLogo) {
+        altLogo.innerHTML = symbol(opposite(theme)) + '<div class="wm"></div>';
+        var a = altLogo.querySelector('.sym');
+        altParts = { sym: a, halo: a.querySelector('.halo'), core: a.querySelector('.core'), glows: [].slice.call(a.querySelectorAll('.glow')) };
+      }
     }
     function size() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2), hr = hero.getBoundingClientRect();
       var c = logo.querySelector('.sym .core').getBoundingClientRect(), sym = logo.querySelector('.sym').getBoundingClientRect();
       w = hr.width; h = hr.height; canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (altCanvas) { altCanvas.width = canvas.width; altCanvas.height = canvas.height; curve(); }
       cx = c.left - hr.left + c.width / 2; cy = c.top - hr.top + c.height / 2; S = sym.width; E = 0.44 * S; ink = INK[theme];
     }
     function lens(x, y) { var b = Math.hypot(x, y) || 0.001, k = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b; return [cx + x * k, cy + y * k]; }
@@ -311,6 +365,16 @@ var acSymbol = (function () {
       // The symbol tips gently toward the pointer.
       var nx = Math.max(-1, Math.min(1, (ptr.x - cx) / (w * 0.5))), ny = Math.max(-1, Math.min(1, (ptr.y - cy) / (h * 0.5)));
       sym.style.transform = ptr.inf < 0.002 ? '' : 'perspective(700px) rotateX(' + (-ny * 2 * ptr.inf * calm()).toFixed(2) + 'deg) rotateY(' + (nx * 2 * ptr.inf * calm()).toFixed(2) + 'deg)';
+      if (actx && altParts) {
+        altParts.halo.style.opacity = halo.style.opacity; altParts.halo.style.transform = halo.style.transform;
+        altParts.core.style.transform = core.style.transform; altParts.sym.style.transform = sym.style.transform;
+        altParts.glows.forEach(function (g, n) { if (glows[n]) g.style.opacity = glows[n].style.opacity; });
+        var o = INK[opposite(theme)];
+        actx.setTransform(1, 0, 0, 1, 0, 0); actx.globalCompositeOperation = 'source-over';
+        actx.clearRect(0, 0, altCanvas.width, altCanvas.height); actx.drawImage(canvas, 0, 0);
+        actx.globalCompositeOperation = 'source-in'; actx.fillStyle = 'rgb(' + o.join(',') + ')';
+        actx.fillRect(0, 0, altCanvas.width, altCanvas.height); actx.globalCompositeOperation = 'source-over';
+      }
     }
     function loop(t) { if (!on) return; var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t; frame(dt, t / 1000); requestAnimationFrame(loop); }
 
