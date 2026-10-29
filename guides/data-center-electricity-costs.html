@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Center Electricity Costs: How Billing Works | Accretion</title>
+  <meta name="description" content="Data center electricity costs, explained: kW vs kWh, demand charges, energy pass-through, PJM capacity prices and EIA rates, with dated public sources.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/data-center-electricity-costs">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Data Center Electricity Costs: How Power Is Priced and Billed">
+  <meta property="og:description" content="Data center electricity costs, explained: kW vs kWh, demand charges, energy pass-through, PJM capacity prices and EIA rates, with dated public sources.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/data-center-electricity-costs">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=30fa2562">
+  <script src="../site.js?v=30fa2562" defer></script>
+</head>
+<body class="page-data-center-electricity-costs">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Data center electricity costs</p>
+    <p class="eyebrow">AI tenants</p>
+    <h1>Data Center Electricity Costs: How Power Is Priced and Billed</h1>
+    <p class="lede">What a site pays for electricity, how a provider passes that on to a tenant, and the public price data behind both. Every number is sourced and dated.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-28">October 28, 2026</time> · By <a href="/about">Accretion Compute team</a> · 7 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Data center electricity costs have two parts: capacity, priced per kW per month, and energy, priced per kWh used. EIA put the US average industrial price at 8.51 cents per kWh in 2025. Tenants usually pay either one all-in rate per kW, or a per-kW rate with energy billed separately at cost.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-makes-up-the-cost">What makes up the cost</a></li><li><a href="#price-per-kwh">Price per kWh</a></li><li><a href="#pricing-models">How providers bill power</a></li><li><a href="#demand-charges">Demand charges and ratchets</a></li><li><a href="#pjm">PJM capacity prices</a></li><li><a href="#annual-cost">A year of power, worked out</a></li><li><a href="#compare-quotes">Comparing quotes</a></li><li><a href="#product-fit">Accretion&#x27;s pricing model</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Data center electricity costs are hard to compare because two different bills hide behind the phrase. One is what the site pays: a utility tariff, a wholesale contract or the fuel for its own plant. The other is what a tenant pays the provider, which may bundle that cost into one rate or pass it through line by line.</p>
+<p>This guide covers both: the units on each bill, the charges that surprise people (demand charges, ratchets and capacity costs), the pricing models providers use, and why power costs in the PJM region have climbed. Prices come from the US Energy Information Administration (EIA), PJM and Oak Ridge National Laboratory (ORNL), each with the year it covers.</p>
+<h2 id="what-makes-up-the-cost">What makes up data center electricity costs?</h2>
+<p>Data center electricity costs come down to two quantities: how much power you can draw at once, and how much energy you use. <strong>Power</strong> is measured in kilowatts (kW) or megawatts (MW). <strong>Energy</strong> is power over time, in kilowatt-hours (kWh) or megawatt-hours (MWh). Most bills charge for both.</p>
+<p>A large commercial or industrial electricity bill usually has these lines:</p>
+<ul><li><strong>Energy charge (per kWh).</strong> The electricity used in the month, sometimes priced by time of day or season.</li><li><strong>Demand charge (per kW).</strong> Your highest rate of use in the month, which pays for equipment sized to your peak.</li><li><strong>Customer charge.</strong> A flat monthly fee for metering and service.</li><li><strong>Riders.</strong> Fuel adjustments, transmission costs, programs and taxes.</li><li><strong>Capacity costs.</strong> In regions with a capacity market, such as PJM, the cost of keeping enough generation ready for peak hours reaches the bill through the supplier or utility.</li></ul>
+<p>If you lease space from a provider, you don't see this bill directly. You see whatever the provider builds on top of it.</p>
+<h2 id="price-per-kwh">How much does electricity cost a data center per kWh?</h2>
+<p>There is no single price. The public benchmark is EIA's US average for industrial customers: 8.51 cents per kWh in 2025, against 13.37 cents for commercial customers. Large sites usually pay nearer the industrial figure.</p>
+<p>EIA explains why: industrial customers take large amounts of power at higher voltages, which is cheaper to supply, so their price sits close to wholesale. A data center with its own substation looks more like an industrial customer than an office.</p>
+<p>Prices have been rising. EIA's figures for the US average:</p>
+<div class="table-wrap"><table class="compare-table"><thead><tr><th scope="col">Period</th><th scope="col">Commercial (cents/kWh)</th><th scope="col">Industrial (cents/kWh)</th></tr></thead><tbody><tr><th scope="row">2019</th><td>10.68</td><td>6.81</td></tr><tr><th scope="row">2024</th><td>12.75</td><td>8.13</td></tr><tr><th scope="row">2025</th><td>13.37</td><td>8.51</td></tr><tr><th scope="row">2026, January to August (preliminary)</th><td>14.04</td><td>9.09</td></tr></tbody></table></div>
+<p>Location matters as much as the year. In August 2026 (preliminary), EIA's average industrial price was 7.21 cents in Texas, 9.75 in Ohio, 9.98 in Virginia and 10.47 in Pennsylvania. A specific site's price depends on its tariff or contract, load shape and voltage.</p>
+<p>Cooling and power conversion add energy on top of what the servers draw. Our guide on <a href="/guides/how-much-power-does-a-data-center-use">how much power a data center uses</a> explains IT load, facility load and PUE.</p>
+<h2 id="pricing-models">How do data centers charge for power?</h2>
+<p>Providers charge tenants for power in a few ways. The main difference is who carries the risk of energy prices changing:</p>
+<ul><li><strong>All-in per kW.</strong> One monthly rate per kW of committed capacity covers space, power, cooling and energy. Easy to budget. The provider carries energy price risk and prices it in.</li><li><strong>Per kW plus energy pass-through.</strong> A monthly rate per kW pays for the capacity (building, power and cooling), and the energy you use is billed separately, often at cost plus a defined factor for cooling and losses. You carry the energy price risk but see the real cost.</li><li><strong>Per circuit or breaker.</strong> Common in smaller retail colocation. You pay for each circuit's rated capacity whether you use it or not.</li><li><strong>Metered energy only.</strong> You pay for kWh used, usually with a minimum or capacity charge so the provider recovers the infrastructure cost.</li></ul>
+<p>Read two terms carefully. <strong>Committed</strong> kW is what the provider reserves and bills for, used or not. <strong>Pass-through</strong> energy should be defined: which meter, what price basis, and any multiplier for cooling or losses. A pass-through with an undefined multiplier is not much clearer than a bundled rate.</p>
+<p>For multi-year AI deployments, per kW plus pass-through is common because both sides can see where the money goes. Our guide to <a href="/guides/gpu-colocation">GPU colocation</a> covers the rest of the lease.</p>
+<div class="table-wrap"><table class="compare-table"><caption>How data center providers bill tenants for power</caption><thead><tr><th scope="col">Pricing model</th><th scope="col">What you pay for</th><th scope="col">Who carries energy price risk</th><th scope="col">What to check</th></tr></thead><tbody><tr><th scope="row">All-in per kW</th><td>One monthly rate per committed kW, energy included</td><td>The provider (priced into the rate)</td><td>How much energy the rate assumes, and when it can be repriced</td></tr><tr><th scope="row">Per kW plus energy pass-through</th><td>Monthly rate per committed kW, plus metered energy billed separately</td><td>The tenant</td><td>The meter, the energy price basis and any multiplier for cooling and losses</td></tr><tr><th scope="row">Per circuit or breaker</th><td>Each circuit's rated capacity, used or not</td><td>Usually the provider</td><td>Whether redundant feeds are billed twice, and what usable kW each circuit gives</td></tr><tr><th scope="row">Metered energy only</th><td>kWh used, usually with a minimum or capacity charge</td><td>The tenant</td><td>Minimum bills, demand charges and how capacity is recovered</td></tr></tbody></table></div>
+<h2 id="demand-charges">What are demand charges and ratchets?</h2>
+<p>A demand charge bills your highest rate of use in the month, per kW, on top of the energy you used. It pays for wires and transformers sized to your peak, even if you hit it once.</p>
+<p>An ORNL guide for DOE's Better Plants program explains the measurement. Utilities average use over short windows, often 15 minutes: 25 kWh used in one 15-minute window is 100 kW of demand. The highest window sets the charge for the month.</p>
+<p>Two clauses can make billed demand higher than actual demand:</p>
+<ul><li><strong>Ratchets.</strong> Billed demand is the larger of this month's peak and a share of the highest peak in the past 11 months, usually 70%–80%, according to ORNL. One spike can raise bills for most of a year.</li><li><strong>Coincident peak charges.</strong> Some tariffs measure your demand when the grid peaks, not when your own site does.</li></ul>
+<p>AI training loads run near their peak for long stretches. That helps: fixed per-kW charges spread over many kWh. A site that spikes once and then idles pays far more per kWh used.</p>
+<h2 id="pjm">Why are data center power costs rising in PJM?</h2>
+<p>PJM, the grid operator for 13 states and the District of Columbia, runs an auction that pays generators to be available at peak. Its price has risen more than tenfold since the 2024/2025 auction, and PJM ties most of the forecast load growth behind it to data centers.</p>
+<p>The results of PJM's Base Residual Auction, by delivery year:</p>
+<ul><li><strong>2024/2025:</strong> $28.92/MW-day.</li><li><strong>2025/2026:</strong> $269.92/MW-day for most of the footprint.</li><li><strong>2026/2027:</strong> $329.17/MW-day, at the price cap agreed with FERC and the PJM states.</li><li><strong>2027/2028:</strong> $333.44/MW-day, at the cap. PJM says nearly 5,100 MW of the roughly 5,250 MW rise in forecast peak load came from data centers. Supply fell 6,623 MW short of the reliability requirement.</li><li><strong>2028/2029 (held July 2026):</strong> $325/MW-day, at the cap for the third auction running, and 6,831 MW short of the requirement.</li></ul>
+<p>Both of the last two auctions totaled about $16.4 billion at the clearing price. PJM notes that capacity is a fraction of wholesale costs, wholesale costs are only part of a retail bill, and load hedged through self-supply or bilateral contracts is not exposed to the clearing price. For 2026/2027, PJM expected some customers' bills to rise 1.5–5%.</p>
+<p>For a data center in PJM, capacity cost reaches the bill through its supplier or utility. PJM is also developing "connect and manage" rules that would let large new loads connect if they can cut use when the grid is stressed, which could change the cost and terms of grid power for new sites.</p>
+<h2 id="annual-cost">How much does it cost to run a data center's power for a year?</h2>
+<p>Estimate the energy part with simple arithmetic: average load in kW, times 8,760 hours, times the price per kWh. Demand, capacity and fixed charges come on top.</p>
+<p>A worked example, not a quote. A site drawing a steady 1 MW at the facility meter for a year uses 8,760 MWh, or 8.76 million kWh. At EIA's 2025 US industrial average of 8.51 cents per kWh, the energy alone is about 746,000 US dollars. Halve the load and the energy cost halves.</p>
+<p>What changes the real number:</p>
+<ol><li><strong>Utilization.</strong> Capacity charges are paid on the commitment; energy on what you use, which is usually less.</li><li><strong>Overhead.</strong> Cooling and power losses add to the IT load at the facility meter.</li><li><strong>Location and contract.</strong> State averages differ by several cents per kWh.</li><li><strong>Load shape.</strong> Peaks drive demand and capacity charges; a flat load spreads them thin.</li><li><strong>Source.</strong> A site with its own generation pays for fuel, the plant and upkeep instead of a utility tariff.</li></ol>
+<p>On that last point: <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a> avoid many grid charges, including capacity costs passed through a utility, but pay for spare generating units, fuel contracts and staff. Cost then tracks fuel prices, not the tariff. See how <a href="/guides/gas-powered-data-centers">gas-powered data centers</a> secure firm fuel.</p>
+<h2 id="compare-quotes">How to compare power pricing between quotes</h2>
+<p>Put every quote in the same terms first. A low per-kW rate with expensive energy can cost more than a higher all-in rate. Ask each provider, in writing:</p>
+<ol class="steps"><li>Is the per-kW rate charged on kW committed or kW used?</li><li>Is energy included? If not, at what price, from which meter, and with what multiplier?</li><li>How are changes in energy or fuel prices passed on, and how often?</li><li>Are demand, capacity or transmission charges passed through, and how?</li><li>What does going over your committed kW cost, now and later?</li><li>Which escalators, minimum bills and taxes apply?</li></ol>
+<p>Then model the same load across every quote: expected average draw, committed kW, and two or three energy price scenarios. The cheapest quote today is not always the cheapest over a five-year lease.</p>
+<p>Our honest take: an all-in rate is easier to budget, and a pass-through is easier to audit. Neither wins every time. What matters is energy terms written clearly enough to check each month's bill.</p>
+<section class="product-fit" id="product-fit"><h2>How Accretion Compute prices power</h2>
+<p>Accretion Compute is in development. No site is built or operating, and there is no capacity to lease today. We are evaluating sites in Canada and the United States and matching early tenants with sites. We build AI data center capacity at the source of energy, with power generated on site (behind the meter), and lease it to AI companies on multi-year terms. Capacity is priced per kW per month, and energy is billed separately and transparently. We do not publish prices. See how we approach <a href="/capacity">capacity</a> and <a href="/energy">energy</a>.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You want capacity priced per kW with the energy cost shown separately, not buried in one rate.</li><li>You need dedicated, power-dense capacity on a multi-year lease and don't want to wait for a grid connection.</li><li>You bring and own your hardware and want the energy, building, power, cooling and connectivity handled for you.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You want a published rate card before a conversation. We don't publish prices.</li><li>You need capacity live today. Nothing is built yet.</li><li>You want GPU-hours or cloud instances billed by the hour. We are a capacity provider, not a cloud.</li><li>You only need capacity for weeks or months. Our leases are multi-year.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=data-center-electricity-costs&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>How much does it cost to run a data center per year?</h3><p>Start with the energy: average load in kW, times 8,760 hours, times the price per kWh. A steady 1 MW at EIA's 2025 US industrial average of 8.51 cents per kWh comes to about 746,000 US dollars a year. Then add demand, capacity and fixed charges, and the costs beyond power: staff, maintenance, the building and the hardware.</p>
+<h3>What is the difference between kW and kWh on a data center bill?</h3><p>kW is power: how much you can draw, or did draw, at one moment. kWh is energy: power used over time. Capacity and demand charges are billed per kW because they pay for infrastructure sized to your peak. Energy charges are billed per kWh. A quote per kW per month usually covers capacity; energy may or may not be included.</p>
+<h3>What is an energy pass-through in colocation?</h3><p>It means the provider bills the electricity your equipment uses separately from the capacity rate, at or near its own cost. You see the real energy price and carry the risk of it changing. Ask which meter it is read from, what price it is based on, how often it changes, and whether a multiplier is added for cooling and losses.</p>
+<h3>Why is PJM&#x27;s capacity price so high?</h3><p>Demand is forecast to grow faster than new supply. For 2027/2028, PJM said nearly 5,100 MW of a roughly 5,250 MW rise in forecast peak load came from data centers, and supply fell short of the reliability requirement. The last three auctions all cleared at the price cap: $329.17/MW-day, $333.44/MW-day and $325/MW-day.</p>
+<h3>Do data centers pay less for electricity than homes?</h3><p>Per kWh, usually yes. In August 2026, EIA's preliminary US averages were 18.16 cents per kWh for residential customers and 9.64 cents for industrial customers. Large users take power at higher voltage, which costs less to deliver. But they also pay demand and capacity charges per kW, and often fund grid upgrades for their own connection.</p>
+<h3>What is a demand ratchet on an electricity bill?</h3><p>A ratchet sets a floor on billed demand based on your past peaks. According to ORNL's guide for DOE, billed demand is the larger of this month's peak and a share, usually 70%–80%, of the highest peak in the past 11 months. One unusual spike can keep demand charges high for most of a year, so avoiding short peaks matters.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_3" rel="noopener" target="_blank">U.S. Energy Information Administration, Electric Power Monthly, Table 5.3: Average Price of Electricity to Ultimate Customers (data through August 2026; checked 2026-10-28)</a></li><li><a href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" rel="noopener" target="_blank">U.S. Energy Information Administration, Electric Power Monthly, Table 5.6.A: Average Price of Electricity by State and Sector, August 2026 (preliminary; checked 2026-10-28)</a></li><li><a href="https://www.eia.gov/energyexplained/electricity/prices-and-factors-affecting-prices.php" rel="noopener" target="_blank">U.S. Energy Information Administration, &quot;Electricity explained: Prices and factors affecting prices&quot; (checked 2026-10-28)</a></li><li><a href="https://betterbuildingssolutioncenter.energy.gov/sites/default/files/attachments/BP%20Understanding%20your%20Utility%20Bill%20-%20Electricity_FINAL.pdf" rel="noopener" target="_blank">Oak Ridge National Laboratory for DOE Better Plants, &quot;Understanding Your Utility Bills: Electricity&quot; (ORNL/SPR-2021/1839, 2021; checked 2026-10-28)</a></li><li><a href="https://insidelines.pjm.com/pjm-capacity-auction-procures-sufficient-resources-to-meet-rto-reliability-requirement/" rel="noopener" target="_blank">PJM Inside Lines, &quot;PJM Capacity Auction Procures Sufficient Resources To Meet RTO Reliability Requirement&quot; (2024-07-30; checked 2026-10-28)</a></li><li><a href="https://insidelines.pjm.com/pjm-auction-procures-134311-mw-of-generation-resources-supply-responds-to-price-signal/" rel="noopener" target="_blank">PJM Inside Lines, &quot;PJM Auction Procures 134,311 MW of Generation Resources; Supply Responds to Price Signal&quot; (2025-07-22; checked 2026-10-28)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2025-releases/20251217-pjm-auction-procures-134479-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, &quot;PJM Auction Procures 134,479 MW of Generation Resources&quot; (2027/2028 BRA, 2025-12-17; checked 2026-10-28)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2026-releases/20260714-pjm-capacity-auction-procures-138318-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, &quot;PJM Capacity Auction Procures 138,318 MW of Generation Resources&quot; (2028/2029 BRA, 2026-07-14; checked 2026-10-28)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/how-much-power-does-a-data-center-use">How much power a data center uses</a></li><li><a href="/guides/gpu-colocation">GPU colocation: an honest buyer&#x27;s guide</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/where-are-data-centers-being-built">where new data center capacity is going</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/data-center-electricity-costs#article", "headline": "Data Center Electricity Costs: How Power Is Priced and Billed", "description": "Data center electricity costs, explained: kW vs kWh, demand charges, energy pass-through, PJM capacity prices and EIA rates, with dated public sources.", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/data-center-electricity-costs"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Data Center Electricity Costs: How Power Is Priced and Billed", "item": "https://accretioncompute.com/guides/data-center-electricity-costs"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does it cost to run a data center per year?", "acceptedAnswer": {"@type": "Answer", "text": "Start with the energy: average load in kW, times 8,760 hours, times the price per kWh. A steady 1 MW at EIA's 2025 US industrial average of 8.51 cents per kWh comes to about 746,000 US dollars a year. Then add demand, capacity and fixed charges, and the costs beyond power: staff, maintenance, the building and the hardware."}}, {"@type": "Question", "name": "What is the difference between kW and kWh on a data center bill?", "acceptedAnswer": {"@type": "Answer", "text": "kW is power: how much you can draw, or did draw, at one moment. kWh is energy: power used over time. Capacity and demand charges are billed per kW because they pay for infrastructure sized to your peak. Energy charges are billed per kWh. A quote per kW per month usually covers capacity; energy may or may not be included."}}, {"@type": "Question", "name": "What is an energy pass-through in colocation?", "acceptedAnswer": {"@type": "Answer", "text": "It means the provider bills the electricity your equipment uses separately from the capacity rate, at or near its own cost. You see the real energy price and carry the risk of it changing. Ask which meter it is read from, what price it is based on, how often it changes, and whether a multiplier is added for cooling and losses."}}, {"@type": "Question", "name": "Why is PJM's capacity price so high?", "acceptedAnswer": {"@type": "Answer", "text": "Demand is forecast to grow faster than new supply. For 2027/2028, PJM said nearly 5,100 MW of a roughly 5,250 MW rise in forecast peak load came from data centers, and supply fell short of the reliability requirement. The last three auctions all cleared at the price cap: $329.17/MW-day, $333.44/MW-day and $325/MW-day."}}, {"@type": "Question", "name": "Do data centers pay less for electricity than homes?", "acceptedAnswer": {"@type": "Answer", "text": "Per kWh, usually yes. In August 2026, EIA's preliminary US averages were 18.16 cents per kWh for residential customers and 9.64 cents for industrial customers. Large users take power at higher voltage, which costs less to deliver. But they also pay demand and capacity charges per kW, and often fund grid upgrades for their own connection."}}, {"@type": "Question", "name": "What is a demand ratchet on an electricity bill?", "acceptedAnswer": {"@type": "Answer", "text": "A ratchet sets a floor on billed demand based on your past peaks. According to ORNL's guide for DOE, billed demand is the larger of this month's peak and a share, usually 70%–80%, of the highest peak in the past 11 months. One unusual spike can keep demand charges high for most of a year, so avoiding short peaks matters."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>

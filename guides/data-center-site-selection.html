@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Center Site Selection: The Checklist | Accretion</title>
+  <meta name="description" content="Data center site selection for AI loads: the criteria to check, a checklist with red flags, which factors are pass-or-fail, and the order to check them in.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/data-center-site-selection">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Data Center Site Selection: Criteria and a Checklist for AI Sites">
+  <meta property="og:description" content="Data center site selection for AI loads: the criteria to check, a checklist with red flags, which factors are pass-or-fail, and the order to check them in.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/data-center-site-selection">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=30fa2562">
+  <script src="../site.js?v=30fa2562" defer></script>
+</head>
+<body class="page-data-center-site-selection">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Site selection</p>
+    <p class="eyebrow">Land and energy partners</p>
+    <h1>Data Center Site Selection: Criteria and a Checklist for AI Sites</h1>
+    <p class="lede">Most site lists treat every factor as equal. For AI capacity they are not. This guide covers what to check, in what order, and the red flags that should end a site early.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-28">October 28, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Data center site selection starts with power: how much firm electricity a site can get, and how soon. Then check fiber, water and cooling, buildable land with room to grow, zoning and permits, natural hazards, road access, workforce and taxes. Treat power, permits and hazards as pass-or-fail gates. Score the rest.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-it-involves">What it involves</a></li><li><a href="#criteria">The criteria</a></li><li><a href="#testing-power">Testing power</a></li><li><a href="#where-to-locate">Where to locate</a></li><li><a href="#checklist-in-order">Checklist in order</a></li><li><a href="#common-mistakes">Common mistakes</a></li><li><a href="#product-fit">Where does Accretion Compute fit?</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Data center site selection used to be a search for cheap land near customers and a fiber hub. Power was one line on the list. For AI capacity that order has flipped. A single site can need as much electricity as a small city, and the wait to get it can be longer than the time to build the halls.</p>
+<p>This guide is for teams planning AI capacity, and for landowners and energy owners who want to know how their site will be judged. It covers how to choose a data center site: the criteria, a checklist with red flags, why power is tested first, and the mistakes that waste a year.</p>
+<h2 id="what-it-involves">What does data center site selection involve?</h2>
+<p>Data center site selection is the work of narrowing a region down to one parcel that can deliver the power, connectivity and permits a project needs, on the schedule it needs them. It runs in stages, and each stage costs more than the last, so the cheap checks come first.</p>
+<ol><li><strong>Set the requirements.</strong> How much power on day one and at full build, the rack density, air or liquid cooling, how much latency the workloads can accept, and the date capacity is needed.</li><li><strong>Screen from a desk.</strong> Map transmission lines, substations, gas pipelines, fiber routes, flood zones, zoning and land parcels. Most areas drop out here.</li><li><strong>Shortlist and call.</strong> Talk to the utility or the fuel supplier, the landowner and the local planning office. Ask what they can commit to, not what is possible in theory.</li><li><strong>Diligence on the ground.</strong> Title, surveys, soil tests, environmental review, a fiber route, water supply, and the power or fuel studies.</li><li><strong>Secure the site.</strong> An option or a lease, power or fuel agreements, and the first permits.</li></ol>
+<p>Projects rarely fail late because a parcel was too small. They fail early because nobody tested whether the power was real.</p>
+<h2 id="criteria">What are the main data center site selection criteria?</h2>
+<p>The main data center site selection criteria are power and time to power, fiber, water and cooling, land and room to expand, zoning and permits, hazard and climate risk, access, workforce, and taxes and incentives. A few are gates: fail one and the site is out. The rest are trade-offs you can weigh against each other.</p>
+<p><strong>Power and time to power.</strong> The gate that matters most. Data centers used about 4.4% of all U.S. electricity in 2023, around 176 TWh, according to a Berkeley Lab report released by the Department of Energy, and AI is pushing that share up. Utilities in many regions now get far more requests for large loads than they can serve quickly. Our guide to <a href="/guides/how-much-power-does-a-data-center-use">how much power a data center uses</a> covers the scale.</p>
+<p><strong>Fiber.</strong> AI training can tolerate distance from users; inference and storage less so. Either way, the site needs a route to at least one long-haul fiber network, and ideally two on separate paths.</p>
+<p><strong>Water and cooling.</strong> High-density AI racks often need liquid cooling. Some designs use a lot of water, others recirculate it or reject heat to air. The same report estimates U.S. data centers consumed about 66 billion liters of water directly in 2023. Local water rules and drought history matter as much as the volume.</p>
+<p><strong>Land and room to expand.</strong> Flat, well-drained, buildable ground with space for halls, power equipment, setbacks and later phases.</p>
+<p><strong>Zoning and permits.</strong> Industrial zoning or a clear path to it, a building permit route, and, if power is made on site, an air permit.</p>
+<p><strong>Hazards and climate risk.</strong> Flood zones, wildfire, seismic faults, tornado and hurricane exposure, and nearby hazards such as pipelines under pressure, airports or rail lines that cause vibration.</p>
+<p><strong>Access, workforce and taxes.</strong> Heavy-load roads, a labor pool for construction and operations, and the property, sales and equipment taxes that apply over the life of the site.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Data center site selection checklist: what to check, why it matters for AI loads, and red flags</caption><thead><tr><th scope="col">Criterion</th><th scope="col">What to check</th><th scope="col">Why it matters for AI loads</th><th scope="col">Red flags</th></tr></thead><tbody><tr><th scope="row">Power and time to power</th><td>Megawatts available, delivery dates, required upgrades, who pays</td><td>Dense GPU racks need far more power than older halls, around the clock</td><td>Only an interest letter; no dates; upgrades with no owner</td></tr><tr><th scope="row">Fuel supply (on-site power)</th><td>Contracted volumes, term, backup supply, gas quality</td><td>On-site generation is only as firm as its fuel</td><td>Interruptible, declining or flared gas; short contracts</td></tr><tr><th scope="row">Fiber</th><td>Distance to long-haul routes, number of separate paths, build cost</td><td>Training moves large datasets; inference needs low delay to users</td><td>One path only; years of construction to reach a network</td></tr><tr><th scope="row">Water and cooling</th><td>Legal water rights, drought history, cooling design fit</td><td>Liquid cooling is common at AI densities; heat must go somewhere</td><td>Water rights in dispute; a design that assumes water the area lacks</td></tr><tr><th scope="row">Land and expansion</th><td>Usable acres, soil, slope, drainage, easements, room for phases</td><td>Power equipment and later phases take as much room as the halls</td><td>No space for a second phase; poor soil; tangled title</td></tr><tr><th scope="row">Zoning and permits</th><td>Allowed use, rezoning path, building and air permits, hearing history</td><td>On-site generation adds an air permit to the critical path</td><td>Use not allowed and strong local opposition; open legal challenges</td></tr><tr><th scope="row">Hazards and climate</th><td>Flood zone, wildfire, seismic, severe storms, nearby industrial hazards</td><td>Expensive hardware and long leases need a site that stays up</td><td>Mapped floodplain; recent wildfire; active fault nearby</td></tr><tr><th scope="row">Access</th><td>Year-round heavy-load roads, delivery routes, rail if needed</td><td>Transformers, generators and cooling plant arrive as heavy loads</td><td>Seasonal road limits; bridges that cannot take the weight</td></tr><tr><th scope="row">Workforce</th><td>Construction labor, electricians, technicians, commute and housing</td><td>Dense sites need skilled on-site staff every day</td><td>No local trades; no housing for a construction crew</td></tr><tr><th scope="row">Taxes and incentives</th><td>Property and equipment taxes, incentive terms and clawbacks</td><td>GPU hardware is costly, so equipment taxes add up over a lease</td><td>Incentives with job targets the site cannot meet</td></tr></tbody></table></div>
+<h2 id="testing-power">Why test power first, and how?</h2>
+<p>Test power first because it is the slowest thing to fix and the one most often overstated. A site with a weak power path can rarely be rescued by good fiber or cheap land. A site with firm power can usually solve its other gaps with money and time.</p>
+<p>There are two ways to power a site. One is a grid connection. That means a request to the utility, studies, and often new substation or transmission work. Our guide to the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a> explains why that wait can run for years. The other is to generate power on site, <a href="/guides/behind-the-meter-data-centers">behind the meter</a>, from a firm fuel such as pipeline gas or landfill gas. That route skips the grid queue but adds its own checks: fuel supply, generating equipment and air permits.</p>
+<p>Questions that separate a real power path from a hopeful one:</p>
+<ul><li>Is there a signed commitment, or only a letter saying capacity may be available?</li><li>How many megawatts on day one, and on what dates do later blocks arrive?</li><li>Which upgrades are needed, who pays for them, and is the heavy equipment on order?</li><li>For on-site power: is the fuel contracted for the full term, with a backup supply?</li><li>What happens to the schedule if one study comes back badly?</li></ul>
+<h2 id="where-to-locate">Where should a data center be located?</h2>
+<p>A data center should be located where firm power, fiber and buildable land meet, in a place that will permit it and is not exposed to floods or other major hazards. For AI training, that is often away from big cities. For latency-sensitive inference, it is closer to users and to major network hubs.</p>
+<p>That split explains a lot of recent siting. Training runs care about power and cost far more than about a few milliseconds of delay, so they can go where energy is plentiful: near gas fields, large power plants or industrial sites that already have heavy infrastructure. Inference and storage still favor established network hubs, where power is now the scarce part.</p>
+<p>Cold climates help with cooling, but less than they once did. Dense AI racks often use liquid cooling, which works in most climates. Rural sites trade grid access and fiber for land and space; urban sites trade the reverse. Either way, the deciding question is the same: can this site get firm power by the date you need it?</p>
+<h2 id="checklist-in-order">A data center site selection checklist, in order</h2>
+<p>Run the checks in this order. Each step should be able to kill the site before you pay for the next one.</p>
+<ol class="steps"><li><strong>Power path.</strong> Confirm a credible route to the power you need, by the date you need it, from the utility or a firm fuel supplier.</li><li><strong>Hard hazards.</strong> Check flood maps, fault lines, wildfire history and any nearby hazard that rules the site out.</li><li><strong>Zoning and community.</strong> Ask the planning office whether the use is allowed or what it would take. Learn how earlier projects nearby were received.</li><li><strong>Fiber route.</strong> Get a route and a rough cost from the site to at least one network, and ideally a second, separate path.</li><li><strong>Water and cooling.</strong> Match the cooling design to the water that is legally and reliably available.</li><li><strong>Land and title.</strong> Survey, title search, easements, mineral rights, soil tests and room for later phases.</li><li><strong>Access and workforce.</strong> Road weight limits, delivery routes for heavy equipment, and the local labor pool.</li><li><strong>Taxes and incentives.</strong> Property and equipment taxes over the full term, and any incentives with their conditions.</li><li><strong>Secure it.</strong> Option or lease, power or fuel agreements, then permits.</li></ol>
+<h2 id="common-mistakes">What mistakes do teams make when choosing a data center site?</h2>
+<p>The most common mistake is averaging. A weighted score can make a site with no realistic power look like a solid second choice, because it scores well on everything else. Keep the gates separate from the score.</p>
+<ul><li><strong>Treating an interest letter as a power commitment.</strong> Ask for dates, megawatts and who pays for upgrades.</li><li><strong>Assuming water.</strong> A water right on paper and water you can draw in a drought year are different things.</li><li><strong>Leaving the community until late.</strong> Noise, traffic, water use and tax effects come up at public hearings. Early, plain answers save months.</li><li><strong>Buying the land before the studies.</strong> An option with a fair fee keeps the site while you find out if it works.</li><li><strong>Ignoring fuel risk on on-site power.</strong> Gas that is interruptible or declining cannot carry a data center that runs around the clock.</li></ul>
+<p>If you are on the other side of the table, with land or energy to offer, our guide to <a href="/guides/sell-or-lease-land-to-a-data-center">selling or leasing land to a data center</a> covers what developers will ask you.</p>
+<section class="product-fit" id="product-fit"><h2>Where does Accretion Compute fit?</h2>
+<p>Accretion Compute builds AI data center capacity at the source of energy, with power generated on site, behind the meter, and leases it to AI companies on multi-year terms. Site selection for us starts with firm fuel: pipeline gas, gathering-system gas with backup supply, landfill gas, or an existing industrial site. We are in development: no site is built or operating, and we are evaluating sites in Canada and the United States. You can see <a href="/sites">how Accretion scores sites</a>.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an AI company that needs dedicated, power-dense capacity on a multi-year lease, will bring your own hardware, and the grid queue is your blocker.</li><li>You own firm gas (pipeline access or a gathering system with steady supply), a landfill with landfill gas, or an industrial site with energy infrastructure.</li><li>You own land near energy and fiber and want long-term lease income with an operator who builds and runs the site.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You need capacity live today. None is built yet.</li><li>You want GPU-hours, cloud instances or rented GPUs. Accretion provides capacity, not a cloud.</li><li>Your gas is interruptible, declining or flared. A use that can switch off suits it better.</li><li>Your workloads need a site inside a major metro for very low latency.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=data-center-site-selection&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>What is the most important factor in data center site selection?</h3><p>Power, and specifically how much firm power the site can get and how soon. Land, fiber and water problems can usually be solved with time and money. A missing power path usually cannot, at least not on a schedule a tenant will accept. That is why most site searches now start from power maps and utility or fuel conversations, then look for land, rather than the other way round.</p>
+<h3>Why are so many data centers built in rural areas?</h3><p>Rural areas often have what large AI sites need most: room for big buildings and power equipment, space to expand, and sometimes energy close by, such as gas fields or large power plants. Land costs less and there are fewer neighbors. The trade-offs are longer fiber builds, a smaller local workforce, and sometimes a weaker grid. Training workloads tolerate distance from users, which makes rural sites workable.</p>
+<h3>Does a data center need to be near water?</h3><p>Not always. It depends on the cooling design. Some systems evaporate large amounts of water; closed-loop liquid cooling and air-cooled heat rejection use much less. What every site needs is a cooling plan that matches the water it can legally and reliably use, including in a drought year. Check water rights and local rules early, because they can be harder to change than the design.</p>
+<h3>How close does a data center need to be to fiber?</h3><p>Close enough that building the connection does not hold up the project or cost more than it is worth. There is no fixed distance. It depends on the terrain, right-of-way and who can build the route. Ask for a route and a cost to at least one long-haul network, and plan for a second, separate path so one cut cable does not take the site offline.</p>
+<h3>Does latency matter when choosing an AI data center location?</h3><p>For training, much less than you might think. A training run talks mostly to itself inside the site, so a few extra milliseconds to users rarely matter. For inference, such as answering live requests, delay matters more, and those sites tend to sit closer to users and network hubs. Many teams split the two: training where power is, inference near people.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers" rel="noopener" target="_blank">U.S. Department of Energy, DOE Releases New Report Evaluating Increase in Electricity Demand from Data Centers, Dec 20, 2024 (checked 2026-10-28)</a></li><li><a href="https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report_1.pdf" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, 2024 United States Data Center Energy Usage Report, Direct Water Consumption, p. 55 (checked 2026-10-28)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/how-long-does-it-take-to-build-a-data-center">How long it takes to build a data center</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/guides/gas-powered-data-centers">How gas-powered data centers work</a></li><li><a href="/guides/sell-or-lease-land-to-a-data-center">Selling or leasing land to a data center</a></li><li><a href="/guides/landfill-gas-to-energy">how landfill gas becomes electricity</a></li><li><a href="/guides/what-is-stranded-gas">stranded natural gas, explained</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/data-center-site-selection#article", "headline": "Data Center Site Selection: Criteria and a Checklist for AI Sites", "description": "Data center site selection for AI loads: the criteria to check, a checklist with red flags, which factors are pass-or-fail, and the order to check them in.", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/data-center-site-selection"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Data Center Site Selection: Criteria and a Checklist for AI Sites", "item": "https://accretioncompute.com/guides/data-center-site-selection"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the most important factor in data center site selection?", "acceptedAnswer": {"@type": "Answer", "text": "Power, and specifically how much firm power the site can get and how soon. Land, fiber and water problems can usually be solved with time and money. A missing power path usually cannot, at least not on a schedule a tenant will accept. That is why most site searches now start from power maps and utility or fuel conversations, then look for land, rather than the other way round."}}, {"@type": "Question", "name": "Why are so many data centers built in rural areas?", "acceptedAnswer": {"@type": "Answer", "text": "Rural areas often have what large AI sites need most: room for big buildings and power equipment, space to expand, and sometimes energy close by, such as gas fields or large power plants. Land costs less and there are fewer neighbors. The trade-offs are longer fiber builds, a smaller local workforce, and sometimes a weaker grid. Training workloads tolerate distance from users, which makes rural sites workable."}}, {"@type": "Question", "name": "Does a data center need to be near water?", "acceptedAnswer": {"@type": "Answer", "text": "Not always. It depends on the cooling design. Some systems evaporate large amounts of water; closed-loop liquid cooling and air-cooled heat rejection use much less. What every site needs is a cooling plan that matches the water it can legally and reliably use, including in a drought year. Check water rights and local rules early, because they can be harder to change than the design."}}, {"@type": "Question", "name": "How close does a data center need to be to fiber?", "acceptedAnswer": {"@type": "Answer", "text": "Close enough that building the connection does not hold up the project or cost more than it is worth. There is no fixed distance. It depends on the terrain, right-of-way and who can build the route. Ask for a route and a cost to at least one long-haul network, and plan for a second, separate path so one cut cable does not take the site offline."}}, {"@type": "Question", "name": "Does latency matter when choosing an AI data center location?", "acceptedAnswer": {"@type": "Answer", "text": "For training, much less than you might think. A training run talks mostly to itself inside the site, so a few extra milliseconds to users rarely matter. For inference, such as answering live requests, delay matters more, and those sites tend to sit closer to users and network hubs. Many teams split the two: training where power is, inference near people."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>

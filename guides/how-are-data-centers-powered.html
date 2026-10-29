@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Are Data Centers Powered? 5 Ways | Accretion Compute</title>
+  <meta name="description" content="How are data centers powered? The grid, on-site gas, landfill gas, solar with storage and nuclear, compared in one sourced table with honest trade-offs.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/how-are-data-centers-powered">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="How Are Data Centers Powered? Grid, Gas, Solar and Nuclear">
+  <meta property="og:description" content="How are data centers powered? The grid, on-site gas, landfill gas, solar with storage and nuclear, compared in one sourced table with honest trade-offs.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/how-are-data-centers-powered">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=30fa2562">
+  <script src="../site.js?v=30fa2562" defer></script>
+</head>
+<body class="page-how-are-data-centers-powered">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / How data centers are powered</p>
+    <p class="eyebrow">Power</p>
+    <h1>How Are Data Centers Powered? Grid, Gas, Solar and Nuclear</h1>
+    <p class="lede">Where a data center's electricity comes from, how it moves through the building, and the options new AI sites are weighing, side by side.</p>
+    <p class="meta-row">Updated <time datetime="2026-10-28">October 28, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Most data centers are powered by the local electric grid. In the US, that electricity comes mostly from natural gas, then renewables, nuclear and coal. Batteries and diesel generators on site cover outages. A growing number of new AI sites also build their own power plants, mostly gas-fired, with solar, storage and nuclear further out.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#today">Most data centers today</a></li><li><a href="#inside">Inside the building</a></li><li><a href="#why-own-plant">Why build a power plant</a></li><li><a href="#gas">Natural gas plants</a></li><li><a href="#other-sources">Landfill gas, solar, nuclear</a></li><li><a href="#fit">Which option fits</a></li><li><a href="#questions">Questions to ask</a></li><li><a href="#product-fit">Where Accretion Compute fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Ask how are data centers powered and you get two kinds of answer. One describes the equipment inside the building: transformers, batteries, generators. The other is about where the electricity is made, which is the part that now decides where and how fast new AI capacity gets built.</p>
+<p>This guide covers both. It starts with the grid, which still powers most sites, walks through the power chain inside a building, and then compares every supply option in one table: grid, bridge power, on-site gas, landfill gas, solar or wind with batteries, and nuclear. Each has a real cost, and the table says what it is.</p>
+<h2 id="today">How are most data centers powered today?</h2>
+<p>Most data centers are powered by the grid. The site connects to the local utility through a substation, often with two separate feeds so one line can fail without cutting power. The data center buys electricity like any other large customer.</p>
+<p>So the fuel behind a typical data center is whatever the regional grid burns. The International Energy Agency (IEA) estimates that in 2024, natural gas supplied <strong>over 40%</strong> of the electricity used by US data centers. Renewables, mostly solar and wind, supplied <strong>24%</strong>, nuclear <strong>around 20%</strong> and coal <strong>around 15%</strong> (<a href="https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai" rel="noopener" target="_blank">iea.org, Energy and AI</a>).</p>
+<p>That mix varies a lot by region. A site in a hydro-heavy area runs on different electricity from one in a gas-heavy or coal-heavy area, even though both are "on the grid".</p>
+<aside class="callout"><p>"Powered by renewables" claims usually mean the operator buys contracts or certificates for clean energy elsewhere. The electrons in the building still come from the local grid mix. Ask which one is being described.</p></aside>
+<h2 id="inside">What is data center power inside the building?</h2>
+<p>Data center power, inside the building, is a chain that takes high-voltage electricity and turns it into clean, steady power at each rack, with backup at every step. Whatever the source, the chain looks much the same.</p>
+<ol class="steps"><li><strong>Substation and transformers.</strong> High-voltage power from the grid, or from an on-site plant, is stepped down to voltages the building can use.</li><li><strong>Switchgear.</strong> Large switches route power and isolate faults. They also switch the load to backup when the main supply fails.</li><li><strong>UPS (uninterruptible power supply).</strong> Batteries or flywheels carry the load for the seconds or minutes between a failure and the backup taking over.</li><li><strong>Backup generators.</strong> Usually diesel, sized to run the site for hours or days during a long outage. On a grid-connected site they sit idle most of the year.</li><li><strong>Power distribution units (PDUs) and busways.</strong> These carry power across the hall to each rack.</li><li><strong>The rack.</strong> Servers, storage and network gear. Cooling, pumps, lighting and security draw from the same supply.</li></ol>
+<p>AI racks draw far more power than ordinary server racks, which puts more load on every step of the chain and on the source behind it. For the numbers, see <a href="/guides/how-much-power-does-a-data-center-use">how much power a data center uses</a>.</p>
+<h2 id="why-own-plant">Why are new data centers building their own power plants?</h2>
+<p>New data centers build their own power plants mainly because the grid cannot connect large new loads fast enough in many places. A big site needs grid studies, new substations and sometimes new transmission lines first. That can take years, as our guide to the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a> explains.</p>
+<p>A data center power plant on the site skips part of that wait. The site makes its own electricity on its own side of the utility meter, which is why it is called <a href="/guides/behind-the-meter-data-centers">behind-the-meter power</a>. Some sites run fully off the grid. Others use on-site power as a bridge until a grid connection is ready, or keep the grid as backup.</p>
+<p>The IEA expects this to grow but is cautious. It estimates that around <strong>15 to 27 GW</strong> of on-site natural gas generation could be powering data centers by 2030, mostly in the US, with high uncertainty. It also notes that gas turbines are in short supply, so it is not clear on-site power is always faster at scale (<a href="https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions" rel="noopener" target="_blank">iea.org, 2026</a>).</p>
+<p>On-site power is not instant. It still needs fuel, permits, equipment and a build. It moves the bottleneck from the grid queue to those items.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Ways a data center gets power, compared</caption><thead><tr><th scope="col">Power source</th><th scope="col">Steady around the clock?</th><th scope="col">Where it is built</th><th scope="col">What sets the timeline</th><th scope="col">Main trade-off</th><th scope="col">Best fit</th></tr></thead><tbody><tr><th scope="row">Grid connection</th><td>Yes, through the regional grid</td><td>Utility plants anywhere on the grid</td><td>Grid studies, upgrades and the queue</td><td>Can take years in busy regions</td><td>Sites the grid can serve on time</td></tr><tr><th scope="row">Grid + bridge power</th><td>Yes, if the bridge is sized and fueled well</td><td>Temporary units on site, then the grid</td><td>Bridge equipment first; the grid date still matters</td><td>Paying for both while the grid date can slip</td><td>Sites with a firm grid date that want to start sooner</td></tr><tr><th scope="row">On-site natural gas</th><td>Yes, with spare units and firm fuel</td><td>On or next to the site, near a pipeline or gathering system</td><td>Fuel access, air permits, turbine or engine delivery</td><td>Fuel risk, emissions, running a power plant</td><td>Large, steady loads that cannot wait for the grid</td></tr><tr><th scope="row">Landfill gas</th><td>Yes, but output is limited and declines after closure</td><td>At or near the landfill</td><td>Gas volume, collection system, permits</td><td>Small and shrinking supply</td><td>Modest loads, or part of a larger supply</td></tr><tr><th scope="row">Solar or wind + batteries</th><td>Not alone; needs large storage and another source</td><td>On site (large land area) or bought through the grid</td><td>Land, interconnection and storage size</td><td>Variable output; land and battery cost</td><td>Cutting emissions alongside a firm source</td></tr><tr><th scope="row">Nuclear</th><td>Yes</td><td>Existing plants via the grid or next door; small reactors later</td><td>Contracts today; licensing and build for new reactors</td><td>Long lead times and cost for new units</td><td>Long-term, low-carbon supply for patient buyers</td></tr></tbody></table></div>
+<h2 id="gas">How do natural gas power plants for data centers work?</h2>
+<p>Natural gas power plants for data centers burn gas in reciprocating engines or gas turbines next to the building and feed the electricity straight in. Gas is the most common on-site choice because it can run around the clock at large scale.</p>
+<ul><li><strong>Fuel.</strong> Gas comes from a pipeline or a gathering system near the wells. The supply has to be firm and contracted for as long as the lease runs.</li><li><strong>Generation.</strong> Many engines or several turbines, with more units than the load needs, so the site can lose one and keep running.</li><li><strong>Storage.</strong> AI workloads can swing sharply from second to second. The IEA notes that on-site battery storage is becoming critical for the next generation of AI data centers, partly to smooth those swings for the generators.</li><li><strong>Emissions and permits.</strong> Gas emits carbon dioxide and local air pollutants. Every plant needs air permits, and buyers with strict carbon goals may not accept it.</li></ul>
+<p>Our guide to <a href="/guides/gas-powered-data-centers">gas-powered data centers</a> covers fuel sources, equipment and off-grid design in more depth.</p>
+<h2 id="other-sources">Can landfill gas, solar or nuclear power a data center?</h2>
+<p>Yes, each can, but each has limits that make it a fit for some projects and not others.</p>
+<p><strong>Landfill gas.</strong> Waste in a landfill breaks down into a gas that is roughly <strong>50%</strong> methane and <strong>50%</strong> carbon dioxide. The US Environmental Protection Agency counted <strong>542</strong> operational landfill gas energy projects as of September 2024, and about <strong>63%</strong> of them generate electricity (<a href="https://www.epa.gov/lmop/basic-information-about-landfill-gas" rel="noopener" target="_blank">epa.gov</a>). The gas can run engines on site. The catch is volume: a landfill's output depends on the waste in place and falls after it closes, so it suits smaller loads or a share of a larger one.</p>
+<p><strong>Solar or wind with batteries.</strong> Cheap energy, but not steady. The sun sets and the wind drops, and a data center runs all night. To carry a data center around the clock, solar or wind needs large batteries, a lot of land, and still another source for long calm or cloudy spells. Many sites buy renewable power through the grid instead of building it on site.</p>
+<p><strong>Nuclear.</strong> Steady and low-carbon. Today it reaches data centers mainly through the grid or through long-term deals with existing nuclear plants, including sites built next to them. New small modular reactors are further out: the IEA expects the first ones to come online <strong>around 2030</strong> (<a href="https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai" rel="noopener" target="_blank">iea.org, Energy and AI</a>). Licensing, cost and build time make nuclear a long-term option, not a quick one.</p>
+<h2 id="fit">Which power option fits which project?</h2>
+<p>The right answer depends on three things: how soon you need power, how steady it must be, and what your buyers accept on emissions.</p>
+<ul><li><strong>The grid can serve you on your timeline.</strong> Take the grid. Someone else runs the plants, fuel and backup, and you pay a tariff. This is still the best answer for most data centers.</li><li><strong>You have a firm grid date but want to start sooner.</strong> Grid plus bridge power. Ask who pays if the grid date slips.</li><li><strong>You cannot wait years and need steady power for a large load.</strong> On-site gas, near firm fuel, with spare units and storage designed in.</li><li><strong>The load is modest and a suitable landfill is nearby.</strong> <a href="/guides/landfill-gas-to-energy">Landfill gas</a>, alone or as part of the supply.</li><li><strong>Carbon matters more than speed.</strong> Renewable or nuclear supply through the grid or long-term contracts, with patience on timing.</li><li><strong>Your gas is flared, interruptible or declining.</strong> That suits flexible loads such as Bitcoin mining better than an AI data center that has to run every hour.</li></ul>
+<p>Many real sites combine these: on-site gas for firm power, batteries for swings, the grid as backup, and renewable contracts on top.</p>
+<h2 id="questions">How to compare data center power solutions</h2>
+<p>Data center power solutions are pitched in very different ways, so compare them on the same questions.</p>
+<ol><li>Where is the electricity made, and who runs that plant?</li><li>Is the fuel or energy supply firm, contracted, and for how long?</li><li>What happens when the main source fails: how many spare units, how much storage, which backup fuel or grid connection?</li><li>Which permits, including air permits, are in hand?</li><li>What sets the date power arrives: the grid queue, equipment delivery or permits?</li><li>How is energy billed: bundled into rent or passed through at cost?</li></ol>
+<p>Specific, written answers are a good sign. Broad claims about "clean" or "redundant" power without detail are not.</p>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data center capacity at the source of energy, with on-site, behind-the-meter power, and leases it to AI companies on multi-year terms. We use firm energy only: pipeline gas, gathering-system gas with backup supply, landfill gas and existing industrial sites, with backup units designed in. We are early: no site is built or operating yet. We are evaluating sites in Canada and the United States and matching early tenants with sites. See our approach to <a href="/energy">energy</a>, <a href="/capacity">capacity</a> and <a href="/sites">site selection</a>.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an AI company that needs dedicated, power-dense capacity on a multi-year lease and does not want to wait for a grid connection.</li><li>You bring and own your hardware and want the energy, building, power, cooling and connectivity handled for you.</li><li>You own firm gas supply, a landfill, an industrial site or land near energy and fiber, and want a long-term buyer or tenant. See <a href="/partners">partners</a>.</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You need capacity live today. None is built yet.</li><li>You want GPU-hours, cloud instances or rented GPUs. We provide capacity, not compute.</li><li>Your gas is flared, interruptible or declining. Flexible loads such as Bitcoin mining suit it better.</li><li>You need grid-only or emissions-free power from day one. A grid site with renewable or nuclear contracts is the better fit.</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=how-are-data-centers-powered&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>What is the main source of power for data centers?</h3><p>The electric grid. Most data centers buy power from the local utility, so their real fuel is the regional grid mix. In the US, the IEA estimates natural gas supplied over 40% of data center electricity in 2024, followed by renewables, nuclear and coal. The mix differs a lot from one region to another, and a growing number of new sites add their own on-site generation.</p>
+<h3>Do data centers have their own power plants?</h3><p>Most do not. They have backup generators and batteries, but their everyday power comes from the grid. That is changing for large AI sites. Where the grid cannot connect them quickly, some developers build gas-fired plants on site, either to run off the grid or to bridge the years until a grid connection is ready.</p>
+<h3>What powers a data center during a power outage?</h3><p>Batteries or flywheels in the UPS carry the load for the first seconds or minutes. Backup generators, usually diesel, then start and run the site for as long as their fuel lasts, often with fuel deliveries arranged ahead of time. Sites with on-site power plants use spare generating units and storage instead, and may keep the grid as a further backup.</p>
+<h3>Can a data center run on solar power alone?</h3><p>Not in practice for a large site. A data center needs power every hour, and solar only produces in daylight. Running on solar alone would need very large battery banks and a lot of land, and it would still struggle through cloudy weeks. Most operators pair solar or wind with a firm source such as the grid, gas or nuclear.</p>
+<h3>Are data centers powered by nuclear power?</h3><p>Partly, through the grid: the IEA puts nuclear at around 20% of US data center electricity in 2024. Some operators have also signed long-term deals with existing nuclear plants or plan sites next to them. New small modular reactors built for data centers are not expected before around 2030, so nuclear is a long-term option rather than a quick fix.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai" rel="noopener" target="_blank">International Energy Agency, Energy and AI, &quot;Energy supply for AI&quot; (April 2025; iea.org blocks automated fetch, figures confirmed via search excerpts of the page on 2026-10-28)</a></li><li><a href="https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions" rel="noopener" target="_blank">International Energy Agency, &quot;Data centre electricity use surged in 2025, even with tightening bottlenecks driving a scramble for solutions&quot; (2026; confirmed via search excerpts on 2026-10-28)</a></li><li><a href="https://www.epa.gov/lmop/basic-information-about-landfill-gas" rel="noopener" target="_blank">U.S. Environmental Protection Agency, LMOP, &quot;Basic Information about Landfill Gas&quot; (updated 2026-09-01; checked 2026-10-28)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers: what it means</a></li><li><a href="/guides/gas-powered-data-centers">Gas-powered data centers: how they work</a></li><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/how-much-power-does-a-data-center-use">How much power a data center uses</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/how-are-data-centers-powered#article", "headline": "How Are Data Centers Powered? Grid, Gas, Solar and Nuclear", "description": "How are data centers powered? The grid, on-site gas, landfill gas, solar with storage and nuclear, compared in one sourced table with honest trade-offs.", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/how-are-data-centers-powered"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "How Are Data Centers Powered? Grid, Gas, Solar and Nuclear", "item": "https://accretioncompute.com/guides/how-are-data-centers-powered"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the main source of power for data centers?", "acceptedAnswer": {"@type": "Answer", "text": "The electric grid. Most data centers buy power from the local utility, so their real fuel is the regional grid mix. In the US, the IEA estimates natural gas supplied over 40% of data center electricity in 2024, followed by renewables, nuclear and coal. The mix differs a lot from one region to another, and a growing number of new sites add their own on-site generation."}}, {"@type": "Question", "name": "Do data centers have their own power plants?", "acceptedAnswer": {"@type": "Answer", "text": "Most do not. They have backup generators and batteries, but their everyday power comes from the grid. That is changing for large AI sites. Where the grid cannot connect them quickly, some developers build gas-fired plants on site, either to run off the grid or to bridge the years until a grid connection is ready."}}, {"@type": "Question", "name": "What powers a data center during a power outage?", "acceptedAnswer": {"@type": "Answer", "text": "Batteries or flywheels in the UPS carry the load for the first seconds or minutes. Backup generators, usually diesel, then start and run the site for as long as their fuel lasts, often with fuel deliveries arranged ahead of time. Sites with on-site power plants use spare generating units and storage instead, and may keep the grid as a further backup."}}, {"@type": "Question", "name": "Can a data center run on solar power alone?", "acceptedAnswer": {"@type": "Answer", "text": "Not in practice for a large site. A data center needs power every hour, and solar only produces in daylight. Running on solar alone would need very large battery banks and a lot of land, and it would still struggle through cloudy weeks. Most operators pair solar or wind with a firm source such as the grid, gas or nuclear."}}, {"@type": "Question", "name": "Are data centers powered by nuclear power?", "acceptedAnswer": {"@type": "Answer", "text": "Partly, through the grid: the IEA puts nuclear at around 20% of US data center electricity in 2024. Some operators have also signed long-term deals with existing nuclear plants or plan sites next to them. New small modular reactors built for data centers are not expected before around 2030, so nuclear is a long-term option rather than a quick fix."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>
