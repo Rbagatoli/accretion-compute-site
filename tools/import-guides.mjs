@@ -33,6 +33,8 @@ for (const f of readdirSync(from).filter((n) => n.endsWith('.fragment.html')).so
   frag = frag.replace(crumbs ? crumbs[0] : '', '').replace(head[0], '');
   // The hub lives at /guides (no trailing slash).
   frag = frag.replaceAll(`"${SITE}/guides/"`, `"${SITE}/guides"`);
+  // the byline is the company, so the Article author is an Organization
+  frag = frag.replaceAll('"@type": "Person", "name": "Accretion Compute team"', '"@type": "Organization", "name": "Accretion Compute team"');
   const [article, ...after] = frag.split('</article>');
 
   const header = { title: meta.title_tag, description: meta.meta_description, ogTitle: meta.og?.['og:title'] || meta.title_tag, nav: 'guides', ogImage: `assets/og/${slug}.png` };

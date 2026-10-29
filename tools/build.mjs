@@ -54,6 +54,7 @@ for (const [dir, prefix] of sources) for (const file of readdirSync(join(root, d
     .replaceAll('{{id}}', id)
     .replaceAll('{{version}}', version)
     .replaceAll('{{ogImage}}', meta.ogImage || 'assets/og-image.png')
+    .replaceAll('{{ogType}}', prefix === 'guides/' ? 'article' : 'website')
     .replace('{{robots}}', meta.noindex ? '<meta name="robots" content="noindex">' : '');
   for (const n of NAV) html = html.replace(`{{nav:${n}}}`, meta.nav === n ? ' aria-current="page"' : '');
 
@@ -63,6 +64,8 @@ for (const [dir, prefix] of sources) for (const file of readdirSync(join(root, d
 
   // a page one folder down reaches the shared files and pages through ../
   if (prefix) html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="../');
+  // the 404 page is served at any missing address, folders included, so it links from the site root
+  if (out === '404.html') html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="/');
 
   const left = html.match(/\{\{[^}]+\}\}/);
   if (left) throw new Error(`${file}: unfilled placeholder ${left[0]}`);

@@ -1,0 +1,12 @@
+# Cloudflare Pages response headers.
+# Build sources are public in the repo but should never show up in search.
+/src/*
+  X-Robots-Tag: noindex
+/tools/*
+  X-Robots-Tag: noindex
+/README.md
+  X-Robots-Tag: noindex
+
+# The pages.dev copy of the site stays out of search; accretioncompute.com is the real address.
+https://accretion-compute-site.pages.dev/*
+  X-Robots-Tag: noindex
