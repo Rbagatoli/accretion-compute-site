@@ -818,13 +818,13 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 
 /* The two ways in: a point of light slowly orbits each card's border */
 @property --oa { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-.hero .oc { display: block; min-width: 270px; padding: 16px 24px 17px; text-align: left; color: var(--fg-strong); text-decoration: none; border: 1px solid transparent;
-  background: linear-gradient(var(--bg), var(--bg)) padding-box, conic-gradient(from var(--oa), var(--line) 0 68%, var(--fg-strong) 86%, var(--line) 100%) border-box;
+.hero .oc { display: block; min-width: 320px; padding: 21px 30px 22px; text-align: left; color: var(--fg-strong); text-decoration: none; border: 1px solid transparent;
+  background: linear-gradient(var(--bg), var(--bg)) padding-box, conic-gradient(from var(--oa), var(--line) 0 70%, color-mix(in srgb, var(--fg-strong) 55%, var(--line)) 86%, var(--line) 100%) border-box;
   animation: oc-spin 8s linear infinite; transition: box-shadow .4s var(--ease); }
 .hero .oc + .oc { animation-delay: -4s; }
 @keyframes oc-spin { to { --oa: 360deg; } }
-.oc small { display: block; margin-bottom: 8px; font: 400 10px/1 var(--body); letter-spacing: .26em; text-transform: uppercase; color: var(--fg-dim); }
-.oc > span { display: flex; align-items: center; gap: 12px; font: 300 16px/1.2 var(--display); font-stretch: 125%; letter-spacing: .02em; }
+.oc small { display: block; margin-bottom: 10px; font: 400 11px/1 var(--body); letter-spacing: .26em; text-transform: uppercase; color: var(--fg-dim); }
+.oc > span { display: flex; align-items: center; gap: 14px; font: 300 19px/1.2 var(--display); font-stretch: 125%; letter-spacing: .02em; }
 .hero .oc:hover { box-shadow: 0 0 30px -8px color-mix(in srgb, var(--fg-strong) 50%, transparent); background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(var(--fg-strong), var(--fg-strong)) border-box; }
 .oc:hover .arrow { width: 24px; }
 @media (max-width: 599.98px) { .hero .oc { width: 100%; min-width: 0; } }
