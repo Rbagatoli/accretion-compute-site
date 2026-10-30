@@ -303,7 +303,7 @@ var acSymbol = (function () {
         g.addColorStop(0, rgba(0)); g.addColorStop(0.3, rgba(a * 0.35)); g.addColorStop(0.5, rgba(a)); g.addColorStop(0.7, rgba(a * 0.35)); g.addColorStop(1, rgba(0));
         return g;
       };
-      LINES.forEach(function (off) {
+      if (!window.AC_NEWBH) LINES.forEach(function (off) {
         var main = off === 0, base = (main ? 0.5 : 1) * glow * (theme === 'dark' ? 1 : 0.85);
         ctx.beginPath();
         for (var x = -L, n = 0; x <= L; x += 1.5, n++) { var p = pull(lens(x, off * S), 0.035); n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
@@ -318,7 +318,7 @@ var acSymbol = (function () {
       // A few grains circle the logo on flat, lensed orbits, drift outward, fade and are reborn near the ring.
       var dim = (theme === 'dark' ? 1 : 0.8) * DISK;
       ctx.fillStyle = rgba(1);
-      dust.forEach(function (p, k) {
+      if (!window.AC_NEWBH) dust.forEach(function (p, k) {
         p.t += dt; if (p.t > p.life) { p = dust[k] = grain(false); }
         p.a -= dt * 0.8 / Math.pow(p.r, 1.5); p.r += dt * p.v;
         var q = pull(lens(Math.cos(p.a) * p.r * S, Math.sin(p.a) * p.r * S * 0.22 + p.y * S), 0.1);
@@ -327,8 +327,8 @@ var acSymbol = (function () {
         if (a < 0.01) return;
         dot(q[0], q[1], p.s, a);
       });
-      if (!fallers.length) for (i = 0; i < (innerWidth < 720 ? 4 : 7); i++) fallers.push(faller(Math.random() * 4));
-      fallers.forEach(function (p, k) {
+      if (!window.AC_NEWBH) if (!fallers.length) for (i = 0; i < (innerWidth < 720 ? 4 : 7); i++) fallers.push(faller(Math.random() * 4));
+      if (!window.AC_NEWBH) fallers.forEach(function (p, k) {
         p.t += dt; if (p.t < 0) return;
         // Round paths far out (so they come from every side), flattening onto the disk as they arrive.
         p.r -= dt * (0.35 + 0.35 * (p.r - p.rt)); p.a -= dt * 0.8 / Math.pow(Math.max(p.r, 0.3), 1.5);
@@ -352,7 +352,7 @@ var acSymbol = (function () {
       // A few dim runners orbit on the two outer horizon lines, all the same way round (anticlockwise):
       // right to left along the top line, out at the left tip, back in on the bottom line at the
       // same tip and left to right along it, out at the right tip and round again.
-      runners.forEach(function (p) {
+      if (!window.AC_NEWBH) runners.forEach(function (p) {
         p.u = (p.u + dt * p.sp) % 1;
         for (var j = 0; j < 4; j++) {
           var u = p.u - j * 0.006; if (u < 0) u += 1;
@@ -450,7 +450,7 @@ var acSymbol = (function () {
       var T = isNaN(lum) || lum > 128 ? 'light' : 'dark';
       INK = T === 'light' ? [11, 12, 14] : [243, 244, 246];
       box.innerHTML = acSymbol(T);
-      box.style.opacity = Q >= 1 ? '' : Q >= 0.6 ? 0.55 + 0.45 * Q : 0.82 * Math.pow(Q / 0.6, 0.8);
+      box.style.opacity = Q >= 1 || window.AC_NEWBH ? '' : Q >= 0.6 ? 0.55 + 0.45 * Q : 0.82 * Math.pow(Q / 0.6, 0.8);
       halo = box.querySelector('.halo'); core = box.querySelector('.core'); glows = [].slice.call(box.querySelectorAll('.glow'));
     }
     function rgba(al) { return 'rgba(' + INK[0] + ',' + INK[1] + ',' + INK[2] + ',' + Math.max(0, al).toFixed(3) + ')'; }
@@ -552,7 +552,7 @@ var acSymbol = (function () {
       ctx.clearRect(0, 0, W, H); ftx.clearRect(0, 0, W, H); ctx.lineCap = ftx.lineCap = 'round';
       var breathe = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / 5.5);
       // the horizon and its two outer lines, bent around the hole like the hero's
-      [0, -0.1, 0.1].forEach(function (off) {
+      if (!window.AC_NEWBH) [0, -0.1, 0.1].forEach(function (off) {
         var main = off === 0, base = (main ? 0.8 : 0.35) * (0.75 + 0.25 * breathe) * Q;
         var gr = ctx.createLinearGradient(cx - L, 0, cx + L, 0);
         gr.addColorStop(0, rgba(0)); gr.addColorStop(0.3, rgba(base * 0.35)); gr.addColorStop(0.5, rgba(base)); gr.addColorStop(0.7, rgba(base * 0.35)); gr.addColorStop(1, rgba(0));
@@ -562,7 +562,7 @@ var acSymbol = (function () {
       });
       // a few grains running round the outer lines, as on the hero
       ctx.fillStyle = rgba(1);
-      runners.forEach(function (p) {
+      if (!window.AC_NEWBH) runners.forEach(function (p) {
         p.u = (p.u + dt * p.sp) % 1;
         for (var j = 0; j < 4; j++) {
           var u = p.u - j * 0.006; if (u < 0) u += 1;
@@ -2022,5 +2022,673 @@ var acSymbol = (function () {
         else { btn.disabled = false; say('That did not go through. Please try again, or write to <a href="mailto:contact@accretioncompute.com">contact@accretioncompute.com</a>.'); }
       })
       .catch(function () { btn.disabled = false; say('That did not go through. Please try again, or write to <a href="mailto:contact@accretioncompute.com">contact@accretioncompute.com</a>.'); });
+  });
+})();
+
+// Home: the 3D black hole round the hero's logo, and the same black hole under the middle card of "Three ways in".
+// A disk of grains on real orbits, bent over and under the hole by a point-mass lens, with the hero's three live lines.
+// It replaces the hero's flat lines, dust and fallers, and the section's flat lines and runners (see AC_NEWBH above).
+(function () {
+  var INK = { dark: [243, 244, 246], light: [11, 12, 14] };
+  var gapOn = true, theme = 'dark', small = innerWidth < 720, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TAU = Math.PI * 2, rnd = Math.random;
+  function gauss() { return (rnd() + rnd() + rnd() - 1.5) / 1.5; }
+
+  // 3D: the disk lies in the X-Z plane, Y is up, Z points away from the viewer.
+  // The camera sits a little above the disk (inc) and can roll; far points are pushed
+  // outward by a point-mass lens, so the back of the disk arcs over and under the logo.
+  function P(st, x, y, z, lens) {
+    var y1 = y * st.ci + z * st.si, z1 = -y * st.si + z * st.ci;
+    var X = x * st.cr - y1 * st.sr, Y = x * st.sr + y1 * st.cr;
+    var k = st.D / (st.D + z1), m = 1; X *= k; Y *= k;
+    if ((z1 > 0 || st.o.both) && lens) {
+      var b = Math.sqrt(X * X + Y * Y) || 1e-6, q = Math.min(1, Math.abs(z1) / 0.3), w = q * q * (3 - 2 * q) * lens;
+      var root = Math.sqrt(b * b + 4 * st.E * st.E * w), bn = (b + root) / 2, sx, sy, sa = 0, a2 = 0, R2 = 0; m = bn / b;
+      if (st.o.sec) {
+        // The far side's light also comes round under the hole: drawn as the mirror of the arc over
+        // the top, so over and under match. It fades where the lens barely moves a point (out at
+        // the sides), so it never doubles the near side.
+        // Placed from the resting view (so at rest it sits on the bottom live line exactly as before),
+        // then moved the same way the point itself moves when the pointer tips the view, so the arc
+        // under the ring travels with the rest of the ring instead of drifting apart from it.
+        var i0 = st.o.inc, c0 = Math.cos(i0), s0 = Math.sin(i0);
+        var y1r = y * c0 + z * s0, z1r = -y * s0 + z * c0, kr = st.D / (st.D + z1r);
+        var Xr = (x * st.cr - y1r * st.sr) * kr, Yr = (x * st.sr + y1r * st.cr) * kr;
+        var br = Math.sqrt(Xr * Xr + Yr * Yr) || 1e-6, qr = Math.min(1, Math.abs(z1r) / 0.3), wr = qr * qr * (3 - 2 * qr) * lens;
+        var bnr = (br + Math.sqrt(br * br + 4 * st.E * st.E * wr)) / 2;
+        // sits on the bottom live line (radius about 0.5 below the core), hugging it like the arc on top
+        var rs = gapOn ? Math.max(0.47, Math.min(bnr * 0.94, 0.5 + Math.max(0, bnr - 0.5) * 0.35)) : 0.42 + Math.max(0, bnr - 0.42) * 0.6;
+        var FOL = 0.55, dX = (X - Xr) * FOL, dY = (Y - Yr) * FOL;
+        // mirror across the ring's own (rolled) line, not the screen's horizontal, so rolling the view
+        // turns the arc under the ring the same way as the arc on top (identical when there is no roll)
+        var ux = Xr / br, uy = Yr / br, ud = 2 * (ux * st.cr + uy * st.sr);
+        var mx = (ud * st.cr - ux) * rs + dX, my = -((ud * st.sr - uy) * rs + dY);
+        sx = st.cx + mx * st.S; sy = st.cy + my * st.S; R2 = Math.sqrt(mx * mx + my * my) * st.S; a2 = Math.atan2(my, mx); sa = Math.min(1, Math.max(0, (bn - b - 0.04) / 0.2));
+      }
+      X *= bn / b; Y *= bn / b;
+    }
+    return { x: st.cx + X * st.S, y: st.cy - Y * st.S, z: z1, k: k, X: X, sx: sx, sy: sy, sa: sa,
+      m: m, R1: Math.sqrt(X * X + Y * Y) * st.S, a1: Math.atan2(-Y, X), R2: R2, a2: a2 };
+  }
+
+  // Real light bending round a black hole (Schwarzschild). Rays are traced once from the viewer
+  // (u'' = 3Mu^2 - u, with u = 1/r) and tabled: for a grain at distance r whose direction is an angle
+  // phi from the line of sight, the radius b at which its light reaches the viewer. phi in [0, pi] is
+  // the direct image; 2pi - phi is the second image, whose light goes round the other side of the hole.
+  // Units: the logo's symbol width is 1. Nothing shows inside the shadow, radius 3*sqrt(3)*M.
+  var BH = (function () {
+    var M = 0.1, NR = 64, NP = 512, RMIN = 0.5, RMAX = 12, lr0 = Math.log(RMIN), dl = (Math.log(RMAX) - lr0) / (NR - 1);
+    var bc = 3 * Math.sqrt(3) * M, uMax = 1 / (2 * M), rows = [], j, k;
+    for (j = 0; j < NR; j++) rows.push([[0, 0]]);
+    function f(u) { return 3 * M * u * u - u; }
+    function trace(b) {
+      var u = 0, v = 1 / b, phi = 0;
+      while (phi < TAU + 0.2) {
+        var h = Math.min(0.01, 0.01 / (Math.abs(v) + 1e-9));
+        var k1u = v, k1v = f(u), k2u = v + h / 2 * k1v, k2v = f(u + h / 2 * k1u),
+          k3u = v + h / 2 * k2v, k3v = f(u + h / 2 * k2u), k4u = v + h * k3v, k4v = f(u + h * k3u);
+        var nu = u + h / 6 * (k1u + 2 * k2u + 2 * k3u + k4u), nv = v + h / 6 * (k1v + 2 * k2v + 2 * k3v + k4v);
+        // note where the ray crosses each tabled radius
+        var ja = u > 0 ? (-Math.log(u) - lr0) / dl : 1e9, jb = nu > 0 ? (-Math.log(nu) - lr0) / dl : 1e9;
+        var lo = Math.max(0, Math.ceil(Math.min(ja, jb))), hi = Math.min(NR - 1, Math.floor(Math.max(ja, jb)));
+        for (var q = lo; q <= hi; q++) {
+          var uq = Math.exp(-(lr0 + q * dl)), t = (uq - u) / (nu - u);
+          if (t >= 0 && t <= 1) rows[q].push([phi + t * h, b]);
+        }
+        u = nu; v = nv; phi += h;
+        if (u > uMax || u < 0) break;
+      }
+    }
+    var bs = [];
+    for (k = 1; k <= 90; k++) bs.push(bc * k / 90.5);
+    for (k = 0; k <= 70; k++) bs.push(bc * (1 + Math.pow(10, -7 + k * 6.5 / 70)));
+    for (k = 1; k <= 260; k++) bs.push(bc * 1.4 + (RMAX * 1.05 - bc * 1.4) * Math.pow(k / 260, 1.6));
+    bs.forEach(trace);
+    var T = new Float32Array(NR * NP);
+    for (j = 0; j < NR; j++) {
+      var row = rows[j].sort(function (a, c) { return a[0] - c[0]; }), m = 0;
+      for (k = 0; k < NP; k++) {
+        var ph = k / (NP - 1) * TAU;
+        while (m < row.length - 2 && row[m + 1][0] < ph) m++;
+        var A = row[m], B = row[m + 1];
+        T[j * NP + k] = (!B || ph > B[0] || ph < A[0]) ? -1 : A[1] + (B[1] - A[1]) * (ph - A[0]) / ((B[0] - A[0]) || 1);
+      }
+    }
+    return {
+      M: M, bc: bc,
+      b: function (r, phi) {
+        if (r >= RMAX) return -2;
+        var fr = Math.max(0, (Math.log(r) - lr0) / dl), fp = phi / TAU * (NP - 1);
+        var j0 = Math.min(NR - 2, fr | 0), k0 = Math.min(NP - 2, Math.max(0, fp | 0)), tr = Math.min(1, fr - j0), tp = fp - k0;
+        var a = T[j0 * NP + k0], b = T[j0 * NP + k0 + 1], c = T[(j0 + 1) * NP + k0], d = T[(j0 + 1) * NP + k0 + 1];
+        if (a < 0 || b < 0 || c < 0 || d < 0) return -1;
+        return (a * (1 - tp) + b * tp) * (1 - tr) + (c * (1 - tp) + d * tp) * tr;
+      }
+    };
+  })();
+
+  // Where a point in the disk's space shows on screen once the hole bends its light. The viewer is far
+  // off along -Z after inclination and roll. Gives the direct image and the second image, which sits
+  // on the opposite side of the hole, close round the shadow.
+  function LR(st, x, y, z) {
+    var y1 = y * st.ci + z * st.si, z1 = -y * st.si + z * st.ci;
+    var X = x * st.cr - y1 * st.sr, Y = x * st.sr + y1 * st.cr;
+    var r = Math.sqrt(x * x + y * y + z * z), rho = Math.sqrt(X * X + Y * Y) || 1e-6, phi = Math.atan2(rho, -z1);
+    var b1 = BH.b(r, phi), b2 = BH.b(r, TAU - phi), ux = X / rho, uy = Y / rho;
+    if (b1 === -2) b1 = rho;
+    // A lensed point is stretched along the ring by b/rho (and its flux grows with it), so a grain
+    // behind the hole shows as a short arclet; the second image is also squeezed toward the shadow.
+    return { x: st.cx + ux * b1 * st.S, y: st.cy - uy * b1 * st.S, z: z1, ok: b1 > 0, X: X,
+      r1: b1 * st.S, a1: Math.atan2(-uy, ux), m1: Math.min(60, b1 / rho),
+      sa: b2 > 0, r2: b2 * st.S, a2: Math.atan2(uy, -ux), m2: Math.min(60, b2 / rho) };
+  }
+  function arclet(c, st, R, ang, len, w, a) {
+    c.globalAlpha = Math.min(1, a); c.lineWidth = w;
+    c.beginPath(); c.arc(st.cx, st.cy, R, ang - len / (2 * R), ang + len / (2 * R)); c.stroke();
+  }
+  function ldotR(st, p, s, a, a2) {
+    if (p.ok && a > 0.004) {
+      var c = p.z > 0 ? st.b : st.f;
+      if (p.m1 < 1.6) { c.globalAlpha = Math.min(1, a); c.fillRect(p.x - s / 2, p.y - s / 2, s, s); }
+      else arclet(c, st, p.r1, p.a1, s * Math.min(p.m1, 9), s, a * Math.min(2.2, Math.sqrt(Math.max(1, p.m1 / 9))));
+    }
+    if (p.sa && a2 > 0.004) arclet(st.b, st, p.r2, p.a2, s * Math.max(1, Math.min(p.m2, 9)), s * 0.7, a2 * 0.6 * Math.min(2.2, Math.sqrt(Math.max(1, p.m2 / 9))));
+  }
+
+  // Draw a closed 3D curve; far parts go behind the logo, near parts in front.
+  function curve(st, n, at, lens, alpha, width) {
+    var prev = null;
+    for (var i = 0; i <= n; i++) {
+      var p = at(i / n); p = P(st, p[0], p[1], p[2], lens);
+      if (prev) {
+        var c = (p.z + prev.z) > 0 ? st.b : st.f, a = alpha(p, i / n);
+        if (a > 0.004) { c.globalAlpha = a; c.lineWidth = width; c.beginPath(); c.moveTo(prev.x, prev.y); c.lineTo(p.x, p.y); c.stroke(); }
+        var sa = Math.min(p.sa || 0, prev.sa || 0) * a;
+        if (sa > 0.004) { st.b.globalAlpha = sa; st.b.lineWidth = width; st.b.beginPath(); st.b.moveTo(prev.sx, prev.sy); st.b.lineTo(p.sx, p.sy); st.b.stroke(); }
+      }
+      prev = p;
+    }
+  }
+  // Light bending stretches a grain behind the hole along the arc by m = bent / straight distance.
+  // A single dot would leave the arcs over and under the ring nearly empty when the disk is seen
+  // flat, so a stretched grain is drawn as a few dots spread along its arc.
+  var SPREAD = [0, -0.5, 0.5, -0.25, 0.25, -0.75, 0.75];
+  function along(c, cx, cy, R, ang, n, len, s, a) {
+    c.globalAlpha = Math.min(1, a);
+    for (var i = 0; i < n; i++) {
+      var t = ang + SPREAD[i] * len / R;
+      c.fillRect(cx + R * Math.cos(t) - s / 2, cy + R * Math.sin(t) - s / 2, s, s);
+    }
+  }
+  function dot(st, p, s, a) {
+    var c = p.z > 0 ? st.b : st.f, n = p.m > 1.6 ? Math.min(7, Math.round(p.m / 1.4)) : 1, len = s * Math.min(p.m, 16) * 1.6;
+    if (n === 1) { c.globalAlpha = Math.min(1, a); c.fillRect(p.x - s / 2, p.y - s / 2, s, s); }
+    else along(c, st.cx, st.cy, p.R1, p.a1, n, len, s, a);
+    if (p.sa > 0.02) {
+      if (n === 1) { st.b.globalAlpha = Math.min(1, a * p.sa); st.b.fillRect(p.sx - s / 2, p.sy - s / 2, s, s); }
+      else along(st.b, st.cx, st.cy, p.R2, p.a2, n, len * 0.8, s, a * p.sa);
+    }
+  }
+
+  // The live hero's three horizon lines (site.js): straight lines bent round the logo by a point-mass lens,
+  // fading out toward their ends, softly breathing.
+  var canBlur = 'filter' in document.createElement('canvas').getContext('2d');
+  function liveLines(st, t) {
+    var c = st.b, ink = INK[theme], S = st.S, E = 0.44 * S, DISK = 0.5;
+    var rgba = function (a) { return 'rgba(' + ink.join(',') + ',' + Math.max(0, a).toFixed(3) + ')'; };
+    var lens = function (x, y) { var b = Math.hypot(x, y) || 0.001, k = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b; return [st.cx + x * k, st.cy + y * k]; };
+    var breathe = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / 5.5), glow = 0.75 + 0.25 * breathe, L = Math.min(2.6 * S, st.w * 0.46);
+    var grad = function (a, cc) {
+      var g = (cc || c).createLinearGradient(st.cx - L, 0, st.cx + L, 0);
+      g.addColorStop(0, rgba(0)); g.addColorStop(0.3, rgba(a * 0.35)); g.addColorStop(0.5, rgba(a)); g.addColorStop(0.7, rgba(a * 0.35)); g.addColorStop(1, rgba(0));
+      return g;
+    };
+    c.save(); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
+    [0, -0.1, 0.1].forEach(function (off) {
+      var main = off === 0, base = (main ? 0.5 : 1) * glow * (theme === 'dark' ? 1 : 0.85);
+      c.beginPath();
+      for (var x = -L, n = 0; x <= L; x += 1.5, n++) { var p = lens(x, off * S); n ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }
+      if (canBlur) { c.save(); c.strokeStyle = grad(Math.min(1, base * 3.6) * DISK); c.lineWidth = main ? 1.3 : 1; c.filter = 'blur(0.8px)'; c.stroke(); c.restore(); }
+      var dp = Math.min(window.devicePixelRatio || 1, 2), hw = (main ? 0.32 : 0.23) * dp, a1 = Math.min(1, base * 2.8) * Math.min(1, hw);
+      c.strokeStyle = grad((1 - Math.pow(1 - a1, 4)) / 1.3 * DISK); c.lineWidth = 1.8 / dp; c.stroke();
+      if (main) {
+        // On the live site the middle line's straight piece across the ring (where it jumps from one side of the
+        // lens to the other) shows through the centre point. Here the logo sits over this canvas, so that one
+        // piece is drawn again on the front canvas, with exactly the same strokes.
+        var f = st.f, xa = -L + Math.floor(L / 1.5) * 1.5, pa = lens(xa, 0), pb = lens(xa + 1.5, 0);
+        f.save(); f.globalCompositeOperation = 'source-over'; f.globalAlpha = 1;
+        f.beginPath(); f.moveTo(pa[0], pa[1]); f.lineTo(pb[0], pb[1]);
+        if (canBlur) { f.save(); f.strokeStyle = grad(Math.min(1, base * 3.6) * DISK, f); f.lineWidth = 1.3; f.filter = 'blur(0.8px)'; f.stroke(); f.restore(); }
+        f.strokeStyle = grad((1 - Math.pow(1 - a1, 4)) / 1.3 * DISK, f); f.lineWidth = 1.8 / dp; f.stroke();
+        f.restore();
+      }
+    });
+    c.restore();
+  }
+
+  var OPTS = {
+    // A: dense Keplerian grain disk with lensing and brighter approaching side.
+    // A, refined: flat, crisp rings bent over and under the logo, sparse grains, particles falling in.
+    refined: {
+      inc: 0.08, D: 10, E: 0.47, lens: 1, sec: true, tilt: 0.35, roll: 0.16,
+      RINGS: [[1.15, 0.5], [1.8, 0.62], [2.6, 0.42]], // paths the grains ride
+      LINES: [],                                      // no fine lines: the disk is grains only
+      init: function (st) {
+        st.g = []; st.fall = []; st.next = 0.4;
+        // most grains ride on the horizon rings, so they trace the bending lines like the live hero
+        // a full disk of grains, like option A: dense near the centre, thinning outward
+        for (var i = 0, n = small ? 1600 : 4000; i < n; i++) st.g.push(this.grain(this.inDisk()));
+      },
+      inDisk: function () { var e = this.edge(); return e * Math.pow(3.05 / e, Math.pow(rnd(), 1.6)); },
+      edge: function () { return gapOn ? 0.74 : 0.62; }, // inner edge of the disk
+      // how far grains rise above and below the disk at each distance: most near the ring,
+      // tapering to a point far out, so the two sides form long sharp cones
+      height: function (r) { return r < 1.2 ? 0.16 * r / 1.2 : 0.16 * Math.pow(Math.max(0, 1 - (r - 1.2) / 2.2), 1.6); },
+      onRing: function () { var L = this.RINGS[(rnd() * this.RINGS.length) | 0]; return L[0] + gauss() * 0.05;
+      },
+      // Each grain has its own slightly tilted orbit, so it rises above the disk and dips below it
+      // as it goes round. No loose haze: every grain stays close to the disk.
+      grain: function (r) {
+        var haze = false;
+        return { r: r, a: rnd() * TAU, hz: gauss() * (haze ? 2.4 : 1), node: rnd() * TAU, s: 0.8 + rnd() * 0.9,
+          o: (0.35 + rnd() * 0.65) * Math.pow(Math.min(1, 1.3 / r), 0.75) * (haze ? 0.7 : 1), age: 9 };
+      },
+      // orbital speed, softened near the hole so the inner grains don't whip round the bend
+      speed: function (r) { return 0.42 / (Math.pow(r, 1.5) + 0.35); },
+      draw: function (st, t, dt) {
+        var self = this;
+        // crisp horizon rings, brighter on the side turning toward you, fading out at their far ends like today's lines
+        this.LINES.forEach(function (L) {
+          var R = L[0];
+          curve(st, 420, function (u) { var a = u * TAU; return [R * Math.cos(a), 0, R * Math.sin(a)]; }, 1,
+            function (p) { var e = Math.abs(p.X) / (R * 1.04); return L[1] * Math.max(0, 1 - e * e * e * e) * (0.7 + 0.3 * Math.max(0, p.X / R)); }, 1);
+        });
+        for (var i = 0; i < st.g.length; i++) {
+          var g = st.g[i];
+          g.a += self.speed(g.r) * dt; g.age += dt;
+          // grains slowly spiral in; at the inner edge they fade into the hole and a new one appears further out
+          g.r -= dt * 0.018 / g.r;
+          if (g.r < self.edge() - 0.02) { g = st.g[i] = self.grain(1.4 + rnd() * 1.6); g.age = 0; }
+          var ca = Math.cos(g.a), sa = Math.sin(g.a), lift = g.hz * self.height(g.r) * Math.sin(g.a - g.node);
+          // the outer disk warps toward edge-on, so far out the two sides close into sharp cones
+          var wq = Math.min(1, Math.max(0, (g.r - 1.15) / 1.45)), warp = wq * wq * (3 - 2 * wq) * 0.9 * Math.tan(st.inc);
+          var p = P(st, g.r * ca, lift - g.r * sa * warp, g.r * sa, 1);
+          var inner = Math.min(1, Math.max(0, (g.r - self.edge() + 0.02) / 0.2)); inner = inner * inner * (3 - 2 * inner);
+          dot(st, p, g.s, g.o * (0.55 + 0.45 * (0.5 + 0.5 * ca)) * Math.min(1, Math.max(0, (3.15 - g.r) / 0.95)) * inner * Math.min(1, g.age / 1.5));
+        }
+        // fine particles drift in from around the hero, spiral down and become part of the disk
+        var dt0 = dt;
+        st.next -= dt * (st.fallK || 1);
+        if (st.next <= 0 && st.fall.length < (small ? 5 : 9)) {
+          st.next = 0.5 + rnd() * 0.9;
+          var far = Math.max(st.w, st.h) * 0.62 / st.S;
+          var nf = { r: far * (0.75 + rnd() * 0.3), a: rnd() * TAU, y: (rnd() - 0.5) * 1.6, rt: this.inDisk(), s: 0.9 + rnd() * 0.5, o: 0.7 + rnd() * 0.3, trail: [], age: 0 };
+          if (rnd() < 0.35) {
+            // some start high above or below the disk (straight over, or off on a diagonal) and settle onto it
+            // as they come in, so they arrive flat like the rest
+            var vt = st.h * 0.5 / st.S;
+            nf.r = far * (0.15 + rnd() * 0.6); nf.y = (rnd() < 0.5 ? -1 : 1) * vt * (0.9 + rnd() * 0.3);
+            nf.y0 = nf.y; nf.r0 = nf.r;
+          }
+          st.fall.push(nf);
+        }
+        st.fall = st.fall.filter(function (f) {
+          var dt = dt0 * (st.fallK || 1); // particles coming in from outside keep their original speed in every version
+          f.age += dt;
+          f.a += 0.42 * Math.pow(f.r, -1.5) * dt * 1.6;
+          f.r -= dt * (0.32 + 0.9 / f.r) * (f.r - f.rt + 0.15) / (f.r + 0.5);
+          if (f.y0 !== undefined) { var u = Math.max(0, (f.r - f.rt) / (f.r0 - f.rt)); f.y = f.y0 * u * u * (3 - 2 * u); }
+          else f.y *= Math.exp(-dt * 0.9);
+          var p = P(st, f.r * Math.cos(f.a), f.y, f.r * Math.sin(f.a), 1);
+          f.trail.push(p); if (f.trail.length > 18) f.trail.shift();
+          var fade = Math.min(1, f.age / 1.2);
+          for (var k = 1; k < f.trail.length; k++) {
+            var q = f.trail[k], q0 = f.trail[k - 1], c = q.z > 0 ? st.b : st.f;
+            c.globalAlpha = f.o * fade * (k / f.trail.length) * 0.5; c.lineWidth = 1;
+            c.beginPath(); c.moveTo(q0.x, q0.y); c.lineTo(q.x, q.y); c.stroke();
+          }
+          dot(st, p, f.s + 0.4, f.o * fade);
+          if (f.r - f.rt < 0.04) { // joined the orbit: hand over to the disk
+            var g = self.grain(f.rt); g.a = f.a; g.node = f.a; // joins level with the disk, then starts its own tilt g.o = Math.min(1, g.o * 1.5); st.g[(rnd() * st.g.length) | 0] = g;
+            return false;
+          }
+          return true;
+        });
+        // no mask: the gap round the ring comes from the bending (E), so nothing gets erased
+      }
+    },
+    // Physics accurate: a thin disk of grains on real orbits round a ray-traced black hole.
+    physics: {
+      inc: 0.15, tilt: 0.45, roll: 0.18, D: 10,
+      RIN: 0.7, ROUT: 2.2,
+      init: function (st) {
+        st.g = []; st.fall = []; st.next = 0.4;
+        for (var i = 0, n = small ? 3000 : 8000; i < n; i++) st.g.push(this.grain(this.inDisk()));
+      },
+      // dense near the inner edge, thinning outward
+      inDisk: function () { return this.RIN * Math.pow(this.ROUT / this.RIN, Math.pow(rnd(), 3)); },
+      // Each grain is on its own circular orbit, tilted a touch out of the disk plane, so the disk has
+      // some thickness: most near the inner edge, thinning to a sharp edge further out.
+      grain: function (r) {
+        return { r: r, a: rnd() * TAU, i: gauss() * 0.014 * Math.max(0.35, 1.3 - r / 2.4), node: rnd() * TAU,
+          s: 0.7 + rnd() * 0.7, o: (0.35 + rnd() * 0.5) * Math.pow(Math.min(1, 1.1 / r), 0.9), age: 9 };
+      },
+      // Kepler: angular speed falls off as r^-1.5
+      w: function (r) { return 0.42 * Math.pow(r, -1.5); },
+      // Doppler beaming: the side coming toward you is brighter, the side going away dimmer.
+      // At angle a the orbit moves along (-sin a, 0, cos a), so its speed away from you goes as cos a.
+      beam: function (r, ca) {
+        var beta = Math.sqrt(BH.M / r) * 0.8, g = Math.sqrt(1 - beta * beta) / (1 + beta * ca * Math.cos(0));
+        return Math.pow(g, 1.6);
+      },
+      // a circle of radius r in a plane tilted by inc about the line at angle node
+      pos: function (r, a, inc, node) {
+        return [r * Math.cos(a), r * Math.sin(a - node) * Math.sin(inc), r * Math.sin(a) * Math.cos(inc)];
+      },
+      draw: function (st, t, dt) {
+        var self = this;
+        for (var i = 0; i < st.g.length; i++) {
+          var g = st.g[i];
+          g.a += self.w(g.r) * dt; g.age += dt;
+          // slow inward drift; at the inner edge a grain fades out and a new one starts further out
+          g.r -= dt * 0.012 / g.r;
+          if (g.r < self.RIN - 0.03) { g = st.g[i] = self.grain(self.inDisk() + 0.5); g.age = 0; }
+          var q = self.pos(g.r, g.a, g.i, g.node), p = LR(st, q[0], q[1], q[2]);
+          var inner = Math.min(1, Math.max(0, (g.r - self.RIN + 0.03) / 0.12)), outer = Math.min(1, Math.max(0, (self.ROUT + 0.2 - g.r) / 1.1));
+          var A = g.o * self.beam(g.r, Math.cos(g.a)) * inner * inner * outer * Math.min(1, g.age / 1.5) * 0.85;
+          ldotR(st, p, g.s, A, A);
+        }
+        // fine particles drift in from around the hero, spiral down and join the disk
+        st.next -= dt;
+        if (st.next <= 0 && st.fall.length < (small ? 3 : 5)) {
+          st.next = 0.6 + rnd() * 0.9;
+          var far = Math.min(Math.max(st.w, st.h) * 0.6 / st.S, 10);
+          st.fall.push({ r: far * (0.75 + rnd() * 0.3), a: rnd() * TAU, y: (rnd() - 0.5) * 1.2, rt: this.inDisk(), s: 1 + rnd() * 0.5, o: 0.7 + rnd() * 0.3, trail: [], age: 0 });
+        }
+        st.fall = st.fall.filter(function (f) {
+          f.age += dt;
+          f.a += self.w(f.r) * 1.3 * dt;
+          f.r -= dt * (0.3 + 0.8 / f.r) * (f.r - f.rt + 0.12) / (f.r + 0.5);
+          f.y *= Math.exp(-dt * 0.9);
+          var p = LR(st, f.r * Math.cos(f.a), f.y, f.r * Math.sin(f.a));
+          if (p.ok) { f.trail.push(p); if (f.trail.length > 16) f.trail.shift(); }
+          var fade = Math.min(1, f.age / 1.2);
+          for (var k = 1; k < f.trail.length; k++) {
+            var q = f.trail[k], q0 = f.trail[k - 1], c = q.z > 0 ? st.b : st.f;
+            if (Math.abs(q.x - q0.x) + Math.abs(q.y - q0.y) > st.S) continue;
+            c.globalAlpha = f.o * fade * (k / f.trail.length) * 0.45; c.lineWidth = 1;
+            c.beginPath(); c.moveTo(q0.x, q0.y); c.lineTo(q.x, q.y); c.stroke();
+          }
+          ldotR(st, p, f.s, f.o * fade, f.o * fade);
+          if (f.r - f.rt < 0.04) { // joined the orbit: hand over to the disk
+            var g = self.grain(f.rt); g.a = f.a; g.node = f.a; st.g[(rnd() * st.g.length) | 0] = g;
+            return false;
+          }
+          return true;
+        });
+      }
+    },
+    lensed: {
+      inc: 0.17, D: 9, lens: 1,
+      init: function (st) {
+        var n = small ? 1300 : 3200; st.g = [];
+        for (var i = 0; i < n; i++) {
+          var r = 0.62 * Math.pow(5, Math.pow(rnd(), 1.4));
+          st.g.push({ r: r, a: rnd() * TAU, w: 0.42 * Math.pow(r, -1.5), y: gauss() * 0.012 * r, s: 0.8 + rnd() * 0.9, o: (0.35 + rnd() * 0.65) * Math.min(1, 1.15 / r) });
+        }
+      },
+      draw: function (st, t, dt) {
+        for (var i = 0; i < st.g.length; i++) {
+          var g = st.g[i]; g.a += g.w * dt;
+          var ca = Math.cos(g.a), sa = Math.sin(g.a), p = P(st, g.r * ca, g.y, g.r * sa, 1);
+          var beam = 0.45 + 0.55 * (0.5 + 0.5 * ca); // the side moving toward the viewer is brighter
+          var edge = Math.min(1, (3.1 - g.r) / 0.8);
+          dot(st, p, g.s * p.k, g.o * beam * edge * 0.9);
+        }
+        // three faint orbit lines, the hero's horizon, now as rings in the disk
+        [0.95, 1.55, 2.4].forEach(function (R, j) {
+          curve(st, 260, function (u) { var a = u * TAU; return [R * Math.cos(a), 0, R * Math.sin(a)]; }, 1,
+            function (p) { return (0.18 - j * 0.04) * (0.55 + 0.45 * Math.max(0, p.X / R)); }, 1);
+        });
+      }
+    },
+    // B: the current hero's three horizon lines and dust, as rings that slowly rock open.
+    today: {
+      inc: 0.03, D: 10, lens: 1,
+      rock: function (t) { return 0.03 + 0.2 * (0.5 - 0.5 * Math.cos(t * TAU / 18)); },
+      init: function (st) {
+        st.g = [];
+        for (var i = 0; i < (small ? 110 : 240); i++) st.g.push({ r: 0.55 + Math.pow(rnd(), 1.6) * 1.6, a: rnd() * TAU, y: gauss() * 0.03, s: 0.9 + rnd() * 0.9, o: 0.35 + rnd() * 0.55 });
+        st.g.forEach(function (g) { g.w = 0.35 * Math.pow(g.r, -1.5); });
+      },
+      draw: function (st, t, dt) {
+        [[0, 1], [-0.1, 0.55], [0.1, 0.55]].forEach(function (L) {
+          curve(st, 320, function (u) { var a = u * TAU; return [2.6 * Math.cos(a), L[0], 2.6 * Math.sin(a)]; }, 1,
+            function (p) { var e = Math.abs(p.X) / 2.7; return 0.5 * L[1] * Math.max(0, 1 - e * e * e); }, 1);
+        });
+        for (var i = 0; i < st.g.length; i++) {
+          var g = st.g[i]; g.a += g.w * dt;
+          dot(st, P(st, g.r * Math.cos(g.a), g.y, g.r * Math.sin(g.a), 1), g.s, g.o * 0.9);
+        }
+      }
+    },
+    // C: tilted rings precessing around the logo, each with a bead of light.
+    rings: {
+      inc: 0.2, D: 8, lens: 0.55,
+      init: function (st) {
+        st.r = [];
+        var n = 6;
+        for (var i = 0; i < n; i++) st.r.push({ R: 0.7 + i * 0.2, tilt: 0.15 + (i % 3) * 0.42 + rnd() * 0.12, ph: i * TAU / n + rnd(), pw: (i % 2 ? 1 : -1) * (0.05 + rnd() * 0.04), b: rnd(), bw: 0.12 + rnd() * 0.08 });
+      },
+      draw: function (st, t, dt) {
+        st.r.forEach(function (o) {
+          o.ph += o.pw * dt; o.b += o.bw * dt / o.R;
+          var ct = Math.cos(o.tilt), stt = Math.sin(o.tilt), cp = Math.cos(o.ph), sp = Math.sin(o.ph);
+          // basis of the ring's plane: u along the node line, v tilted up by "tilt"
+          var u = [cp, 0, sp], v = [-sp * ct, stt, cp * ct];
+          var at = function (q) { var a = q * TAU, c = Math.cos(a) * o.R, s = Math.sin(a) * o.R; return [u[0] * c + v[0] * s, u[1] * c + v[1] * s, u[2] * c + v[2] * s]; };
+          curve(st, 220, at, 0.55, function (p) { return p.z > 0 ? 0.16 : 0.42; }, 1);
+          var b = at(o.b % 1), p = P(st, b[0], b[1], b[2], 0.55);
+          dot(st, p, 2.6, p.z > 0 ? 0.6 : 1);
+        });
+      }
+    },
+    // D: a funnel grid under the logo with dust spiralling down.
+    well: {
+      inc: 0.42, D: 9, lens: 0, below: true,
+      init: function (st) {
+        st.g = [];
+        for (var i = 0; i < (small ? 140 : 320); i++) st.g.push(this.grain(true));
+      },
+      grain: function (fresh) { return { r: fresh ? 0.6 + rnd() * 3.2 : 3.4 + rnd() * 0.6, a: rnd() * TAU, s: 0.9 + rnd() * 0.8, o: 0.45 + rnd() * 0.5 }; },
+      h: function (r) { return -0.55 * Math.pow(0.58 / r, 1.25); },
+      draw: function (st, t, dt) {
+        var self = this, h = this.h;
+        for (var i = 0; i < 11; i++) {
+          var R = 0.58 * Math.pow(1.22, i);
+          if (R > 3.9) break;
+          curve(st, 180, function (u) { var a = u * TAU; return [R * Math.cos(a), h(R), R * Math.sin(a)]; }, 0,
+            function () { return 0.22 * Math.min(1, (3.9 - R) / 1.2); }, 1);
+        }
+        for (var k = 0; k < 32; k++) {
+          var A = k * TAU / 32 + t * 0.02;
+          curve(st, 40, function (u) { var r = 0.58 + u * 3.3; return [r * Math.cos(A), h(r), r * Math.sin(A)]; }, 0,
+            function (p, u) { return 0.16 * Math.min(1, (1 - u) / 0.35); }, 1);
+        }
+        for (i = 0; i < st.g.length; i++) {
+          var g = st.g[i];
+          g.a += 0.5 * Math.pow(g.r, -1.5) * dt; g.r -= 0.09 * dt / Math.sqrt(g.r);
+          if (g.r < 0.6) { st.g[i] = self.grain(false); continue; }
+          var p = P(st, g.r * Math.cos(g.a), h(g.r) + 0.01, g.r * Math.sin(g.a), 0);
+          var fade = Math.min(1, (g.r - 0.6) / 0.35) * Math.min(1, (4 - g.r) / 0.5);
+          // all of the well sits below the logo, so it is drawn behind it
+          p.z = 1; dot(st, p, g.s, g.o * fade);
+        }
+      }
+    }
+  };
+
+  // A, refined, plus the live hero's lines
+  OPTS.combo = Object.assign({}, OPTS.refined, {
+    draw: function (st, t, dt) { OPTS.refined.draw.call(this, st, t, dt); liveLines(st, t); }
+  });
+
+  // A separate layer of particles that orbit along the live hero's three lines, on top of the disk.
+  // Each grain orbits the hole. On the far side its light is bent round the ring the same way the
+  // lines are: it rides the line over the top, and its second image rides the line underneath. On the
+  // near side it runs along the middle line, straight across in front of the ring. Tilting the
+  // hero moves the lanes the way a tilted orbit would. It never changes the disk.
+  var LANE = 0.1, LENS_E = 0.44; // the live lines: offset 0.1 S above and below, bent with E = 0.44 S
+  function haloInit(st, c) {
+    st.h = [];
+    for (var i = 0, n = small ? Math.round(c.n * 0.45) : c.n; i < n; i++)
+      st.h.push({ r: 0.62 + Math.pow(rnd(), 1.4) * 2.0, a: rnd() * TAU, dy: gauss() * c.spread,
+        s: 0.7 + rnd() * 0.8, o: c.o * (0.45 + rnd() * 0.55) });
+  }
+  function laneDot(st, ctx, x, y, lensW, s, a) {
+    // roll, then bend round the hole exactly like the live lines
+    var X = x * st.cr - y * st.sr, Y = x * st.sr + y * st.cr, b = Math.sqrt(X * X + Y * Y) || 1e-6;
+    var E = LENS_E * lensW, k = (b + Math.sqrt(b * b + 4 * E * E)) / 2 / b;
+    ctx.globalAlpha = Math.min(1, a);
+    ctx.fillRect(st.cx + X * k * st.S - s / 2, st.cy - Y * k * st.S - s / 2, s, s);
+  }
+  function haloDraw(st, dt, c) {
+    var tilt = st.inc - st.o.inc; // how far the pointer has tipped the view from the resting angle
+    for (var i = 0; i < st.h.length; i++) {
+      var g = st.h[i];
+      g.a += 0.42 / (Math.pow(g.r, 1.5) + 0.35) * dt;
+      var ca = Math.cos(g.a), sa = Math.sin(g.a), x = g.r * ca;
+      var q = Math.min(1, Math.abs(sa) / 0.35), w = q * q * (3 - 2 * q);           // 0 at the sides, 1 behind / in front
+      var off = (LANE + g.dy) * w + g.r * sa * tilt * 0.3;                               // lane height, plus the tilt
+      var fade = Math.min(1, (2.75 - g.r) / 0.6) * Math.min(1, (g.r - 0.6) / 0.15);
+      var A = g.o * (0.55 + 0.45 * (0.5 + 0.5 * ca)) * fade;
+      if (sa > 0) {
+        laneDot(st, st.b, x, off, w, g.s, A);                                      // over the top
+        laneDot(st, st.b, x, -(LANE + g.dy) * w + g.r * sa * tilt * 0.55, w, g.s, A * 0.85); // and its image underneath
+      } else {
+        laneDot(st, st.f, x, g.dy * 0.5 + g.r * sa * st.inc * 0.3, 0, g.s, A);          // near side, in front
+      }
+    }
+  }
+  function withHalo(c) {
+    return Object.assign({}, OPTS.refined, {
+      init: function (st) { OPTS.refined.init.call(this, st); var d = c.d || 1; st.g.length = Math.round(st.g.length * d); haloInit(st, Object.assign({}, c, { n: Math.round(c.n * d) })); },
+      // sp: orbit speed (1 = as now); it speeds up the particles only, not the lines' breathing
+      draw: function (st, t, dt) { var v = dt * (c.sp || 1); st.fallK = 1 / (c.sp || 1); haloDraw(st, v, c); OPTS.refined.draw.call(this, st, t, v); liveLines(st, t); }
+    });
+  }
+  OPTS.pick = withHalo({ n: 1500, spread: 0.012, o: 1, d: 0.5 });
+  // the mouse tilt is kept very subtle: about an eighth of what it first was
+  OPTS.pick.tilt = 0.045; OPTS.pick.roll = 0.02;
+
+  // ---- Home hero: the black hole drawn round the hero's logo ----
+  function clearLogo(st) {
+    var f = st.f, b = st.b, R = 0.47 * st.S;
+    f.globalCompositeOperation = 'destination-out'; f.globalAlpha = 1;
+    var g = f.createRadialGradient(st.cx, st.cy, 0, st.cx, st.cy, R);
+    var fe = st.fe; // how much the particles in front of the hole are faded (0 = full brightness)
+    g.addColorStop(0, 'rgba(0,0,0,' + fe + ')'); g.addColorStop(0.8, 'rgba(0,0,0,' + fe * 0.8 + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    f.fillStyle = g; f.beginPath(); f.arc(st.cx, st.cy, R, 0, TAU); f.fill();
+    for (var i = 0; i < 4; i++) { f.globalAlpha = 0.4; f.fillRect(st.wm[0] + i * 4, st.wm[1] + i * 2, st.wm[2] - i * 8, st.wm[3] - i * 4); }
+    b.globalCompositeOperation = 'destination-out'; b.globalAlpha = 1; b.fillStyle = '#000';
+    b.beginPath(); b.arc(st.cx, st.cy, 0.37 * st.S, 0, TAU); b.fill();
+    for (i = 0; i < 4; i++) { b.globalAlpha = 0.3; b.fillRect(st.wm[0] + i * 4, st.wm[1] + i * 2, st.wm[2] - i * 8, st.wm[3] - i * 4); }
+    f.globalCompositeOperation = b.globalCompositeOperation = 'source-over'; f.globalAlpha = b.globalAlpha = 1;
+  }
+  window.AC_NEWBH = true;
+  document.addEventListener('DOMContentLoaded', function () {
+    var hero = document.querySelector('[data-hero]'); if (!hero) return;
+    var inner = hero.querySelector(':scope > .hero-in'), logo = inner.querySelector('.alogo');
+    theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var back = document.createElement('canvas'), front = document.createElement('canvas');
+    var css = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+    back.style.cssText = css + 'z-index:-1'; front.style.cssText = css + 'z-index:3';
+    back.setAttribute('aria-hidden', 'true'); front.setAttribute('aria-hidden', 'true');
+    hero.insertBefore(back, inner); hero.insertBefore(front, inner.nextSibling);
+    var o = OPTS.pick;
+    var st = { el: hero, o: o, back: back, front: front, logo: logo, inc: o.inc, tinc: o.inc, roll: 0, troll: 0, D: o.D, E: o.E || 0.44, on: true, ptr: false };
+    st.b = back.getContext('2d'); st.f = front.getContext('2d');
+    st.fe = 0.5; // particles passing in front of the hole are faded by half over the symbol
+    // the hero symbol is 5% bigger than the stylesheet sets it, on every screen size
+    function grow() {
+      var sy = logo.querySelector('.sym'); if (!sy) return;
+      sy.style.width = ''; var w = sy.getBoundingClientRect().width, pw = logo.getBoundingClientRect().width;
+      if (w && pw) sy.style.width = (w / pw * 105) + '%';
+    }
+    function size() {
+      grow();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), r = hero.getBoundingClientRect();
+      var core = logo.querySelector('.sym .core'), sym = logo.querySelector('.sym'), wm = logo.querySelector('.wm');
+      if (!core || !sym || !wm) return false;
+      core = core.getBoundingClientRect(); sym = sym.getBoundingClientRect(); wm = wm.getBoundingClientRect();
+      st.w = r.width; st.h = r.height;
+      [back, front].forEach(function (c) { c.width = st.w * dpr; c.height = st.h * dpr; });
+      st.b.setTransform(dpr, 0, 0, dpr, 0, 0); st.f.setTransform(dpr, 0, 0, dpr, 0, 0);
+      st.cx = core.left - r.left + core.width / 2; st.cy = core.top - r.top + core.height / 2; st.S = sym.width;
+      st.wm = [wm.left - r.left - 10, wm.top - r.top - 6, wm.width + 20, wm.height + 12];
+      return true;
+    }
+    size(); o.init(st);
+    window.addEventListener('resize', size);
+    if ('ResizeObserver' in window) new ResizeObserver(size).observe(inner);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(size);
+    document.addEventListener('ac-theme', function (e) { theme = e.detail === 'dark' ? 'dark' : 'light'; setTimeout(size, 0); });
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
+      st.ptr = true; st.tinc = Math.max(0.02, o.inc + ny * (o.tilt || 0.7)); st.troll = -nx * (o.roll || 0.35);
+    });
+    hero.addEventListener('pointerleave', function () { st.ptr = false; st.tinc = o.inc; st.troll = 0; });
+    new IntersectionObserver(function (en) { st.on = en[0].isIntersecting; }).observe(hero);
+    var last = 0;
+    function frame(now) {
+      var t = now / 1000, dt = last ? Math.min(0.05, t - last) : 0.016; last = t;
+      if (still) dt = 0;
+      if (st.on && st.S) {
+        var ink = INK[theme], col = 'rgb(' + ink.join(',') + ')';
+        st.inc += (st.tinc - st.inc) * 0.06; st.roll += (st.troll - st.roll) * 0.06;
+        st.ci = Math.cos(st.inc); st.si = Math.sin(st.inc); st.cr = Math.cos(st.roll); st.sr = Math.sin(st.roll);
+        [st.b, st.f].forEach(function (c) {
+          c.clearRect(0, 0, st.w, st.h);
+          c.globalCompositeOperation = theme === 'dark' ? 'lighter' : 'source-over';
+          c.fillStyle = c.strokeStyle = col;
+        });
+        o.draw(st, t, dt);
+        clearLogo(st);
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // "Three ways in": the same black hole as the hero, round the section's small symbol. The gas from the
+  // cards (site.js) is its infall, so this copy brings in no particles of its own.
+  document.addEventListener('DOMContentLoaded', function () {
+    var sec = document.querySelector('.fl'); if (!sec) return;
+    var box = sec.querySelector('.fl-sym'), fcv = sec.querySelector('.fl-cv'), ffr = sec.querySelector('.fl-front');
+    if (!box || !fcv || !ffr) return;
+    var back = document.createElement('canvas'), front = document.createElement('canvas');
+    var css = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+    var flo = 0.3; // much lighter than the hero: it sits on white
+    back.style.cssText = css + 'z-index:-1;opacity:' + flo; front.style.cssText = css + 'z-index:1;opacity:' + flo;
+    back.setAttribute('aria-hidden', 'true'); front.setAttribute('aria-hidden', 'true');
+    sec.insertBefore(back, fcv.nextSibling); sec.insertBefore(front, ffr.nextSibling);
+    // the symbol's rings sit lighter here too, so the hole reads as soft as its disk on the white
+    var flr = 0.35;
+    var rs = document.createElement('style'); rs.textContent = '.fl-sym .r1, .fl-sym .r2, .fl-sym .r3 { opacity: ' + flr + '; }'; document.head.appendChild(rs);
+    var o = OPTS.pick;
+    var st = { el: sec, o: o, back: back, front: front, inc: o.inc, tinc: o.inc, roll: 0, troll: 0, D: o.D, E: o.E || 0.44, on: false, ptr: false, fe: 0.5,
+      wm: [-1000, -1000, 0, 0] };
+    st.b = back.getContext('2d'); st.f = front.getContext('2d');
+    var dpr = 1, ready = false;
+    function secTheme() {
+      var h = getComputedStyle(sec).getPropertyValue('--bg').trim().replace('#', '');
+      if (h.length === 3) h = h.replace(/./g, '$&$&');
+      var lum = (parseInt(h.slice(0, 2), 16) + parseInt(h.slice(2, 4), 16) + parseInt(h.slice(4, 6), 16)) / 3;
+      return isNaN(lum) || lum > 128 ? 'light' : 'dark';
+    }
+    function place() {
+      var core = box.querySelector('.core'), sym = box.querySelector('.sym'); if (!core || !sym) return false;
+      var r = sec.getBoundingClientRect(), c = core.getBoundingClientRect();
+      st.cx = c.left - r.left + c.width / 2; st.cy = c.top - r.top + c.height / 2; st.S = sym.getBoundingClientRect().width;
+      return st.S > 0;
+    }
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2); var r = sec.getBoundingClientRect();
+      st.w = r.width; st.h = r.height;
+      [back, front].forEach(function (c) { c.width = st.w * dpr; c.height = st.h * dpr; });
+      st.b.setTransform(dpr, 0, 0, dpr, 0, 0); st.f.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return place();
+    }
+    window.addEventListener('resize', size);
+    if ('ResizeObserver' in window) new ResizeObserver(size).observe(sec);
+    sec.addEventListener('pointermove', function (e) {
+      var r = sec.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
+      st.ptr = true; st.tinc = Math.max(0.02, o.inc + ny * (o.tilt || 0.7)); st.troll = -nx * (o.roll || 0.35);
+    });
+    sec.addEventListener('pointerleave', function () { st.ptr = false; st.tinc = o.inc; st.troll = 0; });
+    new IntersectionObserver(function (en) { st.on = en[0].isIntersecting; }, { rootMargin: '80px' }).observe(sec);
+    var last = 0;
+    function frame(now) {
+      var t = now / 1000, dt = last ? Math.min(0.05, t - last) : 0.016; last = t;
+      if (still) dt = 0;
+      if (!ready && size()) { o.init(st); ready = true; size(); }
+      if (ready && st.on && place()) {
+        var keep = theme; theme = secTheme(); // the section keeps its own background, so it has its own ink
+        var ink = INK[theme], col = 'rgb(' + ink.join(',') + ')';
+        st.inc += (st.tinc - st.inc) * 0.06; st.roll += (st.troll - st.roll) * 0.06;
+        st.ci = Math.cos(st.inc); st.si = Math.sin(st.inc); st.cr = Math.cos(st.roll); st.sr = Math.sin(st.roll);
+        [st.b, st.f].forEach(function (c) {
+          c.clearRect(0, 0, st.w, st.h);
+          c.globalCompositeOperation = theme === 'dark' ? 'lighter' : 'source-over';
+          c.fillStyle = c.strokeStyle = col;
+        });
+        st.next = 1e9; // no infall of its own: the card gas is its infall
+        o.draw(st, t, dt);
+        clearLogo(st);
+        theme = keep;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   });
 })();
