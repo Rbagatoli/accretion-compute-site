@@ -274,6 +274,13 @@ var acSymbol = (function () {
       return [p[0] + dx / d * m, p[1] + dy / d * m];
     }
     function rgba(a) { return 'rgba(' + ink[0] + ',' + ink[1] + ',' + ink[2] + ',' + Math.max(0, a).toFixed(3) + ')'; }
+    // A fine particle of radius r (under a pixel). Browsers draw dots this small very differently (newer Chrome
+    // draws them up to 4x fainter), so it is drawn as a tiny square with the same light as the older round dot.
+    function dot(x, y, r, a) {
+      var c = 3.74 * r * r - 0.537 * r + 0.53, z = 1;
+      if (c > 1.33) z = Math.sqrt(c / 1.3); else a *= c / 1.33;
+      ctx.globalAlpha = Math.min(1, a); ctx.fillRect(x - z / 2, y - z / 2, z, z);
+    }
     // Nothing is drawn behind the wordmark and headline.
     function clearAt(y) { return y < cy + 0.45 * S ? 1 : Math.max(0, 1 - (y - cy - 0.45 * S) / (0.35 * S)); }
 
@@ -318,7 +325,7 @@ var acSymbol = (function () {
         var edge = Math.max(0, 1 - Math.abs(q[0] - cx) / L);
         var a = Math.sin(Math.PI * p.t / p.life) * p.o * edge * clearAt(q[1]) * dim * SPARK * (0.8 + 0.2 * breathe);
         if (a < 0.01) return;
-        ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(q[0], q[1], p.s, 0, 6.2832); ctx.fill();
+        dot(q[0], q[1], p.s, a);
       });
       if (!fallers.length) for (i = 0; i < (innerWidth < 720 ? 4 : 7); i++) fallers.push(faller(Math.random() * 4));
       fallers.forEach(function (p, k) {
@@ -339,7 +346,7 @@ var acSymbol = (function () {
         for (var m = 0; m < p.trail.length; m += 2) {
           var c = p.trail[m], a = a0 * (1 - m / 12) * clearAt(c[1]);
           if (a < 0.01) continue;
-          ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(c[0], c[1], m ? p.s * 0.6 : p.s, 0, 6.2832); ctx.fill();
+          dot(c[0], c[1], m ? p.s * 0.6 : p.s, a);
         }
       });
       // A few dim runners orbit on the two outer horizon lines, all the same way round (anticlockwise):
