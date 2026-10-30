@@ -884,6 +884,20 @@ var acSymbol = (function () {
   }
   function box(b, o) { o = o || {}; o.t = "box"; o.b = b; return o; }
   function lines(ls, o) { o = o || {}; o.t = "lines"; o.lines = ls; return o; }
+  // A moving part: path(o) traces it at the current time NOW (seconds); dots(o, a) adds lights.
+  var NOW = 0;
+  function part(at, path, o) { o = o || {}; o.t = "part"; o.at = at; o.path = path; return o; }
+  // Fan blades turning inside a ring on a flat top (x, z centre, height y, radius r).
+  function fan(x, y, z, r, sp, o) {
+    var ph = Math.random() * 6.2832;
+    return part([x, z], function () {
+      var a0 = ph + NOW * sp;
+      for (var i = 0; i < 4; i++) {
+        var a = a0 + i * 1.5708, b = a + 0.5;
+        pl([[x, y, z], [x + r * 0.85 * Math.cos(a), y, z + r * 0.85 * Math.sin(a)], [x + r * 0.7 * Math.cos(b), y, z + r * 0.7 * Math.sin(b)], [x, y, z]]);
+      }
+    }, o);
+  }
   function cyl(x, z, r, y0, y1, o) { o = o || {}; o.t = "cyl"; o.c = [x, z]; o.r = r; o.y0 = y0; o.y1 = y1; return o; }
   function offset(pts, w) {
     var out = [];
@@ -977,19 +991,36 @@ var acSymbol = (function () {
     [z1, z2].forEach(function (z) { k.push([[0.42, 0.025, z], [0.5, 0.24, zp], [0.6, 0.025, z]]); });
     var hh = [], hh2 = [];
     for (var i = 0; i <= 10; i++) { var a = -0.9 + 1.8 * i / 10; hh.push([0.72 + 0.05 * Math.cos(a), 0.25 + 0.1 * Math.sin(a), zp - 0.014]); hh2.push([0.72 + 0.05 * Math.cos(a), 0.25 + 0.1 * Math.sin(a), zp + 0.014]); }
-    k.push(hh, hh2, [[0.77, 0.16, zp], [0.77, 0.07, zp]]);
-    k.push([[0.3, 0.12, z1 - 0.01], [0.3, 0.235, zp]], [[0.3, 0.12, z2 + 0.01], [0.3, 0.235, zp]]);
     k.push(ring(0.3, 0.085, z2 + 0.012, 0.05, 24), ring(0.3, 0.085, z1 - 0.012, 0.05, 24));
     return [
       box([0.2, 0.84, 0, 0.025, zp - 0.07, zp + 0.07], { sx: 6, glow: true }),
       box([0.24, 0.36, 0.025, 0.1, zp - 0.03, zp + 0.03], {}),
-      box([0.28, 0.73, 0.235, 0.262, zp - 0.014, zp + 0.014], { glow: true }),
       lines(k, { at: [0.52, zp + 0.01], glow: true }),
       box([0.74, 0.8, 0.025, 0.07, zp - 0.03, zp + 0.03], {})
     ];
   }
   var PJ = 0.55;
-  var pumpjack = mapItems(pumpjackOld(), function (p) { return [QX(222 + (0.77 - p[0]) * 400 * PJ), p[1] * PJ, QZ(420) + p[2] * PJ]; }, PJ);
+  function pjMap(p) { return [QX(222 + (0.77 - p[0]) * 400 * PJ), p[1] * PJ, QZ(420) + p[2] * PJ]; }
+  var pumpjack = mapItems(pumpjackOld(), pjMap, PJ);
+  // The walking beam rocks on the samson post (one stroke every 1.8 s), driven by the cranks through the pitman arms.
+  pumpjack.push(part([pjMap([0.52, 0, 0.011])[0], pjMap([0.52, 0, 0.011])[2]], function () {
+    var w = NOW * 2 * Math.PI / 1.8, th = 0.11 * Math.sin(w), c = Math.cos(th), s = Math.sin(th);
+    function r(x, y, z) { return pjMap([0.5 + (x - 0.5) * c - (y - 0.25) * s, 0.25 + (x - 0.5) * s + (y - 0.25) * c, z]); }
+    var zs = [-0.014, 0.014], i, a;
+    zs.forEach(function (z) {
+      pl([r(0.28, 0.235, z), r(0.73, 0.235, z), r(0.73, 0.262, z), r(0.28, 0.262, z)], true);
+      var hh = [];
+      for (i = 0; i <= 10; i++) { a = -0.9 + 1.8 * i / 10; hh.push(r(0.72 + 0.05 * Math.cos(a), 0.25 + 0.1 * Math.sin(a), z)); }
+      pl(hh);
+    });
+    pl([r(0.28, 0.262, -0.014), r(0.28, 0.262, 0.014)]); pl([r(0.73, 0.262, -0.014), r(0.73, 0.262, 0.014)]);
+    var hb = r(0.77, 0.25, 0); pl([hb, pjMap([0.77, 0.07, 0])]);
+    var pin = [0.3 + 0.04 * Math.cos(w), 0.085 - 0.04 * Math.sin(w)], tail = r(0.3, 0.235, 0);
+    [-0.047, 0.047].forEach(function (z) {
+      pl([pjMap([0.3, 0.085, z]), pjMap([pin[0], pin[1], z])]);
+      pl([pjMap([pin[0], pin[1], z]), tail]);
+    });
+  }, { glow: true }));
 
   var FL = Q(345, 340), FH = 0.3;
   var gnd = [
@@ -1045,6 +1076,11 @@ var acSymbol = (function () {
     ex.push(rectPts(604, y + 5, 22, 24, GH), rectPts(630, y + 5, 22, 24, GH));
     ex.push(ring(QX(615), GH, QZ(y + 17), D(7), 18, "xz"), ring(QX(641), GH, QZ(y + 17), D(7), 18, "xz"));
     pow.push(boxQ(560, y, 680, y + 34, 0, GH, { sx: 6, sh: 2, inset: 0.008, extra: ex, glow: true }));
+    // the two radiator fans on top turn (fan() is placed by the box's centre so it draws just after it)
+    [615, 641].forEach(function (fxu) {
+      var f = fan(QX(fxu), GH, QZ(y + 17), D(7), 5 + gi * 0.4);
+      f.at = [QX(620), QZ(y + 17)]; pow.push(f);
+    });
     pow.push(cyl(QX(585), QZ(y + 17), D(6), GH, GH + 0.045, { extra: [ring(QX(585), GH + 0.045, QZ(y + 17), D(3.5), 14, "xz")] }));
     pow.push(lines([[Q(545, y + 17), Q(560, y + 17)], [Q(680, y + 17), Q(690, y + 17)]], { flat: true, glow: true }));
     pow.push(boxQ(556, y - 3, 684, y + 37, 0, 0.004, { vis: "lod", bias: -0.2 }));
@@ -1079,6 +1115,24 @@ var acSymbol = (function () {
   var WX0 = HX(100), WX1 = HX(900), WZ0 = HZ(200), WZ1 = HZ(800), WH = 0.27, WT = 0.02, RH = 0.16;
   var pods = [280, 432, 584], RACKS = 22;
   var hall = [];
+  // Status lights on the face of a rack row that faces the camera: some steady, some blinking with traffic.
+  function rackLights(ry) {
+    var L = [], x0 = HX(236), x1 = HX(764), z0 = HZ(ry), z1 = HZ(ry + 30);
+    for (var r = 0; r < RACKS; r++) for (var n = 0; n < 3; n++) {
+      L.push({ x: lerp(x0, x1, (r + 0.3 + 0.4 * Math.random()) / RACKS), y: RH * (0.12 + 0.76 * (Math.floor(Math.random() * 7) + 0.5) / 7),
+        ph: Math.random() * 100, sp: Math.random() < 0.6 ? 2 + Math.random() * 7 : 0, lo: 0.25 + Math.random() * 0.3 });
+    }
+    return part([(x0 + x1) / 2, (z0 + z1) / 2], null, { vis: "inner", dots: function (o, a) {
+      var zf = cam.cF > 0 ? z1 : z0, base = ctx.globalAlpha, sz = Math.max(0.8, Math.min(2.6, cam.s * LT.k * 0.006));
+      ctx.fillStyle = "rgb(" + INKC + ")";
+      for (var i = 0; i < L.length; i += sz < 1.4 ? 3 : 1) { // a third of them when the hall is drawn small
+        var l = L[i], v = l.sp ? (Math.sin(NOW * l.sp + l.ph) > 0.2 ? 1 : l.lo) : 0.8, q = pj(l.x, l.y, zf);
+        ctx.globalAlpha = base * Math.min(1, a * 1.6) * v;
+        ctx.fillRect(q[0] - sz / 2, q[1] - sz / 2, sz, sz);
+      }
+      ctx.globalAlpha = base;
+    } });
+  }
   (function () {
     var tiles = [];
     for (var gx = 156; gx < 900; gx += 48) tiles.push([Hp(gx, 208), Hp(gx, 792)]);
@@ -1094,6 +1148,10 @@ var acSymbol = (function () {
       [[112, 142]].concat(c < 4 ? [[858, 888]] : []).forEach(function (xx) {
         var fxc = (xx[0] + xx[1]) / 2;
         hall.push(hbox(xx[0], cy, xx[1], cy + 66, 0, 0.15, { sz: 3, vis: "inner", extra: [ring(HX(fxc), 0.15, HZ(cy + 18), 9 * KH, 18, "xz"), ring(HX(fxc), 0.15, HZ(cy + 48), 9 * KH, 18, "xz")] }));
+        [18, 48].forEach(function (dz) {
+          var f = fan(HX(fxc), 0.15, HZ(cy + dz), 9 * KH, 4, { vis: "inner" });
+          f.at = [HX(fxc), HZ(cy + 33)]; hall.push(f);
+        });
       });
     }
     // pods: two rows of racks, a contained hot aisle between them, PDUs at the head of each row
@@ -1101,6 +1159,7 @@ var acSymbol = (function () {
       hall.push(lines([hrect(200, y0 - 4, 596, 94)], { flat: true, closed: true, faint: true, vis: "inner" }));
       [y0, y0 + 56].forEach(function (ry) {
         hall.push(hbox(236, ry, 764, ry + 30, 0, RH, { sx: RACKS, sh: 7, inset: 0.012, glow: pi === 1, vis: "inner" }));
+        hall.push(rackLights(ry));
         hall.push(hbox(206, ry, 232, ry + 30, 0, RH, { sh: 3, vis: "inner" }));
       });
       hall.push(hbox(236, y0 + 30, 764, y0 + 56, RH, RH + 0.012, { tx: 11, bias: 0.12, vis: "inner" }));
@@ -1126,6 +1185,7 @@ var acSymbol = (function () {
       [272, 644].forEach(function (ry) {
         var x0 = 176 + ru * 132;
         hall.push(hbox(x0, ry, x0 + 96, ry + 72, WH + 0.008, WH + 0.04, { vis: "roof", key: 901 + ru * 0.01 + ry * 1e-5, extra: [ring(HX(x0 + 48), WH + 0.04, HZ(ry + 36), 21.6 * KH, 20, "xz")] }));
+        hall.push(fan(HX(x0 + 48), WH + 0.04, HZ(ry + 36), 21.6 * KH, 2.5, { vis: "roof", key: 901.005 + ru * 0.01 + ry * 1e-5 }));
       });
     }
   })();
@@ -1184,7 +1244,8 @@ var acSymbol = (function () {
   }
   function linesPath(o) { for (var i = 0; i < o.lines.length; i++) pl(o.lines[i], o.closed); }
   function outline(o) { // the whole drawing of an item, for the glow pass
-    if (o.t === "box") { boxFaces(o.b); boxExtras(o); }
+    if (o.t === "part") { if (o.path) o.path(o); }
+    else if (o.t === "box") { boxFaces(o.b); boxExtras(o); }
     else if (o.t === "cyl") { cylFaces(o); cylExtras(o); }
     else linesPath(o);
   }
@@ -1195,6 +1256,7 @@ var acSymbol = (function () {
   }
   function drawItem(o, a) {
     if (o.t === "lines") { ctx.beginPath(); linesPath(o); stroke(a, o.faint, o.dash); return; }
+    if (o.t === "part") { if (o.path) { ctx.beginPath(); o.path(o); stroke(a, o.faint, false); } if (o.dots) o.dots(o, a); return; }
     ctx.beginPath();
     if (o.t === "box") boxFaces(o.b); else cylFaces(o);
     ctx.fillStyle = BG; ctx.fill(); stroke(a, o.faint, o.dash);
@@ -1336,6 +1398,7 @@ var acSymbol = (function () {
   function render(force) {
     var still = reduce.matches;
     var p = still ? 1 : warp(shownP());
+    lastP = p;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.lineCap = "round"; ctx.lineJoin = "round";
@@ -1634,11 +1697,13 @@ var acSymbol = (function () {
     dctx.globalAlpha = 1;
   }
 
-  var inView = false, running = false, last = 0, lastT = 0;
+  var inView = false, running = false, last = 0, lastT = 0, lastAnim = 0, lastP = 0;
   function loop(tm) {
     if (!running) return;
     var dt = Math.min(0.05, (tm - last) / 1000 || 0); last = tm; lastT = tm / 1000;
-    glide(dt);
+    NOW = lastT;
+    // The moving parts need a fresh drawing even when the page is still (about 30 a second on phones).
+    if (!glide(dt) && lastP > 0.12 && (!phone || tm - lastAnim > 30)) { lastAnim = tm; render(false); }
     drawDust(lastT);
     drawHole(dt, lastT);
     requestAnimationFrame(loop);
@@ -1682,9 +1747,10 @@ var acSymbol = (function () {
   function shownP() { if (shown === null) shown = progress(); return shown; }
   function glide(dt) {
     var target = progress(), d = target - shownP();
-    if (Math.abs(d) < 0.00005) { if (d !== 0) { shown = target; render(false); } return; }
+    if (Math.abs(d) < 0.00005) { if (d !== 0) { shown = target; render(false); return true; } return false; }
     shown += d * (1 - Math.exp(-dt * 11));
     render(false);
+    return true;
   }
   var queued = false;
   function onScroll() {
