@@ -998,3 +998,55 @@ html:not(.js) .tab-panel + .tab-panel { margin-top: 72px; }
   .cv-air, .cv-liq, .cv-hot, .ch-gas, .ch-pow, .d-rise, .np-u .fan, .dens-bar.hi::after, .np-load .np-bar span::after, .tour.auto .tour-nav button[aria-selected="true"]::before { animation: none !important; }
   .js .reveal .dens-bar span { transform: none; }
 }
+
+/* Site selection: the narrowing funnel and the overlap of energy, fiber and land */
+.funnel { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.funnel li { display: grid; grid-template-columns: minmax(110px, 30%) 1fr; align-items: center; gap: 20px; }
+.funnel b { font: 400 11px/1.3 var(--body); letter-spacing: .22em; text-transform: uppercase; color: var(--fg-strong); }
+.funnel b small { display: block; margin-top: 6px; font-size: 13px; letter-spacing: .02em; text-transform: none; color: var(--fg-dim); }
+.funnel i { display: block; height: 30px; width: var(--w); margin: 0 auto; border: 1px solid var(--fg-strong); background: repeating-linear-gradient(90deg, rgba(var(--aura), .28) 0 2px, transparent 2px 7px); transform-origin: center; transition: transform 1.4s var(--ease); }
+.funnel li:last-child i { background: var(--fg-strong); box-shadow: 0 0 18px rgba(var(--aura), .5); }
+.js .reveal .funnel i { transform: scaleX(0); }
+.js .reveal.in .funnel i { transform: scaleX(1); }
+.js .reveal.in .funnel li:nth-child(2) i { transition-delay: .15s; } .js .reveal.in .funnel li:nth-child(3) i { transition-delay: .3s; }
+.js .reveal.in .funnel li:nth-child(4) i { transition-delay: .45s; } .js .reveal.in .funnel li:nth-child(5) i { transition-delay: .6s; }
+@media (prefers-reduced-motion: reduce) { .js .reveal .funnel i { transform: none; } }
+
+/* Site selection: three map layers (energy, fiber, land) and the one spot where they line up */
+.layers { width: 100%; height: auto; overflow: visible; }
+.layers .ly-face { fill: var(--bg); fill-opacity: .9; stroke: var(--fg-strong); stroke-opacity: .55; stroke-width: 1; }
+.layers .ly-side { fill: var(--fg-strong); fill-opacity: .14; stroke: var(--fg-strong); stroke-opacity: .35; stroke-width: 1; }
+.layers .ly-side2 { fill: var(--fg-strong); fill-opacity: .07; stroke: var(--fg-strong); stroke-opacity: .35; stroke-width: 1; }
+.layers .ly-grid { fill: none; stroke: var(--fg-strong); stroke-opacity: .07; stroke-width: 1; }
+.layers .ly-cont { fill: rgba(var(--aura), .05); stroke: var(--fg-strong); stroke-opacity: .28; stroke-width: 1; stroke-dasharray: 2 4; }
+.layers .ly-pipe { fill: none; stroke: var(--fg-strong); stroke-opacity: .22; stroke-width: 7; stroke-linecap: round; }
+.layers .ly-pipe.thin { stroke-width: 3; stroke-opacity: .3; }
+.layers .ly-gas { fill: none; stroke: var(--fg-strong); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: .1 9; animation: flow 2.4s linear infinite; }
+.layers .ly-well { fill: none; stroke: var(--fg-strong); stroke-width: 1.2; }
+.layers .ly-dot, .layers .ly-node { fill: var(--fg-strong); }
+.layers .ly-node { stroke: var(--bg); stroke-width: 2; }
+.layers .ly-fib { fill: none; stroke: var(--fg-strong); stroke-opacity: .25; stroke-width: 3; stroke-linejoin: round; }
+.layers .ly-fibf { fill: none; stroke: var(--fg-strong); stroke-width: 1.2; stroke-dasharray: 10 8; stroke-linejoin: round; animation: flow 1.1s linear infinite; }
+.layers .ly-par { fill: none; stroke: var(--fg-strong); stroke-opacity: .45; stroke-width: 1; stroke-dasharray: 4 4; }
+.layers .ly-par.on { fill: rgba(var(--aura), .12); stroke-opacity: 1; stroke-dasharray: none; }
+.layers .ly-road { fill: none; stroke: var(--fg-strong); stroke-opacity: .2; stroke-width: 5; }
+.layers .ly-bx { fill: var(--fg-strong); fill-opacity: .3; stroke: var(--fg-strong); stroke-width: 1; }
+.layers .ly-bx2 { fill: var(--fg-strong); fill-opacity: .15; stroke: var(--fg-strong); stroke-width: 1; }
+.layers .ly-bx3 { fill: var(--bg); stroke: var(--fg-strong); stroke-width: 1; }
+.layers .ly-drop { fill: none; stroke: var(--fg-strong); stroke-width: 1.4; stroke-dasharray: 5 5; animation: flow 1.4s linear infinite; }
+.layers .ly-ring { fill: rgba(var(--aura), .15); stroke: var(--fg-strong); stroke-width: 1.2; }
+.layers .ly-hit { fill: var(--fg-strong); filter: drop-shadow(0 0 5px rgba(var(--aura), .9)); }
+.layers .ly-lead { fill: none; stroke: var(--fg-strong); stroke-opacity: .4; stroke-width: 1; }
+.layers .ly-n { font: 400 11px var(--display); letter-spacing: .2em; fill: var(--fg-dim); }
+.layers .ly-t { font: 400 11px var(--body); letter-spacing: .22em; text-transform: uppercase; fill: var(--fg-strong); }
+.layers .ly-s { font: 300 12px var(--body); fill: var(--fg-dim); }
+.layers .ring { fill: none; stroke: var(--fg-strong); stroke-width: 1.2; animation: ly-ping 2.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes ly-ping { from { transform: scale(.4); opacity: 1; } to { transform: scale(2.6); opacity: 0; } }
+/* On reveal the layers start stacked flat and lift apart, then the line drops through */
+.layers .ly, .layers .ly-labels { transition: transform 1.4s var(--ease), opacity 1s var(--ease); }
+.layers .ly-drop, .layers .ly-mk { transition: opacity .7s var(--ease) 1.3s; }
+.layers .ly-mk.m2 { transition-delay: 1.5s; } .layers .ly-mk.m3 { transition-delay: 1.7s; }
+.js .reveal:not(.in) .layers .l1 { transform: translateY(134px); }
+.js .reveal:not(.in) .layers .l3 { transform: translateY(-134px); }
+.js .reveal:not(.in) .layers .ly-labels, .js .reveal:not(.in) .layers .ly-drop, .js .reveal:not(.in) .layers .ly-mk { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .layers .ly-gas, .layers .ly-fibf, .layers .ly-drop, .layers .ring { animation: none; } .js .reveal .layers * { transform: none !important; opacity: 1 !important; } }
