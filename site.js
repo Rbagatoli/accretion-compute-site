@@ -1424,13 +1424,21 @@ var acSymbol = (function () {
     // the dive (the map preview's nesting math, depth 0 -> 1 only)
     var f = smoother((p - T.dive0) / (T.dive1 - T.dive0));
     U = (phone ? Math.min(W * 1.15, H) : Math.min(W, H)) / 1000;
-    var cx = W / 2, cy = H * (phone ? 0.47 : 0.5);
+    // phones: the art box starts 9svh higher (styles.css) so the stack can sit higher; the map keeps its old place
+    var PD = phone ? window.innerHeight * 0.09 : 0;
+    var cx = W / 2, cy = phone ? PD + (H - PD) * 0.47 : H * 0.5;
     var s = Math.pow(S1, f), gq = (1 - 1 / s) / (1 - 1 / S1);
     var cc = P(lerp(500, A1.x, gq), lerp(500, A1.y, gq));
     var t0 = { k: s * U }; t0.ox = cx - cc.x * t0.k; t0.oy = cy - cc.y * t0.k;
     var t1 = { k: t0.k / S1 }; t1.ox = t0.ox + (A1.x - 500 / S1) * t0.k; t1.oy = t0.oy + (A1.y - 500 / S1) * t0.k;
     var a0 = 1 - sstep(0.4, 0.8, f), a1 = sstep(0.2, 0.65, f);
     if (a0 > 0.002) { setT(t0); drawMap(a0, p); noGlow(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    if (PD > 0 && a0 > 0.002) { // phones: the map keeps clear of the strip the art box gained above it
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = "destination-out";
+      var eg = ctx.createLinearGradient(0, 0, 0, (PD + 60) * dpr);
+      eg.addColorStop(0, "rgba(0,0,0," + a0 + ")"); eg.addColorStop(PD / (PD + 60), "rgba(0,0,0," + a0 + ")"); eg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = eg; ctx.fillRect(0, 0, canvas.width, (PD + 60) * dpr); ctx.restore();
+    }
 
     // phases
     var tilt = smoother((p - T.tilt0) / (T.tilt1 - T.tilt0));
@@ -1450,10 +1458,10 @@ var acSymbol = (function () {
     var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;
     // the camera makes room for the black hole while the hall rises, so step 04 never has to jump back
     var topCam = Y2 + 0.27 * (1 - a4) + (G + HOLE_LIFT + 0.2) * smoother((p - 0.68) / 0.2);
-    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34)) * (phone ? 1.25 : 1); // the stack is drawn larger on phones
+    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34)) * (phone ? 1.35 : 1); // the stack is drawn larger on phones
     var pitch = (90 - 60 * tilt) * Math.PI / 180, yaw = yawAt(p) * Math.PI / 180;
     cam.sp = Math.sin(pitch); cam.cp = Math.cos(pitch); cam.sF = Math.sin(yaw); cam.cF = Math.cos(yaw);
-    cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.52 : 0.53), tilt);
+    cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.44 : 0.53), tilt);
     cam.mid = topCam / 2;
 
     // brightness: the whole site is lit on the plan, then each layer in its own step
