@@ -1773,6 +1773,59 @@ var acSymbol = (function () {
   resize();
 })();
 
+// Capacity and energy pages: a diagram you can step through, source tabs, and spare generation at work.
+(function () {
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Runs fn while the element is on screen.
+  function whileSeen(el, on, off) {
+    if (!('IntersectionObserver' in window)) { on(); return; }
+    new IntersectionObserver(function (en) { if (en[0].isIntersecting) on(); else off(); }, { threshold: 0.25 }).observe(el);
+  }
+
+  // Tabs (stage buttons or source tabs). A tour also lights its stage in the drawing and moves on by itself until clicked.
+  [].forEach.call(document.querySelectorAll('[data-tabs]'), function (box) {
+    var btns = [].slice.call(box.querySelectorAll('[role="tab"]')), panels = btns.map(function (b) { return document.getElementById(b.getAttribute('aria-controls')); });
+    var groups = [].slice.call(box.querySelectorAll('.t-g')), tour = box.classList.contains('tour');
+    var T = 7000, timer = null, auto = tour && !still, seen = false, cur = 0;
+    box.style.setProperty('--tour-t', T / 1000 + 's');
+    function show(i, focus) {
+      cur = i;
+      btns.forEach(function (b, k) { b.setAttribute('aria-selected', k === i ? 'true' : 'false'); b.tabIndex = k === i ? 0 : -1; });
+      panels.forEach(function (p, k) { p.hidden = k !== i; });
+      groups.forEach(function (g) { g.classList.toggle('on', +g.getAttribute('data-stage') === i); });
+      if (tour) box.setAttribute('data-on', i);
+      if (focus) btns[i].focus();
+      // restart the fill line on the chosen button
+      if (auto) { box.classList.remove('auto'); void box.offsetWidth; box.classList.add('auto'); }
+    }
+    function tick() { clearTimeout(timer); if (auto && seen) timer = setTimeout(function () { show((cur + 1) % btns.length); tick(); }, T); }
+    function stop() { auto = false; clearTimeout(timer); box.classList.remove('auto'); }
+    btns.forEach(function (b, i) {
+      b.addEventListener('click', function () { stop(); show(i); });
+      b.addEventListener('keydown', function (e) {
+        var k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (k) { e.preventDefault(); stop(); show((i + k + btns.length) % btns.length, true); }
+      });
+    });
+    groups.forEach(function (g) { g.addEventListener('click', function () { stop(); show(+g.getAttribute('data-stage')); }); });
+    show(0);
+    if (tour) whileSeen(box, function () { if (!seen) { seen = true; show(cur); } tick(); }, function () { seen = false; clearTimeout(timer); });
+  });
+
+  // Spare generation: every few seconds a different unit goes out for service; the load stays fully met.
+  [].forEach.call(document.querySelectorAll('[data-np]'), function (box) {
+    var units = [].slice.call(box.querySelectorAll('.np-u')), note = box.querySelector('[data-np-note]'), k = -1, timer = null;
+    function step() {
+      units.forEach(function (u) { u.classList.remove('off'); });
+      k = (k + 1 + Math.floor(Math.random() * (units.length - 1))) % units.length;
+      units[k].classList.add('off');
+      if (note) note.textContent = 'Unit ' + (k + 1) + ' out for service';
+    }
+    if (still) { units[3].classList.add('off'); if (note) note.textContent = 'Unit 4 out for service'; return; }
+    whileSeen(box, function () { if (!timer) { step(); timer = setInterval(step, 3200); } }, function () { clearInterval(timer); timer = null; });
+  });
+})();
+
 // Site check (partners page): five questions, one at a time, then a verdict with the reasons.
 (function () {
   var form = document.querySelector(".fit-form"), out = document.querySelector(".fit-out");

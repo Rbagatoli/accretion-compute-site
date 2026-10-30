@@ -6,6 +6,12 @@
     <p class="eyebrow">Capacity</p>
     <h1>Dedicated AI capacity, powered at the source</h1>
     <p class="lede">You bring the hardware. We bring the energy, the building and the team that runs it, on terms built for the life of your deployment.</p>
+    <ul class="specs">
+      <li><small>You bring</small><span>Your accelerators, racks and workloads</span></li>
+      <li><small>We bring</small><span>Energy, power, cooling, space, fiber, people</span></li>
+      <li><small>Cooling</small><span>Air or liquid, designed to your hardware</span></li>
+      <li><small>Terms</small><span>Multi-year, priced per kW per month</span></li>
+    </ul>
   </div>
 </section>
 
@@ -33,54 +39,202 @@
     <div class="head-block">
       <p class="eyebrow">Anatomy of a site</p>
       <h2 id="site-h" class="reveal">One site, from fuel to fiber</h2>
-      <p class="lede reveal d1">Energy enters on one side. Compute leaves on the other. Everything in between is built and run by Accretion.</p>
+      <p class="lede reveal d1">Energy enters on one side. Compute leaves on the other. Step through each part of the site to see what it does and who runs it.</p>
     </div>
-    <figure class="diagram reveal">
-      <div class="diagram-scroll">
-        <svg viewBox="0 0 1100 380" role="img" aria-labelledby="site-t">
-          <title id="site-t">Site layout: fuel supply feeds on-site generation, then power conditioning, then the AI hall with cooling, with fiber connecting the hall to the network</title>
-          <path class="d-soft" d="M0 300h1100"/>
-          <!-- fuel line -->
-          <path class="d-flow slow" d="M20 250h120"/>
-          <text class="d-text" x="20" y="232">Fuel</text>
-          <text class="d-small" x="20" y="330">Pipeline, gathering</text>
-          <text class="d-small" x="20" y="350">or landfill gas</text>
-          <!-- generation -->
-          <rect class="d-fill" x="150" y="190" width="170" height="110"/>
-          <path class="d-line" d="M170 210h130M170 230h130M170 250h130M170 270h130"/>
-          <rect class="d-fill" x="190" y="160" width="20" height="30"/><rect class="d-fill" x="260" y="160" width="20" height="30"/>
-          <text class="d-text d-mid" x="235" y="330">Generation</text>
-          <text class="d-small d-mid" x="235" y="350">On site, with backup</text>
-          <path class="d-flow" d="M320 245h70"/>
-          <!-- conditioning -->
-          <rect class="d-fill" x="390" y="210" width="110" height="90"/>
-          <path class="d-strong" d="M440 230l-12 22h12l-6 22 16-28h-12l6-16z"/>
-          <text class="d-text d-mid" x="445" y="330">Power</text>
-          <text class="d-small d-mid" x="445" y="350">Switchgear, UPS</text>
-          <path class="d-flow" d="M500 245h70"/>
-          <!-- hall -->
-          <path class="d-fill" d="M570 300V140l130-50 130 50v160z"/>
-          <g class="d-line">
-            <rect x="600" y="180" width="34" height="110"/><rect x="650" y="180" width="34" height="110"/><rect x="700" y="180" width="34" height="110"/><rect x="750" y="180" width="34" height="110"/>
-            <path d="M600 200h34M600 220h34M600 240h34M600 260h34M650 200h34M650 220h34M650 240h34M650 260h34M700 200h34M700 220h34M700 240h34M700 260h34M750 200h34M750 220h34M750 240h34M750 260h34"/>
-          </g>
-          <text class="d-text d-mid" x="700" y="330">AI hall</text>
-          <text class="d-small d-mid" x="700" y="350">Your hardware</text>
-          <!-- cooling -->
-          <path class="d-flow slow" d="M790 120c60 0 60-50 120-50"/>
-          <path class="d-flow slow" d="M910 100c-50 0-50 40-110 40"/>
-          <circle class="d-fill" cx="950" cy="85" r="38"/>
-          <path class="d-strong" d="M950 85m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0M950 81c-2-12 2-22 12-24-1 12-6 18-12 24M954 88c11 2 18 9 16 20-10-5-14-12-16-20M946 88c-8 8-18 10-25 3 8-6 16-6 25-3"/>
-          <text class="d-text d-mid" x="950" y="150">Cooling</text>
-          <!-- fiber -->
-          <path class="d-flow" d="M830 250h250"/>
-          <text class="d-text" x="900" y="232">Fiber</text>
-          <text class="d-small" x="900" y="330">To the network</text>
-          <text class="d-small" x="900" y="350">and your users</text>
-        </svg>
+    <div class="tour reveal" data-tabs>
+      <figure class="diagram">
+        <div class="diagram-scroll">
+          <svg class="tour-svg" viewBox="0 0 1100 380" role="img" aria-labelledby="site-t">
+            <title id="site-t">Site layout: fuel supply feeds on-site generation, then power conditioning, then the AI hall with cooling, with fiber connecting the hall to the network</title>
+            <path class="d-soft" d="M0 300h1100"/>
+            <g class="t-g" data-stage="0">
+              <rect x="10" y="215" width="130" height="150" fill="transparent"/>
+              <path class="d-flow slow" d="M20 250h120"/>
+              <text class="d-text" x="20" y="232">Fuel</text>
+              <text class="d-small" x="20" y="330">Pipeline, gathering</text>
+              <text class="d-small" x="20" y="350">or landfill gas</text>
+            </g>
+            <g class="t-g" data-stage="1">
+              <rect class="d-fill" x="150" y="190" width="170" height="110"/>
+              <path class="d-line" d="M170 210h130M170 230h130M170 250h130M170 270h130"/>
+              <rect class="d-fill" x="190" y="160" width="20" height="30"/><rect class="d-fill" x="260" y="160" width="20" height="30"/>
+              <text class="d-text d-mid" x="235" y="330">Generation</text>
+              <text class="d-small d-mid" x="235" y="350">On site, with backup</text>
+            </g>
+            <path class="d-flow" d="M320 245h70"/>
+            <g class="t-g" data-stage="2">
+              <rect class="d-fill" x="390" y="210" width="110" height="90"/>
+              <path class="d-strong" d="M440 230l-12 22h12l-6 22 16-28h-12l6-16z"/>
+              <text class="d-text d-mid" x="445" y="330">Power</text>
+              <text class="d-small d-mid" x="445" y="350">Switchgear, UPS</text>
+            </g>
+            <path class="d-flow" d="M500 245h70"/>
+            <g class="t-g" data-stage="3">
+              <path class="d-fill" d="M570 300V140l130-50 130 50v160z"/>
+              <g class="d-line">
+                <rect x="600" y="180" width="34" height="110"/><rect x="650" y="180" width="34" height="110"/><rect x="700" y="180" width="34" height="110"/><rect x="750" y="180" width="34" height="110"/>
+                <path d="M600 200h34M600 220h34M600 240h34M600 260h34M650 200h34M650 220h34M650 240h34M650 260h34M700 200h34M700 220h34M700 240h34M700 260h34M750 200h34M750 220h34M750 240h34M750 260h34"/>
+              </g>
+              <text class="d-text d-mid" x="700" y="330">AI hall</text>
+              <text class="d-small d-mid" x="700" y="350">Your hardware</text>
+            </g>
+            <g class="t-g" data-stage="4">
+              <rect x="790" y="40" width="200" height="120" fill="transparent"/>
+              <path class="d-flow slow" d="M790 120c60 0 60-50 120-50"/>
+              <path class="d-flow slow" d="M910 100c-50 0-50 40-110 40"/>
+              <circle class="d-fill" cx="950" cy="85" r="38"/>
+              <path class="d-strong" d="M950 85m-4 0a4 4 0 1 0 8 0a4 4 0 1 0-8 0M950 81c-2-12 2-22 12-24-1 12-6 18-12 24M954 88c11 2 18 9 16 20-10-5-14-12-16-20M946 88c-8 8-18 10-25 3 8-6 16-6 25-3"/>
+              <text class="d-text d-mid" x="950" y="150">Cooling</text>
+            </g>
+            <g class="t-g" data-stage="5">
+              <rect x="830" y="215" width="260" height="150" fill="transparent"/>
+              <path class="d-flow" d="M830 250h250"/>
+              <text class="d-text" x="900" y="232">Fiber</text>
+              <text class="d-small" x="900" y="330">To the network</text>
+              <text class="d-small" x="900" y="350">and your users</text>
+            </g>
+          </svg>
+        </div>
+      </figure>
+      <div class="tour-nav" role="tablist" aria-label="Parts of the site">
+        <button role="tab" id="tt-0" aria-controls="tp-0"><b>01</b>Fuel</button>
+        <button role="tab" id="tt-1" aria-controls="tp-1"><b>02</b>Generation</button>
+        <button role="tab" id="tt-2" aria-controls="tp-2"><b>03</b>Power</button>
+        <button role="tab" id="tt-3" aria-controls="tp-3"><b>04</b>AI hall</button>
+        <button role="tab" id="tt-4" aria-controls="tp-4"><b>05</b>Cooling</button>
+        <button role="tab" id="tt-5" aria-controls="tp-5"><b>06</b>Fiber</button>
       </div>
-      <figcaption>Simplified, illustrative layout. Each site is designed to the tenant's requirements.</figcaption>
-    </figure>
+      <div class="tour-panels">
+        <div class="tour-panel" role="tabpanel" id="tp-0" aria-labelledby="tt-0">
+          <div><h3>Fuel arrives at the fence line</h3><span class="owner">Accretion runs it</span></div>
+          <div><p>Gas reaches the site from a pipeline, a producer's gathering system or a landfill's collection system. It is metered at the boundary and cleaned up before it reaches the engines.</p>
+            <ul class="ticks"><li>Supply agreements that run for the length of your lease</li><li>Metering, filtering and conditioning on site</li><li>A second supply path wherever the site allows it</li></ul></div>
+        </div>
+        <div class="tour-panel" role="tabpanel" id="tp-1" aria-labelledby="tt-1" hidden>
+          <div><h3>Generation on site, behind the meter</h3><span class="owner">Accretion runs it</span></div>
+          <div><p>Engines or turbines turn the gas into electricity a short walk from your racks. The plant is sized to your load, with more units than the load needs so any one can be serviced while the rest carry it.</p>
+            <ul class="ticks"><li>No wait in a utility interconnection queue</li><li>Spare units designed in for maintenance</li><li>Room to add units as your deployment grows</li></ul></div>
+        </div>
+        <div class="tour-panel" role="tabpanel" id="tp-2" aria-labelledby="tt-2" hidden>
+          <div><h3>Power, conditioned and protected</h3><span class="owner">Accretion runs it</span></div>
+          <div><p>Switchgear, transformers and uninterruptible power supplies turn raw generation into clean, steady power, then carry it to the hall on feeds designed for your rack layout.</p>
+            <ul class="ticks"><li>Switchgear and transformers sized to the site</li><li>UPS to ride through any switchover</li><li>Feeds to the rack, matched to your power design</li></ul></div>
+        </div>
+        <div class="tour-panel" role="tabpanel" id="tp-3" aria-labelledby="tt-3" hidden>
+          <div><h3>A hall built around your hardware</h3><span class="owner you">You run what is inside your racks</span></div>
+          <div><p>The hall is designed to your density, layout and cooling method, from the floor loading to the containment. You install and run your hardware; we run the building around it.</p>
+            <ul class="ticks"><li>Layout and density set by your deployment</li><li>Secure, controlled physical access</li><li>On-site staff and remote hands</li></ul></div>
+        </div>
+        <div class="tour-panel" role="tabpanel" id="tp-4" aria-labelledby="tt-4" hidden>
+          <div><h3>Heat out, at the density AI makes</h3><span class="owner">Accretion runs it</span></div>
+          <div><p>Heat leaves the hall through air handling, liquid loops or both, and is rejected outside. The cooling plant is designed for the heat your racks will actually make.</p>
+            <ul class="ticks"><li>Air, rear-door or direct-to-chip liquid cooling</li><li>Liquid loops to the rack for dense accelerators</li><li>Designed to your hardware's heat split</li></ul></div>
+        </div>
+        <div class="tour-panel" role="tabpanel" id="tp-5" aria-labelledby="tt-5" hidden>
+          <div><h3>Fiber to the network and your users</h3><span class="owner">Accretion runs the routes</span></div>
+          <div><p>Sites are chosen with fiber in reach. Routes come into the site, and cross-connects carry them to your racks, so data moves as freely as the power does.</p>
+            <ul class="ticks"><li>Fiber routes to the site</li><li>Cross-connects to your racks</li><li>You choose your carriers and network design</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <p class="diagram" style="margin-top:28px"><span class="dim" style="font-size:14px;letter-spacing:.04em">Simplified, illustrative layout. Each site is designed to the tenant's requirements.</span></p>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="dens-h">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Density</p>
+        <h2 id="dens-h" class="reveal">Built for the heat AI makes</h2>
+        <p class="dim reveal d1">An AI rack can draw many times the power of a conventional one, and nearly all of that power ends up as heat. Halls designed for yesterday's racks cannot simply be filled with today's. We design power and cooling around the hardware you will actually run.</p>
+      </div>
+      <div class="dens reveal d1">
+        <div class="dens-row">
+          <header><span>Conventional server rack</span><b>3 to 5 kW</b></header>
+          <div class="dens-bar lo"><span></span></div>
+        </div>
+        <div class="dens-row">
+          <header><span>Present-day GPU rack</span><b>Up to about 120 kW</b></header>
+          <div class="dens-bar hi"><span></span></div>
+        </div>
+        <p class="dens-note">Figures from Lawrence Berkeley National Laboratory and a 2025 Pacific Northwest National Laboratory report for the US Department of Energy. More in our <a href="/guides/liquid-cooling-for-ai-data-centers">guide to liquid cooling</a>.</p>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:clamp(56px,7vw,88px)">
+      <div class="card cool-card reveal">
+        <svg viewBox="0 0 240 150" aria-hidden="true">
+          <rect class="d-fill" x="90" y="18" width="60" height="114"/>
+          <path class="d-line" d="M98 36h44M98 54h44M98 72h44M98 90h44M98 108h44"/>
+          <path class="cv-air" d="M8 45h74M8 75h74M8 105h74"/>
+          <path class="cv-hot" d="M158 45c20 0 20-8 40-8s20 8 34 8M158 75c20 0 20-8 40-8s20 8 34 8M158 105c20 0 20-8 40-8s20 8 34 8"/>
+          <text class="d-small" x="8" y="146">Cold air in</text><text class="d-small" x="170" y="146">Hot air out</text>
+        </svg>
+        <h3>Air</h3>
+        <p>Cold air through the front of the rack, hot air out the back, kept apart by containment. Simple and familiar.</p>
+        <span class="tag">Suits lower-density racks and the parts of an AI rack liquid does not reach</span>
+      </div>
+      <div class="card cool-card reveal d1">
+        <svg viewBox="0 0 240 150" aria-hidden="true">
+          <rect class="d-fill" x="70" y="18" width="60" height="114"/>
+          <path class="d-line" d="M78 36h44M78 54h44M78 72h44M78 90h44M78 108h44"/>
+          <rect class="d-fill" x="134" y="18" width="12" height="114"/>
+          <path class="d-line" d="M134 30h12M134 42h12M134 54h12M134 66h12M134 78h12M134 90h12M134 102h12M134 114h12"/>
+          <path class="cv-air" d="M8 45h54M8 75h54M8 105h54M152 45h74M152 75h74M152 105h74"/>
+          <path class="cv-liq" d="M140 18V6h96M236 144H140v-12"/>
+          <text class="d-small" x="8" y="146">Air in</text><text class="d-small" x="160" y="34">Water loop</text>
+        </svg>
+        <h3>Rear-door</h3>
+        <p>A water-cooled coil on the back of the rack takes the heat out of the exhaust air before it reaches the room.</p>
+        <span class="tag">A middle path for denser racks that are still air-cooled</span>
+      </div>
+      <div class="card cool-card reveal d2">
+        <svg viewBox="0 0 240 150" aria-hidden="true">
+          <rect class="d-fill" x="60" y="18" width="110" height="114"/>
+          <rect class="d-line" x="70" y="30" width="90" height="22"/><rect class="d-line" x="70" y="64" width="90" height="22"/><rect class="d-line" x="70" y="98" width="90" height="22"/>
+          <rect class="d-fill" x="96" y="36" width="22" height="10"/><rect class="d-fill" x="96" y="70" width="22" height="10"/><rect class="d-fill" x="96" y="104" width="22" height="10"/>
+          <path class="cv-liq" d="M200 8v122M200 41h-82M200 75h-82M200 109h-82"/>
+          <path class="cv-hot" d="M20 60h32M20 90h32"/>
+          <text class="d-small" x="186" y="148" text-anchor="middle">Coolant</text><text class="d-small" x="78" y="148">Cold plates</text>
+        </svg>
+        <h3>Direct-to-chip</h3>
+        <p>Liquid runs through cold plates on the processors and carries most of the heat away. Air handles what is left.</p>
+        <span class="tag">Built for the densest accelerators</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band mist dark" aria-labelledby="who-h">
+  <div class="wrap narrow">
+    <div class="head-block">
+      <p class="eyebrow">Who does what</p>
+      <h2 id="who-h" class="reveal">A clear line between our work and yours</h2>
+      <p class="lede reveal d1">We run everything up to your rack. You run everything inside it.</p>
+    </div>
+    <div class="reveal">
+      <table class="split-tbl">
+        <thead><tr><th scope="col">Responsibility</th><th scope="col">Accretion</th><th scope="col">You</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">Energy and power</td></tr>
+          <tr><td>Fuel supply and supply agreements</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>On-site generation and spare units</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>Switchgear, transformers and UPS</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>Power feeds to the rack</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr class="grp"><td colspan="3">Building and cooling</td></tr>
+          <tr><td>Hall, physical security and access</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>Cooling plant and loops to the rack</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>On-site staff and remote hands</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr class="grp"><td colspan="3">Network</td></tr>
+          <tr><td>Fiber routes to the site and cross-connects</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>Carriers and network design</td><td></td><td><span class="mk o" aria-label="You"></span></td></tr>
+          <tr class="grp"><td colspan="3">Compute</td></tr>
+          <tr><td>Servers, accelerators and storage</td><td></td><td><span class="mk o" aria-label="You"></span></td></tr>
+          <tr><td>Software, workloads and data</td><td></td><td><span class="mk o" aria-label="You"></span></td></tr>
+        </tbody>
+      </table>
+      <p class="split-key"><span><i class="mk"></i>Accretion</span><span><i class="mk o"></i>You</span><span>A typical split. The exact line is agreed in each contract.</span></p>
+    </div>
   </div>
 </section>
 
@@ -91,10 +245,14 @@
       <h2 id="how-h" class="reveal">From first call to running workloads</h2>
     </div>
     <ol class="steps">
-      <li class="reveal"><h3>Requirements</h3><p>Power, density, cooling, location and timeline. We start with what your deployment needs.</p></li>
-      <li class="reveal d1"><h3>Site match</h3><p>We match your requirements to sites in our pipeline where energy, land and fiber line up.</p></li>
-      <li class="reveal d2"><h3>Build to spec</h3><p>We design and build the hall, power and cooling to your specification.</p></li>
-      <li class="reveal d3"><h3>Operate</h3><p>Our team runs the site day to day. You run your workloads.</p></li>
+      <li class="reveal"><h3>Requirements</h3><p>Power, density, cooling, location and timeline. We start with what your deployment needs.</p>
+        <ul class="io"><li class="you">You share your hardware plan and timeline</li><li>We map it to power and cooling needs</li></ul></li>
+      <li class="reveal d1"><h3>Site match</h3><p>We match your requirements to sites in our pipeline where energy, land and fiber line up.</p>
+        <ul class="io"><li>We propose a site with a dated plan</li><li class="you">You review the site and the terms</li></ul></li>
+      <li class="reveal d2"><h3>Build to spec</h3><p>We design and build the hall, power and cooling to your specification.</p>
+        <ul class="io"><li>We build and commission the site</li><li class="you">You sign off the design and install your hardware</li></ul></li>
+      <li class="reveal d3"><h3>Operate</h3><p>Our team runs the site day to day. You run your workloads.</p>
+        <ul class="io"><li>We run power, cooling and the building</li><li class="you">You run your hardware and workloads</li></ul></li>
     </ol>
   </div>
 </section>
@@ -122,6 +280,22 @@
         <p>Halls designed around your density and layout, with room to expand on the same site.</p>
       </div>
     </div>
+    <div class="split" style="margin-top:clamp(64px,8vw,104px)">
+      <div>
+        <p class="eyebrow">In every proposal</p>
+        <h3 class="reveal" style="font:300 clamp(22px,2.6vw,30px)/1.25 var(--display);font-stretch:125%;letter-spacing:.02em;text-transform:none">What you will see before you commit</h3>
+      </div>
+      <ul class="ticks cols2 reveal d1">
+        <li>The site, its energy source and its supply terms</li>
+        <li>Power available to you, and the date it is ready</li>
+        <li>The hall design for your density and layout</li>
+        <li>The cooling method and how it is sized</li>
+        <li>Redundancy design and service levels</li>
+        <li>Fiber routes and connection options</li>
+        <li>Price per kW and how energy is billed</li>
+        <li>Term, renewal and room to expand</li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -143,15 +317,27 @@
         <p>We are evaluating sites in Canada and the United States where firm energy, fiber and land come together. See <a href="sites.html">how we choose sites</a>.</p>
       </details>
       <details>
+        <summary>How much power can a site provide?</summary>
+        <p>Each site is sized to its energy supply and to the tenant's needs. We share figures for a specific site once it is matched to your requirements, not before.</p>
+      </details>
+      <details>
+        <summary>How long until power is ready?</summary>
+        <p>It depends on the site and the build. Each proposal includes a dated plan. Generating on site means we do not wait in a utility interconnection queue, which is often the longest step for a grid-connected build. See <a href="/guides/how-long-does-it-take-to-build-a-data-center">how long a data center takes to build</a>.</p>
+      </details>
+      <details>
         <summary>What uptime and redundancy will you offer?</summary>
         <p>Each site's design, redundancy and service levels are set out in its contract before you commit. We do not publish figures for sites that are not yet built.</p>
       </details>
       <details>
         <summary>Can you support liquid cooling?</summary>
-        <p>Yes. Halls are designed to the tenant's specification, including liquid cooling for high-density accelerators.</p>
+        <p>Yes. Halls are designed to the tenant's specification, including direct-to-chip liquid cooling for high-density accelerators.</p>
+      </details>
+      <details>
+        <summary>Can we expand later?</summary>
+        <p>Yes. We look for sites with room to grow, in both energy and land, and expansion rights can be written into the lease.</p>
       </details>
     </div>
-    <p class="guide-links">Guides: <a href="/guides/gpu-colocation">GPU colocation</a> · <a href="/guides/how-much-power-does-a-data-center-use">How much power a data center uses</a> · <a href="/guides/how-long-does-it-take-to-build-a-data-center">How long a data center takes to build</a></p>
+    <p class="guide-links">Guides: <a href="/guides/gpu-colocation">GPU colocation</a> · <a href="/guides/how-much-power-does-a-data-center-use">How much power a data center uses</a> · <a href="/guides/how-long-does-it-take-to-build-a-data-center">How long a data center takes to build</a> · <a href="/guides/liquid-cooling-for-ai-data-centers">Liquid cooling for AI data centers</a></p>
   </div>
 </section>
 

@@ -29,8 +29,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
   <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
-  <link rel="stylesheet" href="styles.css?v=b7f5bd0e">
-  <script src="site.js?v=b7f5bd0e" defer></script>
+  <link rel="stylesheet" href="styles.css?v=d69d1016">
+  <script src="site.js?v=d69d1016" defer></script>
 </head>
 <body class="page-energy">
   <a class="skip" href="#main">Skip to content</a>
@@ -105,6 +105,12 @@
     <p class="eyebrow">Energy</p>
     <h1>Power where it is produced</h1>
     <p class="lede">The fastest way to power AI is to go where the energy already is. We generate on site, behind the meter, from sources that can be relied on for years.</p>
+    <ul class="specs">
+      <li><small>Fuel</small><span>Pipeline, gathering-system and landfill gas</span></li>
+      <li><small>Generation</small><span>On site, behind the meter</span></li>
+      <li><small>Redundancy</small><span>Spare units and a second supply path</span></li>
+      <li><small>Supply terms</small><span>Matched to the length of the lease</span></li>
+    </ul>
   </div>
 </section>
 
@@ -123,38 +129,186 @@
   </div>
 </section>
 
-<section class="band mist" aria-labelledby="src-h">
+<section class="band dark" aria-labelledby="chain-h">
+  <div class="wrap">
+    <div class="head-block">
+      <p class="eyebrow">From molecule to megawatt</p>
+      <h2 id="chain-h" class="reveal">Every step between the gas and your racks</h2>
+      <p class="lede reveal d1">On a behind-the-meter site, the whole path from fuel to rack sits inside one fence, run by one team.</p>
+    </div>
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+        <svg viewBox="0 0 1100 230" role="img" aria-labelledby="chain-t">
+          <title id="chain-t">Gas enters the site, is conditioned, and fuels on-site generators. Their power passes through switchgear, transformers and UPS, then is distributed to the racks.</title>
+          <rect x="140" y="20" width="955" height="200" fill="none" class="d-line" stroke-dasharray="6 6"/>
+          <text class="d-small" x="152" y="40">One site</text>
+          <path class="ch-pipe" d="M10 120h160M240 120h50"/>
+          <path class="ch-gas" d="M10 120h160M240 120h50"/>
+          <text class="d-small" x="10" y="160">Gas in</text>
+          <rect class="d-fill" x="170" y="92" width="70" height="56"/>
+          <path class="d-line" d="M184 104v32M198 104v32M212 104v32M226 104v32"/>
+          <text class="d-small d-mid" x="205" y="178">Conditioning</text>
+          <rect class="d-fill" x="290" y="72" width="150" height="96"/>
+          <path class="d-line" d="M306 92h118M306 108h118M306 124h118M306 140h118"/>
+          <rect class="d-fill" x="310" y="54" width="16" height="18"/><rect class="d-fill" x="394" y="54" width="16" height="18"/>
+          <text class="d-small d-mid" x="365" y="196">Generators</text>
+          <path class="ch-pow" d="M440 120h70M570 120h50M680 120h60M800 120h60M920 120h40"/>
+          <rect class="d-fill" x="510" y="90" width="60" height="60"/>
+          <path class="d-line" d="M522 104h36M522 120h36M522 136h36"/>
+          <text class="d-small d-mid" x="540" y="178">Switchgear</text>
+          <circle class="d-line" cx="638" cy="120" r="18"/><circle class="d-line" cx="662" cy="120" r="18"/>
+          <text class="d-small d-mid" x="650" y="178">Transformers</text>
+          <rect class="d-fill" x="740" y="90" width="60" height="60"/>
+          <path class="d-strong" d="M772 100l-10 18h10l-5 18 13-22h-10l5-14z"/>
+          <text class="d-small d-mid" x="770" y="178">UPS</text>
+          <rect class="d-fill" x="860" y="100" width="60" height="40"/>
+          <path class="d-line" d="M872 112h36M872 128h36"/>
+          <text class="d-small d-mid" x="890" y="178">Distribution</text>
+          <g class="d-line">
+            <rect x="960" y="62" width="34" height="116"/><rect x="1004" y="62" width="34" height="116"/><rect x="1048" y="62" width="34" height="116"/>
+            <path d="M960 84h34M960 106h34M960 128h34M960 150h34M1004 84h34M1004 106h34M1004 128h34M1004 150h34M1048 84h34M1048 106h34M1048 128h34M1048 150h34"/>
+          </g>
+          <text class="d-small d-mid" x="1021" y="200">Your racks</text>
+        </svg>
+      </div>
+      <figcaption>Simplified and illustrative. Equipment and layout are designed for each site.</figcaption>
+    </figure>
+    <ol class="chain-steps">
+      <li class="reveal"><h3>Gas in</h3><p>Fuel arrives by pipeline or collection system and is metered at the fence.</p></li>
+      <li class="reveal d1"><h3>Conditioning</h3><p>Filtering and treatment bring the gas to the quality the engines need.</p></li>
+      <li class="reveal d2"><h3>Generators</h3><p>Engines or turbines turn the gas into electricity, with spare units on hand.</p></li>
+      <li class="reveal d3"><h3>Switchgear</h3><p>Protects the system and routes power between units and loads.</p></li>
+      <li class="reveal"><h3>Transformers</h3><p>Step the voltage to what the hall's equipment uses.</p></li>
+      <li class="reveal d1"><h3>UPS</h3><p>Batteries carry the load through any switchover, without a flicker.</p></li>
+      <li class="reveal d2"><h3>Distribution</h3><p>Feeds carry power across the hall to each row.</p></li>
+      <li class="reveal d3"><h3>Your racks</h3><p>Power arrives at your racks, matched to your power design.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="src-h">
   <div class="wrap">
     <div class="head-block">
       <p class="eyebrow">Sources</p>
       <h2 id="src-h" class="reveal">Energy we build on</h2>
+      <p class="lede reveal d1">Four kinds of site, each with its own strengths. What they share is supply that is steady, contracted and long-lived.</p>
     </div>
-    <div class="grid g4">
-      <div class="card reveal">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M2 26h40M2 18h40"/><circle cx="14" cy="22" r="7"/><path d="M14 15v14M30 12v20"/></svg>
-        <h3>Pipeline gas</h3>
-        <p>Sites near transmission or distribution pipelines with long-term supply.</p>
+    <div class="reveal" data-tabs>
+      <div class="tabs-nav" role="tablist" aria-label="Energy sources">
+        <button role="tab" id="st-0" aria-controls="sp-0">Pipeline gas</button>
+        <button role="tab" id="st-1" aria-controls="sp-1">Gathering-system gas</button>
+        <button role="tab" id="st-2" aria-controls="sp-2">Landfill gas</button>
+        <button role="tab" id="st-3" aria-controls="sp-3">Industrial sites</button>
       </div>
-      <div class="card reveal d1">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M6 38V22M22 38V14M38 38V24M6 22h16M22 14l16 10"/><circle cx="6" cy="22" r="3"/><circle cx="22" cy="14" r="3"/><circle cx="38" cy="24" r="3"/></svg>
-        <h3>Gathering-system gas</h3>
-        <p>Gas from producer gathering networks, with backup supply built in.</p>
+      <div class="tab-panel" role="tabpanel" id="sp-0" aria-labelledby="st-0">
+        <svg viewBox="0 0 480 260" aria-hidden="true">
+          <path class="ch-pipe" d="M0 80h480"/><path class="ch-gas" d="M0 80h480"/>
+          <text class="d-small" x="0" y="50">Transmission pipeline</text>
+          <rect class="d-fill" x="150" y="96" width="40" height="40"/><circle class="d-line" cx="170" cy="116" r="10"/>
+          <text class="d-small" x="200" y="122">Meter and tap</text>
+          <path class="ch-pipe" d="M170 136v54h70"/><path class="ch-gas" d="M170 136v54h70"/>
+          <rect class="d-fill" x="240" y="160" width="90" height="60"/>
+          <path class="d-line" d="M252 176h66M252 190h66M252 204h66"/>
+          <path class="ch-pow" d="M330 190h40"/>
+          <path class="d-fill" d="M370 230v-62l45-18 45 18v62z"/>
+          <text class="d-small" x="240" y="250">Generation</text><text class="d-small" x="380" y="250">AI hall</text>
+        </svg>
+        <div>
+          <h3>Pipeline gas</h3>
+          <p>Sites near transmission or distribution pipelines, with a tap and meter station feeding on-site generation. Pipelines carry gas from many producers, so supply does not hang on any one well.</p>
+          <ul class="ticks"><li>Pipeline capacity available at the site</li><li>Long-term supply and transport agreements</li><li>Fiber and land within reach</li></ul>
+        </div>
       </div>
-      <div class="card reveal d2">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M2 38c8-14 14-20 20-20s12 6 20 20z"/><path d="M22 18V8M18 10l4-4 4 4"/></svg>
-        <h3>Landfill gas</h3>
-        <p>Steady methane from landfills, captured and used to generate power on site.</p>
+      <div class="tab-panel" role="tabpanel" id="sp-1" aria-labelledby="st-1">
+        <svg viewBox="0 0 480 260" aria-hidden="true">
+          <g class="d-line">
+            <path d="M30 120V70M22 70h16M90 140V90M82 90h16M150 110V60M142 60h16"/>
+          </g>
+          <path class="ch-pipe" d="M30 120v40h300M90 140v20M150 110v50"/><path class="ch-gas" d="M30 120v40h300M90 140v20M150 110v50"/>
+          <text class="d-small" x="10" y="40">Wells</text>
+          <text class="d-small" x="180" y="148">Gathering line</text>
+          <path class="ch-pipe" d="M200 220h130" stroke-dasharray="2 10"/>
+          <text class="d-small" x="200" y="246">Backup supply</text>
+          <rect class="d-fill" x="330" y="130" width="70" height="56"/>
+          <path class="d-line" d="M342 146h46M342 160h46M342 174h46"/>
+          <path class="ch-pow" d="M400 158h20"/>
+          <path class="d-fill" d="M420 200v-52l30-12 30 12v52z"/>
+        </svg>
+        <div>
+          <h3>Gathering-system gas</h3>
+          <p>Gas from a producer's gathering network, taken near the wells before it reaches a processing plant. We look for systems with steady volumes and build a second supply path into the design.</p>
+          <ul class="ticks"><li>Steady, documented production volumes</li><li>A backup supply path from the start</li><li>A producer looking for a long-term buyer</li></ul>
+        </div>
       </div>
-      <div class="card reveal d3">
-        <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M4 40V20l10 6v-6l10 6v-6l10 6V6h6v34z"/><path d="M4 40h36"/></svg>
-        <h3>Industrial sites</h3>
-        <p>Existing industrial sites where power, permits and infrastructure are already in place.</p>
+      <div class="tab-panel" role="tabpanel" id="sp-2" aria-labelledby="st-2">
+        <svg viewBox="0 0 480 260" aria-hidden="true">
+          <path class="d-fill" d="M0 200c50-90 110-120 160-120s110 30 160 120z"/>
+          <path class="d-line" d="M90 200V120M160 200V96M230 200V120"/>
+          <path class="d-rise" d="M90 120V60M160 96V36M230 120V60"/>
+          <text class="d-small" x="40" y="236">Collection wells in the landfill</text>
+          <path class="ch-pipe" d="M90 200v20h270M160 200v20M230 200v20"/><path class="ch-gas" d="M90 200v20h270M160 200v20M230 200v20"/>
+          <rect class="d-fill" x="340" y="150" width="60" height="50"/>
+          <path class="d-line" d="M350 164h40M350 178h40"/>
+          <path class="ch-pow" d="M400 175h20"/>
+          <path class="d-fill" d="M420 210v-52l28-12 28 12v52z"/>
+        </svg>
+        <div>
+          <h3>Landfill gas</h3>
+          <p>Decomposing waste gives off methane for decades. Collection wells capture it and feed engines on site, turning a gas that would otherwise be flared or vented into power.</p>
+          <ul class="ticks"><li>An established collection system</li><li>Gas flow that can be measured and forecast</li><li>A landfill operator looking for steady use of its gas</li></ul>
+        </div>
+      </div>
+      <div class="tab-panel" role="tabpanel" id="sp-3" aria-labelledby="st-3">
+        <svg viewBox="0 0 480 260" aria-hidden="true">
+          <path class="d-fill" d="M10 220V130l50 30v-30l50 30v-30l50 30V60h30v160z"/>
+          <path class="d-rise" d="M175 60V10"/>
+          <text class="d-small" x="10" y="246">Existing industrial site</text>
+          <g class="d-line"><path d="M250 220V140M290 220V140M240 150h60M245 170h50"/></g>
+          <text class="d-small" x="230" y="246">Power in place</text>
+          <path class="ch-pow" d="M300 180h60"/>
+          <path class="d-fill" d="M360 220v-60l50-20 50 20v60z"/>
+          <text class="d-small" x="370" y="246">AI hall</text>
+        </svg>
+        <div>
+          <h3>Industrial sites</h3>
+          <p>Existing or former industrial sites where power infrastructure, permits and land are already in place. Reusing them can save years compared with starting from an empty field.</p>
+          <ul class="ticks"><li>Electrical infrastructure already on site</li><li>Land zoned for industrial use</li><li>Room to add generation and halls</li></ul>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="band dark" aria-labelledby="btm-h">
+<section class="band dark" aria-labelledby="np-h">
+  <div class="wrap">
+    <div class="np" data-np>
+      <div>
+        <p class="eyebrow">Spare generation</p>
+        <h2 id="np-h" class="reveal">Maintenance without downtime</h2>
+        <p class="lede reveal d1">Every engine needs servicing. So we install more generating units than the load needs.</p>
+        <p class="dim reveal d2">When one unit comes out for service, the others carry the full load, and your racks never notice. The same spare capacity covers an unexpected fault.</p>
+      </div>
+      <div class="reveal d1">
+        <div class="np-units">
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+          <div class="np-u"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><g class="fan"><path d="M20 20c-2-8 0-13 6-14 0 7-2 11-6 14M20 20c8 1 12 5 10 11-6-3-9-6-10-11M20 20c-6 6-11 6-15 2 5-4 10-4 15-2"/></g></svg><small>Service</small></div>
+        </div>
+        <div class="np-load">
+          <header><span>Your load</span><span>Fully met</span></header>
+          <div class="np-bar"><span></span></div>
+          <header style="margin-top:10px"><span data-np-note aria-live="off">All units running</span><span>5 units needed, 6 installed</span></header>
+        </div>
+        <p class="dim" style="font-size:14px;margin-top:20px">Illustrative. The number of units and the redundancy design are set for each site and written into its contract.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="btm-h">
   <div class="wrap">
     <div class="head-block">
       <p class="eyebrow">Behind the meter</p>
@@ -197,11 +351,16 @@
       </div>
       <figcaption>Simplified and illustrative. Some sites may also connect to the grid for backup or export.</figcaption>
     </figure>
-    <p class="guide-links reveal">Guides: <a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers</a> · <a href="/guides/gas-powered-data-centers">Gas-powered data centers</a></p>
+    <div class="grid g3" style="margin-top:clamp(48px,6vw,72px)">
+      <div class="card reveal"><h3>No queue to wait in</h3><p>Grid connections for large loads can take years to approve and build. On-site generation does not wait for one.</p></div>
+      <div class="card reveal d1"><h3>Fewer steps to fail</h3><p>No long-distance lines between the plant and the load. Generation, power and the hall are run by one team on one site.</p></div>
+      <div class="card reveal d2"><h3>Costs you can see</h3><p>Energy is billed from the site's own supply, separately and transparently, rather than through a utility tariff.</p></div>
+    </div>
+    <p class="guide-links reveal">Guides: <a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers</a> · <a href="/guides/gas-powered-data-centers">Gas-powered data centers</a> · <a href="/guides/data-center-interconnection-queue">The interconnection queue</a></p>
   </div>
 </section>
 
-<section class="band" aria-labelledby="sec-h">
+<section class="band mist dark" aria-labelledby="sec-h">
   <div class="wrap">
     <div class="head-block">
       <p class="eyebrow">Securing supply</p>
@@ -213,6 +372,55 @@
       <li class="reveal d2"><h3>Backup fuel</h3><p>A second supply path, such as pipeline or gathering-system backup, wherever possible.</p></li>
       <li class="reveal d3"><h3>Aligned interests</h3><p>Producers gain a steady, long-term buyer. Tenants gain power they can plan around.</p></li>
     </ol>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="ep-h">
+  <div class="wrap">
+    <div class="head-block">
+      <p class="eyebrow">For energy partners</p>
+      <h2 id="ep-h" class="reveal">Have gas, land or an industrial site?</h2>
+      <p class="lede reveal d1">Producers, landfill operators and landowners can turn steady energy and land into a long-term partnership.</p>
+    </div>
+    <div class="grid g3">
+      <a class="card reveal" href="partners"><h3>Partner with us</h3><p>How partnerships work, and what producers and landowners gain from them.</p><span class="link">Partners <span class="arrow"></span></span></a>
+      <a class="card reveal d1" href="site-check"><h3>Check a site</h3><p>A quick first look at whether a site could suit an AI data center.</p><span class="link">Site check <span class="arrow"></span></span></a>
+      <a class="card reveal d2" href="submit-a-site"><h3>Submit a site</h3><p>Send us the details of your gas supply, landfill or land.</p><span class="link">Submit a site <span class="arrow"></span></span></a>
+    </div>
+  </div>
+</section>
+
+<section class="band mist" aria-labelledby="efaq-h">
+  <div class="wrap narrow">
+    <p class="eyebrow">Questions</p>
+    <h2 id="efaq-h">Energy FAQ</h2>
+    <div class="faq">
+      <details>
+        <summary>What does behind the meter mean?</summary>
+        <p>The power is generated on the same site where it is used, instead of being bought from a utility over the grid. See <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a>.</p>
+      </details>
+      <details>
+        <summary>Why gas?</summary>
+        <p>Gas can be delivered steadily, around the clock, and stored and backed up on site, which suits loads that run continuously. Generating from it on site avoids waiting for a grid connection. See <a href="/guides/gas-powered-data-centers">gas-powered data centers</a>.</p>
+      </details>
+      <details>
+        <summary>Why not flare gas?</summary>
+        <p>Flare gas often comes from wells whose output falls over time or stops without warning. AI tenants need power for years, so we build on supply that is steady and contracted for the length of the lease.</p>
+      </details>
+      <details>
+        <summary>What happens if a generator fails?</summary>
+        <p>Sites are designed with more generating units than the load needs, plus UPS batteries to ride through any switchover. The exact redundancy design for each site is set out in its contract.</p>
+      </details>
+      <details>
+        <summary>Will sites connect to the grid?</summary>
+        <p>Some may, for backup or to export spare power, where it makes sense for the site. The core design does not depend on it.</p>
+      </details>
+      <details>
+        <summary>How is energy billed?</summary>
+        <p>Capacity is priced per kW per month. Energy is billed separately and transparently, from the site's own supply.</p>
+      </details>
+    </div>
+    <p class="guide-links">Guides: <a href="/guides/how-are-data-centers-powered">How data centers are powered</a> · <a href="/guides/landfill-gas-to-energy">Landfill gas to energy</a> · <a href="/guides/what-is-stranded-gas">What is stranded gas</a> · <a href="/guides/data-center-electricity-costs">Data center electricity costs</a></p>
   </div>
 </section>
 
