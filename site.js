@@ -626,6 +626,24 @@ var acSymbol = (function () {
   // where canvas blur does not work (see acCanBlur) the soft glow passes are skipped, not drawn hard
   var BLUR = acCanBlur;
   var fx = art.querySelector(".cb-fx"), fctx = fx && fx.getContext && fx.getContext("2d");
+  // Phones draw every line of the story finer (map, stack and black hole): a line width set anywhere on these
+  // canvases is scaled down while the section is phone-sized.
+  var PHONE_LW = 0.6;
+  [ctx, fctx].forEach(function (c) {
+    if (!c) return;
+    var d = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, "lineWidth");
+    if (!d || !d.set) return;
+    Object.defineProperty(c, "lineWidth", { configurable: true,
+      get: function () { return d.get.call(this) / (phone ? PHONE_LW : 1); },
+      set: function (v) { d.set.call(this, v * (phone ? PHONE_LW : 1)); } });
+    // a thinner line gives off less light, so each line is drawn that much stronger: finer, not darker
+    var stroke = c.stroke;
+    c.stroke = function () {
+      if (!phone || this.filter && this.filter !== "none") return stroke.apply(this, arguments);
+      var a = this.globalAlpha; this.globalAlpha = Math.min(1, a / PHONE_LW);
+      stroke.apply(this, arguments); this.globalAlpha = a;
+    };
+  });
   var holeBox = art.querySelector(".cb-hole");
   var slides = sec.querySelectorAll(".mz-slide");
   var ticks = sec.querySelectorAll(".mz-rail li");
@@ -1432,7 +1450,7 @@ var acSymbol = (function () {
     var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;
     // the camera makes room for the black hole while the hall rises, so step 04 never has to jump back
     var topCam = Y2 + 0.27 * (1 - a4) + (G + HOLE_LIFT + 0.2) * smoother((p - 0.68) / 0.2);
-    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34));
+    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34)) * (phone ? 1.25 : 1); // the stack is drawn larger on phones
     var pitch = (90 - 60 * tilt) * Math.PI / 180, yaw = yawAt(p) * Math.PI / 180;
     cam.sp = Math.sin(pitch); cam.cp = Math.cos(pitch); cam.sF = Math.sin(yaw); cam.cF = Math.cos(yaw);
     cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.52 : 0.53), tilt);
@@ -2180,7 +2198,10 @@ var acSymbol = (function () {
       c.fillRect(cx + R * Math.cos(t) - s / 2, cy + R * Math.sin(t) - s / 2, s, s);
     }
   }
+  // phones draw the grains finer: the hole is small there, so full-size grains read as coarse
+  var FINE = small ? 0.55 : 1;
   function dot(st, p, s, a) {
+    s *= FINE;
     var c = p.z > 0 ? st.b : st.f, n = p.m > 1.6 ? Math.min(7, Math.round(p.m / 1.4)) : 1, len = s * Math.min(p.m, 16) * 1.6;
     if (n === 1) { c.globalAlpha = Math.min(1, a); c.fillRect(p.x - s / 2, p.y - s / 2, s, s); }
     else along(c, st.cx, st.cy, p.R1, p.a1, n, len, s, a);
@@ -2304,7 +2325,7 @@ var acSymbol = (function () {
           var fade = Math.min(1, f.age / 1.2);
           for (var k = 1; k < f.trail.length; k++) {
             var q = f.trail[k], q0 = f.trail[k - 1], c = q.z > 0 ? st.b : st.f;
-            c.globalAlpha = f.o * fade * (k / f.trail.length) * 0.5; c.lineWidth = 1;
+            c.globalAlpha = f.o * fade * (k / f.trail.length) * 0.5; c.lineWidth = FINE;
             c.beginPath(); c.moveTo(q0.x, q0.y); c.lineTo(q.x, q.y); c.stroke();
           }
           dot(st, p, f.s + 0.4, f.o * fade);
