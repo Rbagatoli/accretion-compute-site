@@ -216,7 +216,7 @@ var acSymbol = (function () {
     // The accretion disk (horizon lines and the grains on them) is kept dim so it sits behind the logo.
     var DISK = 0.5;
     // The orbiting grains and the particles falling in are a little brighter than the lines.
-    var SPARK = 1.3;
+    var SPARK = 1.7;
     var w, h, cx, cy, S, E, ink, on = false, last = 0, energy = 0, halo, core, glows;
     // The visitor's pointer acts as a small second mass; clicks make the core flare.
     var ptr = { x: 0, y: 0, tx: 0, ty: 0, inf: 0, want: 0 }, sym;
