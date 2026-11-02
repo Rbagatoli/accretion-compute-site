@@ -489,6 +489,11 @@ a.card:hover { border-color: var(--fg-strong); transform: translateY(-3px); }
 .cta .lede { margin: 0 auto; color: var(--fg-dim); }
 .cta .actions { justify-content: center; }
 .cta-disk { position: absolute; left: 50%; top: 50%; width: min(1100px, 160vw); transform: translate(-50%, -50%); z-index: -1; pointer-events: none; }
+/* white theme, phones: the soft glow reads as a grey smudge behind the text on white, so drop it (and the soft dot at the centre) */
+@media (max-width: 720px) {
+  [data-theme="light"] .cta-disk svg > circle { display: none; }
+  [data-theme="light"] .cta-disk .pulse circle:first-of-type { display: none; }
+}
 
 /* ---------- Ion Group strip ---------- */
 .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0; text-align: center; color: var(--fg-dim); margin: 0; }
