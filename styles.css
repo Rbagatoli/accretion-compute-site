@@ -24,6 +24,9 @@
   --aura: 11, 12, 14; /* the ink card glows are made of */
 
   --platinum: linear-gradient(135deg, #ffffff 0%, #b9bdc4 20%, #f3f4f6 40%, #8e939b 60%, #e6e8eb 80%, #a9adb4 100%);
+  /* Headings: brushed metal. Platinum on black, a dark graphite version on white. */
+  --graphite-metal: linear-gradient(135deg, #0b0c0e 0%, #4a4e55 22%, #16181b 42%, #5f636b 62%, #1f2125 82%, #3f434a 100%);
+  --metal: var(--graphite-metal);
   --head: "Michroma", "Eurostile", Arial, sans-serif;
   /* Large headings: thin, wide and squared, to echo the wordmark */
   --display: "Saira", "Michroma", Arial, sans-serif;
@@ -46,6 +49,7 @@
   --line: rgba(232, 234, 237, 0.14);
   --line-soft: rgba(232, 234, 237, 0.07);
   --aura: 243, 244, 246;
+  --metal: var(--platinum);
   --bar-bg: rgba(5, 5, 6, 0.94);
   background: var(--bg);
   color: var(--fg);
@@ -58,6 +62,7 @@
   --fg-dim: var(--graphite-2);
   --line: rgba(11, 12, 14, 0.12);
   --line-soft: rgba(11, 12, 14, 0.07);
+  --metal: var(--graphite-metal);
   --aura: 11, 12, 14;
   --bar-bg: rgba(255, 255, 255, 0.96);
   background: var(--bg);
@@ -190,6 +195,8 @@ p { margin: 0 0 16px; }
 }
 .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; opacity: 0.6; }
 h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 400; margin: 0; text-wrap: balance; }
+h1, h2, h3 { background: var(--metal); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.foot-nav h2 { background: none; color: var(--fg-strong); }
 h1 { font: 200 clamp(32px, 5.8vw, 66px)/1.1 var(--display); font-stretch: 125%; letter-spacing: 0.02em; margin-bottom: 28px; }
 h2 { font: 300 clamp(26px, 3.9vw, 44px)/1.18 var(--display); font-stretch: 125%; letter-spacing: 0.02em; margin-bottom: 24px; }
 h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
