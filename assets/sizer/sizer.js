@@ -653,23 +653,22 @@ applyTheme();
 /* ---------- render pipeline ---------- */
 applyTheme();
 
-// Wheel: zoom with Ctrl/Cmd (or a trackpad pinch), or after clicking the model; otherwise let the page scroll.
+// Wheel: zoom only with Ctrl/Cmd (or a trackpad pinch); otherwise the page scrolls, even after clicking the model.
 const hero = document.getElementById("hero"), heroCopy = document.getElementById("herocopy");
 const toastEl = document.getElementById("toast"); let toastT = 0;
 function toast(msg) { if (!toastEl) return; toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, 1400); }
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform || "");
-let engaged = false;
-renderer.domElement.addEventListener("pointerdown", () => { engaged = true; });
-stage.addEventListener("pointerleave", () => { engaged = false; }); document.getElementById("mini").addEventListener("pointerleave", () => { engaged = false; });
+let toldZoom = 0;
 renderer.domElement.addEventListener("wheel", e => {
-  if (e.ctrlKey || e.metaKey || engaged) return;
-  e.stopImmediatePropagation(); toast((isMac ? "⌘" : "Ctrl") + " + scroll to zoom, or click the model first");
+  if (e.ctrlKey || e.metaKey) return;
+  e.stopImmediatePropagation(); if (Date.now() - toldZoom > 6000) { toldZoom = Date.now(); toast((isMac ? "⌘" : "Ctrl") + " + scroll to zoom"); }
 }, { passive: true });
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableZoom = true; controls.enablePan = true; controls.screenSpacePanning = false;
 controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
-controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+controls.touches = { ONE: -1, TWO: THREE.TOUCH.DOLLY_PAN };
+renderer.domElement.style.touchAction = "pan-y"; // the controls set "none", which would stop the page scrolling
 controls.zoomSpeed = 1.1; controls.panSpeed = .9; controls.rotateSpeed = .8;
 controls.enableDamping = true; controls.dampingFactor = .07;
 controls.minPolarAngle = .12; controls.maxPolarAngle = 1.38; controls.minDistance = 5; controls.maxDistance = 900;
@@ -846,7 +845,7 @@ function frameInner() {
       pin.style.transform = "translate(" + ((v.x * .5 + .5) * VW).toFixed(1) + "px," + ((-v.y * .5 + .5) * VH).toFixed(1) + "px)"; });
   } else pins.forEach(({ pin }) => pin.classList.remove("on"));
   if (!SC.mode3d) { SC.mode3d = true; const iso = document.getElementById("iso"); if (iso) iso.style.display = "none"; window.__gl3d = true;
-    const c = document.getElementById("ctrls"), h = document.getElementById("hint"); if (c) c.hidden = false; if (h) h.hidden = false; ready = true; updateDock(); }
+    const c = document.getElementById("ctrls"), h = document.getElementById("hint"); if (c) c.hidden = false; if (h) { if (matchMedia("(pointer:coarse)").matches) h.textContent = "Two fingers to move or zoom · Tap a module to open it"; h.hidden = false; } ready = true; updateDock(); }
 }
 function pickModule() { let best = -1, bx = Infinity, bz = -Infinity;
   mpos.forEach((p, i) => { if (p[0] < bx - .1 || (Math.abs(p[0] - bx) < .1 && p[1] > bz)) { best = i; bx = p[0]; bz = p[1]; } }); return best; }

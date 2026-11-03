@@ -131,12 +131,17 @@ p { margin: 0 0 16px; }
 .nav .nav-cta::after { display: none; }
 .nav .nav-cta:hover, .nav .nav-cta[aria-current="page"] { background: var(--fg-strong); color: var(--bg); }
 .bar-toggle { display: none; }
-/* Eight menu items: a tighter row on desktops so they fit inside the page width. */
+/* Eight menu items: on desktops the bar runs wider than the page text, with slimmer side margins,
+   and the spacing grows with the screen so the row is never cramped and never overflows. */
 @media (min-width: 1100.02px) {
-  .bar-in { gap: 14px; }
-  .nav { gap: clamp(10px, 0.9vw, 14px); }
-  .nav a { font-size: 13px; letter-spacing: 0.09em; }
-  .nav .nav-cta { padding: 12px 14px; }
+  .bar-in { max-width: 1520px; padding: 0 clamp(28px, 3vw, 56px); gap: clamp(16px, 2vw, 40px); }
+  .nav { gap: clamp(11px, calc(2.2vw - 13px), 30px); }
+  .nav a { font-size: 13px; letter-spacing: 0.12em; white-space: nowrap; }
+  .nav .nav-cta { padding: 12px 16px; }
+}
+@media (min-width: 1680px) {
+  .nav a { font-size: 14px; letter-spacing: 0.14em; }
+  .nav .nav-cta { padding: 13px 20px; }
 }
 
 /* Colour switch: a white and a black swatch */
