@@ -19,6 +19,10 @@ const NAV = ['capacity', 'energy', 'sites', 'partners', 'about', 'guides', 'cont
 const version = createHash('sha256')
   .update(readFileSync(join(root, 'styles.css')))
   .update(readFileSync(join(root, 'site.js')))
+  // the site model page loads its own files; a change to any of them must bust the cache too
+  .update(readFileSync(join(root, 'assets/sizer/sizer.css')))
+  .update(readFileSync(join(root, 'assets/sizer/sizer.js')))
+  .update(readFileSync(join(root, 'assets/sizer/three.js')))
   .digest('hex').slice(0, 8);
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');

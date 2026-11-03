@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site model | Accretion Compute</title>
+  <meta name="description" content="Pick your energy source and gas flow, and a live 3D model sizes the power plant and AI compute modules that could be built on your site, with planning estimates.">
+  <link rel="canonical" href="https://accretioncompute.com/site-model">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Site model | Accretion Compute">
+  <meta property="og:description" content="Pick your energy source and gas flow, and a live 3D model sizes the power plant and AI compute modules that could be built on your site, with planning estimates.">
+  <meta property="og:url" content="https://accretioncompute.com/site-model">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="styles.css?v=51a71777">
+  <script src="site.js?v=51a71777" defer></script>
+</head>
+<body class="page-site-model">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="./" aria-label="Accretion Compute home">
+        <img class="for-light" src="assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="capacity">Capacity</a>
+        <a href="energy">Energy</a>
+        <a href="sites">Site selection</a>
+        <a href="partners" aria-current="page">Partners</a>
+        <a href="about">About</a>
+        <a href="guides">Guides</a>
+        <a class="nav-cta" href="contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/sizer/sizer.css?v=51a71777">
+
+<div class="sizer" id="sizer">
+  <div class="sz-hero" id="hero">
+    <div class="stage" id="stage" role="img" aria-label="3D model of a site: gas supply, generator sets, battery and compute modules, sized to the gas flow chosen below.">
+      <canvas id="iso"></canvas>
+      <div class="labels" id="labels"></div>
+      <div class="legend" id="legend" aria-live="polite">
+        <div class="eyebrow">Inside a compute module</div>
+        <h3>About 1 MW of AI computing in a factory-built module</h3>
+        <ol id="legend-list"></ol>
+        <p class="note">Typical layout, for illustration. Right-drag to look around.</p>
+      </div>
+      <div class="badge" id="badge">Live model</div>
+      <div class="hint" id="hint" hidden>Drag to move · Right-drag to turn · Ctrl + scroll to zoom · Click a module to open it</div>
+      <div class="toast" id="toast" hidden></div>
+      <div class="dock">
+        <div class="counts" id="counts"></div>
+        <div class="ctrls" id="ctrls" hidden>
+          <button type="button" class="open-btn" id="openmod">Look inside a module</button>
+          <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">&minus;</button><button type="button" id="zreset" aria-label="Reset view">&#10227;</button></div>
+        </div>
+      </div>
+      <div class="glnote" id="glnote" hidden></div>
+    </div>
+    <div class="scrim" aria-hidden="true"></div>
+    <div class="copy" id="herocopy">
+      <p class="crumbs"><a href="./">Home</a> / <a href="partners">Partners</a> / Site model</p>
+      <div class="eyebrow">For owners of gas, landfills and industrial land</div>
+      <h1>See what your energy could build</h1>
+      <p class="lede">Pick your energy source and gas flow. The live model sizes the power plant and AI compute modules that could sit on your site, powered by on-site gas engines with no grid connection.</p>
+      <div class="hero-stats" aria-live="polite">
+        <div><div class="num" id="hs-mw">0</div><div class="k">MW on site</div></div>
+        <div><div class="num" id="hs-racks">0</div><div class="k">AI racks</div></div>
+        <div><div class="num" id="hs-pay">$0</div><div class="k">To you, per year</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mini" id="mini" aria-label="Live model, docked">
+    <div class="mini-cap" id="mini-cap">Live model</div>
+    <button type="button" class="mini-x" id="mini-x" aria-label="Hide the docked model">&times;</button>
+    <button type="button" class="mini-up" id="mini-up">Full view &uarr;</button>
+  </div>
+
+  <div class="wrap">
+    <section id="build" aria-labelledby="build-h">
+      <div class="sec-head">
+        <div class="eyebrow">Size it to your site</div>
+        <h2 id="build-h">Set your gas, see what could be built</h2>
+        <p class="lede">Move the sliders to match your site. The model and the numbers update together. These are planning estimates from rules of thumb; real figures come from your gas data and site studies.</p>
+      </div>
+      <div class="builder">
+        <div class="controls">
+          <div class="sz-field">
+            <span class="eyebrow">Energy source</span>
+            <div class="seg" role="group" aria-label="Energy source">
+              <button type="button" id="src-lfg" aria-pressed="true">Landfill gas</button>
+              <button type="button" id="src-gas" aria-pressed="false">Field gas</button>
+              <button type="button" id="src-plant" aria-pressed="false">Plant site</button>
+            </div>
+          </div>
+          <div class="sz-field" id="f-flow">
+            <label for="flow"><span id="flow-label">Landfill gas collected</span><output id="flow-out" for="flow">2,000 scfm</output></label>
+            <input type="range" id="flow" min="0" max="100" step="1" value="40">
+            <div class="hint" id="flow-hint">Standard cubic feet per minute, as reported to your regulator.</div>
+          </div>
+          <div class="sz-field" id="f-ch4">
+            <label for="ch4"><span>Methane content</span><output id="ch4-out" for="ch4">50%</output></label>
+            <input type="range" id="ch4" min="35" max="60" step="1" value="50">
+          </div>
+          <div class="sz-field">
+            <span class="eyebrow">Examples</span>
+            <div class="sz-chips" id="chips"></div>
+          </div>
+        </div>
+        <div class="readout" aria-live="polite">
+          <div class="cell wide">
+            <div><div class="k">Paid to you each year</div><div class="num" id="r-pay">$0</div><div class="d">gas purchase plus land lease, at typical prices</div></div>
+            <div class="side"><div class="k">Over a 10-year term</div><div class="num" id="r-ten" style="font-size:clamp(22px,2.6vw,30px)">$0</div></div>
+          </div>
+          <div class="cell"><div class="k">Power on site</div><div class="num" id="r-mw">0<small>MW</small></div><div class="d">from your gas, firm</div></div>
+          <div class="cell"><div class="k">Generator sets</div><div class="num" id="r-gens">0</div><div class="d" id="r-gens-d">running plus one spare</div></div>
+          <div class="cell"><div class="k">Computing load</div><div class="num" id="r-it">0<small>MW</small></div><div class="d">after cooling and losses</div></div>
+          <div class="cell"><div class="k">AI racks</div><div class="num" id="r-racks">0</div><div class="d">liquid-cooled, about 120 kW each</div></div>
+          <div class="cell"><div class="k">GPUs</div><div class="num" id="r-gpus">0</div><div class="d">at 72 per rack</div></div>
+          <div class="cell"><div class="k">Compute modules</div><div class="num" id="r-halls">0</div><div class="d">about 1 MW each, 8 racks</div></div>
+          <div class="cell"><div class="k">Land used</div><div class="num" id="r-acres">0<small>acres</small></div><div class="d">including gas yard and setbacks</div></div>
+          <div class="cell"><div class="k">Gas used</div><div class="num" id="r-mmbtu">0<small>k MMBtu/yr</small></div><div class="d" id="r-mmbtu-d">at 95% running time</div></div>
+          <div class="cell"><div class="k">Grid connection</div><div class="num">None</div><div class="d">no export, no new load on the grid</div></div>
+        </div>
+      </div>
+      <p class="est">Planning estimates only, not an offer. Prices and terms are set site by site in signed agreements.</p>
+    </section>
+  </div>
+</div>
+
+<section class="band" aria-labelledby="as-h">
+  <div class="wrap narrow">
+    <p class="eyebrow">Behind the numbers</p>
+    <h2 id="as-h">How the model sizes a site</h2>
+    <p class="lede">Rules of thumb, so you can check the arithmetic. Real figures come from your gas analysis and our site studies.</p>
+    <div class="faq">
+      <details>
+        <summary>Show the assumptions</summary>
+        <div class="diagram-scroll">
+          <table class="split-tbl">
+            <thead><tr><th>Item</th><th>Value</th><th>Basis</th></tr></thead>
+            <tbody>
+              <tr><td>Methane energy content</td><td>1,012 Btu/scf</td><td>Higher heating value of methane</td></tr>
+              <tr><td>Pipeline gas energy content</td><td>1,037 MMBtu/MMcf</td><td>Typical pipeline-quality gas</td></tr>
+              <tr><td>Engine heat rate, landfill gas</td><td>11,000 Btu/kWh</td><td>Within the 10,600-11,700 range used by the US EPA landfill methane program</td></tr>
+              <tr><td>Engine heat rate, field gas</td><td>9,000 Btu/kWh</td><td>Modern lean-burn gas engines</td></tr>
+              <tr><td>Running time</td><td>95%</td><td>Planned and unplanned maintenance</td></tr>
+              <tr><td>Generator set size</td><td>1.6 MW / 2.5 MW</td><td>Landfill / field gas; one spare unit</td></tr>
+              <tr><td>Cooling and losses (PUE)</td><td>1.20</td><td>Liquid cooling with dry coolers</td></tr>
+              <tr><td>AI rack power</td><td>120 kW</td><td>Current liquid-cooled 72-GPU racks</td></tr>
+              <tr><td>Compute module</td><td>About 1 MW of computing (8 racks)</td><td>Factory-built, container-sized</td></tr>
+              <tr><td>Land</td><td>5 acres + 1.2 acres per MW</td><td>Gas yard, engines, modules, roads and setbacks; varies by site</td></tr>
+              <tr><td>Payment range</td><td>Gas used &times; a typical price band, plus acres &times; $1,000-2,000 a year</td><td>Typical bands only; your price is agreed in the gas agreement. Before any royalties or taxes you owe.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="band cta dark" aria-labelledby="sm-cta-h">
+  <div class="cta-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center">Start with your numbers</p>
+    <h2 id="sm-cta-h" class="reveal">Send us your gas flow and a site plan</h2>
+    <p class="lede reveal d1">We reply by email with a first sizing for your site, based on your own data.</p>
+    <div class="actions reveal d2">
+      <a class="btn" href="submit-a-site">Submit a site <span class="arrow"></span></a>
+      <a class="btn ghost" href="site-check">Does your site fit?</a>
+    </div>
+  </div>
+</section>
+
+<script defer src="assets/sizer/three.js?v=51a71777"></script>
+<script defer src="assets/sizer/sizer.js?v=51a71777"></script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="about">About</a>
+          <a href="partners">Partners</a>
+          <a href="contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="capacity">Capacity</a>
+          <a href="energy">Energy</a>
+          <a href="sites">Site selection</a>
+          <a href="guides">Guides</a>
+        </div>
+        <div>
+          <h2>Ion Group</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute. An Ion Group company.</p>
+  </footer>
+</body>
+</html>
