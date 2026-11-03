@@ -26,7 +26,7 @@
       <ul class="ticks reveal d1">
         <li><strong>Power</strong> delivered to your racks from on-site generation</li>
         <li><strong>Cooling</strong> designed for your density, air or liquid</li>
-        <li><strong>Space</strong> in secure halls with controlled physical access</li>
+        <li><strong>Space</strong> in secure compute modules with controlled physical access</li>
         <li><strong>Connectivity</strong> through fiber routes and cross-connects</li>
         <li><strong>Operations</strong>: on-site staff and remote hands</li>
       </ul>
@@ -45,7 +45,7 @@
       <figure class="diagram">
         <div class="diagram-scroll">
           <svg class="tour-svg" viewBox="0 0 1100 380" role="img" aria-labelledby="site-t">
-            <title id="site-t">Site layout: fuel supply feeds on-site generation, then power conditioning, then the AI hall with cooling, with fiber connecting the hall to the network</title>
+            <title id="site-t">Site layout: fuel supply feeds on-site generation, then power conditioning, then the compute modules with cooling, with fiber connecting the modules to the network</title>
             <path class="d-soft" d="M0 300h1100"/>
             <g class="t-g" data-stage="0">
               <rect x="10" y="215" width="130" height="150" fill="transparent"/>
@@ -75,7 +75,7 @@
                 <rect x="600" y="180" width="34" height="110"/><rect x="650" y="180" width="34" height="110"/><rect x="700" y="180" width="34" height="110"/><rect x="750" y="180" width="34" height="110"/>
                 <path d="M600 200h34M600 220h34M600 240h34M600 260h34M650 200h34M650 220h34M650 240h34M650 260h34M700 200h34M700 220h34M700 240h34M700 260h34M750 200h34M750 220h34M750 240h34M750 260h34"/>
               </g>
-              <text class="d-text d-mid" x="700" y="330">AI hall</text>
+              <text class="d-text d-mid" x="700" y="330">Compute modules</text>
               <text class="d-small d-mid" x="700" y="350">Your hardware</text>
             </g>
             <g class="t-g" data-stage="4">
@@ -100,7 +100,7 @@
         <button role="tab" id="tt-0" aria-controls="tp-0"><b>01</b>Fuel</button>
         <button role="tab" id="tt-1" aria-controls="tp-1"><b>02</b>Generation</button>
         <button role="tab" id="tt-2" aria-controls="tp-2"><b>03</b>Power</button>
-        <button role="tab" id="tt-3" aria-controls="tp-3"><b>04</b>AI hall</button>
+        <button role="tab" id="tt-3" aria-controls="tp-3"><b>04</b>Compute modules</button>
         <button role="tab" id="tt-4" aria-controls="tp-4"><b>05</b>Cooling</button>
         <button role="tab" id="tt-5" aria-controls="tp-5"><b>06</b>Fiber</button>
       </div>
@@ -117,17 +117,17 @@
         </div>
         <div class="tour-panel" role="tabpanel" id="tp-2" aria-labelledby="tt-2" hidden>
           <div><h3>Power, conditioned and protected</h3><span class="owner">Accretion runs it</span></div>
-          <div><p>Switchgear, transformers and uninterruptible power supplies turn raw generation into clean, steady power, then carry it to the hall on feeds designed for your rack layout.</p>
+          <div><p>Switchgear, transformers and uninterruptible power supplies turn raw generation into clean, steady power, then carry it to the modules on feeds designed for your rack layout.</p>
             <ul class="ticks"><li>Switchgear and transformers sized to the site</li><li>UPS to ride through any switchover</li><li>Feeds to the rack, matched to your power design</li></ul></div>
         </div>
         <div class="tour-panel" role="tabpanel" id="tp-3" aria-labelledby="tt-3" hidden>
-          <div><h3>A hall built around your hardware</h3><span class="owner you">You run what is inside your racks</span></div>
-          <div><p>The hall is designed to your density, layout and cooling method, from the floor loading to the containment. You install and run your hardware; we run the building around it.</p>
+          <div><h3>Compute modules built around your hardware</h3><span class="owner you">You run what is inside your racks</span></div>
+          <div><p>The modules are designed to your density, layout and cooling method, from the rack power to the containment. You install and run your hardware; we run the modules around it.</p>
             <ul class="ticks"><li>Layout and density set by your deployment</li><li>Secure, controlled physical access</li><li>On-site staff and remote hands</li></ul></div>
         </div>
         <div class="tour-panel" role="tabpanel" id="tp-4" aria-labelledby="tt-4" hidden>
           <div><h3>Heat out, at the density AI makes</h3><span class="owner">Accretion runs it</span></div>
-          <div><p>Heat leaves the hall through air handling, liquid loops or both, and is rejected outside. The cooling plant is designed for the heat your racks will actually make.</p>
+          <div><p>Heat leaves the modules through air handling, liquid loops or both, and is rejected outside. The cooling plant is designed for the heat your racks will actually make.</p>
             <ul class="ticks"><li>Air, rear-door or direct-to-chip liquid cooling</li><li>Liquid loops to the rack for dense accelerators</li><li>Designed to your hardware's heat split</li></ul></div>
         </div>
         <div class="tour-panel" role="tabpanel" id="tp-5" aria-labelledby="tt-5" hidden>
@@ -147,7 +147,7 @@
       <div>
         <p class="eyebrow">Density</p>
         <h2 id="dens-h" class="reveal">Built for the heat AI makes</h2>
-        <p class="dim reveal d1">An AI rack can draw many times the power of a conventional one, and nearly all of that power ends up as heat. Halls designed for yesterday's racks cannot simply be filled with today's. We design power and cooling around the hardware you will actually run.</p>
+        <p class="dim reveal d1">An AI rack can draw many times the power of a conventional one, and nearly all of that power ends up as heat. Data halls designed for yesterday's racks cannot simply be filled with today's. We design power and cooling around the hardware you will actually run.</p>
       </div>
       <div class="dens reveal d1">
         <div class="dens-row">
@@ -222,7 +222,7 @@
           <tr><td>Switchgear, transformers and UPS</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
           <tr><td>Power feeds to the rack</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
           <tr class="grp"><td colspan="3">Building and cooling</td></tr>
-          <tr><td>Hall, physical security and access</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
+          <tr><td>Compute modules, physical security and access</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
           <tr><td>Cooling plant and loops to the rack</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
           <tr><td>On-site staff and remote hands</td><td><span class="mk" aria-label="Accretion"></span></td><td></td></tr>
           <tr class="grp"><td colspan="3">Network</td></tr>
@@ -249,7 +249,7 @@
         <ul class="io"><li class="you">You share your hardware plan and timeline</li><li>We map it to power and cooling needs</li></ul></li>
       <li class="reveal d1"><h3>Site match</h3><p>We match your requirements to sites in our pipeline where energy, land and fiber line up.</p>
         <ul class="io"><li>We propose a site with a dated plan</li><li class="you">You review the site and the terms</li></ul></li>
-      <li class="reveal d2"><h3>Build to spec</h3><p>We design and build the hall, power and cooling to your specification.</p>
+      <li class="reveal d2"><h3>Build to spec</h3><p>We design and build the compute modules, power and cooling to your specification.</p>
         <ul class="io"><li>We build and commission the site</li><li class="you">You sign off the design and install your hardware</li></ul></li>
       <li class="reveal d3"><h3>Operate</h3><p>Our team runs the site day to day. You run your workloads.</p>
         <ul class="io"><li>We run power, cooling and the building</li><li class="you">You run your hardware and workloads</li></ul></li>
@@ -277,7 +277,7 @@
       <div class="card reveal d2">
         <svg class="icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M8 36V14l14-8 14 8v22z"/><path d="M16 36V24h12v12"/></svg>
         <h3>Built for you</h3>
-        <p>Halls designed around your density and layout, with room to expand on the same site.</p>
+        <p>Compute modules designed around your density and layout, with room to expand on the same site.</p>
       </div>
     </div>
     <div class="split" style="margin-top:clamp(64px,8vw,104px)">
@@ -288,7 +288,7 @@
       <ul class="ticks cols2 reveal d1">
         <li>The site, its energy source and its supply terms</li>
         <li>Power available to you, and the date it is ready</li>
-        <li>The hall design for your density and layout</li>
+        <li>The compute module design for your density and layout</li>
         <li>The cooling method and how it is sized</li>
         <li>Redundancy design and service levels</li>
         <li>Fiber routes and connection options</li>
@@ -330,7 +330,7 @@
       </details>
       <details>
         <summary>Can you support liquid cooling?</summary>
-        <p>Yes. Halls are designed to the tenant's specification, including direct-to-chip liquid cooling for high-density accelerators.</p>
+        <p>Yes. Compute modules are designed to the tenant's specification, including direct-to-chip liquid cooling for high-density accelerators.</p>
       </details>
       <details>
         <summary>Can we expand later?</summary>
