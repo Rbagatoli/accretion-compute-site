@@ -86,6 +86,9 @@
 .sizer .hero-stats div{background:var(--bg);padding:14px 14px 12px}
 .sizer .hero-stats .num{font-size:clamp(20px,2.3vw,28px);line-height:1;white-space:nowrap}
 .sizer .hero-stats .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim);margin-top:6px}
+.sizer .hero-gas{pointer-events:auto;margin-top:-6px;gap:2px}
+.sizer .hero-gas label{font-size:13px;color:var(--fg-dim)}
+.sizer .hero-gas label output{font-size:18px}
 .sizer section{padding-block:clamp(40px,6vw,80px);border-top:1px solid var(--line-soft)}
 .sizer .sec-head{display:grid;gap:10px;margin-bottom:28px;max-width:70ch}
 .sizer .builder{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(16px,3vw,40px)}

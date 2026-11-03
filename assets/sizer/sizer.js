@@ -66,7 +66,8 @@
   function update(){
     const m = MODES[mode];
     R = calc();
-    $("flow-out").textContent = (m.unit==="scfm" ? fmt(st.flow) : fmt(st.flow, st.flow<10?2:0)) + " " + m.unit;
+    $("flow-out").textContent = $("hflow-out").textContent = (m.unit==="scfm" ? fmt(st.flow) : fmt(st.flow, st.flow<10?2:0)) + " " + m.unit;
+    $("hflow").value = $("flow").value;
     $("ch4-out").textContent = st.ch4 + "%";
     const mwd = R.mw < 10 ? 1 : 0;
     tween("hs-mw", R.mw, v => fmt(v, mwd));
@@ -85,14 +86,14 @@
     tween("r-acres", R.acres, v => fmt(Math.round(v)) + "<small>acres</small>");
     tween("r-mmbtu", R.mmbtu/1000, v => fmt(Math.round(v)) + "<small>k MMBtu/yr</small>");
     const p = (el) => el.style.setProperty("--p", ((el.value-el.min)/(el.max-el.min)*100) + "%");
-    ["flow","ch4"].forEach(id => p($(id)));
+    ["flow","hflow","ch4"].forEach(id => p($(id)));
     scene.target = R;
   }
 
   function setMode(k, keepFlow){
     mode = k; const m = MODES[k];
     ["lfg","gas","plant"].forEach(x => $("src-"+x).setAttribute("aria-pressed", String(x===k)));
-    $("flow-label").textContent = m.label;
+    $("flow-label").textContent = $("hflow-label").textContent = m.label;
     $("flow-hint").textContent = m.hint;
     $("f-ch4").hidden = !m.ch4;
     if(!keepFlow){ st.flow = m.def; }
@@ -108,7 +109,7 @@
     update();
   }
 
-  $("flow").addEventListener("input", e => { const m = MODES[mode]; st.flow = roundFlow(fromSlider(+e.target.value, m), m); update(); });
+  ["flow","hflow"].forEach(id => $(id).addEventListener("input", e => { const m = MODES[mode]; $("flow").value = e.target.value; st.flow = roundFlow(fromSlider(+e.target.value, m), m); update(); }));
   $("ch4").addEventListener("input", e => { st.ch4 = +e.target.value; update(); });
   ["lfg","gas","plant"].forEach(k => $("src-"+k).addEventListener("click", () => setMode(k)));
 
