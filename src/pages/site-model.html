@@ -57,13 +57,13 @@
           <div class="sz-field">
             <span class="eyebrow">Energy source</span>
             <div class="seg" role="group" aria-label="Energy source">
-              <button type="button" id="src-lfg" aria-pressed="true">Landfill gas</button>
-              <button type="button" id="src-gas" aria-pressed="false">Field gas</button>
+              <button type="button" id="src-lfg" aria-pressed="false">Landfill gas</button>
+              <button type="button" id="src-gas" aria-pressed="true">Field gas</button>
               <button type="button" id="src-plant" aria-pressed="false">Plant site</button>
             </div>
           </div>
           <div class="sz-field" id="f-flow">
-            <label for="flow"><span id="flow-label">Landfill gas collected</span><output id="flow-out" for="flow">2,000 scfm</output></label>
+            <label for="flow"><span id="flow-label">Gas available</span><output id="flow-out" for="flow">4 MMcf/d</output></label>
             <input type="range" id="flow" min="0" max="100" step="1" value="40">
             <div class="hint" id="flow-hint">Standard cubic feet per minute, as reported to your regulator.</div>
           </div>
@@ -107,6 +107,55 @@
         <div class="sz-link"><div class="step">COMPUTE</div><svg viewBox="0 0 44 44"><rect x="6" y="8" width="32" height="28"/><path d="M12 14h20M12 20h20M12 26h20M12 32h20"/></svg><h3>Compute modules</h3><p>Factory-built, liquid-cooled AI modules, added about 1 MW at a time.</p></div>
         <div class="sz-link"><div class="step">COOL</div><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="13"/><path d="M22 9v26M9 22h26M13 13l18 18M31 13 13 31"/></svg><h3>Closed-loop cooling</h3><p>Dry coolers in a sealed loop: no evaporative water use by design.</p></div>
       </div>
+    </section>
+    <section aria-labelledby="terms-h">
+      <div class="sec-head">
+        <div class="eyebrow">What we ask, what you get</div>
+        <h2 id="terms-h">Two simple agreements</h2>
+        <p class="lede">Everything is negotiated site by site. These are the starting terms we propose.</p>
+      </div>
+      <div class="terms">
+        <div class="term">
+          <h3>Gas purchase</h3>
+          <dl>
+            <dt>Volume</dt><dd>A fixed daily volume sized to the first phase, with room to grow</dd>
+            <dt>Term</dt><dd>5 to 10 years</dd>
+            <dt>Price</dt><dd>Fixed, or indexed to a hub you choose</dd>
+            <dt>Security</dt><dd>Take-or-pay on the contracted volume</dd>
+            <dt>Delivery</dt><dd>At a meter on your site; we build everything downstream</dd>
+          </dl>
+        </div>
+        <div class="term">
+          <h3>Land</h3>
+          <dl>
+            <dt>Start</dt><dd>An option while studies and permits are done</dd>
+            <dt>Then</dt><dd>A long-term ground lease</dd>
+            <dt>Area</dt><dd>Sized to the phase; the model above shows the estimate</dd>
+            <dt>Location</dt><dd>Outside active cells, wells and buffers you need</dd>
+            <dt>At the end</dt><dd>Equipment removed and land returned</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="gets">
+        <div><h3>No capital from you</h3><p>We fund, build and operate the power plant and the compute modules.</p></div>
+        <div><h3>Steady income</h3><p>A long-term gas buyer and a land lease, paid monthly.</p></div>
+        <div><h3>Gas put to work</h3><p>Flared or curtailed gas becomes a product instead of a cost.</p></div>
+        <div><h3>No grid strain</h3><p>The site powers itself and exports nothing.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="steps-h">
+      <div class="sec-head">
+        <div class="eyebrow">What happens next</div>
+        <h2 id="steps-h">From first email to first power</h2>
+      </div>
+      <ol class="steps">
+        <li><span class="step">STEP 1</span><h3>Data</h3><p>You share gas flow and quality, and a site plan. We confirm the size.</p></li>
+        <li><span class="step">STEP 2</span><h3>Letter of intent</h3><p>Non-binding terms for the gas and an option on the land.</p></li>
+        <li><span class="step">STEP 3</span><h3>Studies</h3><p>Gas analysis, geotechnical, air permit and local approvals, at our cost.</p></li>
+        <li><span class="step">STEP 4</span><h3>Agreements</h3><p>Gas purchase agreement and ground lease signed.</p></li>
+        <li><span class="step">STEP 5</span><h3>Build</h3><p>Power plant and compute modules installed; we operate the site.</p></li>
+      </ol>
     </section>
   </div>
 </div>

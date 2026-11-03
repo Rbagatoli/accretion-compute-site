@@ -209,5 +209,9 @@
 @media (max-width:900px){
   .sizer .stage{height:max(400px,62svh)}
   .sizer .sz-hero .copy{padding:28px var(--gutter) 32px}
-  .sizer .mini{top:auto;bottom:0;border-width:1px 0 0;transform:translateY(18px)}
+  .sizer .mini{left:auto;right:10px;top:auto;bottom:10px;width:min(46vw,220px);height:auto;aspect-ratio:16/11;border-width:1px;transform:translateY(18px)}
+  .sizer .mini-cap{font-size:9px;max-width:calc(100% - 44px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 6px 4px 5px!important}
+  .sizer .mini-cap::before{margin-right:5px}
+  .sizer .mini-x{width:20px;height:20px;right:5px;top:5px;font-size:13px}
+  .sizer .mini-up{right:5px;bottom:5px;padding:4px 7px;font-size:9px}
 }

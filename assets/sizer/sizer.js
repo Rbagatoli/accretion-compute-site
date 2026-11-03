@@ -18,7 +18,7 @@
             hint:"Gas taken from the plant's existing supply, for a site beside a working or retired plant.",
             chips:[["First phase",5],["Second phase",12],["Campus",40]], src:"stack"}
   };
-  let mode = "lfg";
+  let mode = "gas";
   const st = {flow:2000, ch4:50};
   // Typical price bands used for the payment range; the real price is set in the gas agreement.
   const BANDS = {lfg:[1.5,2.5], gas:[2,3], plant:[2.5,3.5]}, LEASE = [1000,2000];
@@ -243,7 +243,7 @@
     requestAnimationFrame(draw);
   }
 
-  setMode("lfg");
+  setMode("gas");
   requestAnimationFrame(draw);
 })();
 
@@ -672,7 +672,7 @@ renderer.domElement.style.touchAction = "pan-y"; // the controls set "none", whi
 controls.zoomSpeed = 1.1; controls.panSpeed = .9; controls.rotateSpeed = .8;
 controls.enableDamping = true; controls.dampingFactor = .07;
 controls.minPolarAngle = .12; controls.maxPolarAngle = 1.38; controls.minDistance = 5; controls.maxDistance = 900;
-controls.autoRotate = true; controls.autoRotateSpeed = .35;
+controls.autoRotate = true; controls.autoRotateSpeed = .15;
 let idleT = 0, userCam = false, tw = null;
 controls.addEventListener("start", () => { controls.autoRotate = false; idleT = 0; userCam = true; tw = null; });
 camera.position.set(-180, 160, 260);
@@ -723,9 +723,7 @@ dockCheck();
   function place(x, y) { const w = mini.offsetWidth, h = mini.offsetHeight;
     const barB = Math.max(0, (document.querySelector(".bar") || { getBoundingClientRect: () => ({ bottom: 0 }) }).getBoundingClientRect().bottom);
     x = Math.max(0, Math.min(innerWidth - w, x)); y = Math.max(barB, Math.min(innerHeight - h, y));
-    // phones: the dock spans the width, so it only moves up and down
-    if (matchMedia("(max-width: 900px)").matches) { mini.style.left = mini.style.right = ""; mini.style.top = y + "px"; mini.style.bottom = "auto"; }
-    else { mini.style.left = x + "px"; mini.style.top = y + "px"; mini.style.right = "auto"; mini.style.bottom = "auto"; }
+    mini.style.left = x + "px"; mini.style.top = y + "px"; mini.style.right = "auto"; mini.style.bottom = "auto";
     pos = { x, y }; }
   if (pos) requestAnimationFrame(() => place(pos.x, pos.y));
   cap.title = "Drag to move";
@@ -793,7 +791,7 @@ function frameInner() {
     computeFit();
     if (modOpen && openIdx >= nM) closeModule(true);
     if (!modOpen) userCam = false;
-    if (!camInit) { camInit = true; controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(-.55, .5, .67).normalize().multiplyScalar(fitR)); }
+    if (!camInit) { camInit = true; controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)); }
     scene.fog.near = fitR * 1.2; scene.fog.far = fitR * 4;
     const cap = (R.gens > MAX_G || R.halls > MAX_M) ? " · model shows the first phase" : "";
     if (counts) counts.textContent = R.gens + " gensets · " + nB + " battery units · " + R.halls + " compute modules" + cap;
@@ -870,12 +868,12 @@ function openModule(i) {
 function closeModule(instant) {
   modOpen = false; hero.classList.remove("open"); openBtn.textContent = "Look inside a module";
   userCam = false; if (instant) openAmt = 0;
-  else tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .5, .67).normalize().multiplyScalar(fitR)), 1.6);
+  else tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.6);
 }
 openBtn.addEventListener("click", () => { if (modOpen) closeModule(false); else openModule(pickModule()); });
 document.getElementById("zin").addEventListener("click", () => zoomBy(.7));
 document.getElementById("zout").addEventListener("click", () => zoomBy(1.43));
-document.getElementById("zreset").addEventListener("click", () => { if (modOpen) closeModule(false); else { userCam = false; tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .5, .67).normalize().multiplyScalar(fitR)), 1.2); } });
+document.getElementById("zreset").addEventListener("click", () => { if (modOpen) closeModule(false); else { userCam = false; tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.2); } });
 addEventListener("keydown", e => { if (e.key === "Escape" && modOpen) closeModule(false); });
 
 // click (not drag) on a module opens it; the pointer turns to a hand over modules
