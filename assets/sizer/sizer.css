@@ -195,7 +195,7 @@
 .sizer .sz-hero{margin-left:0;margin-right:0}
 .sizer .wrap{max-width:var(--max);padding:0 var(--gutter)}
 .sizer .sz-hero .copy,.sizer .stage .legend{left:calc(max(0px,(100% - var(--max)) / 2) + var(--gutter))}
-.sizer .stage{height:max(560px,calc(100svh - var(--bar-h)))}
+.sizer .stage{height:max(540px,calc(88svh - var(--bar-h)))}
 .sizer .crumbs{margin:0;font-family:var(--body);font-size:13px;letter-spacing:.08em;color:var(--fg-dim);pointer-events:auto}
 .sizer .crumbs a{color:var(--fg-dim);text-decoration:none}
 .sizer .crumbs a:hover{color:var(--fg-strong)}
@@ -206,7 +206,7 @@
 .sizer .hero-stats{grid-template-columns:minmax(0,.8fr) minmax(0,.8fr) minmax(0,1.4fr)}
 .sizer .est{margin-top:14px;font-size:13px;color:var(--fg-dim)}
 @media (max-width:900px){
-  .sizer .stage{height:max(420px,70svh)}
+  .sizer .stage{height:max(400px,62svh)}
   .sizer .sz-hero .copy{padding:28px var(--gutter) 32px}
   .sizer .mini{top:auto;bottom:0;border-width:1px 0 0;transform:translateY(18px)}
 }
