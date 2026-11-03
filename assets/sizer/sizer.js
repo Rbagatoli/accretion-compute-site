@@ -700,6 +700,7 @@ let ready = false, heroOn = true, below = false, dismissed = false, visible = tr
 function moveTo(h) { if (h === host) return; host = h;
   if (h === mini) mini.insertBefore(renderer.domElement, mini.firstChild); else stage.insertBefore(renderer.domElement, stage.firstChild);
   if (h === mini && !userCam) controls.autoRotate = true;
+  stage.classList.toggle("docked", h === mini);
   shiftCur = 0; size(); }
 function updateDock() {
   if (heroOn) dismissed = false;
@@ -708,7 +709,14 @@ function updateDock() {
   if (on) moveTo(mini); else if (heroOn || !ready) moveTo(stage);
   visible = heroOn || on;
 }
-new IntersectionObserver(e => { heroOn = e[0].isIntersecting; below = !heroOn && e[0].boundingClientRect.bottom <= 0; updateDock(); }).observe(stage);
+// The dock appears once about half of the model has scrolled up under the top bar.
+let dockRaf = 0;
+function dockCheck() { dockRaf = 0; const r = stage.getBoundingClientRect();
+  const top = Math.max(0, (document.querySelector(".bar") || { getBoundingClientRect: () => ({ bottom: 0 }) }).getBoundingClientRect().bottom);
+  heroOn = r.top > top - r.height * 0.5; below = !heroOn; updateDock(); }
+addEventListener("scroll", () => { if (!dockRaf) dockRaf = requestAnimationFrame(dockCheck); }, { passive: true });
+addEventListener("resize", () => { if (!dockRaf) dockRaf = requestAnimationFrame(dockCheck); });
+dockCheck();
 // Drag the dock anywhere by its label bar; the position is remembered for this viewer.
 (() => { const cap = document.getElementById("mini-cap"); let drag = null, pos = null;
   try { pos = JSON.parse(localStorage.getItem("acc-site-dock-pos") || "null"); } catch (e) {}
