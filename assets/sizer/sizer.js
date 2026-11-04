@@ -876,7 +876,7 @@ function frameInner() {
     if (!camInit) { camInit = true; controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)); }
     scene.fog.near = fitR * 1.2; scene.fog.far = fitR * 4;
     const cap = (R.gens > MAX_G || (!hall && R.halls > MAX_M)) ? " · model shows the first phase" : "", inH = hall ? " in " + nHall + " halls" : "";
-    if (counts) counts.textContent = R.gens + " gensets · " + nB + (nB === 1 ? " battery unit · " : " battery units · ") + R.halls + " compute modules" + inH + cap;
+    if (counts) counts.textContent = R.gens + " gensets · " + nB + (nB === 1 ? " battery unit · " : " battery units · ") + R.halls + (R.halls === 1 ? " compute module" : " compute modules") + inH + cap;
     const mc = document.getElementById("mini-cap"); if (mc) mc.textContent = "Live model · " + R.gens + " gensets · " + R.halls + " modules" + inH;
   }
   if (!visible) return;
