@@ -67,7 +67,7 @@ for (const [dir, prefix] of sources) for (const file of readdirSync(join(root, d
   if (/href="[a-z0-9-]+\.html/.test(html)) throw new Error(`${file}: an internal .html link survived`);
 
   // a page one folder down reaches the shared files and pages through ../
-  if (prefix) html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="../');
+  if (prefix || out.includes('/')) html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="../');
   // the 404 page is served at any missing address, folders included, so it links from the site root
   if (out === '404.html') html = html.replace(/(href|src)="(?![a-z][a-z0-9+.-]*:|\/|#)(\.\/)?/g, '$1="/');
 

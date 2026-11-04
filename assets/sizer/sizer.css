@@ -218,3 +218,11 @@
   .sizer .mini-x{width:20px;height:20px;right:5px;top:5px;font-size:13px}
   .sizer .mini-up{right:5px;bottom:5px;padding:4px 7px;font-size:9px}
 }
+/* Embed mode (?embed=1): only the 3D model, filling the frame, for the per-site sizing pages */
+html.embed,html.embed body{height:100%;overflow:hidden;background:var(--void,#050506)}
+html.embed :is(.bar,.foot,.skip),html.embed .sizer>:not(.sz-hero),html.embed .sz-hero :is(.copy,.scrim){display:none!important}
+html.embed main{padding:0!important;margin:0!important}
+html.embed .sizer .sz-hero{margin:0!important;border:0}
+html.embed .sizer .stage{height:100vh!important}
+/* ?copy=1: the parent page lays its own text over the left of the frame, so keep the camera shifted right of it */
+html.embed.withcopy .sz-hero .copy{display:grid!important;visibility:hidden}

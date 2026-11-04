@@ -337,8 +337,14 @@ const M = {
   fan: std({ map: fanT, alphaTest: .5, metalness: .5, roughness: .45, side: THREE.DoubleSide }),
   led: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: 2 }),
   lamp: std({ color: 0x222222, emissive: 0xffffff, emissiveIntensity: 3 }),
+  // compute module lighting: base band, three pulsing groups of rack-activity slits, and a ground halo
+  band: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: 1.6 }),
+  act0: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: 1 }),
+  act1: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: 1 }),
+  act2: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: 1 }),
   fence: std({ color: 0xb8b8b8, metalness: .6, roughness: .5, map: chain, alphaTest: .35, side: THREE.DoubleSide, transparent: false }),
   pool: new THREE.MeshBasicMaterial({ map: glowT, transparent: true, opacity: .16, blending: THREE.AdditiveBlending, depthWrite: false }),
+  halo: new THREE.MeshBasicMaterial({ map: glowT, transparent: true, opacity: .45, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }),
 };
 
 /* ---------- builders ---------- */
@@ -385,8 +391,59 @@ function makeMod() {
     B(W - .3, .9, 2.7, M.steel, 0, .35 + H + .95, z, g);
     fan(.95, 0, .35 + H + 1.42, z, g); }
   const pipe = C(.12, .12, L - 1, M.steel, W / 2 - .3, .35 + H + .62, 0, g, 10); pipe.rotation.x = Math.PI / 2;
+  // lights: a glowing band along the base, vertical activity slits on both long sides, a soft pool of light on the ground
+  for (const sx of [-1, 1]) {
+    B(.06, .22, L - .6, M.band, sx * (W / 2 + .04), .62, 0, g, false);
+    B(.06, .1, L - .5, M.band, sx * (W / 2 + .04), .35 + H + .02, 0, g, false);      // roof-edge line
+    for (let i = 0; i < 14; i++) B(.06, 2.1, .16, [M.act0, M.act1, M.act2][(i * 7 + (sx > 0 ? 1 : 0)) % 3], sx * (W / 2 + .04), .35 + H / 2 + .1, -L / 2 + 1.5 + i * ((L - 3) / 13), g, false);
+  }
+  for (const sz of [-1, 1]) B(W - .5, .1, .06, M.band, 0, .35 + H + .02, sz * (L / 2 + .04), g, false);
+  const halo = mesh(new THREE.PlaneGeometry(W * 4.6, L * 1.75), M.halo, 0, .37, 0, g, false); halo.rotation.x = -Math.PI / 2; halo.renderOrder = 2;
   return g;
 }
+// merge a group's static meshes into one mesh per material (fans and see-through parts stay separate), so big sites stay quick
+function bake(g) {
+  const by = new Map(), keep = [];
+  g.updateMatrixWorld(true);
+  g.children.slice().forEach(o => {
+    if (!o.isMesh || o.name === "fan" || o.material.transparent) { keep.push(o); return; }
+    const geo = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone(); geo.applyMatrix4(o.matrix);
+    for (const a of Object.keys(geo.attributes)) if (!["position", "normal", "uv"].includes(a)) geo.deleteAttribute(a);
+    const k = o.material.uuid; if (!by.has(k)) by.set(k, { m: o.material, gs: [], cast: o.castShadow }); by.get(k).gs.push(geo); g.remove(o); });
+  by.forEach(({ m, gs, cast }) => mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(gs), m, 0, 0, 0, g, cast));
+  return g;
+}
+// Compute hall: a building that houses up to 12 of the same 1 MW modules, two rows of six,
+// each with its own dry cooler on the roof. Large sites use halls instead of open-air modules.
+const PER_HALL = 12, HALL_AT = 40;
+function makeHall(n) {
+  const g = new THREE.Group(), cols = Math.ceil(n / 2), W = cols * 4.2 + 2.4, D = 30, H = 7.5;
+  B(W + 2, .35, D + 2, M.pad, 0, .175, 0, g);
+  B(W, H, D, M.mod, 0, .35 + H / 2, 0, g);
+  seams(W, H - .5, D, .6, 3, M.black, g);
+  B(W + .3, .55, D + .3, M.galv, 0, .35 + H + .27, 0, g);                       // parapet
+  B(W - .6, .1, D - .6, M.dark, 0, .35 + H + .5, 0, g, false);                   // roof deck
+  for (let i = 0; i < n; i++) { const c = Math.floor(i / 2), x = -W / 2 + 1.2 + c * 4.2 + 2.1, z = (i % 2 ? 1 : -1) * 7;
+    B(3.2, 1.1, 6.5, M.steel, x, .35 + H + 1.05, z, g);
+    fan(1.05, x, .35 + H + 1.62, z - 1.6, g); fan(1.05, x, .35 + H + 1.62, z + 1.6, g); }
+  B(4.5, 4.6, .08, M.louvre, W / 2 - 3.5, 2.65, D / 2 + .04, g, false);         // roll-up door
+  B(1.1, 2.3, .08, M.steel, -W / 2 + 2, 1.5, D / 2 + .04, g, false);            // personnel door
+  B(.2, .12, .1, M.lamp, -W / 2 + 2, 2.9, D / 2 + .1, g, false);
+  // lights: base band and roof line all round, rack-activity slits on every wall, a pool of light on the ground
+  for (const sz of [-1, 1]) {
+    B(W - .4, .26, .07, M.band, 0, .7, sz * (D / 2 + .05), g, false);
+    B(W - .4, .12, .07, M.band, 0, .35 + H - .2, sz * (D / 2 + .05), g, false);
+    const nS = Math.max(4, cols * 3); for (let i = 0; i < nS; i++) { const x = -W / 2 + 1.5 + i * ((W - 3) / (nS - 1)); if (sz > 0 && x > W / 2 - 6.2) continue;
+      B(.18, 3.4, .07, [M.act0, M.act1, M.act2][(i * 5 + (sz > 0 ? 1 : 0)) % 3], x, .35 + H / 2 + .3, sz * (D / 2 + .05), g, false); } }
+  for (const sx of [-1, 1]) {
+    B(.07, .26, D - .4, M.band, sx * (W / 2 + .05), .7, 0, g, false);
+    B(.07, .12, D - .4, M.band, sx * (W / 2 + .05), .35 + H - .2, 0, g, false);
+    for (let i = 0; i < 9; i++) B(.07, 3.4, .18, [M.act0, M.act1, M.act2][(i * 7 + (sx > 0 ? 2 : 0)) % 3], sx * (W / 2 + .05), .35 + H / 2 + .3, -D / 2 + 2 + i * ((D - 4) / 8), g, false); }
+  const halo = mesh(new THREE.PlaneGeometry(W * 2.6, D * 2.2), M.halo, 0, .37, 0, g, false); halo.rotation.x = -Math.PI / 2; halo.renderOrder = 2;
+  g.userData.n = n; g.userData.hall = true;
+  return bake(g);
+}
+const hallProto = {}; const hallOf = n => (hallProto[n] = hallProto[n] || makeHall(n)).clone();
 // Battery container with end-wall HVAC
 function makeBat() {
   const g = new THREE.Group(); const L = 6.1, W = 2.5, H = 2.9;
@@ -588,15 +645,15 @@ const protoGen = makeGen(false), protoMod = makeMod(), protoBat = makeBat();
 })();
 
 const L = {};
-function layout(nG, nM, nB, gs) {
+function layout(nG, nM, nB, gs, hall) {
   const gRow = Math.max(4, Math.min(12, Math.ceil(Math.sqrt(nG * 2.2))));
   const gRows = Math.ceil(nG / gRow), gx0 = 32, gpx = 4.4 * gs, gpz = 16 * gs;
   const gW = Math.min(nG, gRow) * gpx;
   const tx = gx0 + gW + 6;
   const bx0 = tx + 10, bRow = Math.min(nB, 4), bW = Math.max(1, bRow) * 3.4;
   const mx0 = bx0 + bW + 10;
-  const mRows = Math.max(1, Math.min(5, Math.ceil(Math.sqrt(nM / 2.4))));
-  const mCols = Math.ceil(nM / mRows), mpx = 5.2, mpz = 17;
+  const mRows = hall ? Math.max(1, Math.min(4, Math.ceil(Math.sqrt(nM / 1.3)))) : Math.max(1, Math.min(5, Math.ceil(Math.sqrt(nM / 2.4))));
+  const mCols = Math.ceil(nM / mRows), mpx = hall ? 32 : 5.2, mpz = hall ? 37 : 17;
   const depth = Math.max(gRows * gpz, mRows * mpz, 30);
   Object.assign(L, { gRow, gRows, gx0, gpx, gpz, tx, bx0, mx0, mRows, mCols, mpx, mpz, depth, padW: mx0 + mCols * mpx + 8 });
   const gp = [], mp = [], bp = [];
@@ -650,7 +707,7 @@ function applyTheme() {
   sun.intensity = dark ? 2.4 : 3.2; hemi.intensity = dark ? .1 : .7;
   hemi.groundColor.set(dark ? 0x101010 : 0x5a5a5a);
   M.led.emissiveIntensity = dark ? 1.1 : .25; M.lamp.emissiveIntensity = dark ? 4 : .6;
-  M.pool.opacity = dark ? .07 : 0;
+  M.pool.opacity = dark ? .07 : 0; M.halo.opacity = dark ? .45 : .08;
   Object.values(M).forEach(m => { if (m.isMeshStandardMaterial) m.envMapIntensity = dark ? .22 : .55; });
   if (padG) padG.traverse(o => { if (o.material && o.material.isMeshStandardMaterial) o.material.envMapIntensity = dark ? .22 : .55; });
   if (bloom) { bloom.strength = dark ? .55 : .1; bloom.threshold = dark ? .93 : .97; }
@@ -691,16 +748,17 @@ function zoomBy(f) { const off = camera.position.clone().sub(controls.target); c
 
 // Shift the picture right so the site sits clear of the copy on wide screens.
 let shiftGoal = 0, shiftCur = 0, panelPx = 0;
-function overlayPx() { if (host !== stage || !heroCopy || !matchMedia("(min-width: 901px)").matches) return 0;
+function overlayPx() { const de = document.documentElement; if ((de.classList.contains("embed") && !de.classList.contains("withcopy")) || host !== stage || !heroCopy || !matchMedia("(min-width: 901px)").matches) return 0;
   const s = stage.getBoundingClientRect(), c = heroCopy.getBoundingClientRect(); return Math.max(0, c.right - s.left + 24); }
 let VW = 1, VH = 1, span = 200, fitR = 300;
 const mini = document.getElementById("mini"); let host = stage;
 function size() { const r = host.getBoundingClientRect(); const w = Math.max(1, r.width), h = Math.max(1, r.height);
   VW = w; VH = h; renderer.setSize(w, h, false); camera.aspect = w / h; panelPx = overlayPx(); applyShift(); computeFit(); }
 function applyShift() { if (Math.abs(shiftCur) < .5) camera.clearViewOffset(); else camera.setViewOffset(VW, VH, -shiftCur, 0, VW, VH); camera.updateProjectionMatrix(); }
+let isHall = false; // true once the site is big enough that modules sit in halls
 function computeFit() {
   const vf = THREE.MathUtils.degToRad(camera.fov), effA = Math.max(.6, (VW - panelPx) / VH), hf = 2 * Math.atan(Math.tan(vf / 2) * effA);
-  fitR = Math.max((span * .5) / Math.tan(hf / 2), (span * .34) / Math.tan(vf / 2)) * .7;
+  fitR = Math.max((span * .5) / Math.tan(hf / 2), (span * .34) / Math.tan(vf / 2)) * (isHall ? .9 : .7);  // halls are deep as well as wide, so pull back a little
   controls.maxDistance = fitR * 2.4;
 }
 const ro = new ResizeObserver(() => size()); ro.observe(stage); ro.observe(mini); size();
@@ -783,14 +841,23 @@ function frameInner() {
   const rawDt = clock.getDelta(), dt = Math.min(.05, rawDt), rdt = Math.min(.25, rawDt), t = clock.elapsedTime;
   const R = SC.target; if (!R) return;
   if (SC.src !== curSrc) { if (srcG) scene.remove(srcG); srcG = buildSource(SC.src); scene.add(srcG); curSrc = SC.src; }
-  const nG = Math.min(R.gens, MAX_G), nM = Math.min(R.halls, MAX_M), nB = Math.max(1, Math.min(12, Math.ceil(R.mw / 4)));
+  // up to 40 modules stand in the open; past that they are housed in halls of 12 (the last hall holds the rest)
+  const hall = R.halls > HALL_AT, nHall = Math.ceil(R.halls / PER_HALL), lastN = R.halls - (nHall - 1) * PER_HALL;
+  const nG = Math.min(R.gens, MAX_G), nM = hall ? nHall : Math.min(R.halls, MAX_M), nB = Math.max(1, Math.min(12, Math.ceil(R.mw / 4)));
   const gs = Math.max(1, Math.cbrt(R.genMW / 2.5)); // a larger engine is drawn larger
-  const k = nG + "|" + nM + "|" + nB + "|" + gs;
+  const k = nG + "|" + nM + "|" + nB + "|" + gs + "|" + (hall ? "h" + lastN : "m");
   if (k !== key) {
-    key = k; const P = layout(nG, nM, nB, gs); gpos = P.gp; mpos = P.mp; bpos = P.bp;
+    key = k; const P = layout(nG, nM, nB, gs, hall); gpos = P.gp; mpos = P.mp; bpos = P.bp;
+    if (modsG.userData.hall !== hall) { if (modOpen) closeModule(true); while (modsG.children.length) modsG.remove(modsG.children[0]); modsG.userData.hall = hall; }
+    isHall = hall; if (openBtn) openBtn.hidden = hall;
+    { const h = document.getElementById("hint"); if (h) { h.dataset.base = h.dataset.base || h.textContent;
+        h.textContent = hall ? h.dataset.base.replace(/ · (Click|Tap) a module to open it/, "") + " · Each hall holds up to 12 modules" : h.dataset.base; } }
+    { const d = document.querySelector("#r-halls + .d"); if (d) { d.dataset.base = d.dataset.base || d.textContent; d.textContent = hall ? "about 1 MW each, in " + nHall + " halls" : d.dataset.base; } }
     sync(gensG, nG, () => protoGen.clone());
     gensG.children.forEach((o, i) => { const sp = i === nG - 1; o.userData.spare = sp; o.userData.s = gs; o.scale.x = o.scale.z = gs; o.children[1].material = sp ? M.genSpare : M.gen; });
-    sync(modsG, nM, () => protoMod.clone()); sync(batsG, nB, () => protoBat.clone());
+    sync(modsG, nM, i => hall ? hallOf(i === nM - 1 ? lastN : PER_HALL) : protoMod.clone()); sync(batsG, nB, () => protoBat.clone());
+    if (hall) modsG.children.forEach((o, i) => { const want = i === nM - 1 ? lastN : PER_HALL; if (o.userData.n !== want) {
+      const h = hallOf(want); h.position.copy(o.position); h.scale.copy(o.scale); modsG.remove(o); modsG.add(h); } });
     gensG.children.forEach((o, i) => { if (o.scale.y < .01) o.position.set(gpos[i][0], 0, gpos[i][1]); });
     modsG.children.forEach((o, i) => { if (o.scale.y < .01) o.position.set(mpos[i][0], 0, mpos[i][1]); });
     batsG.children.forEach((o, i) => { if (o.scale.y < .01) o.position.set(bpos[i][0], 0, bpos[i][1]); });
@@ -803,15 +870,19 @@ function frameInner() {
     if (!modOpen) userCam = false;
     if (!camInit) { camInit = true; controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)); }
     scene.fog.near = fitR * 1.2; scene.fog.far = fitR * 4;
-    const cap = (R.gens > MAX_G || R.halls > MAX_M) ? " · model shows the first phase" : "";
-    if (counts) counts.textContent = R.gens + " gensets · " + nB + " battery units · " + R.halls + " compute modules" + cap;
-    const mc = document.getElementById("mini-cap"); if (mc) mc.textContent = "Live model · " + R.gens + " gensets · " + R.halls + " modules";
+    const cap = (R.gens > MAX_G || (!hall && R.halls > MAX_M)) ? " · model shows the first phase" : "", inH = hall ? " in " + nHall + " halls" : "";
+    if (counts) counts.textContent = R.gens + " gensets · " + nB + " battery units · " + R.halls + " compute modules" + inH + cap;
+    const mc = document.getElementById("mini-cap"); if (mc) mc.textContent = "Live model · " + R.gens + " gensets · " + R.halls + " modules" + inH;
   }
   if (!visible) return;
   const ease = 1 - Math.pow(.002, dt);
   const place = (grp, pos) => grp.children.forEach((o, i) => { const p = pos[i]; if (!p) return; o.position.x += (p[0] - o.position.x) * ease; o.position.z += (p[1] - o.position.z) * ease; const s = o.userData.s || 1; o.scale.y += (s - o.scale.y) * ease * .8; });
   place(gensG, gpos); place(modsG, mpos); place(batsG, bpos);
   fans.forEach(f => f.rotation.z += f.userData.w * dt);
+  // module lights breathe slowly, each group out of step, like racks at work
+  { const k = dark ? 1 : .3; M.act0.emissiveIntensity = k * (2.2 + 1.6 * Math.sin(t * 1.7));
+    M.act1.emissiveIntensity = k * (2.2 + 1.6 * Math.sin(t * 2.3 + 2.1)); M.act2.emissiveIntensity = k * (2.2 + 1.6 * Math.sin(t * 1.3 + 4.2));
+    M.band.emissiveIntensity = k * (3 + .5 * Math.sin(t * .8)); }
 
   // camera: scripted moves, else follow the site size until the viewer takes over
   if (tw) { tw.t = Math.min(1, tw.t + rdt / tw.dur); const k = 1 - Math.pow(1 - tw.t, 3);
@@ -893,9 +964,9 @@ function modAt(e) { const r = renderer.domElement.getBoundingClientRect(); ndc.s
   let o = hit.object; while (o && o.parent !== modsG) o = o.parent; return o ? modsG.children.indexOf(o) : -1; }
 renderer.domElement.addEventListener("pointerdown", e => { downAt = { x: e.clientX, y: e.clientY, t: performance.now() }; });
 renderer.domElement.addEventListener("pointerup", e => { if (!downAt) return; const d = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y), q = performance.now() - downAt.t; downAt = null;
-  if (d < 6 && q < 400) { const i = modAt(e); if (i >= 0 && i !== openIdx) openModule(i); } });
+  if (d < 6 && q < 400 && !isHall) { const i = modAt(e); if (i >= 0 && i !== openIdx) openModule(i); } });
 renderer.domElement.addEventListener("pointermove", e => { if (e.buttons || hoverQ || e.pointerType !== "mouse") return; hoverQ = true;
-  requestAnimationFrame(() => { hoverQ = false; renderer.domElement.classList.toggle("pick", modAt(e) >= 0); }); });
+  requestAnimationFrame(() => { hoverQ = false; renderer.domElement.classList.toggle("pick", !isHall && modAt(e) >= 0); }); });
 
 frame();
 
