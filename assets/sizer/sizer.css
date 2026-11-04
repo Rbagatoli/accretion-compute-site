@@ -226,3 +226,4 @@ html.embed .sizer .sz-hero{margin:0!important;border:0}
 html.embed .sizer .stage{height:100vh!important}
 /* ?copy=1: the parent page lays its own text over the left of the frame, so keep the camera shifted right of it */
 html.embed.withcopy .sz-hero .copy{display:grid!important;visibility:hidden}
+html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!important}

@@ -29,8 +29,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&family=Saira:wdth,wght@125,200;125,300&display=swap">
   <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
-  <link rel="stylesheet" href="../styles.css?v=051e6c15">
-  <script src="../site.js?v=051e6c15" defer></script>
+  <link rel="stylesheet" href="../styles.css?v=b4a8732f">
+  <script src="../site.js?v=b4a8732f" defer></script>
 </head>
 <body class="page-sizing-brownsville">
   <a class="skip" href="#main">Skip to content</a>
@@ -63,11 +63,21 @@
 
   <main id="main">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../assets/sizer/sizer.css?v=051e6c15">
+<link rel="stylesheet" href="../assets/sizer/sizer.css?v=b4a8732f">
 <style>
 /* Hero: the live model fills the first screen, text over its left side (same layout as the Site model page) */
 .szp-root .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .szp-root .copy h1{font-size:clamp(24px,2.9vw,36px)}
+/* Dock: once the hero scrolls away, the same live model sits in a corner window (as on the Site model page) */
+.szp-dock{display:none;pointer-events:none}
+.szp-root .stage.docked :is(iframe,.szp-dock){position:fixed;inset:auto 16px 16px auto;width:min(500px,42vw);height:min(310px,38vh);animation:szpIn .35s var(--ease)}
+.szp-root .stage.docked iframe{z-index:40;border:1px solid var(--line);background:var(--bg);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.szp-root .stage.docked .szp-dock{display:block;z-index:41}
+.szp-root .stage .szp-dock>button{pointer-events:auto}
+.szp-dock .mini-cap{cursor:default;pointer-events:none!important;max-width:calc(100% - 50px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.szp-dock .mini-cap::before{content:none}
+@keyframes szpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){.szp-root .stage.docked :is(iframe,.szp-dock){inset:auto 10px 10px auto;width:min(46vw,220px);height:calc(min(46vw,220px) * .6875)}}
 .szp-root .copy .szp-links{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px}
 .szp-root .copy .szp-links a{color:var(--fg-strong)}
 .szp-tog{display:flex;pointer-events:auto}
@@ -84,8 +94,9 @@
 .szp-earn{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:16px;border:1px solid var(--line);border-top:0;padding:20px}
 .szp-earn .tot .v{font-size:clamp(26px,3.2vw,40px)}
 .szp-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px)}
+.szp-cols>*{min-width:0}
 .szp .eyebrow{margin-bottom:12px}
-.szp table{width:100%;border-collapse:collapse;font-size:16px}
+.szp table{width:100%;min-width:0;border-collapse:collapse;font-size:16px}
 .szp td{padding:9px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--fg)}
 .szp td.r{text-align:right;white-space:nowrap;padding-left:14px;color:var(--fg-strong)}
 .szp ul{margin:0;padding-left:18px;color:var(--fg)} .szp li{margin:0 0 8px}
@@ -97,11 +108,12 @@
 .szp-btn.ghost{background:transparent;color:var(--fg-strong);border-color:var(--line)}
 .szp-btn:hover{background:transparent;color:var(--fg-strong)}
 @media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
- .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:1fr!important}}
+ .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
 </style>
 <div class="sizer szp-root">
 <div class="sz-hero">
- <div class="stage"><iframe id="szp-frame" src="../site-model?src=lfg&amp;flow=820&amp;ch4=50&amp;embed=1&amp;copy=1" title="Live 3D model of Brownsville Municipal Landfill, Texas" allow="fullscreen"></iframe></div>
+ <div class="stage"><iframe id="szp-frame" src="../site-model?src=lfg&amp;flow=820&amp;ch4=50&amp;embed=1&amp;copy=1" title="Live 3D model of Brownsville Municipal Landfill, Texas" allow="fullscreen"></iframe>
+  <div class="szp-dock"><div class="mini-cap">Live model &middot; Brownsville Municipal Landfill, Texas</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
  <div class="scrim" aria-hidden="true"></div>
  <div class="copy">
   <p class="crumbs">First sizing &middot; November 2026</p>
@@ -139,6 +151,15 @@
  </div>
 </div>
 </div>
+
+<script>
+(function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
+ var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}
+ function check(){var r=hero.getBoundingClientRect(),away=r.bottom<r.height*.5;if(!away)dismissed=false;var want=away&&!dismissed;if(want!==on){on=want;stage.classList.toggle("docked",on);send()}}
+ addEventListener("scroll",check,{passive:true});addEventListener("resize",check);f.addEventListener("load",send);check();
+ document.getElementById("szp-dock-x").addEventListener("click",function(){dismissed=true;on=false;stage.classList.remove("docked");send()});
+ document.getElementById("szp-dock-up").addEventListener("click",function(){hero.scrollIntoView({behavior:"smooth",block:"start"})});})();
+</script>
   </main>
 
   <footer class="foot">

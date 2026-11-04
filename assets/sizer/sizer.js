@@ -802,6 +802,11 @@ dockCheck();
   addEventListener("resize", () => { if (pos) place(pos.x, pos.y); });
 })();
 document.getElementById("mini-x").addEventListener("click", () => { dismissed = true; updateDock(); });
+// a sizing page that embeds this model docks it in a corner window when its hero scrolls away
+addEventListener("message", e => { if (e.origin !== location.origin || !e.data || e.data.acc !== "dock") return;
+  const de = document.documentElement; if (!de.dataset.wc) de.dataset.wc = de.classList.contains("withcopy") ? "1" : "0";
+  de.classList.toggle("docked", !!e.data.on); de.classList.toggle("withcopy", !e.data.on && de.dataset.wc === "1");
+  if (e.data.on && !userCam) controls.autoRotate = true; size(); });
 document.getElementById("mini-up").addEventListener("click", () => document.getElementById("hero").scrollIntoView({ behavior: "smooth", block: "start" }));
 
 /* ---------- loop ---------- */
