@@ -10,3 +10,7 @@
 # The pages.dev copy of the site stays out of search; accretioncompute.com is the real address.
 https://accretion-compute-site.pages.dev/*
   X-Robots-Tag: noindex
+
+# First sizings sent to site owners: shared by link only, kept out of search.
+/sizings/*
+  X-Robots-Tag: noindex, nofollow

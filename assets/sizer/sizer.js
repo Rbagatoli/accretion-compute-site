@@ -8,13 +8,13 @@
 
   // Source modes. Slider 0-100 maps onto a log scale between lo and hi.
   const MODES = {
-    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:500, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, price:2,
+    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:500, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, sizes:[1.6,3.3,4.5], price:2,
             hint:"Standard cubic feet per minute, as reported to your regulator.",
             chips:[["Small landfill",1200,50],["Mid landfill",2500,48],["Large landfill",7000,46]], src:"flare"},
-    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.5, hi:40, def:4, ch4:false, hr:9000, gen:2.5, price:2.5,
+    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.5, hi:40, def:4, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:2.5,
             hint:"Million cubic feet per day at a tap on your plant or gathering line.",
             chips:[["Plant tap",2],["Curtailed gas",5],["Large field",20]], src:"well"},
-    plant: {label:"Gas from the existing line", unit:"MMcf/d", lo:2, hi:60, def:5, ch4:false, hr:9000, gen:2.5, price:3,
+    plant: {label:"Gas from the existing line", unit:"MMcf/d", lo:2, hi:60, def:5, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:3,
             hint:"Gas taken from the plant's existing supply, for a site beside a working or retired plant.",
             chips:[["First phase",5],["Second phase",12],["Campus",40]], src:"stack"}
   };
@@ -35,7 +35,9 @@
     if (m.unit === "scfm") btuh = st.flow * (st.ch4/100) * 1012 * 60;
     else btuh = st.flow * 1e6 * 1037 / 24; // MMcf/d -> scf/h * Btu/scf
     const mw = btuh / m.hr / 1000;         // kW -> MW
-    const run = Math.max(1, Math.ceil(mw / m.gen));
+    // Bigger sites use bigger engines, not more of them: the smallest unit that keeps eight or fewer running.
+    const genMW = m.sizes.find(u => mw / u <= 8) || m.sizes[m.sizes.length - 1];
+    const run = Math.max(1, Math.ceil(mw / genMW));
     const gens = run + 1;
     const it = mw / 1.2;
     const racks = Math.floor(it * 1000 / 120);
@@ -44,7 +46,7 @@
     const mmbtu = btuh * 8760 * 0.95 / 1e6;
     const b = BANDS[mode];
     const payLo = mmbtu * b[0] + acres * LEASE[0], payHi = mmbtu * b[1] + acres * LEASE[1];
-    return {mw, gens, run, it, racks, gpus:racks*72, halls, acres, mmbtu, payLo, payHi, pay:(payLo+payHi)/2};
+    return {mw, gens, run, genMW, it, racks, gpus:racks*72, halls, acres, mmbtu, payLo, payHi, pay:(payLo+payHi)/2};
   }
 
   // Smoothly animated numbers
@@ -78,7 +80,7 @@
     tween("r-ten", R.payLo*10, v => range(v, v*k));
     tween("r-mw", R.mw, v => fmt(v,1) + "<small>MW</small>");
     tween("r-gens", R.gens, v => fmt(Math.round(v)));
-    $("r-gens-d").textContent = R.run + " running at " + m.gen + " MW, plus one spare";
+    $("r-gens-d").textContent = R.run + " running at " + R.genMW + " MW, plus one spare";
     tween("r-it", R.it, v => fmt(v,1) + "<small>MW</small>");
     tween("r-racks", R.racks, v => fmt(Math.round(v)));
     tween("r-gpus", R.gpus, v => fmt(Math.round(v)));
@@ -146,12 +148,12 @@
   }
   function line(a,b,stroke,lw=1,dash){ ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.setLineDash(dash||[]); ctx.stroke(); ctx.setLineDash([]); }
 
-  function layout(nG, nH){
+  function layout(nG, nH, gs){
     // World units: 1 = about 10 m. Source and gas yard on the left, generator block, battery, then hall block.
     const gPer = Math.max(3, Math.min(10, Math.ceil(Math.sqrt(nG*1.5))));
     const hPer = Math.max(2, Math.min(8, Math.ceil(Math.sqrt(nH*1.2))));
     const gCols = Math.ceil(nG/gPer), hCols = Math.ceil(nH/hPer);
-    const gw = 1.3, gd = 2.2, gGap = 0.5, hw = 2.6, hd = 4.2, hGap = 0.8;
+    const gw = 1.3*gs, gd = 2.2*gs, gGap = 0.5*gs, hw = 2.6, hd = 4.2, hGap = 0.8;
     const gBlockD = Math.min(nG,gPer)*(gd+gGap) - gGap, hBlockD = Math.min(nH,hPer)*(hd+hGap) - hGap;
     const depth = Math.max(gBlockD, hBlockD, 8) + 2;
     const gx0 = 7.5, gy0 = (depth - gBlockD)/2;
@@ -167,7 +169,7 @@
     const sh = scene.shown, ease = 0.12;
     sh.gens += (R.gens - sh.gens)*ease; sh.halls += (R.halls - sh.halls)*ease;
     const nG = Math.max(2, Math.round(Math.min(sh.gens, 80))), nH = Math.max(1, Math.round(Math.min(sh.halls, 64)));
-    const L = layout(nG, nH);
+    const L = layout(nG, nH, Math.max(1, Math.cbrt(R.genMW / 2.5)));
     const wx = L.width + 1, wy = L.depth + 1;
     const sx = W / ((wx + wy) * C30 * 0.98), sy = H / ((wx + wy) * S30 * 1.02 + 6.5);
     S += ((Math.min(sx, sy)*DPR) - S) * 0.15;
@@ -220,7 +222,7 @@
 
     // draw boxes back to front by (x+y)
     const items = [];
-    gens.forEach((p,i)=> items.push({x:p[0],y:p[1],w:L.gw,d:L.gd,h:1.1,c: i===nG-1 ? cDim : c, k:"g"}));
+    gens.forEach((p,i)=> items.push({x:p[0],y:p[1],w:L.gw,d:L.gd,h:1.1*L.gw/1.3,c: i===nG-1 ? cDim : c, k:"g"}));
     items.push({x:bat[0],y:bat[1],w:2.4,d:3,h:1.6,c,k:"b"});
     halls.forEach(p=> items.push({x:p[0],y:p[1],w:L.hw,d:L.hd,h:1.5,c,k:"h"}));
     items.sort((a,b)=>(a.x+a.y)-(b.x+b.y));
@@ -244,7 +246,13 @@
     requestAnimationFrame(draw);
   }
 
-  setMode("gas");
+  // A link can open the model at a given site: ?src=lfg&flow=2214&ch4=50
+  (function(){
+    const q = new URLSearchParams(location.search), k = MODES[q.get("src")] ? q.get("src") : "gas", m = MODES[k];
+    const f = parseFloat(q.get("flow")), c = parseFloat(q.get("ch4"));
+    if (m.ch4 && c >= 35 && c <= 60) { st.ch4 = Math.round(c); $("ch4").value = st.ch4; }
+    if (f >= m.lo && f <= m.hi) { st.flow = f; setMode(k, true); } else setMode(k);
+  })();
   requestAnimationFrame(draw);
 })();
 
@@ -580,9 +588,9 @@ const protoGen = makeGen(false), protoMod = makeMod(), protoBat = makeBat();
 })();
 
 const L = {};
-function layout(nG, nM, nB) {
+function layout(nG, nM, nB, gs) {
   const gRow = Math.max(4, Math.min(12, Math.ceil(Math.sqrt(nG * 2.2))));
-  const gRows = Math.ceil(nG / gRow), gx0 = 32, gpx = 4.4, gpz = 16;
+  const gRows = Math.ceil(nG / gRow), gx0 = 32, gpx = 4.4 * gs, gpz = 16 * gs;
   const gW = Math.min(nG, gRow) * gpx;
   const tx = gx0 + gW + 6;
   const bx0 = tx + 10, bRow = Math.min(nB, 4), bW = Math.max(1, bRow) * 3.4;
@@ -776,11 +784,12 @@ function frameInner() {
   const R = SC.target; if (!R) return;
   if (SC.src !== curSrc) { if (srcG) scene.remove(srcG); srcG = buildSource(SC.src); scene.add(srcG); curSrc = SC.src; }
   const nG = Math.min(R.gens, MAX_G), nM = Math.min(R.halls, MAX_M), nB = Math.max(1, Math.min(12, Math.ceil(R.mw / 4)));
-  const k = nG + "|" + nM + "|" + nB;
+  const gs = Math.max(1, Math.cbrt(R.genMW / 2.5)); // a larger engine is drawn larger
+  const k = nG + "|" + nM + "|" + nB + "|" + gs;
   if (k !== key) {
-    key = k; const P = layout(nG, nM, nB); gpos = P.gp; mpos = P.mp; bpos = P.bp;
+    key = k; const P = layout(nG, nM, nB, gs); gpos = P.gp; mpos = P.mp; bpos = P.bp;
     sync(gensG, nG, () => protoGen.clone());
-    gensG.children.forEach((o, i) => { const sp = i === nG - 1; o.userData.spare = sp; o.children[1].material = sp ? M.genSpare : M.gen; });
+    gensG.children.forEach((o, i) => { const sp = i === nG - 1; o.userData.spare = sp; o.userData.s = gs; o.scale.x = o.scale.z = gs; o.children[1].material = sp ? M.genSpare : M.gen; });
     sync(modsG, nM, () => protoMod.clone()); sync(batsG, nB, () => protoBat.clone());
     gensG.children.forEach((o, i) => { if (o.scale.y < .01) o.position.set(gpos[i][0], 0, gpos[i][1]); });
     modsG.children.forEach((o, i) => { if (o.scale.y < .01) o.position.set(mpos[i][0], 0, mpos[i][1]); });
@@ -800,7 +809,7 @@ function frameInner() {
   }
   if (!visible) return;
   const ease = 1 - Math.pow(.002, dt);
-  const place = (grp, pos) => grp.children.forEach((o, i) => { const p = pos[i]; if (!p) return; o.position.x += (p[0] - o.position.x) * ease; o.position.z += (p[1] - o.position.z) * ease; o.scale.y += (1 - o.scale.y) * ease * .8; });
+  const place = (grp, pos) => grp.children.forEach((o, i) => { const p = pos[i]; if (!p) return; o.position.x += (p[0] - o.position.x) * ease; o.position.z += (p[1] - o.position.z) * ease; const s = o.userData.s || 1; o.scale.y += (s - o.scale.y) * ease * .8; });
   place(gensG, gpos); place(modsG, mpos); place(batsG, bpos);
   fans.forEach(f => f.rotation.z += f.userData.w * dt);
 
@@ -840,7 +849,7 @@ function frameInner() {
   const run = gensG.children.filter(o => !o.userData.spare && o.scale.y > .9);
   puffs.forEach(p => { p.userData.life += dt;
     if (p.userData.life > 4 || !p.userData.src) { if (!run.length) { p.material.opacity = 0; return; } p.userData.life = 0; const g = run[(Math.random() * run.length) | 0];
-      p.userData.src = g.position.clone().add(g.userData.stack); }
+      const k = g.userData.s || 1, q = g.userData.stack; p.userData.src = g.position.clone().add(new THREE.Vector3(q.x * k, q.y * k, q.z * k)); }
     const a = p.userData.life / 4; if (a < 0) return;
     p.position.copy(p.userData.src).add(new THREE.Vector3(a * 6, a * 9, -a * 2));
     const s = 2 + a * 9; p.scale.set(s, s, 1); p.material.opacity = (dark ? .012 : .03) * Math.sin(Math.PI * a); });
