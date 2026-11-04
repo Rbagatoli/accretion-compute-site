@@ -22,7 +22,7 @@
   const st = {flow:2000, ch4:50};
   // Typical price bands used for the payment range; the real price is set in the gas agreement.
   const BANDS = {lfg:[1.5,2.5], gas:[2,3], plant:[2.5,3.5]}, LEASE = [1000,2000];
-  const range = (lo, hi) => { const u = hi >= 1e6 ? 1e6 : 1e3, d = u === 1e6 ? 1 : 0, s = u === 1e6 ? "M" : "k";
+  const range = (lo, hi) => { const u = hi >= 1e6 ? 1e6 : 1e3, d = u === 1e6 && hi < 1e7 ? 1 : 0, s = u === 1e6 ? "M" : "k";
     return "$" + fmt(lo/u, d) + "&ndash;" + fmt(hi/u, d) + s; };
 
   const toSlider = (v,m) => 100*Math.log(v/m.lo)/Math.log(m.hi/m.lo);
