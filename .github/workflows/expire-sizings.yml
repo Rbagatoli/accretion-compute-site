@@ -1,0 +1,28 @@
+# Every day: take down sizing pages 90 days after they went live (tools/expire-sizings.mjs).
+# The push it makes redeploys the site on Cloudflare Pages.
+name: Expire sizing pages
+on:
+  schedule:
+    - cron: "17 9 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  expire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/expire-sizings.mjs
+      - name: Commit and push
+        run: |
+          git add -A sizings src/pages _redirects
+          if git diff --cached --quiet; then echo "nothing to take down"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sizing pages: take down pages past 90 days"
+          git push
