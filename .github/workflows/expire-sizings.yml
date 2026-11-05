@@ -20,7 +20,8 @@ jobs:
       - run: node tools/expire-sizings.mjs
       - name: Commit and push
         run: |
-          git add -A sizings src/pages _redirects
+          git add -A sizings src/pages
+          if [ -e _redirects ]; then git add _redirects; fi
           if git diff --cached --quiet; then echo "nothing to take down"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
