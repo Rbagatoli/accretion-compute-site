@@ -1,4 +1,4 @@
-<!--{"title": "Madison County Landfill, Canastota, New York: first sizing | Accretion Compute", "description": "What the gas the site now flares could power, how much land it would take, and what it could earn each year.", "out": "sizings/madison-county-ny.html", "noindex": true}-->
+<!--{"title": "Madison County Landfill, Canastota, New York: revised sizing | Accretion Compute", "description": "What the landfill gas could power today and at the County&#x27;s target gas quality, how much land it would take, and what it could earn each year.", "out": "sizings/madison-county-ny.html", "noindex": true}-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/sizer/sizer.css?v={{version}}">
 <style>
@@ -47,48 +47,49 @@
 @media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
  .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
 </style>
+
+<style>.szp td.h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim)} .szp tr:last-child td{color:var(--fg-strong)} .sizer .szp td.r{font-family:inherit;font-size:inherit;white-space:normal} .sizer .szp td.r.h{font-family:var(--mono);font-size:11px}</style>
 <div class="sizer szp-root">
 <div class="sz-hero">
- <div class="stage"><iframe id="szp-frame" src="site-model?src=lfg&amp;flow=357&amp;ch4=44&amp;embed=1&amp;copy=1" title="Live 3D model of Madison County Landfill, Canastota, New York" allow="fullscreen"></iframe>
+ <div class="stage"><iframe id="szp-frame" src="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;embed=1&amp;copy=1" title="Live 3D model of Madison County Landfill, Canastota, New York" allow="fullscreen"></iframe>
   <div class="szp-dock"><div class="mini-cap">Live model &middot; Madison County Landfill, Canastota, New York</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
  <div class="scrim" aria-hidden="true"></div>
  <div class="copy">
-  <p class="crumbs">First sizing &middot; November 2026</p>
+  <p class="crumbs">Revised sizing &middot; November 2026</p>
   <div class="eyebrow">Landfill gas</div>
   <h1>Madison County Landfill, Canastota, New York</h1>
-  <p class="lede">What the gas the site now flares could power, how much land it would take, and what it could earn each year.</p>
-  <div class="hero-stats"><div><div class="num">0.9</div><div class="k">MW on site</div></div><div><div class="num">1</div><div class="k">Compute module</div></div><div><div class="num">$6–72k</div><div class="k">To the owner, per year</div></div></div>
-  <p class="szp-links"><a href="sizings/madison-county-ny.pdf" download>Download the PDF</a><a id="szp-full" href="site-model?src=lfg&amp;flow=357&amp;ch4=44">Open the full model &rarr;</a></p>
+  <p class="lede">What the landfill gas could power today and at the County&#x27;s target gas quality, how much land it would take, and what it could earn each year.</p>
+  <div class="hero-stats"><div><div class="num">1.0</div><div class="k">MW on site</div></div><div><div class="num">1</div><div class="k">Compute module</div></div><div><div class="num">$6–78k</div><div class="k">To the County, per year</div></div></div>
+  <div class="szp-tog" role="group" aria-label="Gas case"><button type="button" aria-pressed="false" data-q="src=lfg&amp;flow=350&amp;ch4=30" data-s="0.6|1|$6–51k">Today</button><button type="button" aria-pressed="true" data-q="src=lfg&amp;flow=360&amp;ch4=48" data-s="1.0|1|$6–78k">At target</button></div><p class="szp-links"><a href="sizings/madison-county-ny.pdf" download>Download the PDF</a><a id="szp-full" href="site-model?src=lfg&amp;flow=360&amp;ch4=48">Open the full model &rarr;</a></p>
  </div>
 </div>
 <div class="wrap szp">
- <div class="szp-kpis">
-  <div><div class="v">0.9 MW</div><div class="k">Power from the gas</div></div>
-  <div><div class="v">1</div><div class="k">Compute module</div></div>
-  <div><div class="v">6 acres</div><div class="k">Land needed</div></div>
-  <div><div class="v">80k</div><div class="k">MMBtu bought a year</div></div>
- </div>
- <div class="szp-earn">
-  <div><div class="k">Gas sale, per year</div><div class="v">up to $60k</div></div>
-  <div><div class="k">Land lease, per year</div><div class="v">$6k to $12k</div></div>
-  <div class="tot"><div class="k">Total to the owner, per year</div><div class="v">$6k to $72k</div></div>
+ <div class="szp-earn" style="border-top:1px solid var(--line)">
+  <div><div class="k">To the County today, per year</div><div class="v">$6k to $51k</div></div>
+  <div><div class="k">At target, per year</div><div class="v">$6k to $78k</div></div>
+  <div class="tot"><div class="k">What better gas adds, per year</div><div class="v">up to $27k</div></div>
  </div>
 </div>
 <div class="wrap szp"><div class="szp-cols">
- <div><div class="eyebrow">The math</div><table><tr><td>Landfill gas collected and flared (2022)</td><td class='r'>357 scfm</td></tr><tr><td>Methane content (2022)</td><td class='r'>44.1%</td></tr><tr><td>Energy in the gas</td><td class='r'>9.6 MMBtu per hour</td></tr><tr><td>Power at a heat rate of 11,000 Btu/kWh</td><td class='r'>about 0.9 MW</td></tr><tr><td>Compute (power less cooling and losses, /1.2)</td><td class='r'>about 0.7 MW</td></tr><tr><td>Compute modules (about 1 MW each)</td><td class='r'>1</td></tr><tr><td>Gas engines (running plus one spare)</td><td class='r'>2 at 1.6 MW</td></tr><tr><td>Land: 5 acres plus 1.2 acres per MW</td><td class='r'>about 6 acres</td></tr><tr><td>Gas bought per year (95% run time)</td><td class='r'>80k MMBtu</td></tr><tr><td>Gas payment at up to $0.75 per MMBtu (under 1¢ per kWh)</td><td class='r'>up to $60k</td></tr><tr><td>Land lease at $1,000 to $2,000 per acre per year</td><td class='r'>$6k to $12k</td></tr></table><p class="small" style="margin-top:10px">Landfill gas: about 1,012 Btu per cubic foot of methane. Prices in US dollars; the price band is the one shown on our Site model page.</p></div>
- <div><div class="eyebrow">What it would look like</div><ul><li>Gas engines on a small parcel near the gas, a battery to smooth the load, and factory-built compute modules leased to an AI company.</li><li>No grid connection and no export: all of the power is used on site.</li><li>We build and run the site. The owner puts in no capital.</li><li>Multi-year gas and land agreements, matched to the tenant&#x27;s lease, at a fixed price.</li></ul>
-  <div class='box'><div class='eyebrow'>Worth checking</div><ul class='small'><li>Flow after the 2025 new gas wells</li><li>Who holds the gas rights now that the old power plant is gone</li><li>Fit with the county&#x27;s Agriculture and Renewable Energy Park</li><li>Space for a small fenced parcel near the flare</li><li>Gas quality (siloxanes, H2S) for engines</li></ul></div>
+ <div><div class="eyebrow">The math</div><table><tr><td></td><td class='r h'>Today</td><td class='r h'>At target</td></tr><tr><td>Landfill gas collected</td><td class='r'>350 scfm</td><td class='r'>360 scfm</td></tr><tr><td>Methane content</td><td class='r'>30%</td><td class='r'>48%</td></tr><tr><td>Power at 11,000 Btu/kWh</td><td class='r'>about 0.6 MW</td><td class='r'>about 1.0 MW</td></tr><tr><td>Compute (after cooling and losses)</td><td class='r'>about 0.5 MW</td><td class='r'>about 0.8 MW</td></tr><tr><td>Compute modules (about 1 MW)</td><td class='r'>1</td><td class='r'>1</td></tr><tr><td>Gas engines (incl. one spare)</td><td class='r'>2 at 1.6 MW</td><td class='r'>2 at 1.6 MW</td></tr><tr><td>Land (5 ac + 1.2 ac per MW)</td><td class='r'>about 6 acres</td><td class='r'>about 6 acres</td></tr><tr><td>Gas bought a year (95% run)</td><td class='r'>53k MMBtu</td><td class='r'>87k MMBtu</td></tr><tr><td>Gas, up to $0.75 per MMBtu</td><td class='r'>up to $40k</td><td class='r'>up to $65k</td></tr><tr><td>Land, $1,000–2,000 per acre</td><td class='r'>$6k to $11k</td><td class='r'>$6k to $12k</td></tr><tr><td>Total to the County, per year</td><td class='r'>$6k to $51k</td><td class='r'>$6k to $78k</td></tr></table><p class="small" style="margin-top:10px">Landfill gas: about 1,012 Btu per cubic foot of methane. Prices in US dollars; the price band is the one shown on our Site model page.</p></div>
+ <div><div class="eyebrow">What it would look like</div><ul><li>Gas engines, a battery to smooth the load, and factory-built compute modules leased to an AI company, on a small parcel near the gas.</li><li>The County keeps running the wellfield and delivers gas to our meter. Gas at the target quality is paid at a higher price.</li><li>Runs on its own engines. If the earlier project&#x27;s grid connection is still in place, it could serve as backup.</li><li>We build and run the site; the County puts in no capital. Engine heat is available for the ARE Park.</li></ul>
+  <div class='box'><div class='eyebrow'>To firm up the numbers</div><ul class='small'><li>12 to 24 months of flow, methane and oxygen readings</li><li>Equipment still in place from the earlier project</li><li>Whether the earlier National Grid connection is still in place, and its size</li><li>Utilities and acres at the ARE Park; gas quality (siloxanes, H2S)</li></ul></div>
  </div>
 </div></div>
 <div class="wrap szp szp-end">
- <p class="small"><strong>Source:</strong> EPA Landfill Methane Outreach Program (LMOP) database, September 2024 release (2022 data): gas collected and flared. This is a first read from public data, not an offer: no cost and no obligation. The real price and terms are set in the gas and land agreements after a site review.</p>
+ <p class="small"><strong>Source:</strong> Madison County gas readings shared in November 2026: today about 350 scfm at 30% methane; the County&#x27;s target is 350 to 375 scfm at 45 to 50% methane (the target column uses 360 scfm at 48%). These are estimates from the County&#x27;s readings, not an offer: no cost and no obligation. Twelve to 24 months of readings will firm them up; the real price and terms are set in the gas and land agreements.</p>
  <div class="actions">
   <a class="szp-btn" href="contact">Talk to us about your site &rarr;</a>
   <a class="szp-btn ghost" href="sizings/madison-county-ny.pdf" download>Download the one-page PDF</a>
  </div>
 </div>
 </div>
-
+<script>
+document.querySelectorAll(".szp-tog button").forEach(function(b){b.addEventListener("click",function(){
+  document.querySelectorAll(".szp-tog button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});
+  var q=b.getAttribute("data-q");document.getElementById("szp-frame").src="../site-model?"+q+"&embed=1&copy=1";
+  var v=b.getAttribute("data-s").split("|");document.querySelectorAll(".hero-stats .num").forEach(function(n,i){n.textContent=v[i]});document.getElementById("szp-full").href="../site-model?"+q;});});
+</script>
 <script>
 (function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
  var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}

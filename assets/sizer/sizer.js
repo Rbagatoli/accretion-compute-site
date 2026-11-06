@@ -8,7 +8,7 @@
 
   // Source modes. Slider 0-100 maps onto a log scale between lo and hi.
   const MODES = {
-    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:500, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, sizes:[1.6,3.3,4.5], price:2,
+    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:100, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, sizes:[1.6,3.3,4.5], price:2,
             hint:"Standard cubic feet per minute, as reported to your regulator.",
             chips:[["Small landfill",1200,50],["Mid landfill",2500,48],["Large landfill",7000,46]], src:"flare"},
     gas:   {label:"Gas available", unit:"MMcf/d", lo:0.5, hi:40, def:4, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:2.5,
@@ -250,7 +250,7 @@
   (function(){
     const q = new URLSearchParams(location.search), k = MODES[q.get("src")] ? q.get("src") : "gas", m = MODES[k];
     const f = parseFloat(q.get("flow")), c = parseFloat(q.get("ch4"));
-    if (m.ch4 && c >= 35 && c <= 60) { st.ch4 = Math.round(c); $("ch4").value = st.ch4; }
+    if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = Math.round(c); $("ch4").value = st.ch4; }
     if (f >= m.lo && f <= m.hi) { st.flow = f; setMode(k, true); } else setMode(k);
   })();
   requestAnimationFrame(draw);
