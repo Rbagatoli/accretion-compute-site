@@ -939,6 +939,8 @@ function frameInner() {
   if (!SC.mode3d) { SC.mode3d = true; const iso = document.getElementById("iso"); if (iso) iso.style.display = "none"; window.__gl3d = true;
     const c = document.getElementById("ctrls"), h = document.getElementById("hint"); if (c) c.hidden = false; if (h) { if (matchMedia("(pointer:coarse)").matches) h.textContent = "Two fingers to move or zoom · Tap a module to open it"; h.hidden = false; } ready = true; updateDock(); }
 }
+// Embedded on a sizing page: tell the page a module is open, so it can fade its own title text
+function tellHost(on) { if (parent !== window) try { parent.postMessage({ acc: "mod", open: on }, location.origin); } catch (e) {} }
 function pickModule() { let best = -1, bx = Infinity, bz = -Infinity;
   mpos.forEach((p, i) => { if (p[0] < bx - .1 || (Math.abs(p[0] - bx) < .1 && p[1] > bz)) { best = i; bx = p[0]; bz = p[1]; } }); return best; }
 function openModule(i) {
@@ -946,6 +948,7 @@ function openModule(i) {
   if (openIdx >= 0 && openIdx !== i) { const old = modsG.children[openIdx]; if (old) old.visible = true; openAmt = 0; }
   openIdx = i; modOpen = true; userCam = true; controls.autoRotate = false;
   hero.classList.add("open"); openBtn.textContent = "Close module";
+  tellHost(true);
   const c = new THREE.Vector3(mpos[i][0] + .2, 1.7, mpos[i][1] + .4), narrow = VW < 700;
   const dir = narrow ? new THREE.Vector3(-.5, .74, .45).normalize() : new THREE.Vector3(-.8, .5, .33).normalize();
   if (narrow) { c.y += 2.5; c.z -= 1.5; } else { c.y += 1.2; c.z += 1.1; }
@@ -953,6 +956,7 @@ function openModule(i) {
 }
 function closeModule(instant) {
   modOpen = false; hero.classList.remove("open"); openBtn.textContent = "Look inside a module";
+  tellHost(false);
   userCam = false; if (instant) openAmt = 0;
   else tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.6);
 }

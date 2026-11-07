@@ -2813,3 +2813,13 @@ var acSymbol = (function () {
   window.acSeam = init;
   document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-seam]').forEach(init); });
 })();
+
+/* Sizing pages: the live model sits in a frame under the page title. When a module is opened in it, fade the title text out of the way. */
+(function () {
+  addEventListener('message', function (e) {
+    if (e.origin !== location.origin || !e.data || e.data.acc !== 'mod') return;
+    document.querySelectorAll('.sz-hero').forEach(function (h) {
+      var f = h.querySelector('iframe'); if (f && f.contentWindow === e.source) h.classList.toggle('open', !!e.data.open);
+    });
+  });
+})();
