@@ -648,14 +648,14 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   }
   /* no stars above a curve under the title: high at the edges, lowest in the middle */
   .js .ps-alt .cb-dust {
-    -webkit-mask-image: radial-gradient(ellipse 57% 290px at 50% 0, transparent 90%, #000 100%);
-    mask-image: radial-gradient(ellipse 57% 290px at 50% 0, transparent 90%, #000 100%);
+    -webkit-mask-image: radial-gradient(ellipse 57% 225px at 50% 0, transparent 90%, #000 100%);
+    mask-image: radial-gradient(ellipse 57% 225px at 50% 0, transparent 90%, #000 100%);
   }
   /* the switch from What we do sits right on top; a little of its white stays while the story plays */
   .js .ps-alt[data-seam].seam-on { padding-top: 0; }
   .js .ps-alt[data-seam].seam-on .mz-stage::before {
     content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: 0; pointer-events: none;
-    height: var(--sa-down); background: var(--sa-col);
+    height: var(--sa-down); background: var(--sa-col); opacity: .25;
     -webkit-mask-image: var(--sa-mask); mask-image: var(--sa-mask);
     -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
     -webkit-mask-size: 100% var(--sa-total); mask-size: 100% var(--sa-total);
