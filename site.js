@@ -2721,3 +2721,40 @@ var acSymbol = (function () {
     requestAnimationFrame(frame);
   });
 })();
+
+/* Edge light: the stretch of a card's platinum ring nearest the pointer brightens (styles.css, "Platinum ring"). */
+(function () {
+  if (!window.matchMedia || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  var SEL = '.card, .circ-card, .circ-hw, .seo-guide .quick-answer, .seo-guide .product-fit', REACH = 90, MAX = 6;
+  var x = -1e4, y = -1e4, raf = 0, lit = [];
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function paint() {
+    raf = 0;
+    var els = document.querySelectorAll(SEL), H = innerHeight, hits = [];
+    for (var i = 0; i < els.length; i++) {
+      var r = els[i].getBoundingClientRect();
+      if (!r.width || r.bottom < -REACH || r.top > H + REACH) continue;
+      var px = clamp(x, r.left, r.right), py = clamp(y, r.top, r.bottom);
+      if (px === x && py === y) {
+        var dl = x - r.left, dr = r.right - x, dt = y - r.top, db = r.bottom - y, m = Math.min(dl, dr, dt, db);
+        if (m === dl) px = r.left; else if (m === dr) px = r.right; else if (m === dt) py = r.top; else py = r.bottom;
+      }
+      var d = Math.hypot(x - px, y - py);
+      if (d < REACH) hits.push({ el: els[i], d: d, ex: px - r.left + 1, ey: py - r.top + 1 });
+    }
+    hits.sort(function (a, b) { return a.d - b.d; }); hits = hits.slice(0, MAX);
+    var now = hits.map(function (h) {
+      var a = 1 - h.d / REACH; a = a * a * (3 - 2 * a);
+      h.el.style.setProperty('--ex', h.ex.toFixed(1) + 'px');
+      h.el.style.setProperty('--ey', h.ey.toFixed(1) + 'px');
+      h.el.style.setProperty('--ea', a.toFixed(3));
+      return h.el;
+    });
+    lit.forEach(function (el) { if (now.indexOf(el) < 0) el.style.setProperty('--ea', '0'); });
+    lit = now;
+  }
+  function ask() { if (!raf) raf = requestAnimationFrame(paint); }
+  addEventListener('pointermove', function (e) { x = e.clientX; y = e.clientY; ask(); }, { passive: true });
+  addEventListener('scroll', ask, { passive: true });
+  document.documentElement.addEventListener('pointerleave', function () { x = y = -1e4; ask(); });
+})();

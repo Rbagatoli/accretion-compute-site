@@ -589,7 +589,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   margin: 0 0 22px; font: 400 12px/1 var(--body); letter-spacing: .3em; text-transform: uppercase; color: var(--fg-dim);
 }
 .ps-alt .mz-title {
-  font: 200 clamp(32px, min(4.4vw, 7.4vh), 76px)/1.06 var(--display); font-stretch: 125%;
+  font: 200 clamp(32px, min(4.4vw, 7.4vh), 64px)/1.06 var(--display); font-stretch: 125%;
   letter-spacing: .02em; color: var(--fg-strong); text-transform: none; margin: 0 0 22px;
 }
 .ps-alt .mz-body { margin: 0; color: var(--fg); font-size: clamp(16px, 1.3vw, 19px); line-height: 1.6; max-width: 34ch; }
@@ -1072,3 +1072,39 @@ html:not(.js) .tab-panel + .tab-panel { margin-top: 72px; }
 .js .reveal:not(.in) .layers .l3 { transform: translateY(-134px); }
 .js .reveal:not(.in) .layers .ly-labels, .js .reveal:not(.in) .layers .ly-drop, .js .reveal:not(.in) .layers .ly-mk { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .layers .ly-gas, .layers .ly-fibf, .layers .ly-drop, .layers .ring { animation: none; } .js .reveal .layers * { transform: none !important; opacity: 1 !important; } }
+
+/* ---------- Platinum ring: bright along the top, fading down; the stretch nearest the pointer lights (site.js sets --ex, --ey, --ea) ---------- */
+.card, .circ-card, .circ-hw, .seo-guide .quick-answer, .seo-guide .product-fit { --ex: 0px; --ey: 0px; --ea: 0; position: relative; border-color: transparent; }
+.card::before, .circ-card::before, .circ-hw::before, .seo-guide .quick-answer::before, .seo-guide .product-fit::before {
+  content: ""; position: absolute; inset: -1px; padding: 1px; pointer-events: none; z-index: 2;
+  background:
+    radial-gradient(circle 70px at var(--ex) var(--ey), rgba(var(--aura), calc(0.85 * var(--ea))), rgba(var(--aura), calc(0.22 * var(--ea))) 45%, transparent 72%),
+    linear-gradient(180deg, rgba(var(--aura), 0.5) 0%, rgba(var(--aura), 0.26) 30%, rgba(var(--aura), 0.08) 68%, rgba(var(--aura), 0.14) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+a.card:hover { border-color: transparent; }
+
+/* ---------- Chrome headings: a vertical metal sweep with a dark horizon band.
+   Platinum on black sections, graphite on white ones; a softer sweep for the small h3. ---------- */
+:root {
+  --chrome-plat: linear-gradient(176deg, #ffffff 0%, #e3e5e8 20%, #b6babf 40%, #8c9097 48%, #eceef0 54%, #ffffff 60%, #c3c6cb 80%, #e8eaed 100%);
+  --chrome-plat-soft: linear-gradient(178deg, #ffffff 0%, #e6e8eb 42%, #b1b5bb 80%, #dadde0 100%);
+  --chrome-graphite: linear-gradient(176deg, #2b2e33 0%, #0b0c0e 26%, #3c4046 44%, #6b6f76 50%, #2b2e33 57%, #0b0c0e 74%, #3a3e44 100%);
+  --chrome-graphite-soft: linear-gradient(178deg, #0b0c0e 0%, #2a2d32 50%, #4e5258 85%, #1d1f23 100%);
+}
+[data-theme="dark"] :is(.dark, .foot, .bar), [data-theme="light"] body, [data-theme="light"] .hero-alt { --metal: var(--chrome-plat); --metal-soft: var(--chrome-plat-soft); }
+[data-theme="light"] :is(.dark, .foot, .bar), [data-theme="dark"] body, [data-theme="dark"] .hero-alt { --metal: var(--chrome-graphite); --metal-soft: var(--chrome-graphite-soft); }
+h3 { background: var(--metal-soft, var(--metal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* the sweep repeats on every line of a heading, so a two-line title gets it twice (not one faint slice each) */
+h1, h2, h3 { background-size: 100% 1lh; background-repeat: repeat-y; }
+/* Big display lines that are not plain headings get the same chrome: the home story titles,
+   the energy statement, the site-check headings. */
+.ps-alt .mz-title, .statement, .fit-h, .fit-verdict, .metal {
+  background: var(--metal); -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 100% 1lh; background-repeat: repeat-y;
+}
+.statement .metal { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: inherit; }
+/* The metal only paints inside the heading's box: a little room on the right so the last letter's edge is never cut. */
+h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; margin-right: -.08em; }
+@media (max-width: 420px) { h3 { letter-spacing: .1em; } }

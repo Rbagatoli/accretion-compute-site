@@ -2,7 +2,8 @@
   --bg:#050506; --bg-2:#0d0e11; --fg:#d9dce1; --fg-strong:#f3f4f6; --fg-dim:#8f949c;
   --line:rgba(232,234,237,.14); --line-soft:rgba(232,234,237,.07);
   --glow:243,244,246; --panel:#0a0b0d;
-  --metal:linear-gradient(135deg,#ffffff 0%,#b9bdc4 20%,#f3f4f6 40%,#8e939b 60%,#e6e8eb 80%,#a9adb4 100%);
+  --metal:linear-gradient(176deg,#ffffff 0%,#e3e5e8 20%,#b6babf 40%,#8c9097 48%,#eceef0 54%,#ffffff 60%,#c3c6cb 80%,#e8eaed 100%);
+  --metal-soft:linear-gradient(178deg,#ffffff 0%,#e6e8eb 42%,#b1b5bb 80%,#dadde0 100%);
   --head:"Michroma","Eurostile",Arial,sans-serif;
   --display:"Saira","Michroma",Arial,sans-serif;
   --body:"Jost","Futura","Helvetica Neue",Arial,sans-serif;
@@ -227,3 +228,7 @@ html.embed .sizer .stage{height:100vh!important}
 /* ?copy=1: the parent page lays its own text over the left of the frame, so keep the camera shifted right of it */
 html.embed.withcopy .sz-hero .copy{display:grid!important;visibility:hidden}
 html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!important}
+
+/* chrome headings: softer sweep on the small h3 */
+.sizer h3{background:var(--metal-soft);-webkit-background-clip:text;background-clip:text}
+.sizer h1,.sizer h2,.sizer h3{background-size:100% 1lh;background-repeat:repeat-y}
