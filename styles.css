@@ -627,20 +627,40 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   .js .ps-alt .mz-rail li.on::before { transform: scaleX(1); }
 }
 @media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
+  /* text centered above the animation, wide and high */
   .js .ps-alt .mz-text {
-    top: var(--bar-h); bottom: 0;
-    left: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
-    width: min(36vw, 500px);
+    top: calc(var(--bar-h) + 2vh); bottom: auto; height: 16vh;
+    left: 50%; transform: translateX(-50%); width: min(1280px, calc(100% - 2 * var(--gutter)));
+    text-align: center;
   }
-  .js .ps-alt .mz-slide { top: 50%; transform: translateY(calc(-50% + 18px)); }
-  .js .ps-alt .mz-slide.on { transform: translateY(-50%); }
+  .js .ps-alt .mz-slide { top: 0; transform: translateY(14px); }
+  .js .ps-alt .mz-slide.on { transform: none; }
+  .js .ps-alt .mz-title { max-width: none; }
+  .js .ps-alt .mz-body { margin-left: auto; margin-right: auto; max-width: 72ch; }
+  .js .ps-alt .mz-slide .eyebrow { justify-content: center; margin-left: auto; margin-right: auto; }
+  .js .ps-alt .mz-rail { display: none; }
+  /* bigger last stack, its top just under the text (read by site.js) */
+  .js .ps-alt { --stack-k: 1.28; --stack-y: 0.5; --art-k: .9; }
   .js .ps-alt .mz-art {
-    top: var(--bar-h); bottom: 0; right: 0;
-    left: max(36vw, calc((100% - var(--max)) / 2 + var(--gutter) + 440px));
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%), linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent 0, #000 9%), linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
-    mask-composite: intersect;
+    top: calc(var(--bar-h) + 14vh); bottom: 0; left: 0; right: 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 96%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 96%, transparent 100%);
+  }
+  /* no stars above a curve under the title: high at the edges, lowest in the middle */
+  .js .ps-alt .cb-dust {
+    -webkit-mask-image: radial-gradient(ellipse 57% 290px at 50% 0, transparent 90%, #000 100%);
+    mask-image: radial-gradient(ellipse 57% 290px at 50% 0, transparent 90%, #000 100%);
+  }
+  /* the switch from What we do sits right on top; a little of its white stays while the story plays */
+  .js .ps-alt[data-seam].seam-on { padding-top: 0; }
+  .js .ps-alt[data-seam].seam-on .mz-stage::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: 0; pointer-events: none;
+    height: var(--sa-down); background: var(--sa-col);
+    -webkit-mask-image: var(--sa-mask); mask-image: var(--sa-mask);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-size: 100% var(--sa-total); mask-size: 100% var(--sa-total);
+    -webkit-mask-position: 0 calc(-1 * var(--sa-up) + 15px); mask-position: 0 calc(-1 * var(--sa-up) + 15px);
+    -webkit-mask-composite: source-in; mask-composite: intersect;
   }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
@@ -1116,15 +1136,23 @@ h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; 
 .seam-top { position: relative; }
 .seam-top.seam-on { padding-bottom: calc(clamp(80px, 11vw, 144px) + var(--seam-extra, 0px)); }
 .seam-top.seam-on::after, [data-seam].seam-on::before { content: ""; position: absolute; left: 0; right: 0; pointer-events: none;
-  -webkit-mask-size: 100% var(--seam-total); mask-size: 100% var(--seam-total); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+/* The upper section keeps its own --sb-* and the lower one its own --sa-*, so a section can sit between two fades. */
 /* the lower section's colour, rising into the upper one under the curve */
-.seam-top.seam-on::after { bottom: 0; height: var(--seam-up); z-index: 1; background: var(--seam-b);
-  -webkit-mask-image: var(--seam-mask-b); mask-image: var(--seam-mask-b); -webkit-mask-position: 0 0; mask-position: 0 0;
+.seam-top.seam-on::after { bottom: 0; height: var(--sb-up); z-index: 1; background: var(--sb-col);
+  -webkit-mask-size: 100% var(--sb-total); mask-size: 100% var(--sb-total);
+  -webkit-mask-image: var(--sb-mask); mask-image: var(--sb-mask); -webkit-mask-position: 0 0; mask-position: 0 0;
   -webkit-mask-composite: source-over, source-in; mask-composite: add, intersect; }
 /* the upper section's colour, fading out into the lower one */
-[data-seam].seam-on::before { top: 0; height: var(--seam-down); z-index: -2; background: var(--seam-a);
-  -webkit-mask-image: var(--seam-mask-a); mask-image: var(--seam-mask-a); -webkit-mask-position: 0 calc(-1 * var(--seam-up)); mask-position: 0 calc(-1 * var(--seam-up));
+[data-seam].seam-on::before { top: 0; height: var(--sa-down); z-index: -2; background: var(--sa-col);
+  -webkit-mask-size: 100% var(--sa-total); mask-size: 100% var(--sa-total);
+  -webkit-mask-image: var(--sa-mask); mask-image: var(--sa-mask); -webkit-mask-position: 0 calc(-1 * var(--sa-up)); mask-position: 0 calc(-1 * var(--sa-up));
   -webkit-mask-composite: source-in; mask-composite: intersect; }
-[data-seam].seam-on { padding-top: calc(var(--seam-down) * .45); }
-[data-theme="dark"] .seam-on { --seam-a: var(--white); --seam-b: var(--void); }
-[data-theme="light"] .seam-on { --seam-a: var(--void); --seam-b: var(--white); }
+[data-seam].seam-on { padding-top: calc(var(--sa-down) * .45); }
+/* the story paints its own black: its fade piece sits on that black, still under the story itself */
+.ps-alt[data-seam].seam-on::before { z-index: 0; }
+/* colours: dk = a black section's colour, lt = a white section's (they swap in the white theme) */
+[data-theme="dark"] .sb-dk, [data-theme="light"] .sb-lt { --sb-col: var(--void); }
+[data-theme="dark"] .sb-lt, [data-theme="light"] .sb-dk { --sb-col: var(--white); }
+[data-theme="dark"] .sa-dk, [data-theme="light"] .sa-lt { --sa-col: var(--void); }
+[data-theme="dark"] .sa-lt, [data-theme="light"] .sa-dk { --sa-col: var(--white); }

@@ -1423,7 +1423,7 @@ var acSymbol = (function () {
 
     // the dive (the map preview's nesting math, depth 0 -> 1 only)
     var f = smoother((p - T.dive0) / (T.dive1 - T.dive0));
-    U = (phone ? Math.min(W * 1.15, H) : Math.min(W, H)) / 1000;
+    U = (phone ? Math.min(W * 1.15, H) : Math.min(W, H)) / 1000 * artK;
     // phones: the art box starts 9svh higher (styles.css) so the stack can sit higher; the map keeps its old place
     var PD = phone ? window.innerHeight * 0.09 : 0;
     var cx = W / 2, cy = phone ? PD + (H - PD) * 0.47 : H * 0.5;
@@ -1458,10 +1458,10 @@ var acSymbol = (function () {
     var planS = 400 * t1.k, planOX = t1.ox + 500 * t1.k, planOY = t1.oy + 530 * t1.k;
     // the camera makes room for the black hole while the hall rises, so step 04 never has to jump back
     var topCam = Y2 + 0.27 * (1 - a4) + (G + HOLE_LIFT + 0.2) * smoother((p - 0.68) / 0.2);
-    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34)) * (phone ? 1.35 : 1); // the stack is drawn larger on phones
+    var stS = Math.min(W * 0.36, H * 0.84 / (topCam * 0.866 + 1.34)) * (phone ? 1.35 : 1) * stackK; // the stack is drawn larger on phones
     var pitch = (90 - 60 * tilt) * Math.PI / 180, yaw = yawAt(p) * Math.PI / 180;
     cam.sp = Math.sin(pitch); cam.cp = Math.cos(pitch); cam.sF = Math.sin(yaw); cam.cF = Math.cos(yaw);
-    cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.44 : 0.53), tilt);
+    cam.s = lerp(planS, stS, tilt); cam.ox = lerp(planOX, W / 2, tilt); cam.oy = lerp(planOY, H * (phone ? 0.44 : stackY), tilt);
     cam.mid = topCam / 2;
 
     // brightness: the whole site is lit on the plan, then each layer in its own step
@@ -1740,11 +1740,12 @@ var acSymbol = (function () {
     else if (!want) running = false;
   }
 
+  var stackK = 1, stackY = 0.53, artK = 1;
   /* ---------- sizing and scroll wiring ---------- */
   function resize() {
     var r = canvas.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = Math.max(1, r.width); H = Math.max(1, r.height); phone = W < 600;
+    W = Math.max(1, r.width); H = Math.max(1, r.height); phone = W < 600; stackK = parseFloat(getComputedStyle(sec).getPropertyValue("--stack-k")) || 1; stackY = parseFloat(getComputedStyle(sec).getPropertyValue("--stack-y")) || 0.53; artK = phone ? 1 : parseFloat(getComputedStyle(sec).getPropertyValue("--art-k")) || 1; // optional size-up for the stack (styles.css)
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     if (fx) { fx.style.width = W + "px"; fx.style.height = H + "px"; fx.width = canvas.width; fx.height = canvas.height; }
     sizeDust(); drawDust(lastT);
@@ -2762,9 +2763,14 @@ var acSymbol = (function () {
 /* Home: the hero's curved fade, the other way round, from the "Why" section into the black "Who we work with".
    Same curve and the same even-to-the-eye easing as the hero (see CURVE there), sized off the hero. */
 (function () {
-  document.addEventListener('DOMContentLoaded', function () {
-    var low = document.querySelector('[data-seam]'), up = low && low.previousElementSibling, hero = document.querySelector('[data-hero]');
-    if (!low || !up || !up.classList.contains('band')) return;
+  // any section marked data-seam gets the fade from the white band above it
+  function init(low) {
+    var up = low && low.previousElementSibling, hero = document.querySelector('[data-hero]');
+    if (!low || !up || low.__seam) return;
+    // down: a black section above a white band, the hero's way round (black to white)
+    var down = up.classList.contains('dark') && !low.classList.contains('dark');
+    if (!down && !up.classList.contains('band')) return;
+    low.__seam = 1; low.setAttribute('data-seam', ''); up.classList.add(down ? 'sb-lt' : 'sb-dk'); low.classList.add(down ? 'sa-dk' : 'sa-lt');
     var CURVE = { w: 123, d: 211, s: 23, y: -61, u: 190, t: 310 }, EXTRA = 110;
     function ss(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
     function sss(x) { x = Math.max(0, Math.min(1, x)); return x * x * x * (x * (x * 6 - 15) + 10); }
@@ -2784,7 +2790,7 @@ var acSymbol = (function () {
       var wrap = up.querySelector('.wrap'), gap = up.getBoundingClientRect().bottom - (wrap ? wrap.getBoundingClientRect().bottom : 0);
       var u = Math.round(Math.min(CURVE.u, Math.max(40, gap - 24))), t = small ? 200 : CURVE.t, total = u + t;
       // upper colour over lower: lightness runs evenly from the upper colour to the lower one
-      var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+      var dark = (document.documentElement.getAttribute('data-theme') !== 'light') !== down; // is the upper colour the light one
       var sa = dark ? 1 : 0, sb = dark ? 0 : 1, a = [], b = [];
       for (var i = 0; i <= 60; i++) {
         var p = total * i / 60, L = 100 * (dark ? 1 - sss(p / total) : sss(p / total)), s = lstar(L);
@@ -2798,12 +2804,12 @@ var acSymbol = (function () {
       var ramp = [], R = Math.round(u * 0.85);
       for (var j = 0; j <= 12; j++) ramp.push('rgba(0,0,0,' + ss(j / 12).toFixed(4) + ') ' + (R * j / 12).toFixed(1) + 'px');
       var mb = 'linear-gradient(' + b.join(', ') + '), ' + bowl(false, shape) + ', linear-gradient(' + ramp.join(', ') + ')';
-      [up, low].forEach(function (el) {
-        el.style.setProperty('--seam-up', u + 'px'); el.style.setProperty('--seam-down', t + 'px'); el.style.setProperty('--seam-total', total + 'px');
-        el.style.setProperty('--seam-mask-a', ma); el.style.setProperty('--seam-mask-b', mb);
-      });
+      up.style.setProperty('--sb-up', u + 'px'); up.style.setProperty('--sb-total', total + 'px'); up.style.setProperty('--sb-mask', mb);
+      low.style.setProperty('--sa-up', u + 'px'); low.style.setProperty('--sa-down', t + 'px'); low.style.setProperty('--sa-total', total + 'px'); low.style.setProperty('--sa-mask', ma);
     }
     var rq = 0; function ask() { cancelAnimationFrame(rq); rq = requestAnimationFrame(set); }
     set(); addEventListener('resize', ask); addEventListener('load', ask); document.addEventListener('ac-theme', ask);
-  });
+  }
+  window.acSeam = init;
+  document.addEventListener('DOMContentLoaded', function () { document.querySelectorAll('[data-seam]').forEach(init); });
 })();
