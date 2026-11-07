@@ -2758,3 +2758,52 @@ var acSymbol = (function () {
   addEventListener('scroll', ask, { passive: true });
   document.documentElement.addEventListener('pointerleave', function () { x = y = -1e4; ask(); });
 })();
+
+/* Home: the hero's curved fade, the other way round, from the "Why" section into the black "Who we work with".
+   Same curve and the same even-to-the-eye easing as the hero (see CURVE there), sized off the hero. */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var low = document.querySelector('[data-seam]'), up = low && low.previousElementSibling, hero = document.querySelector('[data-hero]');
+    if (!low || !up || !up.classList.contains('band')) return;
+    var CURVE = { w: 123, d: 211, s: 23, y: -61, u: 190, t: 310 }, EXTRA = 110;
+    function ss(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+    function sss(x) { x = Math.max(0, Math.min(1, x)); return x * x * x * (x * (x * 6 - 15) + 10); }
+    function lstar(L) { var Y = L > 8 ? Math.pow((L + 16) / 116, 3) : L / 903.3; return Y <= 0.0031308 ? 12.92 * Y : 1.055 * Math.pow(Y, 1 / 2.4) - 0.055; }
+    function bowl(inside, shape) {
+      var a = 100 - CURVE.s, st = [];
+      for (var i = 0; i <= 12; i++) { var e = ss(i / 12); st.push('rgba(0,0,0,' + (inside ? 1 - e : e).toFixed(4) + ') ' + (a + CURVE.s * i / 12).toFixed(2) + '%'); }
+      return 'radial-gradient(' + shape + ', ' + st.join(', ') + ')';
+    }
+    up.classList.add('seam-top');
+    function set() {
+      var small = innerWidth < 720, W = up.offsetWidth;
+      var H = hero ? hero.offsetHeight : innerHeight;
+      up.style.setProperty('--seam-extra', (small ? 60 : EXTRA) + 'px');
+      up.classList.add('seam-on'); low.classList.add('seam-on');
+      // the fade starts just under the last of the "Why" content, at most u px above the seam
+      var wrap = up.querySelector('.wrap'), gap = up.getBoundingClientRect().bottom - (wrap ? wrap.getBoundingClientRect().bottom : 0);
+      var u = Math.round(Math.min(CURVE.u, Math.max(40, gap - 24))), t = small ? 200 : CURVE.t, total = u + t;
+      // upper colour over lower: lightness runs evenly from the upper colour to the lower one
+      var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+      var sa = dark ? 1 : 0, sb = dark ? 0 : 1, a = [], b = [];
+      for (var i = 0; i <= 60; i++) {
+        var p = total * i / 60, L = 100 * (dark ? 1 - sss(p / total) : sss(p / total)), s = lstar(L);
+        var al = Math.max(0, Math.min(1, (s - sb) / (sa - sb)));
+        a.push('rgba(0,0,0,' + al.toFixed(4) + ') ' + p.toFixed(1) + 'px'); b.push('rgba(0,0,0,' + (1 - al).toFixed(4) + ') ' + p.toFixed(1) + 'px');
+      }
+      var cy = CURVE.y / 100 * H - (H - u), shape = 'ellipse ' + (CURVE.w / 100 * W).toFixed(1) + 'px ' + (CURVE.d / 100 * H).toFixed(1) + 'px at 50% ' + cy.toFixed(1) + 'px';
+      // upper colour: the eased fade, only inside the curve; lower colour: everything else
+      var ma = 'linear-gradient(' + a.join(', ') + '), ' + bowl(true, shape);
+      // the curve's outer edge eases in from the top of the piece, so it never starts on a hard line
+      var ramp = [], R = Math.round(u * 0.85);
+      for (var j = 0; j <= 12; j++) ramp.push('rgba(0,0,0,' + ss(j / 12).toFixed(4) + ') ' + (R * j / 12).toFixed(1) + 'px');
+      var mb = 'linear-gradient(' + b.join(', ') + '), ' + bowl(false, shape) + ', linear-gradient(' + ramp.join(', ') + ')';
+      [up, low].forEach(function (el) {
+        el.style.setProperty('--seam-up', u + 'px'); el.style.setProperty('--seam-down', t + 'px'); el.style.setProperty('--seam-total', total + 'px');
+        el.style.setProperty('--seam-mask-a', ma); el.style.setProperty('--seam-mask-b', mb);
+      });
+    }
+    var rq = 0; function ask() { cancelAnimationFrame(rq); rq = requestAnimationFrame(set); }
+    set(); addEventListener('resize', ask); addEventListener('load', ask); document.addEventListener('ac-theme', ask);
+  });
+})();

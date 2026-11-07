@@ -1108,3 +1108,23 @@ h1, h2, h3 { background-size: 100% 1lh; background-repeat: repeat-y; }
 /* The metal only paints inside the heading's box: a little room on the right so the last letter's edge is never cut. */
 h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; margin-right: -.08em; }
 @media (max-width: 420px) { h3 { letter-spacing: .1em; } }
+
+/* ---------- Home: the same curved fade as under the hero, the other way round: the white "Why" section
+   runs into the black "Who we work with". Two pieces of one mask, set by site.js (--seam*), so the curve
+   crosses the seam unbroken. The upper piece covers the bottom of "Why"; the lower one sits under the
+   content of "Who". Only shows once site.js has set it up. ---------- */
+.seam-top { position: relative; }
+.seam-top.seam-on { padding-bottom: calc(clamp(80px, 11vw, 144px) + var(--seam-extra, 0px)); }
+.seam-top.seam-on::after, [data-seam].seam-on::before { content: ""; position: absolute; left: 0; right: 0; pointer-events: none;
+  -webkit-mask-size: 100% var(--seam-total); mask-size: 100% var(--seam-total); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+/* the lower section's colour, rising into the upper one under the curve */
+.seam-top.seam-on::after { bottom: 0; height: var(--seam-up); z-index: 1; background: var(--seam-b);
+  -webkit-mask-image: var(--seam-mask-b); mask-image: var(--seam-mask-b); -webkit-mask-position: 0 0; mask-position: 0 0;
+  -webkit-mask-composite: source-over, source-in; mask-composite: add, intersect; }
+/* the upper section's colour, fading out into the lower one */
+[data-seam].seam-on::before { top: 0; height: var(--seam-down); z-index: -2; background: var(--seam-a);
+  -webkit-mask-image: var(--seam-mask-a); mask-image: var(--seam-mask-a); -webkit-mask-position: 0 calc(-1 * var(--seam-up)); mask-position: 0 calc(-1 * var(--seam-up));
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
+[data-seam].seam-on { padding-top: calc(var(--seam-down) * .45); }
+[data-theme="dark"] .seam-on { --seam-a: var(--white); --seam-b: var(--void); }
+[data-theme="light"] .seam-on { --seam-a: var(--void); --seam-b: var(--white); }
