@@ -1,0 +1,99 @@
+<!--{"title": "T.E. Maxson Wastewater Treatment Facility, Memphis, Tennessee: first sizing | Accretion Compute", "description": "What the gas the site now flares could power, how much land it would take, and what it could earn each year.", "out": "sizings/memphis-maxson.html", "noindex": true}-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/sizer/sizer.css?v={{version}}">
+<style>
+/* Hero: the live model fills the first screen, text over its left side (same layout as the Site model page) */
+.szp-root .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.szp-root .copy h1{font-size:clamp(24px,2.9vw,36px)}
+/* Dock: once the hero scrolls away, the same live model sits in a corner window (as on the Site model page) */
+.szp-dock{display:none;pointer-events:none}
+.szp-root .stage.docked :is(iframe,.szp-dock){position:fixed;inset:auto 16px 16px auto;width:min(500px,42vw);height:min(310px,38vh);animation:szpIn .35s var(--ease)}
+.szp-root .stage.docked iframe{z-index:40;border:1px solid var(--line);background:var(--bg);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.szp-root .stage.docked .szp-dock{display:block;z-index:41}
+.szp-root .stage .szp-dock>button{pointer-events:auto}
+.szp-dock .mini-cap{cursor:default;pointer-events:none!important;max-width:calc(100% - 50px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.szp-dock .mini-cap::before{content:none}
+@keyframes szpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){.szp-root .stage.docked :is(iframe,.szp-dock){inset:auto 10px 10px auto;width:min(46vw,220px);height:calc(min(46vw,220px) * .6875)}}
+.szp-root .copy .szp-links{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px}
+.szp-root .copy .szp-links a{color:var(--fg-strong)}
+.szp-tog{display:flex;pointer-events:auto}
+.szp-tog button{font:inherit;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;background:transparent;color:var(--fg);border:1px solid var(--line);cursor:pointer}
+.szp-tog button+button{border-left:0}
+.szp-tog button[aria-pressed=true]{background:var(--fg-strong);color:var(--bg)}
+/* Below the hero */
+.sizer .szp{padding-top:clamp(40px,5vw,64px)}
+.szp-kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.szp-kpis>div{padding:18px 20px;border-right:1px solid var(--line-soft)}
+.szp-kpis>div:last-child{border-right:0}
+.szp .v{font:200 clamp(22px,2.6vw,32px)/1.1 var(--display);font-stretch:125%;color:var(--fg-strong)}
+.szp .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-top:6px}
+.szp-earn{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:16px;border:1px solid var(--line);border-top:0;padding:20px}
+.szp-earn .tot .v{font-size:clamp(26px,3.2vw,40px)}
+.szp-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px)}
+.szp-cols>*{min-width:0}
+.szp .eyebrow{margin-bottom:12px}
+.szp table{width:100%;min-width:0;border-collapse:collapse;font-size:16px}
+.szp td{padding:9px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--fg)}
+.szp td.r{text-align:right;white-space:nowrap;padding-left:14px;color:var(--fg-strong)}
+.szp ul{margin:0;padding-left:18px;color:var(--fg)} .szp li{margin:0 0 8px}
+.szp .box{border:1px solid var(--line);padding:18px 20px;margin-top:24px}
+.szp .small{font-size:14px;color:var(--fg-dim);line-height:1.6}
+.sizer .szp-end{padding-bottom:clamp(56px,7vw,96px)}
+.szp-end .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.szp-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid var(--fg-strong);background:var(--fg-strong);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+.szp-btn.ghost{background:transparent;color:var(--fg-strong);border-color:var(--line)}
+.szp-btn:hover{background:transparent;color:var(--fg-strong)}
+@media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
+ .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
+</style>
+<div class="sizer szp-root">
+<div class="sz-hero">
+ <div class="stage"><iframe id="szp-frame" src="site-model?src=lfg&amp;flow=950&amp;ch4=49&amp;embed=1&amp;copy=1" title="Live 3D model of T.E. Maxson Wastewater Treatment Facility, Memphis, Tennessee" allow="fullscreen"></iframe>
+  <div class="szp-dock"><div class="mini-cap">Live model &middot; T.E. Maxson Wastewater Treatment Facility, Memphis, Tennessee</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
+ <div class="scrim" aria-hidden="true"></div>
+ <div class="copy">
+  <p class="crumbs">First sizing &middot; November 2026</p>
+  <div class="eyebrow">Landfill gas</div>
+  <h1>T.E. Maxson Wastewater Treatment Facility, Memphis, Tennessee</h1>
+  <p class="lede">What the gas the site now flares could power, how much land it would take, and what it could earn each year.</p>
+  <div class="hero-stats"><div><div class="num">2.6</div><div class="k">MW on site</div></div><div><div class="num">3</div><div class="k">Compute modules</div></div><div><div class="num">$8–193k</div><div class="k">To the owner, per year</div></div></div>
+  <p class="szp-links"><a href="sizings/memphis-maxson.pdf" download>Download the PDF</a><a id="szp-full" href="site-model?src=lfg&amp;flow=950&amp;ch4=49">Open the full model &rarr;</a></p>
+ </div>
+</div>
+<div class="wrap szp">
+ <div class="szp-kpis">
+  <div><div class="v">2.6 MW</div><div class="k">Power from the gas</div></div>
+  <div><div class="v">3</div><div class="k">Compute modules</div></div>
+  <div><div class="v">8 acres</div><div class="k">Land needed</div></div>
+  <div><div class="v">235k</div><div class="k">MMBtu bought a year</div></div>
+ </div>
+ <div class="szp-earn">
+  <div><div class="k">Gas sale, per year</div><div class="v">up to $176k</div></div>
+  <div><div class="k">Land lease, per year</div><div class="v">$8k to $16k</div></div>
+  <div class="tot"><div class="k">Total to the owner, per year</div><div class="v">$8k to $193k</div></div>
+ </div>
+</div>
+<div class="wrap szp"><div class="szp-cols">
+ <div><div class="eyebrow">The math</div><table><tr><td>Lagoon biogas flared (2018 onward)</td><td class='r'>950 scfm</td></tr><tr><td>Methane (from about 500 Btu/cf)</td><td class='r'>49%</td></tr><tr><td>Energy in the gas</td><td class='r'>28.3 MMBtu per hour</td></tr><tr><td>Power at a heat rate of 11,000 Btu/kWh</td><td class='r'>about 2.6 MW</td></tr><tr><td>Compute (power less cooling and losses, /1.2)</td><td class='r'>about 2.1 MW</td></tr><tr><td>Compute modules (about 1 MW each)</td><td class='r'>3</td></tr><tr><td>Gas engines (running plus one spare)</td><td class='r'>3 at 1.6 MW</td></tr><tr><td>Land: 5 acres plus 1.2 acres per MW</td><td class='r'>about 8 acres</td></tr><tr><td>Gas bought per year (95% run time)</td><td class='r'>235k MMBtu</td></tr><tr><td>Gas payment at up to $0.75 per MMBtu (under 1¢ per kWh)</td><td class='r'>up to $176k</td></tr><tr><td>Land lease at $1,000 to $2,000 per acre per year</td><td class='r'>$8k to $16k</td></tr></table><p class="small" style="margin-top:10px">Biogas: methane at about 1,012 Btu per cubic foot. Prices in US dollars; the price band is the one shown on our Site model page.</p></div>
+ <div><div class="eyebrow">What it would look like</div><ul><li>Gas engines on a small parcel near the gas, a battery to smooth the load, and factory-built compute modules leased to an AI company.</li><li>No grid connection and no export: all of the power is used on site.</li><li>We build and run the site. The owner puts in no capital.</li><li>Multi-year gas and land agreements, matched to the tenant&#x27;s lease, at a fixed price.</li></ul>
+  <div class='box'><div class='eyebrow'>Worth checking</div><ul class='small'><li>Whether the existing biogas offtake contract is still in force</li><li>High H2S: gas cleanup sized for it</li><li>City data center rules (Ordinance 5986, October 2026)</li></ul></div>
+ </div>
+</div></div>
+<div class="wrap szp szp-end">
+ <p class="small"><strong>Source:</strong> Shelby County Health Department, Title V renewal statement of basis (2024): about 500 MMcf a year of lagoon biogas since 2018 (about 950 scfm) at about 500 Btu/cf, all to five flares since the pipeline offtake stopped in 2017. This is a first read from public data, not an offer: no cost and no obligation. The real price and terms are set in the gas and land agreements after a site review.</p>
+ <div class="actions">
+  <a class="szp-btn" href="contact">Talk to us about your site &rarr;</a>
+  <a class="szp-btn ghost" href="sizings/memphis-maxson.pdf" download>Download the one-page PDF</a>
+ </div>
+</div>
+</div>
+
+<script>
+(function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
+ var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}
+ function check(){var r=hero.getBoundingClientRect(),away=r.bottom<r.height*.5;if(!away)dismissed=false;var want=away&&!dismissed;if(want!==on){on=want;stage.classList.toggle("docked",on);send()}}
+ addEventListener("scroll",check,{passive:true});addEventListener("resize",check);f.addEventListener("load",send);check();
+ document.getElementById("szp-dock-x").addEventListener("click",function(){dismissed=true;on=false;stage.classList.remove("docked");send()});
+ document.getElementById("szp-dock-up").addEventListener("click",function(){hero.scrollIntoView({behavior:"smooth",block:"start"})});})();
+</script>
