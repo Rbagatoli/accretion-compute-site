@@ -2,8 +2,8 @@
   --bg:#050506; --bg-2:#0d0e11; --fg:#d9dce1; --fg-strong:#f3f4f6; --fg-dim:#8f949c;
   --line:rgba(232,234,237,.14); --line-soft:rgba(232,234,237,.07);
   --glow:243,244,246; --panel:#0a0b0d;
-  --metal:linear-gradient(176deg,#ffffff 0%,#e3e5e8 20%,#b6babf 40%,#8c9097 48%,#eceef0 54%,#ffffff 60%,#c3c6cb 80%,#e8eaed 100%);
-  --metal-soft:linear-gradient(178deg,#ffffff 0%,#e6e8eb 42%,#b1b5bb 80%,#dadde0 100%);
+  --metal:linear-gradient(174deg,#ffffff 0%,#dcdbd9 17%,#8e8d8a 39%,#6d6c69 47%,#f2f1ef 52%,#ffffff 57%,#c9c8c5 72%,#91908c 88%,#e9e8e6 100%);
+  --metal-soft:linear-gradient(174deg,#ffffff 0%,#dcdbd9 17%,#8e8d8a 39%,#6d6c69 47%,#f2f1ef 52%,#ffffff 57%,#c9c8c5 72%,#91908c 88%,#e9e8e6 100%);
   --head:"Michroma","Eurostile",Arial,sans-serif;
   --display:"Saira","Michroma",Arial,sans-serif;
   --body:"Jost","Futura","Helvetica Neue",Arial,sans-serif;

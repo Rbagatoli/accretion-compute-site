@@ -850,6 +850,8 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 .hero h1, .hero .lede, .hero .actions, .hero-flow { animation: hero-rise 1.1s var(--ease) both; }
 .hero h1 { animation-delay: 0.55s; }
 .hero h1 .glint { animation: sheen 8s 2.6s ease-in-out infinite; }
+/* On the dark hero the glint line is static platinum, like the headings and the wordmark */
+[data-theme="dark"] .hero h1 .glint:not(.hero-alt .glint), [data-theme="light"] .hero-alt h1 .glint { background-image: var(--metal-plat); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: none; }
 .hero .lede { animation-delay: 0.8s; }
 .hero .actions { animation-delay: 1s; }
 .hero-flow { animation-delay: 1.25s; }
@@ -1131,8 +1133,8 @@ a.card:hover { border-color: transparent; }
 /* ---------- Chrome headings: a vertical metal sweep with a dark horizon band.
    Platinum on black sections, graphite on white ones; a softer sweep for the small h3. ---------- */
 :root {
-  --chrome-plat: linear-gradient(176deg, #ffffff 0%, #e3e5e8 20%, #b6babf 40%, #8c9097 48%, #eceef0 54%, #ffffff 60%, #c3c6cb 80%, #e8eaed 100%);
-  --chrome-plat-soft: linear-gradient(178deg, #ffffff 0%, #e6e8eb 42%, #b1b5bb 80%, #dadde0 100%);
+  --chrome-plat: linear-gradient(174deg, #ffffff 0%, #dcdbd9 17%, #8e8d8a 39%, #6d6c69 47%, #f2f1ef 52%, #ffffff 57%, #c9c8c5 72%, #91908c 88%, #e9e8e6 100%); /* Proton's platinum, shared with the wordmark */
+  --chrome-plat-soft: linear-gradient(174deg, #ffffff 0%, #dcdbd9 17%, #8e8d8a 39%, #6d6c69 47%, #f2f1ef 52%, #ffffff 57%, #c9c8c5 72%, #91908c 88%, #e9e8e6 100%);
   --chrome-graphite: linear-gradient(176deg, #2b2e33 0%, #0b0c0e 26%, #3c4046 44%, #6b6f76 50%, #2b2e33 57%, #0b0c0e 74%, #3a3e44 100%);
   --chrome-graphite-soft: linear-gradient(178deg, #0b0c0e 0%, #2a2d32 50%, #4e5258 85%, #1d1f23 100%);
 }
