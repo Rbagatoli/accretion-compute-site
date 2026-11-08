@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Will it fit? | Accretion Compute</title>
+  <meta name="description" content="Enter your servers and see the power, racks, cooling and compute modules they would need at an Accretion Compute site. Estimates only; nothing is sent anywhere.">
+  <link rel="canonical" href="https://accretioncompute.com/fit">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Will it fit? | Accretion Compute">
+  <meta property="og:description" content="Enter your servers and see the power, racks, cooling and compute modules they would need at an Accretion Compute site. Estimates only; nothing is sent anywhere.">
+  <meta property="og:url" content="https://accretioncompute.com/fit">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="styles.css?v=693cb5a1">
+  <script src="site.js?v=693cb5a1" defer></script>
+</head>
+<body class="page-fit">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="./" aria-label="Accretion Compute home">
+        <img class="for-light" src="assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="capacity" aria-current="page">Capacity</a>
+        <a href="energy">Energy</a>
+        <a href="sites">Site selection</a>
+        <a href="partners">Partners</a>
+        <a href="site-model">Site model</a>
+        <a href="about">About</a>
+        <a href="guides">Guides</a>
+        <a class="nav-cta" href="contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="./">Home</a> / <a href="capacity">Capacity</a> / Will it fit?</p>
+    <p class="eyebrow">For tenants</p>
+    <h1>Will your servers fit?</h1>
+    <p class="lede">Tell us what you run and how many. You get the power, racks, cooling and compute modules it would take, and the choices we would build to. Nothing is sent anywhere.</p>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="tf-h">
+  <div class="wrap tf">
+    <h2 id="tf-h" class="sr">Tenant sizing</h2>
+    <form class="tf-form" novalidate>
+      <fieldset class="field">
+        <legend>Your servers</legend>
+        <div class="chips" id="tf-type">
+          <label><input type="radio" name="type" value="8a" checked><span>8-GPU server, current generation (about 10 kW)</span></label>
+          <label><input type="radio" name="type" value="8b"><span>8-GPU server, newest generation (about 14 kW)</span></label>
+          <label><input type="radio" name="type" value="rack"><span>72-GPU rack-scale system (about 130 kW a rack)</span></label>
+          <label><input type="radio" name="type" value="inf"><span>4-GPU inference server (about 3.5 kW)</span></label>
+          <label><input type="radio" name="type" value="own"><span>My own figure</span></label>
+        </div>
+      </fieldset>
+
+      <div class="tf-row">
+        <div class="field">
+          <label for="tf-n" id="tf-n-l">How many servers</label>
+          <input id="tf-n" type="number" inputmode="numeric" min="1" step="1" value="64">
+        </div>
+        <div class="field" id="tf-kw-f" hidden>
+          <label for="tf-kw">kW per server, at the wall</label>
+          <input id="tf-kw" type="number" inputmode="decimal" min="0.1" step="0.1" value="10">
+        </div>
+      </div>
+
+      <fieldset class="field" id="tf-dens-f">
+        <legend>Rack density you want</legend>
+        <div class="chips" id="tf-dens">
+          <label><input type="radio" name="dens" value="20"><span>About 20 kW a rack</span></label>
+          <label><input type="radio" name="dens" value="40" checked><span>About 40 kW</span></label>
+          <label><input type="radio" name="dens" value="60"><span>About 60 kW</span></label>
+          <label><input type="radio" name="dens" value="130"><span>130 kW and up</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Room to grow</legend>
+        <div class="chips" id="tf-grow">
+          <label><input type="radio" name="grow" value="1" checked><span>Just this deployment</span></label>
+          <label><input type="radio" name="grow" value="1.5"><span>Room for 50% more</span></label>
+          <label><input type="radio" name="grow" value="2"><span>Room to double</span></label>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="tf-out" aria-live="polite">
+      <p class="eyebrow">What it would take</p>
+      <p class="tf-verdict" id="tf-verdict"></p>
+      <ul class="specs tf-specs">
+        <li><small>Your IT load</small><span id="o-it"></span></li>
+        <li><small>Site power, with cooling</small><span id="o-site"></span></li>
+        <li><small>Racks</small><span id="o-racks"></span></li>
+        <li><small>Compute modules</small><span id="o-mods"></span></li>
+      </ul>
+      <ul class="ticks tf-why" id="tf-why"></ul>
+
+      <div class="tf-menu">
+        <p class="eyebrow">Built to your spec</p>
+        <p class="dim">Each site is built around the tenant. You choose, and the rent is priced to the build you choose:</p>
+        <ul class="ticks">
+          <li><strong>Rack density</strong>, from air-cooled racks to liquid-cooled rack-scale systems</li>
+          <li><strong>Cooling</strong>: air, rear-door heat exchangers or direct-to-chip liquid</li>
+          <li><strong>Redundancy</strong> in power and cooling, set out in the contract before you commit</li>
+          <li><strong>Term</strong>, sized to the life of your hardware, with room to expand on the same site</li>
+        </ul>
+      </div>
+
+      <div class="fit-act">
+        <a class="btn" href="contact">Send us your numbers <span class="arrow"></span></a>
+        <a class="btn ghost" href="capacity">How capacity works</a>
+      </div>
+      <p class="form-note">Estimates only, not an offer. Power per server depends on the configuration, so we size every site from your real figures. Site power assumes 20% on top of your IT load for cooling and losses, and compute modules of about 1 MW each.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.tf-form { display: grid; gap: 40px; }
+.tf-row { display: grid; gap: 28px; }
+@media (min-width: 720px) { .tf-row { grid-template-columns: repeat(2, minmax(0, 320px)); } }
+.tf-row input { font-size: 22px; }
+.tf-out { margin-top: clamp(56px, 8vw, 88px); padding-top: clamp(40px, 6vw, 56px); border-top: 1px solid var(--line); }
+.tf-verdict { font: 200 clamp(30px, 4.4vw, 52px)/1.1 var(--display); font-stretch: 125%; letter-spacing: 0.02em; color: var(--fg-strong); margin: 10px 0 28px; max-width: 22ch; }
+.tf [hidden] { display: none !important; }
+.tf-specs { margin-top: 8px; }
+.tf-why { margin: 36px 0 0; }
+.tf-menu { margin: clamp(48px, 7vw, 72px) 0 36px; max-width: 760px; }
+.tf-menu .dim { margin: 12px 0 18px; }
+</style>
+
+<script>
+(function () {
+  var KW = { '8a': 10.2, '8b': 14.3, rack: 130, inf: 3.5 };
+  var f = document.querySelector('.tf-form');
+  var $ = function (id) { return document.getElementById(id); };
+  var val = function (name) { var c = f.querySelector('input[name=' + name + ']:checked'); return c ? c.value : null; };
+  var fmt = function (kw) { return kw >= 1000 ? (kw / 1000).toFixed(kw >= 10000 ? 0 : 1) + ' MW' : Math.round(kw) + ' kW'; };
+  var plural = function (n, one, many) { return n + ' ' + (n === 1 ? one : many); };
+
+  function run() {
+    var type = val('type'), rack = type === 'rack';
+    var n = Math.max(0, Math.floor(+$('tf-n').value || 0));
+    var per = type === 'own' ? Math.max(0, +$('tf-kw').value || 0) : KW[type];
+    var grow = +val('grow');
+    $('tf-kw-f').hidden = type !== 'own';
+    $('tf-dens-f').hidden = rack;
+    $('tf-n-l').textContent = rack ? 'How many racks' : 'How many servers';
+
+    var dens = rack ? 130 : +val('dens');
+    if (!rack && per > dens) dens = per;            // one server never splits across racks
+    var it = n * per;                                // kW for this deployment
+    var plan = it * grow;                            // kW to plan the site around
+    var site = plan * 1.2;
+    var perRack = rack ? 1 : Math.max(1, Math.floor(dens / per));
+    var racks = rack ? n : Math.ceil(n / perRack);
+    var mods = Math.max(1, Math.ceil(plan / 1000));
+
+    $('o-it').textContent = fmt(it) + (grow > 1 ? ', ' + fmt(plan) + ' with growth' : '');
+    $('o-site').textContent = fmt(site);
+    $('o-racks').textContent = racks + (rack ? '' : ' at about ' + Math.round(Math.min(dens, perRack * per)) + ' kW');
+    $('o-mods').textContent = it ? plural(mods, 'module', 'modules') : '0';
+
+    var v, why = [];
+    if (!it) v = 'Enter your servers to see the fit.';
+    else if (site <= 6000 && plan >= 300) v = 'This fits one site.';
+    else if (plan < 300) v = 'Smaller than one module, but tell us anyway.';
+    else v = 'Larger than one site. It could be phased or split across sites.';
+
+    var cool = dens >= 80 ? 'direct-to-chip liquid cooling' : dens > 40 ? 'rear-door heat exchangers or liquid cooling' : 'air cooling';
+    if (it) {
+      why.push('At this density, the racks call for ' + cool + '.');
+      if (!rack) why.push('About ' + plural(perRack, 'server', 'servers') + ' a rack, from ' + per + ' kW each.');
+      if (site <= 6000 && plan >= 300) why.push('Our sites are planned at about 1 to 6 MW, so this deployment' + (grow > 1 ? ' and its growth' : '') + ' would fit on one.');
+      if (site > 6000) why.push('One site holds up to about 6 MW, so this would take about ' + plural(Math.ceil(site / 6000), 'site', 'sites') + ', or a first phase now and more later.');
+      if (plan < 300) why.push('A dedicated module is about 1 MW. Smaller deployments are still worth a conversation.');
+    }
+    $('tf-verdict').textContent = v;
+    $('tf-why').innerHTML = why.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+  }
+  f.addEventListener('input', run);
+  f.addEventListener('change', run);
+  run();
+})();
+</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="about">About</a>
+          <a href="partners">Partners</a>
+          <a href="contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="capacity">Capacity</a>
+          <a href="energy">Energy</a>
+          <a href="sites">Site selection</a>
+          <a href="guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>
