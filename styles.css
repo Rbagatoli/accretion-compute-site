@@ -10,9 +10,9 @@
   --mist: #eceef1;
   --mist-2: #f5f6f8;
   --white: #ffffff;
-  --light: #e8eaed;
-  --light-bright: #f3f4f6;
-  --light-dim: #a3a7ae;
+  --light: #e6e5e2;
+  --light-bright: #f2f1ef;
+  --light-dim: #a6a5a1;
   --silver: #b9bdc4;
 
   --bg: var(--white);
@@ -36,6 +36,8 @@
   --bar-h: 84px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --bar-bg: rgba(255, 255, 255, 0.96);
+  --txt-satin: none;
+  --txt-fill: currentColor;
   color-scheme: light;
 }
 
@@ -51,6 +53,8 @@
   --aura: 243, 244, 246;
   --metal: var(--platinum);
   --bar-bg: rgba(5, 5, 6, 0.94);
+  --txt-satin: linear-gradient(180deg, color-mix(in srgb, currentColor, #fff 55%) 0%, color-mix(in srgb, currentColor, #fff 30%) 40%, color-mix(in srgb, currentColor, #000 12%) 100%);
+  --txt-fill: transparent;
   background: var(--bg);
   color: var(--fg);
   color-scheme: dark;
@@ -65,6 +69,8 @@
   --metal: var(--graphite-metal);
   --aura: 11, 12, 14;
   --bar-bg: rgba(255, 255, 255, 0.96);
+  --txt-satin: none;
+  --txt-fill: currentColor;
   background: var(--bg);
   color: var(--fg);
   color-scheme: light;
@@ -1181,3 +1187,9 @@ h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; 
 [data-theme="dark"] .sb-lt, [data-theme="light"] .sb-dk { --sb-col: var(--white); }
 [data-theme="dark"] .sa-dk, [data-theme="light"] .sa-lt { --sa-col: var(--void); }
 [data-theme="dark"] .sa-lt, [data-theme="light"] .sa-dk { --sa-col: var(--white); }
+
+/* Body text on black: a soft platinum satin per line (bright at the top, like the headings), still reading as white.
+   On white sections --txt-satin is none and the text is a plain colour. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) and (color: color-mix(in srgb, red, blue)) {
+  :is(p, li, .oc small, .oc > span) { background-image: var(--txt-satin); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--txt-fill); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+}

@@ -1,5 +1,5 @@
 .sizer{
-  --bg:#050506; --bg-2:#0d0e11; --fg:#d9dce1; --fg-strong:#f3f4f6; --fg-dim:#8f949c;
+  --bg:#050506; --bg-2:#0d0e11; --fg:#dcdbd8; --fg-strong:#f2f1ef; --fg-dim:#92918d;
   --line:rgba(232,234,237,.14); --line-soft:rgba(232,234,237,.07);
   --glow:243,244,246; --panel:#0a0b0d;
   --metal:linear-gradient(174deg,#ffffff 0%,#dcdbd9 17%,#8e8d8a 39%,#6d6c69 47%,#f2f1ef 52%,#ffffff 57%,#c9c8c5 72%,#91908c 88%,#e9e8e6 100%);
@@ -234,3 +234,4 @@ html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!
 /* chrome headings: softer sweep on the small h3 */
 .sizer h3{background:var(--metal-soft);-webkit-background-clip:text;background-clip:text}
 .sizer h1,.sizer h2,.sizer h3{background-size:100% 1lh;background-repeat:repeat-y}
+.sizer{--txt-satin:linear-gradient(180deg,color-mix(in srgb,currentColor,#fff 55%) 0%,color-mix(in srgb,currentColor,#fff 30%) 40%,color-mix(in srgb,currentColor,#000 12%) 100%);--txt-fill:transparent}
