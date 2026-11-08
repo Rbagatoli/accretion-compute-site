@@ -590,37 +590,423 @@ function makeCutaway() {
 }
 
 /* ---------- gas sources (outside the fence, at negative x) ---------- */
-function moundH(x, z) { const r = Math.hypot(x, z) / 44; return r >= 1 ? 0 : 11 * Math.pow(1 - r * r, 1.4); }
+/* ---------- landfill: three terraces with benches, a crowned grass cap, a switchback haul road,
+   gas wells on a grid with laterals and headers to the blower and flare, perimeter road, ditch,
+   stormwater pond, fence, and the active working face with a dozer, compactor and dump truck.
+   Built at local (0,0), placed at world x = CX. One mesh for the ground, merged meshes for the kit. ---------- */
+function landfill(g, CX, M, mesh) {
+  var BASE = .9, AX = 44, AZ = 40, RS = 40, TIERS = 3, RUN = 6.5, BENCH = 2.2, RISE = 4.4, P = RUN + BENCH, TOP = TIERS * P - BENCH;
+  var FX = 56, FXW = 64, FZ = 52, FZS = 60, GATE = [55.6, -20]; // fence: wider on the west and south for the pond
+  var POND = { x: -49, z: 41, hx: 6.5, hz: 4.6 }, WF = { x: -17, z: 7, r: 8.5 };
+  if (!M.lfCap) {
+    var gr = M.ground.map.clone(); gr.needsUpdate = true; gr.repeat.set(1, 1);
+    M.lfCap = new THREE.MeshStandardMaterial({ color: 0xc4c4c4, roughness: 1, map: M.mound.map, bumpMap: M.mound.bumpMap, bumpScale: 1.2, vertexColors: true });
+    M.lfRoad = new THREE.MeshStandardMaterial({ color: 0xbdbdbd, roughness: 1, map: gr, bumpMap: gr, bumpScale: .4, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    M.lfWater = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: .18, metalness: .2 });
+    M.lfSoil = new THREE.MeshStandardMaterial({ color: 0x3c3c3c, roughness: 1, flatShading: true });
+    M.lfPipe = new THREE.MeshStandardMaterial({ color: 0x1c1c1c, roughness: .55, metalness: .1 }); // black HDPE
+    [M.lfCap, M.lfRoad, M.lfWater, M.lfSoil, M.lfPipe].forEach(function (m) { m.envMapIntensity = M.mound.envMapIntensity; });
+  }
+  function q4(v) { v *= v; return v * v; }
+  function sn(x, z, ax, az) { return Math.pow(q4(Math.abs(x) / ax) + q4(Math.abs(z) / az), .25); }
+  function inward(x, z) { return (1 - sn(x, z, AX, AZ)) * RS; }
+  function ss(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
+  function nz(x, z) { return Math.sin(x * .31 + z * .17) * Math.sin(z * .23 - x * .11) * .6 + Math.sin(x * 1.3 + z * .9) * Math.sin(z * 1.1 - x * .7) * .4; }
+  function prof(s) {
+    if (s >= -2.6) return BASE + (s < 0 ? 0 : s >= TOP ? TIERS * RISE + Math.min(1.6, (s - TOP) * .11) : tier(s)); // toe road, slopes and benches, crowned cap
+    if (s > -8) { var u = (s + 8) / 5.4; return u < .3 ? .45 * (1 - ss(u / .3)) : u < .5 ? .02 : BASE * ss((u - .5) / .5); } // perimeter ditch
+    return s > -10.5 ? .45 * Math.sin((s + 10.5) / 2.5 * Math.PI / 2) : 0;                                  // its outer berm
+  }
+  function tier(s) {
+    var k = Math.floor(s / P), r = s - k * P, t = Math.min(1, r / RUN);
+    return k * RISE + RISE * (.4 * t + .6 * ss(t));                                                   // slope, then flat bench
+  }
+  function pondSdf(x, z) { var dx = Math.abs(x - POND.x) - POND.hx + 2, dz = Math.abs(z - POND.z) - POND.hz + 2;
+    return Math.hypot(Math.max(dx, 0), Math.max(dz, 0)) + Math.min(Math.max(dx, dz), 0) - 2; }
+  function baseH(x, z) {
+    var h = prof(inward(x, z)), pd = pondSdf(x, z);
+    if (pd < 2.5) { var rim = pd < -1 ? .02 : pd < .8 ? .02 + 1.08 * ss((pd + 1) / 1.8) : 1.1 * (1 - ss((pd - .8) / 1.7)); h = pd < .8 ? rim : Math.max(h, rim); } // stormwater pond and its berm
+    var wd = Math.hypot(x - WF.x, z - WF.z); if (wd < WF.r) h += (1 - ss((wd - WF.r * .55) / (WF.r * .4))) * (1.1 + .3 * nz(x * 2.3, z * 2.3)); // today's lift of fresh fill
+    return h;
+  }
+  // haul road: three switchback legs up the south face, then across the cap to the working face
+  function faceZ(x, s) { var n = 1 - s / RS, v = q4(n) - q4(Math.abs(x) / AX); return AZ * Math.pow(Math.max(v, 1e-6), .25); }
+  var road = [], legX = [[12, -6], [-6, 12], [12, -6]];
+  legX.forEach(function (L, k) {
+    var s0 = k * P - 1.2, s1 = k * P + RUN + 1.2, y0 = prof(s0), y1 = prof(s1);
+    for (var i = k ? 1 : 0; i <= 18; i++) { var t = i / 18, x = L[0] + (L[1] - L[0]) * t, s = s0 + (s1 - s0) * t; road.push([x, faceZ(x, s), y0 + (y1 - y0) * t]); }
+  });
+  var e = road[road.length - 1];
+  for (var i = 1; i <= 10; i++) { var t = i / 10, x = e[0] + (WF.x + 4 - e[0]) * t, z = e[1] + (WF.z + 3 - e[1]) * t; road.push([x, z, baseH(x, z)]); }
+  var gateRd = [[GATE[0] + 1, GATE[1], 0], [AX - 1, GATE[1], BASE]];
+  function nearSeg(pts, x, z) { // distance to a polyline in plan, and the polyline height there
+    var best = 1e9, by = 0;
+    for (var i = 0; i < pts.length - 1; i++) { var a = pts[i], b = pts[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], l2 = dx * dx + dz * dz || 1;
+      var t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (z - a[1]) * dz) / l2)), px = a[0] + dx * t, pz = a[1] + dz * t, d = Math.hypot(x - px, z - pz);
+      if (d < best) { best = d; by = a[2] + (b[2] - a[2]) * t; } }
+    return [best, by];
+  }
+  function H(x, z) {
+    var h = baseH(x, z);
+    if (x > -24 && x < 16 && z > 4) { var r = nearSeg(road, x, z); if (r[0] < 3.4) h += (r[1] - h) * (1 - ss((r[0] - 1.5) / 1.9)); }
+    if (x > AX - 4 && Math.abs(z - GATE[1]) < 4) { var r2 = nearSeg(gateRd, x, z); if (r2[0] < 3.4) h += (r2[1] - h) * (1 - ss((r2[0] - 1.5) / 1.9)); }
+    return h;
+  }
+  // the ground: one heightfield, its edge pulled in to a rounded line just outside the fence
+  var geo = new THREE.PlaneGeometry(FX + FXW + 6, FZ + FZS + 6, 160, 150); geo.rotateX(-Math.PI / 2); geo.translate((FX - FXW) / 2, 0, (FZS - FZ) / 2);
+  var pos = geo.attributes.position, col = new Float32Array(pos.count * 3);
+  for (var vi = 0; vi < pos.count; vi++) {
+    var x = pos.getX(vi), z = pos.getZ(vi), fn = sn(x, z, x < 0 ? FXW : FX, z > 0 ? FZS : FZ);
+    if (fn > 1.015) { x *= 1.015 / fn; z *= 1.015 / fn; pos.setX(vi, x); pos.setZ(vi, z); }
+    var s = inward(x, z), h = H(x, z), c;
+    if (s >= TOP) c = 1.06 + .06 * (Math.sin(x * 1.05 + z * .12) > 0 ? 1 : -1);           // mowed cap, striped
+    else if (s >= 0) c = .94 + .56 * ss(((s - Math.floor(s / P) * P) - RUN) / .7);       // grass slopes, gravel benches
+    else c = .95 + (.5 - .95) * ss((s + 8.6) / 1.2) + (1.15 - .5) * ss((s + 3.2) / 1.2);  // grass, ditch, toe road
+    c += .07 * nz(x, z);
+    if (s > -3 && s < TOP && (Math.abs(Math.abs(x) - 26) < .8 && Math.abs(z) > 14 || Math.abs(Math.abs(z) - 22) < .8 && Math.abs(x) > 16) && !(z > 0 && x > -8 && x < 14)) c = 1.3 + .15 * nz(x * 5, z * 5); // riprap downchutes
+    var wd = Math.hypot(x - WF.x, z - WF.z); if (wd < WF.r * 1.15) { var w = 1 - ss((wd - WF.r * .6) / (WF.r * .4)); c += (.26 + .1 * nz(x * 3, z * 3) - c) * w; }
+    var pd = pondSdf(x, z); if (pd < 1.4) c = pd < -1 ? .35 : 1.3 + .15 * nz(x * 4, z * 4);
+    pos.setY(vi, h + .06); col[vi * 3] = col[vi * 3 + 1] = col[vi * 3 + 2] = c;
+  }
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3)); geo.computeVertexNormals();
+  mesh(geo, M.lfCap, CX, 0, 0, g);
+  // water in the pond
+  var wp = mesh(new THREE.PlaneGeometry(POND.hx * 2 - 1, POND.hz * 2 - 1), M.lfWater, CX + POND.x, .42, POND.z, g, false); wp.rotation.x = -Math.PI / 2;
+  // roads as gravel ribbons laid on the ground
+  function ribbon(pts, w, closed) {
+    var n = pts.length, v = [], uv = [], idx = [], along = 0;
+    for (var i = 0; i < n; i++) {
+      var a = pts[closed ? (i - 1 + n) % n : Math.max(0, i - 1)], b = pts[closed ? (i + 1) % n : Math.min(n - 1, i + 1)];
+      var tx = b[0] - a[0], tz = b[1] - a[1], l = Math.hypot(tx, tz) || 1, nx = -tz / l * w / 2, nzz = tx / l * w / 2;
+      if (i) along += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      [[1, 0], [-1, 1]].forEach(function (sd) { var px = pts[i][0] + nx * sd[0], pz = pts[i][1] + nzz * sd[0]; v.push(px, H(px, pz) + .16, pz); uv.push(sd[1] * w / 6, along / 6); });
+    }
+    for (var j = 0; j < (closed ? n : n - 1); j++) { var a0 = j * 2, b0 = ((j + 1) % n) * 2; idx.push(a0, b0, a0 + 1, a0 + 1, b0, b0 + 1); }
+    var rg = new THREE.BufferGeometry(); rg.setAttribute("position", new THREE.Float32BufferAttribute(v, 3)); rg.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    rg.setIndex(idx); rg.computeVertexNormals(); return mesh(rg, M.lfRoad, CX, 0, 0, g, false);
+  }
+  function contour(nrm, ax, az, step, axw, azs) { // points round a rounded square, about `step` apart (axw, azs: west and south half-widths)
+    axw = axw || ax; azs = azs || az;
+    var out = [], N = Math.round(2 * Math.PI * Math.max(ax, az) * nrm * 1.08 / step);
+    for (var i = 0; i < N; i++) { var t = i / N * Math.PI * 2, c = Math.cos(t), s = Math.sin(t);
+      out.push([(c < 0 ? axw : ax) * nrm * Math.sign(c) * Math.sqrt(Math.abs(c)), (s > 0 ? azs : az) * nrm * Math.sign(s) * Math.sqrt(Math.abs(s))]); }
+    return out;
+  }
+  ribbon(road, 2.6, false);
+  ribbon(contour(1 + 1.3 / RS, AX, AZ, 1.6), 2.4, true);
+  ribbon(gateRd, 2.8, false);
+  // gas wells: a grid on the cap, and rows along the two benches
+  var wells = [], near = function (x, z, d) { return nearSeg(road, x, z)[0] < d; };
+  for (var gx = -16; gx <= 18; gx += 6.5) for (var gz = -16; gz <= 16; gz += 6.5) {
+    if (inward(gx, gz) > TOP + 2 && Math.hypot(gx - WF.x, gz - WF.z) > WF.r + 1.5 && !near(gx, gz, 2.5)) wells.push([gx, gz]);
+  }
+  var benchRings = [];
+  [1, 2].forEach(function (k) {
+    var nb = 1 - (k * P - BENCH / 2) / RS, ring = contour(nb, AX, AZ, 1.8);
+    benchRings.push(contour(1 - (k * P - BENCH + .5) / RS, AX, AZ, 1.8));
+    ring.forEach(function (p, i) { if (i % 6 === 0 && !near(p[0], p[1], 3.5) && Math.hypot(p[0] - WF.x, p[1] - WF.z) > WF.r + 2) wells.push(p); });
+  });
+  var gP = [], gD = [];
+  wells.forEach(function (w) { var y = H(w[0], w[1]);
+    var a = new THREE.CylinderGeometry(.17, .17, 1.15, 8); a.translate(w[0], y + .57, w[1]); gP.push(a);
+    var b = new THREE.CylinderGeometry(.26, .26, .26, 8); b.translate(w[0], y + 1.2, w[1]); gD.push(b);
+    var c = new THREE.BoxGeometry(.5, .14, .14); c.translate(w[0] + .2, y + .85, w[1]); gD.push(c); });
+  var MG = THREE.BufferGeometryUtils.mergeBufferGeometries;
+  mesh(MG(gP), M.white, CX, 0, 0, g); mesh(MG(gD), M.dark, CX, 0, 0, g);
+  // pipes: laterals along each row of cap wells into a header, bench header rings, and the main header to the blower
+  function onGround(pts, lift) { return pts.map(function (p) { return new THREE.Vector3(p[0], H(p[0], p[1]) + lift, p[1]); }); }
+  function dense(a, b, step) { var n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step)), o = []; for (var i = 0; i <= n; i++) o.push([a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n]); return o; }
+  var tubes = [], HX = -1e9, rows = {};
+  wells.forEach(function (w) { if (inward(w[0], w[1]) > TOP) { HX = Math.max(HX, w[0]); (rows[w[1]] = rows[w[1]] || []).push(w[0]); } });
+  HX += 2; var zs = Object.keys(rows).map(Number).sort(function (a, b) { return a - b; });
+  zs.forEach(function (z) { var x0 = Math.min.apply(null, rows[z]); tubes.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(onGround(dense([x0, z], [HX, z], 1.5), .32)), 24, .13, 6)); });
+  if (zs.length) tubes.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(onGround(dense([HX, zs[0]], [HX, zs[zs.length - 1]], 1.5), .36)), 30, .22, 6));
+  benchRings.forEach(function (r) { tubes.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(onGround(r, .32), true), r.length * 2, .17, 6, true)); });
+  var main = onGround(dense([HX, 0], [AX + 2, 0], 1), .4);
+  main.push(new THREE.Vector3(AX + 5, 1.2, 0), new THREE.Vector3(50, 1.2, 0));
+  tubes.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(main), 60, .3, 8));
+  mesh(MG(tubes), M.lfPipe, CX, 0, 0, g);
+  // fence round the property, with a gate on the road in
+  var fpts = contour(1, FX, FZ, 2.4, FXW, FZS), fv = [], fuv = [], fidx = [], posts = [], run = 0;
+  for (var fi = 0; fi < fpts.length; fi++) {
+    var p0 = fpts[fi], p1 = fpts[(fi + 1) % fpts.length], mx = (p0[0] + p1[0]) / 2, mz = (p0[1] + p1[1]) / 2, l = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
+    var pc = new THREE.CylinderGeometry(.07, .07, 2.3, 5); pc.translate(p0[0], 1.15 + H(p0[0], p0[1]), p0[1]); posts.push(pc);
+    if (Math.hypot(mx - GATE[0], mz - GATE[1]) < 3.2) { run += l; continue; }
+    var b0 = fv.length / 3, y0 = H(p0[0], p0[1]), y1 = H(p1[0], p1[1]);
+    fv.push(p0[0], y0 + .05, p0[1], p1[0], y1 + .05, p1[1], p0[0], y0 + 2.2, p0[1], p1[0], y1 + 2.2, p1[1]);
+    fuv.push(run / 1.2, 0, (run + l) / 1.2, 0, run / 1.2, 1.8, (run + l) / 1.2, 1.8); run += l;
+    fidx.push(b0, b0 + 1, b0 + 2, b0 + 2, b0 + 1, b0 + 3);
+  }
+  var fg = new THREE.BufferGeometry(); fg.setAttribute("position", new THREE.Float32BufferAttribute(fv, 3)); fg.setAttribute("uv", new THREE.Float32BufferAttribute(fuv, 2));
+  fg.setIndex(fidx); fg.computeVertexNormals(); mesh(fg, M.fence, CX, 0, 0, g, false);
+  mesh(MG(posts), M.galv, CX, 0, 0, g);
+  // the working face: dumped loads, a dozer pushing, a compactor, a truck tipping
+  function machine(x, z, ry, parts) { var m = new THREE.Group(); m.position.set(CX + x, H(x, z), z); m.rotation.y = ry; g.add(m);
+    parts.forEach(function (q) { var o = mesh(q[0], q[1], q[2], q[3], q[4], m); if (q[5]) o.rotation.set(q[5], 0, q[6] || 0); }); return m; }
+  var BX = function (w, h, d) { return new THREE.BoxGeometry(w, h, d); };
+  machine(WF.x - 2, WF.z + 1.5, .6, [[BX(.5, .75, 3.1), M.dark, -1.05, .37, 0], [BX(.5, .75, 3.1), M.dark, 1.05, .37, 0], [BX(1.7, 1.1, 2.6), M.white, 0, 1.2, -.1],
+    [BX(1.2, 1.0, 1.1), M.white, 0, 2.2, -.6], [BX(1.25, .45, 1.15), M.black, 0, 2.3, -.6], [BX(2.8, 1.0, .22), M.steel, 0, .6, 1.75]]);
+  var wh = function () { var c = new THREE.CylinderGeometry(.72, .72, .62, 12); c.rotateZ(Math.PI / 2); return c; };
+  machine(WF.x + 2.5, WF.z - 2.5, -.9, [[wh(), M.steel, -1.05, .72, 1.1], [wh(), M.steel, 1.05, .72, 1.1], [wh(), M.steel, -1.05, .72, -1.2], [wh(), M.steel, 1.05, .72, -1.2],
+    [BX(1.5, 1.1, 2.9), M.white, 0, 1.35, 0], [BX(1.1, 1.0, 1.0), M.white, 0, 2.4, -.3], [BX(1.15, .45, 1.05), M.black, 0, 2.5, -.3], [BX(2.6, .8, .2), M.steel, 0, .55, 2.0]]);
+  machine(WF.x + 3.5, WF.z + 4.5, 2.3, [[BX(2.1, 1.7, 1.7), M.white, 0, 1.25, 2.1], [BX(2.12, .5, 1.72), M.black, 0, 1.6, 2.1], [BX(2.0, .4, 5.6), M.dark, 0, .55, .3],
+    [BX(2.3, 1.3, 3.6), M.galv, 0, 1.75, -.6, -.32], [wh(), M.dark, -1.05, .5, 2.1], [wh(), M.dark, 1.05, .5, 2.1], [wh(), M.dark, -1.05, .5, -1.5], [wh(), M.dark, 1.05, .5, -1.5]]);
+  [[-1, -1, .9], [1.5, 2.5, .8], [-3.5, -.5, .7], [0, 3.8, .65], [-4, 3, .85], [-5.5, 1.2, .6], [-2, 5.2, .7], [3.2, .6, .6], [-6, -2.6, .75], [1, -4.2, .6]].forEach(function (l) {
+    var x = WF.x + l[0], z = WF.z + l[1], s = mesh(new THREE.SphereGeometry(1, 7, 5), M.lfSoil, CX + x, H(x, z), z, g); s.scale.set(l[2] * 1.3, l[2] * .55, l[2] * 1.1); s.rotation.y = l[0]; });
+}
+/* ---------- kit bag: small parts placed in world space and merged per material (few draw calls, smooth on phones) ---------- */
+function kitBag(M, mesh) {
+  var groups = [], byMat = {};
+  if (!M.kbRoad) {
+    var gt = M.ground.map.clone(); gt.needsUpdate = true; gt.repeat.set(1, 1);
+    M.kbRoad = new THREE.MeshStandardMaterial({ color: 0xbdbdbd, roughness: 1, map: gt, bumpMap: gt, bumpScale: .4, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    var pt = M.ground.map.clone(); pt.needsUpdate = true; pt.repeat.set(5, 5);
+    M.kbGravel = new THREE.MeshStandardMaterial({ color: 0xc8c8c8, roughness: 1, map: pt, bumpMap: pt, bumpScale: .5 });
+    var at = M.road.map.clone(); at.needsUpdate = true; at.repeat.set(1, 1);
+    M.kbAsph = new THREE.MeshStandardMaterial({ color: 0x6e6e6e, roughness: .95, map: at, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    M.kbRoof = new THREE.MeshStandardMaterial({ color: 0x8e8e8e, roughness: .9, metalness: .1 });
+    M.kbGlass = new THREE.MeshStandardMaterial({ color: 0x161616, roughness: .12, metalness: .85 });
+    M.kbPaint = new THREE.MeshStandardMaterial({ color: 0xe6e6e6, roughness: .6 });
+    [M.kbRoad, M.kbGravel, M.kbAsph, M.kbRoof, M.kbGlass, M.kbPaint].forEach(function (m) { m.envMapIntensity = M.mound.envMapIntensity; });
+  }
+  function put(geo, mat) { var k = mat.uuid; if (!byMat[k]) { byMat[k] = { m: mat, gs: [] }; groups.push(byMat[k]); } byMat[k].gs.push(geo); }
+  var E = new THREE.Euler(), R = new THREE.Matrix4(), Y = new THREE.Vector3(0, 1, 0);
+  function frame(fx, fz, fry) { // a local frame: x, z offset and a turn about y
+    function fin(geo, mat, x, y, z, rx, ry, rz) {
+      if (rx || ry || rz) geo.applyMatrix4(R.makeRotationFromEuler(E.set(rx || 0, ry || 0, rz || 0)));
+      geo.translate(x, y, z); if (fry) geo.rotateY(fry); geo.translate(fx, 0, fz); put(geo, mat); return geo;
+    }
+    return {
+      box: function (w, h, d, mat, x, y, z, rx, ry, rz) { return fin(new THREE.BoxGeometry(w, h, d), mat, x, y, z, rx, ry, rz); },
+      cyl: function (r1, r2, h, mat, x, y, z, seg, rx, ry, rz) { return fin(new THREE.CylinderGeometry(r1, r2, h, seg || 12), mat, x, y, z, rx, ry, rz); },
+      cap: function (r, len, mat, x, y, z, rx, ry, rz) { return fin(new THREE.CapsuleGeometry(r, len, 4, 14), mat, x, y, z, rx, ry, rz); },
+      wheel: function (r, mat, x, y, z, rx, ry, rz) { return fin(new THREE.TorusGeometry(r, r * .12, 5, 14), mat, x, y, z, rx, ry, rz); },
+      fan: function (r, x, y, z) { fin(new THREE.CircleGeometry(r, 20), M.fan, x, y, z, -Math.PI / 2); return fin(new THREE.TorusGeometry(r, r * .08, 5, 20), M.dark, x, y, z, Math.PI / 2); },
+      pipe: function (pts, r, mat, seg) { // straight runs between [x, y, z] points
+        for (var i = 0; i < pts.length - 1; i++) {
+          var a = new THREE.Vector3().fromArray(pts[i]), b = new THREE.Vector3().fromArray(pts[i + 1]), d = b.clone().sub(a), l = d.length(); if (l < .01) continue;
+          var g = new THREE.CylinderGeometry(r, r, l + r * .6, seg || 8); g.applyMatrix4(R.makeRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(Y, d.normalize())));
+          fin(g, mat, (a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
+        }
+      },
+      rail: function (x0, z0, x1, z1, y, h, mat) { // handrail: posts plus top and mid rails
+        var l = Math.hypot(x1 - x0, z1 - z0), ry = -Math.atan2(z1 - z0, x1 - x0), n = Math.max(1, Math.round(l / 1.6));
+        for (var i = 0; i <= n; i++) this.box(.05, h, .05, mat, x0 + (x1 - x0) * i / n, y + h / 2, z0 + (z1 - z0) * i / n);
+        this.box(l, .05, .05, mat, (x0 + x1) / 2, y + h, (z0 + z1) / 2, 0, ry); this.box(l, .04, .04, mat, (x0 + x1) / 2, y + h / 2, (z0 + z1) / 2, 0, ry);
+      },
+    };
+  }
+  var W = frame(0, 0, 0);
+  W.frame = frame;
+  W.road = function (g, pts, w, mat, y) { // flat strip on the ground with world-scaled texture
+    var v = [], uv = [], idx = [], along = 0, n = pts.length;
+    for (var i = 0; i < n; i++) {
+      var a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)], tx = b[0] - a[0], tz = b[1] - a[1], l = Math.hypot(tx, tz) || 1;
+      var nx = -tz / l * w / 2, nz = tx / l * w / 2; if (i) along += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      v.push(pts[i][0] + nx, y || .05, pts[i][1] + nz, pts[i][0] - nx, y || .05, pts[i][1] - nz); uv.push(0, along / 6, w / 6, along / 6);
+      if (i < n - 1) idx.push(i * 2, i * 2 + 2, i * 2 + 1, i * 2 + 1, i * 2 + 2, i * 2 + 3);
+    }
+    var rg = new THREE.BufferGeometry(); rg.setAttribute("position", new THREE.Float32BufferAttribute(v, 3)); rg.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    rg.setIndex(idx); rg.computeVertexNormals(); return mesh(rg, mat || M.kbRoad, 0, 0, 0, g, false);
+  };
+  W.fence = function (g, pts, gaps) { // chain-link round a closed polygon, with gaps [x, z, half-width]
+    var fv = [], fuv = [], fi = [], run = 0;
+    for (var i = 0; i < pts.length; i++) {
+      var p0 = pts[i], p1 = pts[(i + 1) % pts.length], l = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), n = Math.max(1, Math.round(l / 3));
+      for (var k = 0; k < n; k++) {
+        var a = [p0[0] + (p1[0] - p0[0]) * k / n, p0[1] + (p1[1] - p0[1]) * k / n], b = [p0[0] + (p1[0] - p0[0]) * (k + 1) / n, p0[1] + (p1[1] - p0[1]) * (k + 1) / n], s = l / n;
+        W.cyl(.06, .06, 2.4, M.galv, a[0], 1.2, a[1], 5);
+        var mx = (a[0] + b[0]) / 2, mz = (a[1] + b[1]) / 2, gap = (gaps || []).some(function (q) { return Math.hypot(mx - q[0], mz - q[1]) < q[2]; });
+        if (!gap) { var b0 = fv.length / 3; fv.push(a[0], .05, a[1], b[0], .05, b[1], a[0], 2.2, a[1], b[0], 2.2, b[1]);
+          fuv.push(run / 1.2, 0, (run + s) / 1.2, 0, run / 1.2, 1.8, (run + s) / 1.2, 1.8); fi.push(b0, b0 + 1, b0 + 2, b0 + 2, b0 + 1, b0 + 3); }
+        run += s;
+      }
+    }
+    var fg = new THREE.BufferGeometry(); fg.setAttribute("position", new THREE.Float32BufferAttribute(fv, 3)); fg.setAttribute("uv", new THREE.Float32BufferAttribute(fuv, 2));
+    fg.setIndex(fi); fg.computeVertexNormals(); mesh(fg, M.fence, 0, 0, 0, g, false);
+  };
+  W.light = function (x, z, ry) { var F = frame(x, z, ry || 0); F.cyl(.1, .14, 8, M.galv, 0, 4, 0, 6); F.box(1.6, .08, .08, M.galv, .7, 7.9, 0); F.box(.6, .14, .3, M.lamp, 1.4, 7.8, 0); };
+  W.done = function (g) {
+    var MG = THREE.BufferGeometryUtils.mergeBufferGeometries;
+    groups.forEach(function (b) { var m = mesh(MG(b.gs), b.m, 0, 0, 0, g); if (b.m === M.fan) m.castShadow = false; b.gs.forEach(function (x) { x.dispose(); }); });
+  };
+  return W;
+}
+
+/* ---------- field gas: three well pads, a compressor station, the flare, gathering lines and lease roads ---------- */
+function fieldGas(g, M, mesh, flare) {
+  var K = kitBag(M, mesh);
+  function tree(F, x, z) { // wellhead "christmas tree" in a cellar, with a pipe guard round it
+    F.box(2.6, .1, 2.6, M.dark, x, .05, z); F.box(2.6, .04, .3, M.galv, x, .11, z - 1.15); F.box(2.6, .04, .3, M.galv, x, .11, z + 1.15);
+    F.cyl(.55, .55, .3, M.dark, x, .25, z, 14); F.cyl(.34, .34, .6, M.galv, x, .7, z, 12);
+    F.box(.55, .5, .55, M.kbPaint, x, 1.25, z); F.wheel(.3, M.dark, x + .5, 1.25, z, 0, Math.PI / 2);
+    F.box(.55, .5, .55, M.kbPaint, x, 1.85, z); F.wheel(.3, M.dark, x + .5, 1.85, z, 0, Math.PI / 2);
+    F.box(1.5, .45, .45, M.kbPaint, x, 2.45, z);
+    [-1, 1].forEach(function (s) { F.box(.4, .5, .5, M.kbPaint, x + s * .95, 2.45, z); F.wheel(.26, M.dark, x + s * .95, 2.82, z, Math.PI / 2); });
+    F.box(.5, .5, .5, M.kbPaint, x, 3.0, z); F.cyl(.2, .27, .4, M.galv, x, 3.45, z, 10); F.cyl(.13, .13, .07, M.white, x + .3, 3.15, z, 12, 0, 0, Math.PI / 2);
+    F.pipe([[x + 1.15, 2.45, z], [x + 1.7, 2.45, z], [x + 1.7, .3, z]], .1, M.steel);
+    [[-1.5, -1.5], [1.5, -1.5], [1.5, 1.5], [-1.5, 1.5]].forEach(function (c) { F.cyl(.09, .09, 1.1, M.kbPaint, x + c[0], .55, z + c[1], 6); });
+    F.box(3, .1, .1, M.kbPaint, x, 1.05, z - 1.5); F.box(3, .1, .1, M.kbPaint, x, 1.05, z + 1.5); F.box(.1, .1, 3, M.kbPaint, x - 1.5, 1.05, z);
+  }
+  function pumpjack(F, x, z) {
+    F.box(1.4, .3, 8, M.dark, x, .15, z); F.box(.3, .3, 8, M.galv, x - .55, .4, z); F.box(.3, .3, 8, M.galv, x + .55, .4, z);
+    [-1, 1].forEach(function (s) { F.box(.22, 4.5, .22, M.galv, x + s * .55, 2.4, z + .4, -.18 * s * 0, 0, -s * .1); F.box(.2, 4.3, .2, M.galv, x + s * .5, 2.3, z - .5, .2, 0, -s * .1); });
+    F.box(.4, .6, 8, M.kbPaint, x, 4.75, z + .6, -.1);                              // walking beam
+    F.box(.55, 2.4, 1.1, M.kbPaint, x, 4.1, z + 4.6, -.1);                          // horsehead
+    F.cyl(.03, .03, 3.4, M.steel, x, 2.4, z + 5.1, 6); tree(F, x, z + 5.1);           // bridle down to the well
+    F.box(1.4, 1.5, 1.5, M.galv, x, 1.4, z - 2.8);                                  // gear reducer
+    [-1, 1].forEach(function (s) { F.box(.18, 2.4, .5, M.dark, x + s * .85, 1.6, z - 2.8, 0, 0, .5); F.box(.35, 1.3, 1.6, M.dark, x + s * 1.05, 1.0, z - 3.3, .5);
+      F.box(.12, 3.1, .12, M.galv, x + s * .55, 3.0, z - 2.4, .1); });
+    F.box(1.1, 1, 1.4, M.dark, x, .8, z - 4.4);                                      // motor
+  }
+  function vsep(F, x, z, r, h) { F.box(r * 3.2, .25, r * 3.2, M.dark, x, .12, z); F.cap(r, h, M.kbPaint, x, h / 2 + r + .3, z);
+    F.box(.04, h + r * 2, .04, M.galv, x + r + .25, (h + r * 2) / 2 + .3, z - .2); F.box(.04, h + r * 2, .04, M.galv, x + r + .25, (h + r * 2) / 2 + .3, z + .2);
+    F.cyl(.1, .1, .6, M.steel, x, h + r * 2 + .5, z, 6); }
+  function battery(F, x, z, n) { // tanks inside a steel containment ring, catwalk on top, stairs at the end
+    var L = n * 4 + 2, x0 = x - L / 2;
+    F.box(L, .1, 7, M.pad, x, .05, z); F.box(L, 1, .2, M.galv, x, .5, z - 3.5); F.box(L, 1, .2, M.galv, x, .5, z + 3.5); F.box(.2, 1, 7, M.galv, x0, .5, z); F.box(.2, 1, 7, M.galv, x0 + L, .5, z);
+    for (var i = 0; i < n; i++) { var tx = x0 + 3 + i * 4;
+      F.cyl(1.6, 1.6, 6, M.kbPaint, tx, 3.1, z, 20); F.cyl(.25, 1.62, .4, M.kbPaint, tx, 6.3, z, 20); F.cyl(.22, .22, .3, M.dark, tx + .5, 6.5, z + .5, 8);
+      F.pipe([[tx, .9, z + 1.6], [tx, .9, z + 2.6]], .09, M.steel); }
+    F.box(L - 2, .1, 1, M.galv, x, 6.7, z - 1.9); F.rail(x0 + 1, z - 2.4, x0 + L - 1, z - 2.4, 6.7, 1, M.galv); F.rail(x0 + 1, z - 1.4, x0 + L - 1, z - 1.4, 6.7, 1, M.galv);
+    F.box(9.2, .12, 1, M.galv, x0 + L + 2.6, 3.4, z - 1.9, 0, 0, -.82);
+    F.pipe([[x0 + 2, .9, z + 2.6], [x0 + L + 1, .9, z + 2.6], [x0 + L + 1, .9, z + 4.5]], .1, M.steel); F.box(.4, 1.3, .4, M.dark, x0 + L + 1, .65, z + 4.5);
+  }
+  function wellPad(cx, cz, wells, pj, tanks, w, d) {
+    K.box(w, .12, d, M.kbGravel, cx, .06, cz);
+    var F = K.frame(cx, cz, 0), wz = -d / 2 + 4, pz = 1.5, flow = [];
+    wells.forEach(function (wx) { tree(F, wx, wz); flow.push(wx); });
+    if (pj != null) pumpjack(F, pj, wz - 1.4);
+    vsep(F, -w / 2 + 4, pz, .7, 2.6); vsep(F, -w / 2 + 7, pz, .7, 2.6);
+    F.box(2.6, .3, 2.6, M.dark, -w / 2 + 10.5, .15, pz); F.cap(1.05, 4.2, M.kbPaint, -w / 2 + 10.5, 3.6, pz); F.cyl(.18, .18, 2.8, M.dark, -w / 2 + 10.9, 7.6, pz + .4, 8); // heater-treater
+    F.box(.4, .6, 1.4, M.dark, -w / 2 + 13.4, .3, pz); F.box(.4, .6, 1.4, M.dark, -w / 2 + 16.6, .3, pz); F.cap(.8, 3.8, M.kbPaint, -w / 2 + 15, 1.5, pz, 0, 0, Math.PI / 2); // 3-phase separator
+    flow.forEach(function (wx) { F.pipe([[wx + 1.7, .3, wz], [wx + 1.7, .3, pz - 2.2], [-w / 2 + 4, .3, pz - 2.2], [-w / 2 + 4, .6, pz - .8]], .09, M.steel); });
+    battery(F, w / 2 - (tanks * 4 + 2) / 2 - 3.5, d / 2 - 5, tanks);
+    F.box(2.4, 2.5, 2.6, M.kbPaint, w / 2 - 3, 1.25, pz - 1); F.box(2.8, .2, 3, M.kbRoof, w / 2 - 3, 2.6, pz - 1); // meter house
+    F.cyl(.9, .9, 6.5, M.kbPaint, w / 2 - 3, 3.4, -d / 2 + 3, 16); F.cyl(1.0, 1.0, .5, M.dark, w / 2 - 3, 6.9, -d / 2 + 3, 16); F.box(2, .3, 2, M.dark, w / 2 - 3, .15, -d / 2 + 3); // combustor
+  }
+  wellPad(-70, -26, [-11, -6], 4, 4, 32, 24);
+  wellPad(-60, 18, [-12, -7, -2, 3], null, 4, 32, 24);
+  wellPad(-36, -34, [-9, -4, 1], null, 3, 28, 22);
+  // compressor station
+  K.box(26, .12, 18, M.kbGravel, -28, .06, 5);
+  var S = K.frame(-30, 4, 0);
+  S.box(14, 6, 8, M.gen, 0, 3, 0); S.box(14.6, .4, 8.6, M.kbRoof, 0, 6.2, 0); S.box(3.2, 3.6, .1, M.dark, -3, 1.8, 4.05); S.box(3.2, 3.6, .1, M.dark, 3, 1.8, 4.05);
+  [-4, 0, 4].forEach(function (x) { S.cyl(.4, .4, 3.4, M.steel, x, 8, -1.5, 10); S.cyl(.55, .55, .3, M.dark, x, 9.8, -1.5, 10); S.cap(.6, 2.6, M.steel, x, 7.2, 1.6, 0, 0, Math.PI / 2); });
+  [[10.5, -1], [10.5, 3.6]].forEach(function (c) { // fin-fan coolers
+    [[-1.8, -4], [1.8, -4], [-1.8, 4], [1.8, 4]].forEach(function (p) { S.box(.25, 3, .25, M.galv, c[0] + p[0], 1.5, c[1] + p[1] * .5); });
+    S.box(4, 1.2, 4.6, M.galv, c[0], 3.6, c[1]); S.fan(1.6, c[0], 4.22, c[1]); });
+  S.cap(1.1, 4, M.kbPaint, -11, 3.6, -3); S.cap(1.1, 4, M.kbPaint, -11, 3.6, 1); S.box(3, .3, 7, M.dark, -11, .15, -1);
+  S.box(4, 3, 3, M.kbPaint, -10, 1.5, 6); S.box(4.4, .2, 3.4, M.kbRoof, -10, 3.1, 6);
+  S.cap(.7, 4, M.steel, 6, 1.5, 7, 0, 0, Math.PI / 2); // pig receiver
+  // flare pad with knockout drum
+  K.box(10, .12, 10, M.kbGravel, -20, .06, -16); K.cap(1, 3.5, M.steel, -23.5, 1.6, -14, 0, 0, Math.PI / 2);
+  flare(g, -20, -16, 14);
+  // lease roads
+  K.road(g, [[-4, 19], [-30, 19], [-44, 19]], 4.5);
+  K.road(g, [[-42, 19], [-43, 4], [-46, -8], [-54, -17]], 4.2);
+  K.road(g, [[-46, -8], [-40, -16], [-38, -23]], 4.2);
+  // gathering lines on low supports, with pipeline markers
+  function line(pts) { K.pipe(pts.map(function (p) { return [p[0], .45, p[1]]; }), .2, M.steel);
+    for (var i = 0; i < pts.length - 1; i++) { var a = pts[i], b = pts[i + 1], l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      for (var t = 3; t < l; t += 6) { var x = a[0] + (b[0] - a[0]) * t / l, z = a[1] + (b[1] - a[1]) * t / l; K.box(.3, .3, .9, M.dark, x, .15, z); if (t % 18 < 6) { K.cyl(.06, .06, 1.4, M.kbPaint, x + 1.2, .7, z, 6); K.box(.2, .3, .05, M.dark, x + 1.2, 1.3, z); } } } }
+  line([[-48, 10], [-42, 8], [-38, 6]]);
+  line([[-56, -22], [-48, -10], [-41, 0]]);
+  line([[-38, -25], [-36, -6], [-36, -1]]);
+  line([[-22, -3], [-21, -10]]);
+  K.pipe([[-16, 1.2, 4], [-10, 1.2, 4], [-10, 1.2, -10]], .3, M.steel);
+  K.light(-17, 15, Math.PI); K.light(-41, 15, 0); K.light(-58, -12, 0);
+  K.done(g);
+}
+
+/* ---------- gas plant: process building, boiler house and stacks, cooling tower, tanks, pipe rack, meter station, substation ---------- */
+function gasPlant(g, M, mesh) {
+  var K = kitBag(M, mesh);
+  K.box(108, .1, 70, M.kbGravel, -77, .05, -3);
+  // process building with a high bay, docks, windows and rooftop units
+  var P = K.frame(-76, 0, 0);
+  P.box(36, 11, 24, M.gen, 0, 5.5, 0); P.box(36.8, .5, 24.8, M.kbRoof, 0, 11.25, 0);
+  P.box(16, 19, 16, M.gen, 9, 9.5, -2); P.box(16.8, .5, 16.8, M.kbRoof, 9, 19.25, -2);
+  [-14, -9, -4].forEach(function (x) { P.box(3.6, 4.2, .12, M.dark, x, 2.1, 12.02); for (var y = .4; y < 4.2; y += .35) P.box(3.6, .04, .14, M.galv, x, y, 12.04);
+    P.box(4.2, .6, .5, M.dark, x, 4.5, 12.2); P.box(3.2, 1.1, 2.4, M.pad, x, .55, 13.2); });
+  P.box(20, .3, 5, M.kbRoof, -9, 5.6, 14.5); [-18, -9, 0].forEach(function (x) { P.box(.2, 5.5, .2, M.galv, x, 2.75, 16.8); });
+  P.box(1.1, 2.3, .1, M.dark, 6, 1.15, 12.02); P.box(1.1, 2.3, .1, M.dark, 13, 1.15, 12.02);
+  P.box(34, 1.1, .1, M.kbGlass, 0, 8.4, 12.03); P.box(15.6, 1.1, .1, M.kbGlass, 9, 15.5, 6.03); P.box(.1, 1.1, 22, M.kbGlass, -18.03, 8.4, 0); P.box(.1, 1.1, 14, M.kbGlass, 17.03, 15.5, -2);
+  [-17.8, -6, 5.8].forEach(function (x) { P.cyl(.12, .12, 11, M.galv, x, 5.5, 12.2, 6); });
+  [[-12, -6], [-6, -6], [-12, 4], [-4, 4]].forEach(function (c) { P.box(3, 1.4, 2.2, M.galv, c[0], 12.2, c[1]); P.fan(.6, c[0] + .6, 12.92, c[1]); });
+  [[4, -6], [10, -8], [14, 2]].forEach(function (c) { P.cyl(.35, .35, 2, M.steel, c[0], 20.3, c[1], 10); P.cyl(.6, .6, .3, M.dark, c[0], 21.4, c[1], 10); });
+  // boiler house, breeching ducts and two stacks with platforms and ladders
+  var Bh = K.frame(-104, -4, 0);
+  Bh.box(12, 15, 13, M.kbPaint, 0, 7.5, 0); Bh.box(12.6, .5, 13.6, M.kbRoof, 0, 15.25, 0); Bh.box(2.5, 3, .1, M.dark, 0, 1.5, 6.52);
+  for (var y = 2.5; y < 14; y += 3.2) Bh.box(.1, .8, 9, M.kbGlass, -6.02, y + 1, 0);
+  [-6, 6].forEach(function (z, i) { Bh.box(8, 2.6, 2.6, M.galv, -9, 12, z * .8);
+    Bh.cyl(2.2, 2.8, 48, M.kbPaint, -13, 24, z, 24); Bh.cyl(2.28, 2.28, 3, M.dark, -13, 46.5, z, 24);
+    [16, 34].forEach(function (h) { Bh.wheel(3.2, M.galv, -13, h, z, Math.PI / 2); Bh.cyl(3.3, 3.3, .15, M.galv, -13, h - .1, z, 24); });
+    Bh.box(.05, 46, .05, M.galv, -10.4, 23, z - .3); Bh.box(.05, 46, .05, M.galv, -10.4, 23, z + .3); });
+  // cooling tower: two cells with louvres and fan stacks
+  var Ct = K.frame(-66, -22, 0);
+  Ct.box(18, 7, 8, M.louvre, 0, 3.5, 0); Ct.box(18.4, .3, 8.4, M.galv, 0, 7.15, 0); Ct.box(18, .8, 8, M.dark, 0, .4, 0);
+  [-4.5, 4.5].forEach(function (x) { Ct.cyl(2.8, 3.1, 2.2, M.kbPaint, x, 8.4, 0, 20); Ct.fan(2.6, x, 9.52, 0); });
+  Ct.rail(-9, -4, 9, -4, 7.3, 1, M.galv); Ct.pipe([[-9.2, 1.2, 2], [-14, 1.2, 2], [-14, 1.2, 14]], .4, M.steel);
+  // tank farm in a dike, and pressure bullets on saddles
+  var Tf = K.frame(-110, 26, 0);
+  Tf.box(24, .1, 12, M.pad, 0, .05, 0); Tf.box(24, .9, .3, M.pad, 0, .45, -6); Tf.box(24, .9, .3, M.pad, 0, .45, 6); Tf.box(.3, .9, 12, M.pad, -12, .45, 0); Tf.box(.3, .9, 12, M.pad, 12, .45, 0);
+  [-5.5, 5.5].forEach(function (x) { Tf.cyl(4, 4, 8, M.kbPaint, x, 4.1, 0, 28); Tf.cyl(.4, 4.05, .8, M.kbPaint, x, 8.5, 0, 28); Tf.rail(x - 3, -2, x + 3, -2, 8.3, 1, M.galv);
+    Tf.box(.9, .12, 10, M.galv, x + 4.4, 4.2, -1, -.9); });
+  var Bu = K.frame(-90, 27, 0);
+  [-3.2, 0, 3.2].forEach(function (z) { Bu.cap(1.3, 8, M.kbPaint, 0, 2.2, z, 0, 0, Math.PI / 2); Bu.box(.6, 1.2, 2.2, M.pad, -3, .6, z); Bu.box(.6, 1.2, 2.2, M.pad, 3, .6, z); });
+  // pipe rack from the building to the meter station, cable tray underneath
+  function rack(a, b) { var l = Math.hypot(b[0] - a[0], b[1] - a[1]), ry = -Math.atan2(b[1] - a[1], b[0] - a[0]), n = Math.round(l / 6);
+    for (var i = 0; i <= n; i++) { var t = i / n, F = K.frame(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, ry);
+      F.box(.3, 5.6, .3, M.galv, 0, 2.8, -1.6); F.box(.3, 5.6, .3, M.galv, 0, 2.8, 1.6); F.box(.3, .3, 3.6, M.galv, 0, 5.5, 0); F.box(.3, .3, 3.6, M.galv, 0, 3.4, 0); }
+    var F2 = K.frame(a[0], a[1], ry);
+    F2.pipe([[0, 5.95, -1.1], [l, 5.95, -1.1]], .3, M.steel); F2.pipe([[0, 5.85, 0], [l, 5.85, 0]], .2, M.kbPaint); F2.pipe([[0, 5.8, .9], [l, 5.8, .9]], .15, M.steel);
+    F2.box(l, .12, .8, M.galv, l / 2, 3.65, 0); }
+  rack([-58, 8], [-30, 8]); rack([-30, 8], [-30, 16]);
+  // meter station: fenced yard with meter runs, regulators, a control hut and the incoming line
+  var Ms = K.frame(-30, 22, 0);
+  Ms.box(14, .1, 10, M.kbGravel, 0, .06, 0);
+  [-1.6, 1.6].forEach(function (z) { Ms.pipe([[-5, 1.1, z], [5, 1.1, z]], .3, M.steel); [-3, 0, 3].forEach(function (x) { Ms.cyl(.45, .45, .2, M.dark, x, 1.1, z, 12, 0, 0, Math.PI / 2); });
+    Ms.box(.8, .9, .8, M.kbPaint, 1.5, 1.6, z); Ms.box(.4, 1.1, .4, M.dark, -4, .55, z); Ms.box(.4, 1.1, .4, M.dark, 4, .55, z); });
+  Ms.box(3.4, 3, 3, M.kbPaint, 3.5, 1.5, -3.4); Ms.box(3.8, .2, 3.4, M.kbRoof, 3.5, 3.1, -3.4);
+  Ms.pipe([[-5, 1.1, 1.6], [-5, 1.1, -1.6], [-5, 1.1, 0], [-5, -.2, 0]], .3, M.steel); Ms.pipe([[0, 1.1, 5], [0, 1.1, 1.6]], .3, M.steel);
+  K.fence(g, [[-37, 17], [-23, 17], [-23, 27], [-37, 27]], [[-30, 27, 2]]);
+  K.pipe([[-30, -.2, 60], [-30, -.2, 27.5]], .3, M.steel); K.cyl(.06, .06, 1.4, M.kbPaint, -28.6, .7, 40, 6); K.cyl(.06, .06, 1.4, M.kbPaint, -28.6, .7, 52, 6);
+  K.pipe([[-23, 1.2, 22], [-10, 1.2, 22], [-10, 1.2, -6]], .35, M.steel);
+  for (var pz = 20; pz > -6; pz -= 6) K.box(.25, 1.2, .9, M.dark, -10, .6, pz);
+  // substation: transformers with radiators and bushings, an H-frame, its own fence
+  var Ss = K.frame(-40, -24, 0);
+  Ss.box(18, .1, 12, M.kbGravel, 0, .06, 0);
+  [-5, 0, 5].forEach(function (x) { Ss.box(4, .4, 3.6, M.pad, x, .2, 1.4); Ss.box(2.6, 2.6, 2, M.dark, x, 1.7, 1.4);
+    for (var i = 0; i < 7; i++) Ss.box(.07, 2.1, .7, M.galv, x - 1.2 + i * .4, 1.6, 2.75);
+    [-.7, 0, .7].forEach(function (b) { Ss.cyl(.1, .16, 1, M.white, x + b, 3.5, 1.1, 8); }); });
+  [-7, 7].forEach(function (x) { Ss.box(.4, 9, .4, M.galv, x, 4.5, -3.5); }); Ss.box(14.4, .4, .4, M.galv, 0, 8.8, -3.5);
+  [-4, 0, 4].forEach(function (x) { Ss.cyl(.12, .12, 1.2, M.white, x, 8, -3.5, 8); });
+  K.fence(g, [[-49, -30], [-31, -30], [-31, -18], [-49, -18]], [[-40, -18, 2]]);
+  // roads, parking with cars, lights, and the property fence
+  K.road(g, [[-2, 36], [-122, 36]], 6.5, M.kbAsph);
+  K.road(g, [[-80, 36], [-80, 15]], 6, M.kbAsph, .055); K.road(g, [[-44, 36], [-44, -17]], 5, M.kbAsph, .055);
+  K.road(g, [[-122, 36], [-122, -28], [-104, -28]], 5.5, M.kbAsph, .056);
+  K.box(20, .06, 13, M.kbAsph, -112, .04, -29);
+  for (var i = 0; i < 7; i++) { K.box(.12, .02, 4.6, M.kbPaint, -120.5 + i * 2.8, .08, -32.6); }
+  [[-119, M.kbPaint], [-116.2, M.galv], [-110.6, M.dark], [-107.8, M.kbPaint], [-105, M.galv]].forEach(function (c) { K.box(1.8, .75, 4.2, c[1], c[0], .6, -32.4); K.box(1.6, .6, 2.2, M.kbGlass, c[0], 1.25, -32.6); });
+  [[-20, 33], [-60, 33], [-100, 33], [-124, 10], [-124, -20]].forEach(function (p) { K.light(p[0], p[1], Math.PI / 2); });
+  K.fence(g, [[-130, -40], [-22, -40], [-22, 31], [-130, 31]], [[-80, 31, 3.5], [-44, 31, 3], [-122, 31, 3]]);
+  K.done(g);
+}
+
 function buildSource(kind) {
   const g = new THREE.Group(); flames.length = 0;
   if (kind === "flare") {
-    const geo = new THREE.PlaneGeometry(100, 100, 80, 80); geo.rotateX(-Math.PI / 2);
-    const pos = geo.attributes.position; for (let i = 0; i < pos.count; i++) pos.setY(i, moundH(pos.getX(i), pos.getZ(i)) - .05);
-    geo.computeVertexNormals(); const m = mesh(geo, M.mound, -72, 0, 0, g); m.castShadow = true;
-    for (let i = 0; i < 12; i++) { const a = i * 2.4, r = 8 + (i % 5) * 6.5; const x = Math.cos(a) * r, z = Math.sin(a) * r; const y = moundH(x, z);
-      C(.18, .18, 1.6, M.galv, -72 + x, y + .8, z, g, 8); B(.5, .3, .5, M.dark, -72 + x, y + 1.6, z, g); }
+    landfill(g, -80, M, mesh);
     flare(g, -18, -10, 16);
     B(5, 2.6, 3, M.gen, -18, 1.3, 2, g); // blower skid
     pipeRun(g, [[-30, 0], [-18, 0], [-18, -8]], .35);
     pipeRun(g, [[-18, 2], [2, 2], [2, -6], [6, -6]], .3);
   } else if (kind === "well") {
-    for (const [x, z] of [[-70, -26], [-60, 18], [-36, -34]]) {
-      B(26, .2, 22, M.pad, x, .1, z, g, false);
-      for (let k = 0; k < 3; k++) { const wx = x - 6 + k * 6, wz = z - 4;
-        C(.35, .35, 1.2, M.steel, wx, .8, wz, g, 12); C(.25, .25, 1.6, M.galv, wx, 2.2, wz, g, 12);
-        const wh = mesh(new THREE.TorusGeometry(.4, .06, 8, 20), M.dark, wx + .45, 1.7, wz, g); wh.rotation.y = Math.PI / 2; }
-      vessel(g, x + 2, z + 5, .9, 4, true);
-      for (const tx of [x + 7, x + 10.5]) { C(1.6, 1.6, 6, M.white, tx, 3, z + 5, g); }
-    }
-    flare(g, -20, -16, 12);
-    pipeRun(g, [[-60, 10], [-36, -10], [-10, -10]], .3);
+    fieldGas(g, M, mesh, flare);
   } else {
-    B(48, 26, 30, M.white, -70, 13, 0, g); B(48.4, 1, 30.4, M.galv, -70, 26.5, 0, g);
-    for (let i = 0; i < 7; i++) B(.1, 14, 3, M.dark, -45.9, 12, -10 + i * 3.3, g, false);
-    B(20, 40, 18, M.gen, -100, 20, -2, g);
-    for (const z of [-14, 10]) C(2.6, 3.6, 72, M.white, -112, 36, z, g, 32);
-    for (let i = 0; i < 3; i++) makeTransformer(g, -60 + i * 10, -26);
-    pipeRun(g, [[-46, 18], [-10, 18], [-10, -6]], .4);
+    gasPlant(g, M, mesh);
   }
   return g;
 }
