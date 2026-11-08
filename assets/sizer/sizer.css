@@ -283,3 +283,10 @@ html.embed .seg.aud{display:none}
 .sizer .yb{margin:2px 0 4px;padding:10px 12px;border:1px solid var(--fg-dim);font-size:13px;line-height:1.45;color:var(--fg)}
 .sizer .yb strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-strong);margin-bottom:3px;font-weight:400}
 .sizer .spec-k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);font-weight:400;margin:clamp(22px,3vw,34px) 0 -6px}
+/* servers mode: the module opens with the switch; on desktop the switch moves to the top right while the module is open */
+@media (min-width:901px){
+.tenant-mode .sizer .sz-hero.open .copy{opacity:1;transform:none;left:auto;right:16px;top:14px;bottom:auto;width:340px;align-content:start}
+.tenant-mode .sizer .sz-hero.open .copy > :not(.aud){display:none!important}
+.tenant-mode .sizer .sz-hero.open .copy .aud,.tenant-mode .sizer .sz-hero.open .copy .aud *{pointer-events:auto!important}
+.tenant-mode .sizer .sz-hero.open .seg.aud button{padding:11px 10px;font-size:12px}
+}

@@ -292,7 +292,18 @@
     const yb = "<strong>Your build</strong> " + fmt(p.racks) + (p.racks === 1 ? " rack" : " racks") + " at about " + rkw + " kW" +
       (p.rack ? "" : ", " + p.perRack + (p.perRack === 1 ? " server" : " servers") + " each") + ", " + cool + " cooling, in " + p.mods + (p.mods === 1 ? " module." : " modules.");
     document.querySelectorAll(".yb").forEach(el => el.innerHTML = yb);
-    scene.tenant = {racks: p.racks, mods: p.mods};
+    // the module's parts list follows the tenant's build: their racks and the cooling their density needs
+    const lg = {racks: [fmt(rpm) + (rpm === 1 ? " rack" : " racks") + " for your servers",
+      "About " + rkw + " kW each" + (p.rack ? ", one rack-scale system a rack" : ", " + p.perRack + (p.perRack === 1 ? " server" : " servers") + " a rack"),
+      "Your servers go in these racks at the density you choose. The model draws a typical layout; the real module is laid out around your rack count, power per rack and cooling." + (p.mods > 1 ? " Your build fills " + p.mods + " modules." : "")]};
+    if (p.dens < 80 && p.dens > 40) lg.manifolds = ["Rear-door heat exchangers", "A coolant coil in the back door of each rack",
+      "At this density each rack gets a rear door with a coolant coil, or cold plates if your hardware has them. The door takes the heat out of the exhaust air and sends it to the coolant loop and out to the roof."];
+    if (p.dens <= 40) { lg.manifolds = ["Hot and cold aisles", "Cool air in at the front, hot air contained at the back",
+      "At this density the racks are air-cooled. Cool air reaches the front of each rack and the hot exhaust is contained and returned to the cooling units, so no liquid runs to your servers."];
+      lg.cdu = ["Cooling units", "Cool the room air and send the heat to the roof",
+      "Cooling units by the racks take the heat out of the exhaust air and hand it to a sealed loop that runs up to the dry coolers on the roof."]; }
+    lg.key = JSON.stringify(lg);
+    scene.tenant = {racks: p.racks, mods: p.mods, lg};
     tween("hs-mods", p.mods, v => fmt(Math.round(v)));
     ["srv","hsrv","kw"].forEach(id => { const el = $(id); el.style.setProperty("--p", ((el.value-el.min)/(el.max-el.min)*100) + "%"); });
   }
@@ -312,6 +323,7 @@
     if (on === tenant) return;
     if (on) saved = {mode, flow: st.flow};
     tenant = on; if (!on) scene.tenant = null;
+    scene.wantOpen = on ? 1 : -1; // servers mode opens straight into the module; energy mode closes it
     document.documentElement.classList.toggle("tenant-mode", on);
     $("aud-e").setAttribute("aria-pressed", String(!on)); $("aud-t").setAttribute("aria-pressed", String(on));
     swapText(on);
@@ -1373,11 +1385,12 @@ const pins = LEGEND.map(([id, title, detail, more], i) => {
   li.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") setPart(id); }); li.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") setPart(hlLock); });
   li.addEventListener("click", () => { hlLock = hlLock === id ? null : id; setPart(hlLock); });
   li.addEventListener("focus", () => setPart(id)); li.addEventListener("blur", () => setPart(hlLock));
-  return { id, a, pin, li, title, more };
+  return { id, a, pin, li, title, more, orig: [title, detail, more] };
 });
 // highlight: the hovered part's meshes swap to a brighter copy of their own material
 const hiMats = new Map();
-function hiMat(m) { if (Array.isArray(m)) return m.map(hiMat); let h = hiMats.get(m);
+function hiMat(m) { if (Array.isArray(m)) return m.map(hiMat); if (!m.emissive) return m; // basic materials (coolant flow) have no glow slot: lighting them crashed the 3D view
+  let h = hiMats.get(m);
   if (!h) { h = m.clone(); h.emissive = new THREE.Color(0xffffff); h.emissiveIntensity = (m.emissiveIntensity || 0) * (m.emissiveMap ? 1.5 : 0) + .32;
     if (!m.emissiveMap) h.emissiveMap = null; hiMats.set(m, h); hiMats.set(h, h); } return h; }
 const partMeshes = []; cut.g.traverse(o => { if (o.isMesh && o.userData.part) { o.userData.mat0 = o.material; partMeshes.push(o); } });
@@ -1401,7 +1414,7 @@ function rackStep(dt) { const k = cut.rackKit;
   k.door.rotation.y = -1.75 * e;
   k.trays.forEach(({ t, out, deep, lag }) => { const a = THREE.MathUtils.clamp((k.amt - lag) / (1 - lag), 0, 1); t.userData.go = (t.userData.go == null ? out : t.userData.go) + ((k.full ? deep : out) - (t.userData.go == null ? out : t.userData.go)) * Math.min(1, dt * 3); t.position.x = .16 - t.userData.go * a * a * (3 - 2 * a); });
 }
-let camInit = false, key = "", eCounts = "", eMini = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
+let legendKey = "", camInit = false, key = "", eCounts = "", eMini = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
 const counts = document.getElementById("counts");
 const clock = new THREE.Clock();
 let dead = false;
@@ -1454,6 +1467,11 @@ function frameInner() {
   { const mc = document.getElementById("mini-cap"), mt = SC.tenant ? "Live model · " + SC.tenant.racks + (SC.tenant.racks === 1 ? " rack · " : " racks · ") + R.halls + (R.halls === 1 ? " module" : " modules") : eMini;
     if (mc && mc.textContent !== mt) mc.textContent = mt; }
   if (openBtn && !modOpen) { const ol = isHall ? (SC.tenant ? "Look inside your hall" : "Look inside a hall") : (SC.tenant ? "Look inside your module" : "Look inside a module"); if (openBtn.textContent !== ol) openBtn.textContent = ol; }
+  if (SC.wantOpen > 0 && SC.tenant && mpos.length) { SC.wantOpen = 0; if (!modOpen) openModule(pickModule()); }
+  else if (SC.wantOpen < 0) { SC.wantOpen = 0; if (modOpen) closeModule(false); }
+  { const lg = SC.tenant ? SC.tenant.lg : null, lk = lg ? lg.key : "";
+    if (lk !== legendKey) { legendKey = lk; pins.forEach(p => { const o = (lg && lg[p.id]) || p.orig;
+      p.title = o[0]; p.more = o[2]; p.li.querySelector("strong").textContent = o[0]; p.li.querySelector("span").textContent = o[1]; }); } }
 
   if (!visible) return;
   const ease = 1 - Math.pow(.002, dt);
