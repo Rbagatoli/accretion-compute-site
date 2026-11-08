@@ -276,3 +276,10 @@ html.embed .aud-k{display:none}
 html:not(.tenant-mode) .t-only{display:none!important}
 html.embed .seg.aud{display:none}
 @media (min-width:901px) and (max-height:820px){html:not(.embed) .sizer .sz-hero .copy{gap:12px;padding:10px 0}html:not(.embed) .sizer .sz-hero .copy h1{font-size:clamp(36px,6.2vh,58px)}html:not(.embed) .sizer .sz-hero .copy .lede{font-size:16px;line-height:1.5}}
+/* Tenant mode: the readout leads with the rack and the module; the power plant follows */
+.tenant-mode .sizer .readout > .cell{order:var(--o,20)}
+.sizer .cell.wide.sub{display:block;background:var(--bg);padding:20px 16px 10px}
+.sizer .cell.wide.sub .d{margin-top:4px}
+.sizer .yb{margin:2px 0 4px;padding:10px 12px;border:1px solid var(--fg-dim);font-size:13px;line-height:1.45;color:var(--fg)}
+.sizer .yb strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-strong);margin-bottom:3px;font-weight:400}
+.sizer .spec-k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);font-weight:400;margin:clamp(22px,3vw,34px) 0 -6px}

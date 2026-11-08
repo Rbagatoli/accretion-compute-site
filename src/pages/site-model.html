@@ -11,6 +11,7 @@
       <div class="legend" id="legend" aria-live="polite">
         <div class="eyebrow">Inside a compute module</div>
         <h3>About 1 MW of AI computing in a factory-built module</h3>
+        <div class="yb t-only" id="yb-mod"></div>
         <ol id="legend-list"></ol>
         <p class="note">Typical layout, for illustration. Hover a part to learn more; right-drag to look around.</p>
       </div>
@@ -37,9 +38,10 @@
       <h1 data-t="See where your servers could run">See what your energy could build</h1>
       <p class="lede" data-t="Tell us what you run. The live model sizes the racks, compute modules and on-site gas power your deployment would need, built to your spec.">Pick your energy source and gas flow. The live model sizes the power plant and AI compute modules that could sit on your site, powered by on-site gas engines with no grid connection.</p>
       <div class="hero-stats" aria-live="polite">
-        <div><div class="num" id="hs-mw">0</div><div class="k">MW on site</div></div>
+        <div class="e-only"><div class="num" id="hs-mw">0</div><div class="k">MW on site</div></div>
         <div><div class="num" id="hs-racks">0</div><div class="k" data-t="Your racks">AI racks</div></div>
         <div class="e-only"><div class="num" id="hs-pay">$0</div><div class="k">To you, per year</div></div>
+        <div class="t-only"><div class="num" id="hs-rkw">0</div><div class="k">kW a rack</div></div>
         <div class="t-only"><div class="num" id="hs-mods">0</div><div class="k">Compute modules</div></div>
       </div>
       <div class="sz-field hero-gas e-only">
@@ -128,7 +130,7 @@
           </div>
         </div>
         <div class="readout" aria-live="polite">
-          <div class="cell wide t-only">
+          <div class="cell wide t-only" style="--o:1">
             <div><div class="k">Your IT load</div><div class="num" id="t-it">0</div><div class="d" id="t-it-d">the servers you bring</div></div>
             <div class="side"><div class="k">Fit</div><div class="num" id="t-fit" style="font-size:clamp(18px,2vw,24px)">One site</div></div>
           </div>
@@ -136,16 +138,20 @@
             <div><div class="k">Paid to you each year</div><div class="num" id="r-pay">$0</div><div class="d">land lease plus gas at up to $0.75 per MMBtu</div></div>
             <div class="side"><div class="k">Over a 10-year term</div><div class="num" id="r-ten" style="font-size:clamp(22px,2.6vw,30px)">$0</div></div>
           </div>
-          <div class="cell"><div class="k">Power on site</div><div class="num" id="r-mw">0<small>MW</small></div><div class="d" data-t="from on-site gas engines, with cooling">from your gas, firm</div></div>
-          <div class="cell"><div class="k">Generator sets</div><div class="num" id="r-gens">0</div><div class="d" id="r-gens-d">running plus one spare</div></div>
-          <div class="cell"><div class="k">Computing load</div><div class="num" id="r-it">0<small>MW</small></div><div class="d">after cooling and losses</div></div>
-          <div class="cell"><div class="k" data-t="Your racks">AI racks</div><div class="num" id="r-racks">0</div><div class="d" id="r-racks-d">liquid-cooled, about 120 kW each</div></div>
+          <div class="cell" style="--o:9"><div class="k">Power on site</div><div class="num" id="r-mw">0<small>MW</small></div><div class="d" data-t="gas engines on site, cooling included">from your gas, firm</div></div>
+          <div class="cell" style="--o:10"><div class="k">Generator sets</div><div class="num" id="r-gens">0</div><div class="d" id="r-gens-d">running plus one spare</div></div>
+          <div class="cell e-only"><div class="k">Computing load</div><div class="num" id="r-it">0<small>MW</small></div><div class="d">after cooling and losses</div></div>
+          <div class="cell" style="--o:2"><div class="k" data-t="Your racks">AI racks</div><div class="num" id="r-racks">0</div><div class="d" id="r-racks-d">liquid-cooled, about 120 kW each</div></div>
+          <div class="cell t-only" style="--o:3"><div class="k">Servers a rack</div><div class="num" id="t-spr">0</div><div class="d" id="t-spr-d">at the density you chose</div></div>
+          <div class="cell t-only" style="--o:4"><div class="k">Power a rack</div><div class="num" id="t-rkw">0<small>kW</small></div><div class="d">fed from an overhead busway</div></div>
           <div class="cell e-only"><div class="k">GPUs</div><div class="num" id="r-gpus">0</div><div class="d">at 72 per rack</div></div>
-          <div class="cell t-only"><div class="k">Cooling</div><div class="num" id="t-cool" style="font-size:clamp(18px,2vw,24px)">Air</div><div class="d">for this rack density</div></div>
-          <div class="cell"><div class="k">Compute modules</div><div class="num" id="r-halls">0</div><div class="d" data-t="about 1 MW each, built to your layout">about 1 MW each, 8 racks</div></div>
-          <div class="cell"><div class="k">Land used</div><div class="num" id="r-acres">0<small>acres</small></div><div class="d">including gas yard and setbacks</div></div>
-          <div class="cell"><div class="k" data-t="Gas the site would use">Gas used</div><div class="num" id="r-mmbtu">0<small>k MMBtu/yr</small></div><div class="d" id="r-mmbtu-d">at 95% running time</div></div>
-          <div class="cell"><div class="k">Grid connection</div><div class="num">None</div><div class="d">no export, no new load on the grid</div></div>
+          <div class="cell t-only" style="--o:5"><div class="k">Cooling</div><div class="num" id="t-cool" style="font-size:clamp(18px,2vw,24px)">Air</div><div class="d" id="t-cool-d">for this rack density</div></div>
+          <div class="cell" style="--o:6"><div class="k">Compute modules</div><div class="num" id="r-halls">0</div><div class="d" data-t="about 1 MW each, factory-built">about 1 MW each, 8 racks</div></div>
+          <div class="cell t-only" style="--o:7"><div class="k">Racks a module</div><div class="num" id="t-rpm">0</div><div class="d" id="t-rpm-d">laid out for your hardware</div></div>
+          <div class="cell wide t-only sub" style="--o:8"><div><div class="k">The power behind it</div><div class="d">Made on site by gas engines, so your racks never wait on a grid connection.</div></div></div>
+          <div class="cell e-only"><div class="k">Land used</div><div class="num" id="r-acres">0<small>acres</small></div><div class="d">including gas yard and setbacks</div></div>
+          <div class="cell e-only"><div class="k" data-t="Gas the site would use">Gas used</div><div class="num" id="r-mmbtu">0<small>k MMBtu/yr</small></div><div class="d" id="r-mmbtu-d">at 95% running time</div></div>
+          <div class="cell" style="--o:11"><div class="k">Grid connection</div><div class="num">None</div><div class="d" data-t="power made on site, with a battery">no export, no new load on the grid</div></div>
         </div>
       </div>
       <p class="est" data-t="Planning estimates only, not an offer. Power per server depends on the configuration, so we size every site from your real figures. Rent and terms are set in a signed lease.">Planning estimates only, not an offer. Prices and terms are set site by site in signed agreements.</p>
@@ -153,14 +159,22 @@
     <section class="t-only" aria-labelledby="spec-h">
       <div class="sec-head">
         <div class="eyebrow">Built to your spec</div>
-        <h2 id="spec-h">You choose the build, the rent follows it</h2>
-        <p class="lede">Each site is built around the tenant. Rent is priced per kW per month, set by the build you choose. You bring your servers; we provide the power, cooling, racks and space.</p>
+        <h2 id="spec-h">Your racks and your module, built around your hardware</h2>
+        <p class="lede">You bring your servers; we provide the racks, power, cooling and space. You choose the build, and the rent is priced per kW per month to match it. Open a module in the model above, then a rack, to see the layout.</p>
       </div>
+      <h3 class="spec-k">The rack</h3>
       <div class="gets">
-        <div><h3>Rack density</h3><p>From air-cooled racks to liquid-cooled rack-scale systems.</p></div>
-        <div><h3>Cooling</h3><p>Air, rear-door heat exchangers or direct-to-chip liquid, sized to your hardware.</p></div>
-        <div><h3>Redundancy</h3><p>Power and cooling redundancy set out in the contract before you commit.</p></div>
-        <div><h3>Term</h3><p>Sized to the life of your hardware, with room to expand on the same site.</p></div>
+        <div><h3>Density</h3><p>From about 20 kW air-cooled racks to 130 kW and up for liquid-cooled rack-scale systems.</p></div>
+        <div><h3>Power to the rack</h3><p>An overhead busway with a tap-off feed into each rack, so racks can be added or swapped without new wiring.</p></div>
+        <div><h3>Cooling</h3><p>Air, rear-door heat exchangers, or direct-to-chip liquid through a coolant distribution unit, matched to the density.</p></div>
+        <div><h3>Your hardware</h3><p>Standard racks, or yours delivered to the site. Your servers stay yours, and you set the configuration.</p></div>
+      </div>
+      <h3 class="spec-k">The module</h3>
+      <div class="gets">
+        <div><h3>Layout</h3><p>About 1 MW of IT load in each factory-built module, laid out for your rack count and aisles.</p></div>
+        <div><h3>Network</h3><p>Fiber into each module, with an overhead tray and a cabinet for your own network gear.</p></div>
+        <div><h3>Redundancy</h3><p>A spare generator and a battery on site. Power and cooling redundancy are set out in the lease before you commit.</p></div>
+        <div><h3>Safety and access</h3><p>Clean-agent fire suppression, controlled access and monitoring, with room to add modules on the same site.</p></div>
       </div>
     </section>
     <section aria-labelledby="how-h">

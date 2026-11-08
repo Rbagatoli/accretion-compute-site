@@ -279,7 +279,20 @@
     $("t-it-d").textContent = T.grow > 1 ? "planned at " + kwFmt(p.plan).replace(/<\/?small>/g, " ").trim() + " with room to grow" : "the servers you bring";
     $("t-fit").textContent = p.site > 6000 ? "About " + Math.ceil(p.site / 6000) + " sites" : p.plan < 300 ? "Under one module" : "One site";
     $("t-cool").textContent = p.dens >= 80 ? "Liquid" : p.dens > 40 ? "Rear-door or liquid" : "Air";
-    $("r-racks-d").textContent = p.rack ? "rack-scale, liquid-cooled" : "about " + p.perRack + " servers a rack, " + Math.round(Math.min(p.dens, p.perRack * p.per)) + " kW";
+    const rkw = p.rack ? p.per : Math.round(Math.min(p.dens, p.perRack * p.per)), rpm = Math.ceil(p.racks / p.mods);
+    const cool = p.dens >= 80 ? "direct-to-chip liquid" : p.dens > 40 ? "rear-door or liquid" : "air";
+    $("r-racks-d").textContent = T.grow > 1 ? "for this deployment, with space to add more" : "for this deployment";
+    $("t-spr").textContent = p.rack ? "1" : fmt(p.perRack);
+    $("t-spr-d").textContent = p.rack ? "one rack-scale system each" : "at " + fmt(p.per, 1).replace(/\.0$/, "") + " kW a server";
+    tween("t-rkw", rkw, v => fmt(Math.round(v)) + "<small>kW</small>");
+    tween("hs-rkw", rkw, v => fmt(Math.round(v)));
+    $("t-cool-d").textContent = p.dens >= 80 ? "cold plates on every chip, sealed loop" : p.dens > 40 ? "heat removed at the rack" : "with hot and cold aisles";
+    $("t-rpm").textContent = fmt(rpm);
+    $("t-rpm-d").textContent = p.mods > 1 ? "across " + p.mods + " modules, with room to grow" : "in one module, with room to grow";
+    const yb = "<strong>Your build</strong> " + fmt(p.racks) + (p.racks === 1 ? " rack" : " racks") + " at about " + rkw + " kW" +
+      (p.rack ? "" : ", " + p.perRack + (p.perRack === 1 ? " server" : " servers") + " each") + ", " + cool + " cooling, in " + p.mods + (p.mods === 1 ? " module." : " modules.");
+    document.querySelectorAll(".yb").forEach(el => el.innerHTML = yb);
+    scene.tenant = {racks: p.racks, mods: p.mods};
     tween("hs-mods", p.mods, v => fmt(Math.round(v)));
     ["srv","hsrv","kw"].forEach(id => { const el = $(id); el.style.setProperty("--p", ((el.value-el.min)/(el.max-el.min)*100) + "%"); });
   }
@@ -298,7 +311,7 @@
   function setAud(on){
     if (on === tenant) return;
     if (on) saved = {mode, flow: st.flow};
-    tenant = on;
+    tenant = on; if (!on) scene.tenant = null;
     document.documentElement.classList.toggle("tenant-mode", on);
     $("aud-e").setAttribute("aria-pressed", String(!on)); $("aud-t").setAttribute("aria-pressed", String(on));
     swapText(on);
@@ -1388,7 +1401,7 @@ function rackStep(dt) { const k = cut.rackKit;
   k.door.rotation.y = -1.75 * e;
   k.trays.forEach(({ t, out, deep, lag }) => { const a = THREE.MathUtils.clamp((k.amt - lag) / (1 - lag), 0, 1); t.userData.go = (t.userData.go == null ? out : t.userData.go) + ((k.full ? deep : out) - (t.userData.go == null ? out : t.userData.go)) * Math.min(1, dt * 3); t.position.x = .16 - t.userData.go * a * a * (3 - 2 * a); });
 }
-let camInit = false, key = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
+let camInit = false, key = "", eCounts = "", eMini = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
 const counts = document.getElementById("counts");
 const clock = new THREE.Clock();
 let dead = false;
@@ -1433,9 +1446,15 @@ function frameInner() {
     if (!camInit) { camInit = true; controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)); }
     scene.fog.near = fitR * 1.2; scene.fog.far = fitR * 4;
     const cap = (R.gens > MAX_G || (!hall && R.halls > MAX_M)) ? " · model shows the first phase" : "", inH = hall ? " in " + nHall + " halls" : "";
-    if (counts) counts.textContent = R.gens + " gensets · " + nB + (nB === 1 ? " battery unit · " : " battery units · ") + R.halls + (R.halls === 1 ? " compute module" : " compute modules") + inH + cap;
-    const mc = document.getElementById("mini-cap"); if (mc) mc.textContent = "Live model · " + R.gens + " gensets · " + R.halls + " modules" + inH;
+    eCounts = R.gens + " gensets · " + nB + (nB === 1 ? " battery unit · " : " battery units · ") + R.halls + (R.halls === 1 ? " compute module" : " compute modules") + inH + cap;
+    eMini = "Live model · " + R.gens + " gensets · " + R.halls + (R.halls === 1 ? " module" : " modules") + inH;
   }
+  if (counts) { const tt = SC.tenant ? SC.tenant.racks + (SC.tenant.racks === 1 ? " rack · " : " racks · ") + R.halls + (R.halls === 1 ? " compute module" : " compute modules") + " · powered by " + R.gens + " gensets" : eCounts;
+    if (counts.textContent !== tt) counts.textContent = tt; }
+  { const mc = document.getElementById("mini-cap"), mt = SC.tenant ? "Live model · " + SC.tenant.racks + (SC.tenant.racks === 1 ? " rack · " : " racks · ") + R.halls + (R.halls === 1 ? " module" : " modules") : eMini;
+    if (mc && mc.textContent !== mt) mc.textContent = mt; }
+  if (openBtn && !modOpen) { const ol = isHall ? (SC.tenant ? "Look inside your hall" : "Look inside a hall") : (SC.tenant ? "Look inside your module" : "Look inside a module"); if (openBtn.textContent !== ol) openBtn.textContent = ol; }
+
   if (!visible) return;
   const ease = 1 - Math.pow(.002, dt);
   const place = (grp, pos) => grp.children.forEach((o, i) => { const p = pos[i]; if (!p) return; o.position.x += (p[0] - o.position.x) * ease; o.position.z += (p[1] - o.position.z) * ease; const s = o.userData.s || 1; o.scale.y += (s - o.scale.y) * ease * .8; });
@@ -1557,9 +1576,10 @@ rackPanel.innerHTML = '<div class="eyebrow">Inside a rack</div><h3>One liquid-co
   '<li>Hardware sourced to your platform: the GPU generation, memory and network you choose</li>' +
   '<li>Power made on site and sized to the racks, with no wait for a grid connection</li>' +
   '<li>Liquid cooling built for dense racks, in a sealed loop with no evaporative water use</li>' +
-  '<li>Room to grow about 1 MW at a time, one module of 8 racks after another</li></ul></div>' +
+  '<li>Room to grow about 1 MW at a time, one module after another</li></ul></div>' +
   '<p class="note">Typical rack, for illustration. Final hardware is chosen with each tenant.</p>';
 legendEl.after(rackPanel);
+{ const yb = document.createElement("div"); yb.className = "yb t-only"; const src = document.getElementById("yb-mod"); if (src) yb.innerHTML = src.innerHTML; rackPanel.querySelector("h3").after(yb); }
 const rFocus = rackPanel.querySelector(".focus"); let subHl = null, subLock = null;
 const rpins = RACK_INFO.map(([id, title, more], i) => {
   const pin = document.createElement("div"); pin.className = "pin"; pin.textContent = i + 1; pin.setAttribute("aria-hidden", "true"); labelsEl.appendChild(pin);
