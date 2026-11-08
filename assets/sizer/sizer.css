@@ -264,8 +264,12 @@ html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!
 @media (max-width:899.98px){.page-site-model .sizer .copy{width:auto}}
 @media (min-width:900px){.page-site-model .sizer h1{font-weight:150}}
 /* Audience switch: "I have energy" / "I have servers" */
-.sizer .seg.aud{grid-template-columns:1fr 1fr;margin:-6px 0 -4px;max-width:360px;pointer-events:auto}
-.sizer .seg.aud button{padding:8px 6px;font-size:10.5px}
+.sizer .seg.aud{grid-template-columns:1fr 1fr;margin:0;max-width:440px;pointer-events:auto;border:1px solid var(--fg-dim);background:rgba(5,5,6,.7)}
+.sizer .aud-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);margin:0 0 -8px}
+.sizer .seg.aud button{padding:14px 10px;font-size:13px;letter-spacing:.12em;color:var(--fg);border-right-color:var(--fg-dim)}
+.sizer .seg.aud button:hover{background:rgba(255,255,255,.08)}
+.sizer .seg.aud button[aria-pressed="true"]{background:var(--fg-strong);color:var(--bg)}
+html.embed .aud-k{display:none}
 .sizer .seg.seg4{grid-template-columns:repeat(4,1fr)}
 .sizer .tchips .chip[aria-pressed="true"]{background:var(--fg-strong);color:var(--bg);border-color:var(--fg-strong)}
 .tenant-mode .e-only{display:none!important}
