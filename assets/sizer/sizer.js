@@ -68,6 +68,7 @@
   function update(){
     const m = MODES[mode];
     R = calc();
+    if (tenant) tenantApply(R);
     $("flow-out").textContent = $("hflow-out").textContent = (m.unit==="scfm" ? fmt(st.flow) : fmt(st.flow, st.flow<10?2:0)) + " " + m.unit;
     $("hflow").value = $("flow").value;
     $("ch4-out").textContent = st.ch4 + "%";
@@ -246,12 +247,85 @@
     requestAnimationFrame(draw);
   }
 
-  // A link can open the model at a given site: ?src=lfg&flow=2214&ch4=50
+  /* ---------- Tenant mode: "I have servers" ----------
+     Same math as /fit: IT load = servers x kW each, plus growth; site power = plan x 1.2;
+     compute modules of about 1 MW. The gas flow the engines would need is then sized from site power. */
+  const KW = {"8a":10.2, "8b":14.3, rack:130, inf:3.5};
+  const T = {type:"8a", n:64, kw:10, dens:40, grow:1};
+  let tenant = false, saved = null;
+  const kwFmt = kw => kw >= 1000 ? fmt(kw/1000, kw >= 10000 ? 0 : 1) + "<small>MW</small>" : fmt(Math.round(kw)) + "<small>kW</small>";
+  const nRange = () => T.type === "rack" ? [1, 48] : [4, 800];
+  const nToS = n => { const r = nRange(); return 100*Math.log(Math.max(r[0], Math.min(r[1], n))/r[0])/Math.log(r[1]/r[0]); };
+  const sToN = s => { const r = nRange(), v = r[0]*Math.pow(r[1]/r[0], s/100); return v < 40 ? Math.round(v) : Math.round(v/4)*4; };
+
+  function tenantPlan(){
+    const rack = T.type === "rack", per = T.type === "own" ? T.kw : KW[T.type];
+    let dens = rack ? 130 : T.dens; if (!rack && per > dens) dens = per;
+    const it = T.n * per, plan = it * T.grow, site = plan * 1.2;
+    const perRack = rack ? 1 : Math.max(1, Math.floor(dens / per));
+    return {rack, per, dens, it, plan, site, perRack, racks: rack ? T.n : Math.ceil(T.n / perRack), mods: Math.max(1, Math.ceil(plan / 1000))};
+  }
+  // Gas the engines would burn for this site power, in MMcf/d at 9,000 Btu/kWh and 1,037 Btu/scf.
+  const flowFor = siteKW => siteKW * 9000 * 24 / (1e6 * 1037);
+
+  function tenantApply(R){
+    const p = tenantPlan();
+    R.racks = p.racks; R.halls = p.mods; R.it = p.plan / 1000; R.gpus = 0;
+    $("srv-out").textContent = $("hsrv-out").textContent = fmt(T.n);
+    $("srv-label").textContent = $("hsrv-label").textContent = p.rack ? "How many racks" : "How many servers";
+    $("kw-out").textContent = fmt(T.kw, 1).replace(/\.0$/, "") + " kW";
+    $("f-dens").hidden = p.rack; $("f-kw").hidden = T.type !== "own";
+    tween("t-it", p.it, v => kwFmt(v));
+    $("t-it-d").textContent = T.grow > 1 ? "planned at " + kwFmt(p.plan).replace(/<\/?small>/g, " ").trim() + " with room to grow" : "the servers you bring";
+    $("t-fit").textContent = p.site > 6000 ? "About " + Math.ceil(p.site / 6000) + " sites" : p.plan < 300 ? "Under one module" : "One site";
+    $("t-cool").textContent = p.dens >= 80 ? "Liquid" : p.dens > 40 ? "Rear-door or liquid" : "Air";
+    $("r-racks-d").textContent = p.rack ? "rack-scale, liquid-cooled" : "about " + p.perRack + " servers a rack, " + Math.round(Math.min(p.dens, p.perRack * p.per)) + " kW";
+    tween("hs-mods", p.mods, v => fmt(Math.round(v)));
+    ["srv","hsrv","kw"].forEach(id => { const el = $(id); el.style.setProperty("--p", ((el.value-el.min)/(el.max-el.min)*100) + "%"); });
+  }
+  function tenantRun(){ st.flow = flowFor(tenantPlan().site); update(); }
+
+  function swapText(on){
+    document.querySelectorAll("[data-t]").forEach(el => {
+      if (el.dataset.e === undefined) el.dataset.e = el.innerHTML;
+      el.innerHTML = on ? el.dataset.t : el.dataset.e;
+    });
+    document.querySelectorAll("[data-t-href]").forEach(el => {
+      if (el.dataset.eHref === undefined) el.dataset.eHref = el.getAttribute("href");
+      el.setAttribute("href", on ? el.dataset.tHref : el.dataset.eHref);
+    });
+  }
+  function setAud(on){
+    if (on === tenant) return;
+    if (on) saved = {mode, flow: st.flow};
+    tenant = on;
+    document.documentElement.classList.toggle("tenant-mode", on);
+    $("aud-e").setAttribute("aria-pressed", String(!on)); $("aud-t").setAttribute("aria-pressed", String(on));
+    swapText(on);
+    if (on) { mode = "gas"; scene.src = MODES.gas.src; tenantRun(); }
+    else if (saved) { st.flow = saved.flow; setMode(saved.mode, true); }
+  }
+  $("aud-e").addEventListener("click", () => setAud(false));
+  $("aud-t").addEventListener("click", () => setAud(true));
+
+  const press = (wrap, b) => wrap.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  $("t-type").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; press($("t-type"), b);
+    const wasRack = T.type === "rack"; T.type = b.dataset.v;
+    if ((T.type === "rack") !== wasRack) T.n = T.type === "rack" ? 4 : 64;
+    $("srv").value = $("hsrv").value = nToS(T.n); tenantRun(); });
+  [["t-dens","dens"],["t-grow","grow"]].forEach(([id, key]) => $(id).addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return; press($(id), b); T[key] = +b.dataset.v; tenantRun(); }));
+  ["srv","hsrv"].forEach(id => $(id).addEventListener("input", e => { $("srv").value = $("hsrv").value = e.target.value; T.n = sToN(+e.target.value); tenantRun(); }));
+  $("kw").addEventListener("input", e => { T.kw = +e.target.value; tenantRun(); });
+  $("srv").value = $("hsrv").value = nToS(T.n);
+
+  // A link can open the model at a given site: ?src=lfg&flow=2214&ch4=50, or for tenants ?mode=tenant
   (function(){
     const q = new URLSearchParams(location.search), k = MODES[q.get("src")] ? q.get("src") : "gas", m = MODES[k];
     const f = parseFloat(q.get("flow")), c = parseFloat(q.get("ch4"));
     if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = Math.round(c); $("ch4").value = st.ch4; }
     if (f >= m.lo && f <= m.hi) { st.flow = f; setMode(k, true); } else setMode(k);
+    if (q.get("mode") === "tenant") setAud(true);
   })();
   requestAnimationFrame(draw);
 })();

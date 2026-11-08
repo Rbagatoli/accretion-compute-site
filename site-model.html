@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
   <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
-  <link rel="stylesheet" href="styles.css?v=693cb5a1">
-  <script src="site.js?v=693cb5a1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=cd3ca166">
+  <script src="site.js?v=cd3ca166" defer></script>
 </head>
 <body class="page-site-model">
   <a class="skip" href="#main">Skip to content</a>
@@ -64,7 +64,7 @@
 
   <main id="main">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/sizer/sizer.css?v=693cb5a1">
+<link rel="stylesheet" href="assets/sizer/sizer.css?v=cd3ca166">
 <script>/* ?embed=1 shows only the 3D model, for the per-site sizing pages */if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.add("embed");if(/[?&]copy=1(&|$)/.test(location.search))document.documentElement.classList.add("withcopy")</script>
 
 <div class="sizer" id="sizer">
@@ -92,18 +92,27 @@
     </div>
     <div class="scrim" aria-hidden="true"></div>
     <div class="copy" id="herocopy">
-      <p class="crumbs"><a href="./">Home</a> / <a href="partners">Partners</a> / Site model</p>
-      <div class="eyebrow">For owners of gas, landfills and industrial land</div>
-      <h1>See what your energy could build</h1>
-      <p class="lede">Pick your energy source and gas flow. The live model sizes the power plant and AI compute modules that could sit on your site, powered by on-site gas engines with no grid connection.</p>
+      <p class="crumbs" data-t='<a href="./">Home</a> / <a href="capacity">Capacity</a> / Site model'><a href="./">Home</a> / <a href="partners">Partners</a> / Site model</p>
+      <div class="seg aud" role="group" aria-label="Show the model for">
+        <button type="button" id="aud-e" aria-pressed="true">I have energy</button>
+        <button type="button" id="aud-t" aria-pressed="false">I have servers</button>
+      </div>
+      <div class="eyebrow" data-t="For AI tenants with their own hardware">For owners of gas, landfills and industrial land</div>
+      <h1 data-t="See where your servers could run">See what your energy could build</h1>
+      <p class="lede" data-t="Tell us what you run. The live model sizes the racks, compute modules and on-site gas power your deployment would need, built to your spec.">Pick your energy source and gas flow. The live model sizes the power plant and AI compute modules that could sit on your site, powered by on-site gas engines with no grid connection.</p>
       <div class="hero-stats" aria-live="polite">
         <div><div class="num" id="hs-mw">0</div><div class="k">MW on site</div></div>
-        <div><div class="num" id="hs-racks">0</div><div class="k">AI racks</div></div>
-        <div><div class="num" id="hs-pay">$0</div><div class="k">To you, per year</div></div>
+        <div><div class="num" id="hs-racks">0</div><div class="k" data-t="Your racks">AI racks</div></div>
+        <div class="e-only"><div class="num" id="hs-pay">$0</div><div class="k">To you, per year</div></div>
+        <div class="t-only"><div class="num" id="hs-mods">0</div><div class="k">Compute modules</div></div>
       </div>
-      <div class="sz-field hero-gas">
+      <div class="sz-field hero-gas e-only">
         <label for="hflow"><span id="hflow-label">Gas available</span><output id="hflow-out" for="hflow">4 MMcf/d</output></label>
         <input type="range" id="hflow" min="0" max="100" step="1" value="40">
+      </div>
+      <div class="sz-field hero-gas t-only">
+        <label for="hsrv"><span id="hsrv-label">Your servers</span><output id="hsrv-out" for="hsrv">64</output></label>
+        <input type="range" id="hsrv" min="0" max="100" step="1" value="50">
       </div>
     </div>
   </div>
@@ -117,12 +126,49 @@
   <div class="wrap">
     <section id="build" aria-labelledby="build-h">
       <div class="sec-head">
-        <div class="eyebrow">Size it to your site</div>
-        <h2 id="build-h">Set your gas, see what could be built</h2>
-        <p class="lede">Move the sliders to match your site. The model and the numbers update together. These are planning estimates from rules of thumb; real figures come from your gas data and site studies.</p>
+        <div class="eyebrow" data-t="Size it to your deployment">Size it to your site</div>
+        <h2 id="build-h" data-t="Set your servers, see the site they need">Set your gas, see what could be built</h2>
+        <p class="lede" data-t="Pick your hardware, how many, and the rack density you want. The model and the numbers update together. These are planning estimates; we size every site from your real figures.">Move the sliders to match your site. The model and the numbers update together. These are planning estimates from rules of thumb; real figures come from your gas data and site studies.</p>
       </div>
       <div class="builder">
-        <div class="controls">
+        <div class="controls t-only">
+          <div class="sz-field">
+            <span class="eyebrow">Your servers</span>
+            <div class="sz-chips tchips" id="t-type">
+              <button type="button" class="chip" data-v="8a" aria-pressed="true">8-GPU, current generation · about 10 kW</button>
+              <button type="button" class="chip" data-v="8b" aria-pressed="false">8-GPU, newest generation · about 14 kW</button>
+              <button type="button" class="chip" data-v="rack" aria-pressed="false">72-GPU rack-scale system · about 130 kW a rack</button>
+              <button type="button" class="chip" data-v="inf" aria-pressed="false">4-GPU inference · about 3.5 kW</button>
+              <button type="button" class="chip" data-v="own" aria-pressed="false">My own figure</button>
+            </div>
+          </div>
+          <div class="sz-field">
+            <label for="srv"><span id="srv-label">How many servers</span><output id="srv-out" for="srv">64</output></label>
+            <input type="range" id="srv" min="0" max="100" step="1" value="50">
+          </div>
+          <div class="sz-field" id="f-kw" hidden>
+            <label for="kw"><span>kW per server, at the wall</span><output id="kw-out" for="kw">10 kW</output></label>
+            <input type="range" id="kw" min="1" max="40" step="0.5" value="10">
+          </div>
+          <div class="sz-field" id="f-dens">
+            <span class="eyebrow">Rack density you want</span>
+            <div class="seg seg4" role="group" aria-label="Rack density" id="t-dens">
+              <button type="button" data-v="20" aria-pressed="false">20 kW</button>
+              <button type="button" data-v="40" aria-pressed="true">40 kW</button>
+              <button type="button" data-v="60" aria-pressed="false">60 kW</button>
+              <button type="button" data-v="130" aria-pressed="false">130 kW+</button>
+            </div>
+          </div>
+          <div class="sz-field">
+            <span class="eyebrow">Room to grow</span>
+            <div class="seg" role="group" aria-label="Room to grow" id="t-grow">
+              <button type="button" data-v="1" aria-pressed="true">This deployment</button>
+              <button type="button" data-v="1.5" aria-pressed="false">50% more</button>
+              <button type="button" data-v="2" aria-pressed="false">Double</button>
+            </div>
+          </div>
+        </div>
+        <div class="controls e-only">
           <div class="sz-field">
             <span class="eyebrow">Energy source</span>
             <div class="seg" role="group" aria-label="Energy source">
@@ -146,22 +192,40 @@
           </div>
         </div>
         <div class="readout" aria-live="polite">
-          <div class="cell wide">
+          <div class="cell wide t-only">
+            <div><div class="k">Your IT load</div><div class="num" id="t-it">0</div><div class="d" id="t-it-d">the servers you bring</div></div>
+            <div class="side"><div class="k">Fit</div><div class="num" id="t-fit" style="font-size:clamp(18px,2vw,24px)">One site</div></div>
+          </div>
+          <div class="cell wide e-only">
             <div><div class="k">Paid to you each year</div><div class="num" id="r-pay">$0</div><div class="d">land lease plus gas at up to $0.75 per MMBtu</div></div>
             <div class="side"><div class="k">Over a 10-year term</div><div class="num" id="r-ten" style="font-size:clamp(22px,2.6vw,30px)">$0</div></div>
           </div>
-          <div class="cell"><div class="k">Power on site</div><div class="num" id="r-mw">0<small>MW</small></div><div class="d">from your gas, firm</div></div>
+          <div class="cell"><div class="k">Power on site</div><div class="num" id="r-mw">0<small>MW</small></div><div class="d" data-t="from on-site gas engines, with cooling">from your gas, firm</div></div>
           <div class="cell"><div class="k">Generator sets</div><div class="num" id="r-gens">0</div><div class="d" id="r-gens-d">running plus one spare</div></div>
           <div class="cell"><div class="k">Computing load</div><div class="num" id="r-it">0<small>MW</small></div><div class="d">after cooling and losses</div></div>
-          <div class="cell"><div class="k">AI racks</div><div class="num" id="r-racks">0</div><div class="d">liquid-cooled, about 120 kW each</div></div>
-          <div class="cell"><div class="k">GPUs</div><div class="num" id="r-gpus">0</div><div class="d">at 72 per rack</div></div>
-          <div class="cell"><div class="k">Compute modules</div><div class="num" id="r-halls">0</div><div class="d">about 1 MW each, 8 racks</div></div>
+          <div class="cell"><div class="k" data-t="Your racks">AI racks</div><div class="num" id="r-racks">0</div><div class="d" id="r-racks-d">liquid-cooled, about 120 kW each</div></div>
+          <div class="cell e-only"><div class="k">GPUs</div><div class="num" id="r-gpus">0</div><div class="d">at 72 per rack</div></div>
+          <div class="cell t-only"><div class="k">Cooling</div><div class="num" id="t-cool" style="font-size:clamp(18px,2vw,24px)">Air</div><div class="d">for this rack density</div></div>
+          <div class="cell"><div class="k">Compute modules</div><div class="num" id="r-halls">0</div><div class="d" data-t="about 1 MW each, built to your layout">about 1 MW each, 8 racks</div></div>
           <div class="cell"><div class="k">Land used</div><div class="num" id="r-acres">0<small>acres</small></div><div class="d">including gas yard and setbacks</div></div>
-          <div class="cell"><div class="k">Gas used</div><div class="num" id="r-mmbtu">0<small>k MMBtu/yr</small></div><div class="d" id="r-mmbtu-d">at 95% running time</div></div>
+          <div class="cell"><div class="k" data-t="Gas the site would use">Gas used</div><div class="num" id="r-mmbtu">0<small>k MMBtu/yr</small></div><div class="d" id="r-mmbtu-d">at 95% running time</div></div>
           <div class="cell"><div class="k">Grid connection</div><div class="num">None</div><div class="d">no export, no new load on the grid</div></div>
         </div>
       </div>
-      <p class="est">Planning estimates only, not an offer. Prices and terms are set site by site in signed agreements.</p>
+      <p class="est" data-t="Planning estimates only, not an offer. Power per server depends on the configuration, so we size every site from your real figures. Rent and terms are set in a signed lease.">Planning estimates only, not an offer. Prices and terms are set site by site in signed agreements.</p>
+    </section>
+    <section class="t-only" aria-labelledby="spec-h">
+      <div class="sec-head">
+        <div class="eyebrow">Built to your spec</div>
+        <h2 id="spec-h">You choose the build, the rent follows it</h2>
+        <p class="lede">Each site is built around the tenant. Rent is priced per kW per month, set by the build you choose. You bring your servers; we provide the power, cooling, racks and space.</p>
+      </div>
+      <div class="gets">
+        <div><h3>Rack density</h3><p>From air-cooled racks to liquid-cooled rack-scale systems.</p></div>
+        <div><h3>Cooling</h3><p>Air, rear-door heat exchangers or direct-to-chip liquid, sized to your hardware.</p></div>
+        <div><h3>Redundancy</h3><p>Power and cooling redundancy set out in the contract before you commit.</p></div>
+        <div><h3>Term</h3><p>Sized to the life of your hardware, with room to expand on the same site.</p></div>
+      </div>
     </section>
     <section aria-labelledby="how-h">
       <div class="sec-head">
@@ -177,7 +241,7 @@
         <div class="sz-link"><div class="step">COOL</div><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="13"/><path d="M22 9v26M9 22h26M13 13l18 18M31 13 13 31"/></svg><h3>Closed-loop cooling</h3><p>Dry coolers in a sealed loop: no evaporative water use by design.</p></div>
       </div>
     </section>
-    <section aria-labelledby="terms-h">
+    <section class="e-only" aria-labelledby="terms-h">
       <div class="sec-head">
         <div class="eyebrow">What we ask, what you get</div>
         <h2 id="terms-h">Two simple agreements</h2>
@@ -218,7 +282,14 @@
         <div class="eyebrow">What happens next</div>
         <h2 id="steps-h">From first email to first power</h2>
       </div>
-      <ol class="steps">
+      <ol class="steps t-only">
+        <li><span class="step">STEP 1</span><h3>Your numbers</h3><p>You share your hardware, power and timeline. We confirm the size.</p></li>
+        <li><span class="step">STEP 2</span><h3>Site and design</h3><p>We match a site and set the density, cooling and redundancy with you.</p></li>
+        <li><span class="step">STEP 3</span><h3>Letter of intent</h3><p>Non-binding terms for the space, the rent and the timeline.</p></li>
+        <li><span class="step">STEP 4</span><h3>Lease</h3><p>A multi-year lease signed before equipment is ordered.</p></li>
+        <li><span class="step">STEP 5</span><h3>Move in</h3><p>Modules built to your spec; you install your servers and we run the site.</p></li>
+      </ol>
+      <ol class="steps e-only">
         <li><span class="step">STEP 1</span><h3>Data</h3><p>You share gas flow and quality, and a site plan. We confirm the size.</p></li>
         <li><span class="step">STEP 2</span><h3>Letter of intent</h3><p>Non-binding terms for the gas and an option on the land.</p></li>
         <li><span class="step">STEP 3</span><h3>Studies</h3><p>Gas analysis, geotechnical, air permit and local approvals, at our cost.</p></li>
@@ -301,17 +372,17 @@
 </svg></div>
   <div class="wrap">
     <p class="eyebrow" style="justify-content:center">Start with your numbers</p>
-    <h2 id="sm-cta-h" class="reveal">Get a free first sizing for your site</h2>
-    <p class="lede reveal d1">Send us your gas flow. We reply by email with the power, land and yearly income for your own numbers, with the math shown. No cost and no obligation.</p>
+    <h2 id="sm-cta-h" class="reveal" data-t="Get a first sizing for your deployment">Get a free first sizing for your site</h2>
+    <p class="lede reveal d1" data-t="Send us your hardware, power and timeline. We reply by email with the site, modules and build we would propose. No cost and no obligation.">Send us your gas flow. We reply by email with the power, land and yearly income for your own numbers, with the math shown. No cost and no obligation.</p>
     <div class="actions reveal d2">
-      <a class="btn" href="submit-a-site">Get a free sizing <span class="arrow"></span></a>
-      <a class="btn ghost" href="site-check">Does your site fit?</a>
+      <a class="btn" href="submit-a-site" data-t-href="contact" data-t='Send us your numbers <span class="arrow"></span>'>Get a free sizing <span class="arrow"></span></a>
+      <a class="btn ghost" href="site-check" data-t-href="capacity" data-t="How capacity works">Does your site fit?</a>
     </div>
   </div>
 </section>
 
-<script defer src="assets/sizer/three.js?v=693cb5a1"></script>
-<script defer src="assets/sizer/sizer.js?v=693cb5a1"></script>
+<script defer src="assets/sizer/three.js?v=cd3ca166"></script>
+<script defer src="assets/sizer/sizer.js?v=cd3ca166"></script>
   </main>
 
   <footer class="foot">
