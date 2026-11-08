@@ -10,9 +10,9 @@
   --mist: #eceef1;
   --mist-2: #f5f6f8;
   --white: #ffffff;
-  --light: #e6e5e2;
-  --light-bright: #f2f1ef;
-  --light-dim: #a6a5a1;
+  --light: #e9ebee;
+  --light-bright: #f5f6f8;
+  --light-dim: #a7abb2;
   --silver: #b9bdc4;
 
   --bg: var(--white);
@@ -53,7 +53,7 @@
   --aura: 243, 244, 246;
   --metal: var(--platinum);
   --bar-bg: rgba(5, 5, 6, 0.94);
-  --txt-satin: linear-gradient(180deg, color-mix(in srgb, currentColor, #fff 55%) 0%, color-mix(in srgb, currentColor, #fff 30%) 40%, color-mix(in srgb, currentColor, #000 12%) 100%);
+  --txt-satin: linear-gradient(180deg, color-mix(in srgb, currentColor, #fff 60%) 0%, color-mix(in srgb, currentColor, #fff 30%) 40%, color-mix(in srgb, currentColor, #6f757e 16%) 100%);
   --txt-fill: transparent;
   background: var(--bg);
   color: var(--fg);
@@ -857,7 +857,7 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 .hero h1 { animation-delay: 0.55s; }
 .hero h1 .glint { animation: sheen 8s 2.6s ease-in-out infinite; }
 /* On the dark hero the glint line is static platinum, like the headings and the wordmark */
-[data-theme="dark"] .hero h1 .glint:not(.hero-alt .glint), [data-theme="light"] .hero-alt h1 .glint { background-image: var(--metal-plat); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: none; }
+[data-theme="dark"] .hero h1 .glint:not(.hero-alt .glint), [data-theme="light"] .hero-alt h1 .glint { background-image: var(--chrome-plat); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: none; }
 .hero .lede { animation-delay: 0.8s; }
 .hero .actions { animation-delay: 1s; }
 .hero-flow { animation-delay: 1.25s; }
@@ -1139,8 +1139,8 @@ a.card:hover { border-color: transparent; }
 /* ---------- Chrome headings: a vertical metal sweep with a dark horizon band.
    Platinum on black sections, graphite on white ones; a softer sweep for the small h3. ---------- */
 :root {
-  --chrome-plat: linear-gradient(174deg, #ffffff 0%, #dcdbd9 17%, #8e8d8a 39%, #6d6c69 47%, #f2f1ef 52%, #ffffff 57%, #c9c8c5 72%, #91908c 88%, #e9e8e6 100%); /* Proton's platinum, shared with the wordmark */
-  --chrome-plat-soft: linear-gradient(174deg, #ffffff 0%, #dcdbd9 17%, #8e8d8a 39%, #6d6c69 47%, #f2f1ef 52%, #ffffff 57%, #c9c8c5 72%, #91908c 88%, #e9e8e6 100%);
+  --chrome-plat: linear-gradient(176deg, #ffffff 0%, #f5f7f9 16%, #d9dde2 34%, #aeb3ba 44%, #858a92 48.5%, #ffffff 51%, #ffffff 58%, #e4e7eb 74%, #cdd1d6 87%, #f4f6f8 100%); /* shiny silver chrome: the old silver, brighter with a crisp mirror highlight */
+  --chrome-plat-soft: linear-gradient(178deg, #ffffff 0%, #f0f2f5 42%, #c4c8ce 80%, #e8ebee 100%);
   --chrome-graphite: linear-gradient(176deg, #2b2e33 0%, #0b0c0e 26%, #3c4046 44%, #6b6f76 50%, #2b2e33 57%, #0b0c0e 74%, #3a3e44 100%);
   --chrome-graphite-soft: linear-gradient(178deg, #0b0c0e 0%, #2a2d32 50%, #4e5258 85%, #1d1f23 100%);
 }

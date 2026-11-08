@@ -1,9 +1,9 @@
 .sizer{
-  --bg:#050506; --bg-2:#0d0e11; --fg:#dcdbd8; --fg-strong:#f2f1ef; --fg-dim:#92918d;
+  --bg:#050506; --bg-2:#0d0e11; --fg:#dde0e4; --fg-strong:#f5f6f8; --fg-dim:#91969e;
   --line:rgba(232,234,237,.14); --line-soft:rgba(232,234,237,.07);
   --glow:243,244,246; --panel:#0a0b0d;
-  --metal:linear-gradient(174deg,#ffffff 0%,#dcdbd9 17%,#8e8d8a 39%,#6d6c69 47%,#f2f1ef 52%,#ffffff 57%,#c9c8c5 72%,#91908c 88%,#e9e8e6 100%);
-  --metal-soft:linear-gradient(174deg,#ffffff 0%,#dcdbd9 17%,#8e8d8a 39%,#6d6c69 47%,#f2f1ef 52%,#ffffff 57%,#c9c8c5 72%,#91908c 88%,#e9e8e6 100%);
+  --metal:linear-gradient(176deg,#ffffff 0%,#f5f7f9 16%,#d9dde2 34%,#aeb3ba 44%,#858a92 48.5%,#ffffff 51%,#ffffff 58%,#e4e7eb 74%,#cdd1d6 87%,#f4f6f8 100%);
+  --metal-soft:linear-gradient(178deg,#ffffff 0%,#f0f2f5 42%,#c4c8ce 80%,#e8ebee 100%);
   --head:"Michroma","Eurostile",Arial,sans-serif;
   --display:"Saira","Michroma",Arial,sans-serif;
   --body:"Jost","Futura","Helvetica Neue",Arial,sans-serif;
@@ -257,7 +257,7 @@ html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!
 /* chrome headings: softer sweep on the small h3 */
 .sizer h3{background:var(--metal-soft);-webkit-background-clip:text;background-clip:text}
 .sizer h1,.sizer h2,.sizer h3{background-size:100% 1lh;background-repeat:repeat-y}
-.sizer{--txt-satin:linear-gradient(180deg,color-mix(in srgb,currentColor,#fff 55%) 0%,color-mix(in srgb,currentColor,#fff 30%) 40%,color-mix(in srgb,currentColor,#000 12%) 100%);--txt-fill:transparent}
+.sizer{--txt-satin:linear-gradient(180deg,color-mix(in srgb,currentColor,#fff 60%) 0%,color-mix(in srgb,currentColor,#fff 30%) 40%,color-mix(in srgb,currentColor,#6f757e 16%) 100%);--txt-fill:transparent}
 .page-site-model .sizer .copy{width:min(560px,44%)}
 .page-site-model .sizer h1{font-size:clamp(36px,4.6vw,62px);line-height:1.1}
 @media (max-width:899.98px){.page-site-model .sizer .copy{width:auto}}
