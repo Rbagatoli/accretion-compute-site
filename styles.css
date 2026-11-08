@@ -557,6 +557,15 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 @media (min-width: 900px) { .foot-in { grid-template-columns: 5fr 7fr; } }
 .foot-brand img { width: min(320px, 80%); margin-bottom: 20px; }
 .foot-brand p { font-size: 15px; letter-spacing: 0.04em; margin: 0; }
+
+/* Dark theme: the wordmark (top bar + footer) in the platinum gradient, laid over the logo SVGs with a mask (the logo itself is unchanged) */
+:root { --metal-plat: linear-gradient(174deg, #ffffff 0%, #dcdbd9 17%, #8e8d8a 39%, #6d6c69 47%, #f2f1ef 52%, #ffffff 57%, #c9c8c5 72%, #91908c 88%, #e9e8e6 100%); }
+.bar-mark, .foot-brand { position: relative; }
+[data-theme="dark"] .bar-mark .for-dark, [data-theme="dark"] .foot-brand .for-dark { visibility: hidden; }
+[data-theme="dark"] .bar-mark::after { content: ""; position: absolute; left: 0; top: 50%; translate: 0 -50%; width: clamp(200px, 22vw, 300px); aspect-ratio: 1320 / 122; pointer-events: none; background: var(--metal-plat);
+  -webkit-mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / 100% 100% no-repeat; mask: url(assets/logos/accretion-compute-wordmark-white.svg) center / 100% 100% no-repeat; }
+[data-theme="dark"] .foot-brand::before { content: ""; position: absolute; left: 0; top: 0; width: min(320px, 80%); aspect-ratio: 1430 / 300; pointer-events: none; background: var(--metal-plat);
+  -webkit-mask: url(assets/logos/accretion-compute-horizontal-white.svg) center / 100% 100% no-repeat; mask: url(assets/logos/accretion-compute-horizontal-white.svg) center / 100% 100% no-repeat; }
 .foot-nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 32px; }
 .foot-nav h2 { font: 400 11px/1 var(--body); letter-spacing: 0.28em; text-transform: uppercase; color: var(--fg-strong); margin: 0 0 18px; }
 .foot-nav a { display: block; padding: 6px 0; font-size: 15px; color: var(--fg-dim); text-decoration: none; }
@@ -664,6 +673,17 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
+  /* phones and tablets too: a little of the white from What we do stays at the top while the story plays */
+  .js .ps-alt[data-seam].seam-on { padding-top: 0; }
+  .js .ps-alt[data-seam].seam-on .mz-stage::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: 0; pointer-events: none;
+    height: var(--sa-down); background: var(--sa-col); opacity: .25;
+    -webkit-mask-image: var(--sa-mask); mask-image: var(--sa-mask);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-size: 100% var(--sa-total); mask-size: 100% var(--sa-total);
+    -webkit-mask-position: 0 calc(-1 * var(--sa-up) + 15px); mask-position: 0 calc(-1 * var(--sa-up) + 15px);
+    -webkit-mask-composite: source-in; mask-composite: intersect;
+  }
   .js .ps-alt .mz-text { top: calc(var(--bar-h) + 20px); left: var(--gutter); right: var(--gutter); height: 36vh; height: 36svh; }
   .js .ps-alt .mz-slide { top: 0; transform: translateY(14px); }
   .js .ps-alt .mz-slide.on { transform: none; }

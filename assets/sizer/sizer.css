@@ -16,7 +16,8 @@
 .sizer{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;font-weight:300;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 .sizer .wrap{max-width:1180px;margin:0 auto}
-.sizer h1,.sizer h2,.sizer h3{font-family:var(--head);font-weight:400;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance;margin:0;letter-spacing:.01em}
+.sizer h1,.sizer h2,.sizer h3{font-family:var(--display);font-weight:300;font-stretch:125%;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance;margin:0;letter-spacing:.02em}
+.sizer h1{font-weight:200}
 .sizer h1{font-size:clamp(26px,3.5vw,42px);line-height:1.16}
 .sizer h2{font-size:clamp(21px,2.6vw,30px);line-height:1.2}
 .sizer h3{font-size:15px;line-height:1.35;letter-spacing:.04em}
