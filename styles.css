@@ -900,6 +900,9 @@ html:not(.js) .fit-q { opacity: 1; visibility: visible; transform: none; grid-ar
 [data-theme="light"] .hero-alt { --gl-a: #c2c6cc; --gl-b: #ffffff; }
 [data-theme="dark"] .hero-alt .alogo .wm { background-image: linear-gradient(100deg, #0b0c0e 0%, #0b0c0e 40%, #6b7078 50%, #0b0c0e 60%, #0b0c0e 100%); }
 [data-theme="light"] .hero-alt .alogo .wm { background-image: linear-gradient(100deg, #cfd2d7 0%, #cfd2d7 38%, #ffffff 50%, #cfd2d7 62%, #cfd2d7 100%); }
+/* On a dark hero the big wordmark is platinum, like the top bar and footer (static, no sweep) */
+[data-theme="dark"] .hero .alogo .wm:not(.hero-alt .wm), [data-theme="light"] .hero-alt .alogo .wm {
+  background: var(--metal-plat); background-size: 100% 100%; animation: wm-in 1.6s 0.5s var(--ease) both; }
 /* Dust in the copy thins out before the hero ends, so nothing is cut off at the edge into the next section. */
 .hero-alt .hero-canvas { -webkit-mask-image: var(--alt-dust, linear-gradient(#000 72%, transparent 97%)); mask-image: var(--alt-dust, linear-gradient(#000 72%, transparent 97%)); }
 /* Extra room under the hero content, so the fade into the next section has space to run. The content keeps its place. */
