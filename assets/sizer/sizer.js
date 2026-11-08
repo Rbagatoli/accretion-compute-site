@@ -514,6 +514,33 @@ const tileT = tex(256, 256, (g, w, h) => { g.fillStyle = "#8a8a8a"; g.fillRect(0
 const panelT = tex(128, 256, (g, w, h) => { g.fillStyle = "#cfcfcf"; g.fillRect(0, 0, w, h); g.fillStyle = "#9c9c9c";
   g.fillRect(4, 4, w - 8, 2); g.fillRect(w / 2 - 1, 8, 2, h - 16); g.fillStyle = "#222"; g.fillRect(w * .62, h * .4, 6, 22); g.fillRect(w * .32, h * .4, 6, 22);
   g.fillStyle = "#555"; for (let i = 0; i < 6; i++) g.fillRect(14, 30 + i * 12, w / 2 - 28, 4); });
+// A compute tray seen from above: four GPUs and two CPUs under cold plates, memory, and coolant lines to the back
+const trayTopT = tex(576, 320, (g, w, h) => { g.scale(2, 2); w /= 2; h /= 2; g.fillStyle = "#1a1a1a"; g.fillRect(0, 0, w, h);
+  g.strokeStyle = "#2c2c2c"; g.lineWidth = 1; for (let x = 8; x < w; x += 9) { g.beginPath(); g.moveTo(x, 4); g.lineTo(x, h - 4); g.stroke(); }
+  g.fillStyle = "#0c0c0c"; g.fillRect(0, 0, 14, h);                                         // front bezel edge
+  const plate = (x, y, s) => { const gr = g.createLinearGradient(x, y, x + s, y + s); gr.addColorStop(0, "#e9e9e9"); gr.addColorStop(1, "#8f8f8f");
+    g.fillStyle = gr; g.fillRect(x, y, s, s); g.strokeStyle = "#5a5a5a"; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, s - 2, s - 2);
+    g.fillStyle = "#6a6a6a"; g.fillRect(x + s * .3, y + s * .42, s * .4, s * .16); };
+  for (const [x, y] of [[34, 18], [34, 92], [100, 18], [100, 92]]) plate(x, y, 50);          // GPUs
+  for (const [x, y] of [[178, 26], [178, 98]]) plate(x, y, 36);                              // CPUs
+  g.fillStyle = "#bdbdbd"; for (let i = 0; i < 6; i++) { g.fillRect(222, 14 + i * 7, 24, 3); g.fillRect(222, 88 + i * 7, 24, 3); } // memory
+  g.lineWidth = 4; g.lineCap = "round";
+  for (const [y, c] of [[44, "#f2f2f2"], [52, "#7a7a7a"], [118, "#f2f2f2"], [126, "#7a7a7a"]]) { g.strokeStyle = c; g.beginPath(); g.moveTo(84, y); g.lineTo(100, y); g.moveTo(150, y); g.lineTo(178, y); g.moveTo(214, y); g.lineTo(272, y); g.stroke(); }
+  g.fillStyle = "#cfcfcf"; for (const y of [40, 56, 114, 130]) g.fillRect(272, y - 4, 12, 8);   // quick disconnects at the back
+});
+const trayFrontT = tex(128, 16, (g, w, h) => { g.fillStyle = "#151515"; g.fillRect(0, 0, w, h); g.fillStyle = "#050505"; for (let x = 6; x < w - 26; x += 5) g.fillRect(x, 3, 3, h - 6);
+  g.fillStyle = "#4a4a4a"; g.fillRect(w - 22, 3, 6, h - 6); g.fillStyle = "#fff"; g.fillRect(w - 12, 6, 3, 3); g.fillRect(w - 7, 6, 3, 3); });
+const switchFrontT = tex(128, 16, (g, w, h) => { g.fillStyle = "#262626"; g.fillRect(0, 0, w, h); g.fillStyle = "#050505";
+  for (let x = 8; x < w - 20; x += 6) { g.fillRect(x, 3, 4, 4); g.fillRect(x, 9, 4, 4); } g.fillStyle = "#fff"; for (let x = 9; x < w - 20; x += 12) g.fillRect(x, 1, 2, 1); g.fillRect(w - 10, 6, 3, 3); });
+const psuFrontT = tex(128, 16, (g, w, h) => { g.fillStyle = "#1c1c1c"; g.fillRect(0, 0, w, h); g.fillStyle = "#080808"; for (let x = 6; x < w - 30; x += 4) g.fillRect(x, 3, 2, h - 6);
+  g.fillStyle = "#6a6a6a"; g.fillRect(w - 26, 4, 12, h - 8); g.fillStyle = "#fff"; g.fillRect(w - 9, 6, 3, 3); });
+// coolant moving through the tray lines, redrawn each frame while a rack is open (supply one way, return the other)
+const flowC = document.createElement("canvas"); flowC.width = 576; flowC.height = 320; const flowG = flowC.getContext("2d");
+const flowT = new THREE.CanvasTexture(flowC); flowT.encoding = THREE.sRGBEncoding;
+function drawFlow(t) { const g = flowG; g.clearRect(0, 0, 576, 320); g.save(); g.scale(2, 2); g.lineWidth = 2.2; g.lineCap = "round";
+  for (const [y, dir] of [[44, 1], [52, -1], [118, 1], [126, -1]]) { g.strokeStyle = dir > 0 ? "rgba(255,255,255,.95)" : "rgba(200,200,200,.75)"; g.setLineDash([5, 9]); g.lineDashOffset = -dir * t * 26;
+    g.beginPath(); g.moveTo(84, y); g.lineTo(100, y); g.moveTo(150, y); g.lineTo(178, y); g.moveTo(214, y); g.lineTo(272, y); g.stroke(); }
+  g.restore(); flowT.needsUpdate = true; }
 Object.assign(M, {
   rack: std({ color: 0xffffff, map: rackT, emissiveMap: rackE, emissive: 0xffffff, emissiveIntensity: 1.4, metalness: .5, roughness: .45 }),
   rackBody: std({ color: 0x141414, metalness: .5, roughness: .5 }),
@@ -523,12 +550,20 @@ Object.assign(M, {
   hot: std({ color: 0x8a8a8a, metalness: .85, roughness: .3 }),
   cold: std({ color: 0xe6e6e6, metalness: .6, roughness: .3 }),
   screen: std({ color: 0x111111, emissive: 0xffffff, emissiveIntensity: .9 }),
+  trayBody: std({ color: 0x2a2a2a, metalness: .6, roughness: .4 }),
+  trayTop: std({ color: 0xffffff, map: trayTopT, metalness: .35, roughness: .45, emissive: 0xffffff, emissiveIntensity: .08, emissiveMap: trayTopT }),
+  switchFront: std({ color: 0xffffff, map: switchFrontT, emissiveMap: switchFrontT, emissive: 0xffffff, emissiveIntensity: .7, metalness: .4, roughness: .5 }),
+  psuFront: std({ color: 0xffffff, map: psuFrontT, emissiveMap: psuFrontT, emissive: 0xffffff, emissiveIntensity: .5, metalness: .4, roughness: .5 }),
+  flow: new THREE.MeshBasicMaterial({ map: flowT, transparent: true, depthWrite: false, toneMapped: false }),
+  trayFront: std({ color: 0xffffff, map: trayFrontT, emissiveMap: trayFrontT, emissive: 0xffffff, emissiveIntensity: .6, metalness: .4, roughness: .5 }),
 });
 function makeCutaway() {
   const g = new THREE.Group(); const L = 12.2, W = 3.0, H = 3.2, y0 = .35, tw = .08;
   const inner = new THREE.Group(), near = new THREE.Group(), roof = new THREE.Group(); g.add(inner, near, roof);
   const anchors = [];
   const tag = (p, x, y, z, id) => { const o = new THREE.Object3D(); o.position.set(x, y, z); p.add(o); anchors.push({ o, id }); };
+  // mark every mesh a block of code adds to p as one part, for hover and highlight
+  const part = (p, id, fn, extra) => { const n = p.children.length; fn(); for (let i = n; i < p.children.length; i++) Object.assign(p.children[i].userData, { part: id }, extra); };
   // plinth and shell (matches the closed module)
   B(W + .6, .35, L + .8, M.pad, 0, .175, 0, g);
   B(tw, H, L, M.mod, W / 2 - tw / 2, y0 + H / 2, 0, g);                         // far wall
@@ -541,52 +576,76 @@ function makeCutaway() {
   B(tw, H, L, M.mod, 0, H / 2, 0, near); B(.05, .08, L - .8, M.led, -.05, H - .35, 0, near, false);
   B(.02, H - .1, L - .2, M.lining, tw / 2 + .01, H / 2, 0, near, false);
   // roof with dry coolers: lifts off when opened
-  B(W, .12, L, M.mod, 0, y0 + H - .06, 0, roof);
-  B(W - .2, .5, L - .4, M.galv, 0, y0 + H + .25, 0, roof);
-  for (let i = 0; i < 4; i++) { const z = -L / 2 + 1.5 + i * 3.05; B(W - .3, .9, 2.7, M.steel, 0, y0 + H + .95, z, roof); fan(.95, 0, y0 + H + 1.42, z, roof); }
-  const rp = C(.12, .12, L - 1, M.steel, W / 2 - .3, y0 + H + .62, 0, roof, 10); rp.rotation.x = Math.PI / 2;
-  for (const [x, m] of [[1.05, M.cold], [1.25, M.hot]]) C(.09, .09, .9, m, x, y0 + H - .3, -2.5, roof, 12);
+  part(roof, "coolers", () => {
+    B(W, .12, L, M.mod, 0, y0 + H - .06, 0, roof);
+    B(W - .2, .5, L - .4, M.galv, 0, y0 + H + .25, 0, roof);
+    for (let i = 0; i < 4; i++) { const z = -L / 2 + 1.5 + i * 3.05; B(W - .3, .9, 2.7, M.steel, 0, y0 + H + .95, z, roof); fan(.95, 0, y0 + H + 1.42, z, roof); }
+    const rp = C(.12, .12, L - 1, M.steel, W / 2 - .3, y0 + H + .62, 0, roof, 10); rp.rotation.x = Math.PI / 2;
+    for (const [x, m] of [[1.05, M.cold], [1.25, M.hot]]) C(.09, .09, .9, m, x, y0 + H - .3, -2.5, roof, 12);
+  });
   tag(roof, 0, y0 + H + 1.5, 1.6, "coolers");
   // floor
   B(W - 2 * tw, .04, L - 2 * tw, M.floor, 0, y0 + .02, 0, inner, false);
   // electrical room (-z end) with partition and doorway on the aisle side
-  for (let i = 0; i < 3; i++) { const z = -5.55 + i * .82; B(.8, 2.2, .8, M.panel, .95, y0 + 1.1, z, inner); B(.02, .35, .5, M.screen, .54, y0 + 1.6, z, inner, false); }
+  part(inner, "power", () => { for (let i = 0; i < 3; i++) { const z = -5.55 + i * .82; B(.8, 2.2, .8, M.panel, .95, y0 + 1.1, z, inner); B(.02, .35, .5, M.screen, .54, y0 + 1.6, z, inner, false); } });
   B(W - 1.25, H - .1, .06, M.lining, .62, y0 + (H - .1) / 2, -3.3, inner);
   B(1.17, H - 2.2, .06, M.lining, -.95, y0 + 2.2 + (H - 2.2) / 2 - .05, -3.3, inner);
   tag(inner, .55, y0 + 2.2, -4.7, "power");
   // busway over the rack row, with a tap-off box per rack
-  B(.16, .14, 7.6, M.galv, .3, y0 + 2.78, -.9, inner);
-  for (let i = 0; i < 8; i++) { B(.22, .26, .22, M.galv, .3, y0 + 2.58, -1.6 + i * .6, inner); C(.025, .025, .25, M.black, .3, y0 + 2.38, -1.6 + i * .6, inner, 6); }
+  part(inner, "power", () => { B(.16, .14, 7.6, M.galv, .3, y0 + 2.78, -.9, inner);
+    for (let i = 0; i < 8; i++) { B(.22, .26, .22, M.galv, .3, y0 + 2.58, -1.6 + i * .6, inner); C(.025, .025, .25, M.black, .3, y0 + 2.38, -1.6 + i * .6, inner, 6); } });
   // coolant distribution unit
-  B(1.2, 2.2, 1.0, M.white, .3, y0 + 1.1, -2.5, inner); B(.02, .3, .45, M.screen, -.31, y0 + 1.65, -2.5, inner, false);
-  B(.02, .7, .8, M.louvre, -.31, y0 + .6, -2.5, inner, false);
-  for (const [x, m] of [[1.05, M.cold], [1.25, M.hot]]) C(.09, .09, H - 2.5, m, x, y0 + 2.2 + (H - 2.5) / 2, -2.5, inner, 12);
+  part(inner, "cdu", () => { B(1.2, 2.2, 1.0, M.white, .3, y0 + 1.1, -2.5, inner); B(.02, .3, .45, M.screen, -.31, y0 + 1.65, -2.5, inner, false);
+    B(.02, .7, .8, M.louvre, -.31, y0 + .6, -2.5, inner, false);
+    for (const [x, m] of [[1.05, M.cold], [1.25, M.hot]]) C(.09, .09, H - 2.5, m, x, y0 + 2.2 + (H - 2.5) / 2, -2.5, inner, 12); });
   tag(inner, -.3, y0 + 1.9, -2.5, "cdu");
   // eight AI racks, fronts facing the aisle (-x)
+  const faces = [];
   for (let i = 0; i < 8; i++) { const z = -1.6 + i * .6;
-    B(1.2, 2.3, .58, M.rackBody, .3, y0 + 1.15, z, inner);
-    const f = mesh(new THREE.PlaneGeometry(.56, 2.28), M.rack, -.305, y0 + 1.15, z, inner, false); f.rotation.y = -Math.PI / 2;
+    part(inner, "racks", () => { B(1.2, 2.3, .58, M.rackBody, .3, y0 + 1.15, z, inner);
+      const f = mesh(new THREE.PlaneGeometry(.56, 2.28), M.rack, -.305, y0 + 1.15, z, inner, false); f.rotation.y = -Math.PI / 2; faces.push(f); }, { rack: i });
     // rear manifolds: supply and return to the cold plates
-    C(.035, .035, 2.1, M.cold, 1.0, y0 + 1.15, z - .12, inner, 8); C(.035, .035, 2.1, M.hot, 1.0, y0 + 1.15, z + .12, inner, 8);
+    part(inner, "manifolds", () => { C(.035, .035, 2.1, M.cold, 1.0, y0 + 1.15, z - .12, inner, 8); C(.035, .035, 2.1, M.hot, 1.0, y0 + 1.15, z + .12, inner, 8); });
   }
   tag(inner, -.31, y0 + 2.45, .2, "racks");
   // headers from the CDU along the backs of the racks
-  for (const [x, y, m] of [[1.12, y0 + .22, M.cold], [1.26, y0 + .22, M.hot], [1.12, y0 + 2.3, M.cold], [1.26, y0 + 2.3, M.hot]]) {
-    const p = C(.06, .06, 5.4, m, x, y, -.4, inner, 10); p.rotation.x = Math.PI / 2; }
+  part(inner, "manifolds", () => { for (const [x, y, m] of [[1.12, y0 + .22, M.cold], [1.26, y0 + .22, M.hot], [1.12, y0 + 2.3, M.cold], [1.26, y0 + 2.3, M.hot]]) {
+    const p = C(.06, .06, 5.4, m, x, y, -.4, inner, 10); p.rotation.x = Math.PI / 2; } });
   tag(inner, 1.15, y0 + 1.2, 2.55, "manifolds");
   // network cabinet and fiber tray
-  B(1.0, 2.1, .6, M.black, .4, y0 + 1.05, 3.6, inner); B(.02, 1.4, .4, M.screen, -.11, y0 + 1.2, 3.6, inner, false);
-  B(.32, .05, 8.8, M.galv, -.95, y0 + 2.95, -.2, inner); B(.2, .06, 8.6, M.white, -.95, y0 + 2.99, -.2, inner, false);
+  part(inner, "network", () => { B(1.0, 2.1, .6, M.black, .4, y0 + 1.05, 3.6, inner); B(.02, 1.4, .4, M.screen, -.11, y0 + 1.2, 3.6, inner, false);
+    B(.32, .05, 8.8, M.galv, -.95, y0 + 2.95, -.2, inner); B(.2, .06, 8.6, M.white, -.95, y0 + 2.99, -.2, inner, false); });
   tag(inner, -.1, y0 + 2.1, 3.6, "network");
   // fire suppression cylinders
-  for (const z of [5.2, 5.6]) { C(.17, .17, 1.4, M.white, 1.15, y0 + .7, z, inner, 16); C(.08, .08, .18, M.dark, 1.15, y0 + 1.49, z, inner, 10); }
-  C(.03, .03, 9.5, M.galv, -.3, y0 + 3.0, .6, inner, 6).rotation.x = Math.PI / 2;
+  part(inner, "fire", () => { for (const z of [5.2, 5.6]) { C(.17, .17, 1.4, M.white, 1.15, y0 + .7, z, inner, 16); C(.08, .08, .18, M.dark, 1.15, y0 + 1.49, z, inner, 10); }
+    C(.03, .03, 9.5, M.galv, -.3, y0 + 3.0, .6, inner, 6).rotation.x = Math.PI / 2; });
   tag(inner, 1.0, y0 + 1.4, 5.4, "fire");
+  // one rack that opens on hover: its front door swings out and compute trays slide toward the aisle
+  const rk = new THREE.Group(); rk.visible = false; inner.add(rk);
+  const door = new THREE.Group(); door.position.set(-.305, y0 + 1.15, -.28); rk.add(door);
+  { const f = mesh(new THREE.PlaneGeometry(.56, 2.28), M.rack, 0, 0, .28, door, false); f.rotation.y = -Math.PI / 2; }
+  const trays = [], rh = (2.28 - 2 * 2.28 * 18 / 512) / RACK_ROWS.length, top = y0 + 1.15 + 1.14 - 2.28 * 18 / 512, kAnch = {};
+  const ka = (p, x, y, z, id) => { const o = new THREE.Object3D(); o.position.set(x, y, z); p.add(o); kAnch[id] = o; };
+  let nc = 0;
+  RACK_ROWS.forEach((k, r) => {
+    const y = top - (r + .5) * rh, front = k === "c" ? M.trayFront : k === "s" ? M.switchFront : M.psuFront;
+    const t = new THREE.Mesh(new THREE.BoxGeometry(.9, rh * .86, .5), [M.trayBody, front, k === "c" ? M.trayTop : M.trayBody, M.trayBody, M.trayBody, M.trayBody]);
+    t.castShadow = false; t.receiveShadow = true; t.position.set(.16, y, 0); t.userData.sub = k === "c" ? "compute" : k === "s" ? "switch" : "power"; rk.add(t);
+    if (r === 17) ka(rk, -.3, y, 0, "switch");
+    if (r === 31) ka(rk, -.3, y, -.1, "power");
+    if (k !== "c") return;
+    const hero = r === 3 || r === 22, mid = r === 12 || r === 26;
+    if (hero || mid) { const f = mesh(new THREE.PlaneGeometry(.9, .5), M.flow, 0, rh * .43 + .003, 0, t, false); f.rotation.x = -Math.PI / 2; f.renderOrder = 3; f.userData.sub = "cooling"; }
+    if (r === 22) ka(t, -.18, rh * .45, -.08, "compute");
+    if (r === 3) ka(t, .38, rh * .45, .06, "cooling");
+    trays.push({ t, out: hero ? .78 : mid ? .42 : .07, deep: hero ? .84 : mid ? .6 : .1, lag: nc++ * .025 }); });
+  rk.traverse(o => { if (o.isMesh) Object.assign(o.userData, { part: "racks" }); });
+  const rackKit = { g: rk, door, trays, faces, idx: -1, want: -1, amt: 0, full: false, anchors: kAnch };
   // ceiling lights over the aisle
   B(.06, .03, 10.5, M.led, -.95, y0 + H - .25, 0, inner, false);
   const glow = new THREE.PointLight(0xffffff, 0, 12, 2); glow.position.set(-.5, y0 + 2.6, 0); g.add(glow);
   g.traverse(o => { if (o.isMesh && o.parent === roof) o.castShadow = false; });
-  return { g, inner, near, roof, anchors, glow };
+  return { g, inner, near, roof, anchors, glow, rackKit };
 }
 
 /* ---------- gas sources (outside the fence, at negative x) ---------- */
@@ -1200,23 +1259,61 @@ const cut = makeCutaway(); cut.g.visible = false; site.add(cut.g);
 let modOpen = false, openAmt = 0, openIdx = -1;
 const labelsEl = document.getElementById("labels"), openBtn = document.getElementById("openmod");
 const LEGEND = [
-  ["power", "Switchboard and busway", "Power from the gas engines, run overhead to every rack"],
-  ["racks", "8 AI racks", "Liquid-cooled, about 120 kW and 72 GPUs each"],
-  ["manifolds", "Cold plates and manifolds", "Coolant flows to a plate on every chip and back"],
-  ["cdu", "Coolant distribution unit", "Pumps and a heat exchanger for the rack loop"],
-  ["coolers", "Dry coolers", "Sealed loop on the roof; no evaporative water use"],
-  ["network", "Network and fiber", "Links the racks to each other and to the outside"],
-  ["fire", "Fire suppression", "Clean-agent system, safe for electronics"],
+  ["power", "Switchboard and busway", "Power from the gas engines, run overhead to every rack",
+    "Power from the gas engines enters a switchboard in the electrical room at one end. A busway runs above the racks, and a tap-off box drops a feed into each rack, so a rack can be added or swapped without new wiring."],
+  ["racks", "8 AI racks", "Liquid-cooled, about 120 kW and 72 GPUs each",
+    "Each rack holds compute trays, each with four GPUs and two CPUs under cold plates, plus switch trays in the middle that link all 72 GPUs as one system. Power shelves sit at the top and bottom. Hover a rack to open it, or click one to look inside."],
+  ["manifolds", "Cold plates and manifolds", "Coolant flows to a plate on every chip and back",
+    "Coolant runs from the distribution unit through headers behind the racks, up a manifold in each rack, and into a metal cold plate on every GPU and CPU. It picks up heat at the chip and returns warm, so the room needs little air cooling."],
+  ["cdu", "Coolant distribution unit", "Pumps and a heat exchanger for the rack loop",
+    "Pumps move coolant through the racks, and a heat exchanger hands the heat to a second loop that goes up to the roof. The two loops stay separate, so the coolant at the chips stays clean and at a steady temperature."],
+  ["coolers", "Dry coolers", "Sealed loop on the roof; no evaporative water use",
+    "Fans blow outside air across finned coils to cool the outer loop. It is a sealed loop, like a car radiator: no water is sprayed or evaporated, so the site does not need a water supply for cooling."],
+  ["network", "Network and fiber", "Links the racks to each other and to the outside",
+    "A network cabinet at the far end connects the racks to each other and, over fiber in the overhead tray, to the outside. Training and inference jobs run across many GPUs at once, so these links carry heavy traffic."],
+  ["fire", "Fire suppression", "Clean-agent system, safe for electronics",
+    "Cylinders hold a clean agent that is released through a pipe along the ceiling if smoke is detected. It puts out a fire without water or residue, so the equipment is not damaged."],
 ];
-const legendList = document.getElementById("legend-list");
-const pins = LEGEND.map(([id, title, detail], i) => {
+const legendEl = document.getElementById("legend"), legendList = document.getElementById("legend-list");
+const focusEl = document.createElement("div"); focusEl.className = "focus"; focusEl.setAttribute("aria-live", "polite"); focusEl.innerHTML = "<strong></strong><p></p>";
+legendList.after(focusEl);
+let hlPart = null, hlLock = null;
+const pins = LEGEND.map(([id, title, detail, more], i) => {
   const a = cut.anchors.find(x => x.id === id);
   const pin = document.createElement("div"); pin.className = "pin"; pin.textContent = i + 1; pin.setAttribute("aria-hidden", "true"); labelsEl.appendChild(pin);
-  const li = document.createElement("li"); li.innerHTML = "<b></b><div><strong></strong><span></span></div>";
+  const li = document.createElement("li"); li.innerHTML = "<b></b><div><strong></strong><span></span></div>"; li.dataset.part = id; li.tabIndex = 0;
   li.querySelector("b").textContent = i + 1; li.querySelector("strong").textContent = title; li.querySelector("span").textContent = detail; legendList.appendChild(li);
-  li.addEventListener("pointerenter", () => pin.classList.add("hl")); li.addEventListener("pointerleave", () => pin.classList.remove("hl"));
-  return { a, pin };
+  li.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") setPart(id); }); li.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") setPart(hlLock); });
+  li.addEventListener("click", () => { hlLock = hlLock === id ? null : id; setPart(hlLock); });
+  li.addEventListener("focus", () => setPart(id)); li.addEventListener("blur", () => setPart(hlLock));
+  return { id, a, pin, li, title, more };
 });
+// highlight: the hovered part's meshes swap to a brighter copy of their own material
+const hiMats = new Map();
+function hiMat(m) { if (Array.isArray(m)) return m.map(hiMat); let h = hiMats.get(m);
+  if (!h) { h = m.clone(); h.emissive = new THREE.Color(0xffffff); h.emissiveIntensity = (m.emissiveIntensity || 0) * (m.emissiveMap ? 1.5 : 0) + .32;
+    if (!m.emissiveMap) h.emissiveMap = null; hiMats.set(m, h); hiMats.set(h, h); } return h; }
+const partMeshes = []; cut.g.traverse(o => { if (o.isMesh && o.userData.part) { o.userData.mat0 = o.material; partMeshes.push(o); } });
+function setPart(id) {
+  if (id === hlPart) return; hlPart = id;
+  partMeshes.forEach(o => { o.material = o.userData.part === id ? hiMat(o.userData.mat0) : o.userData.mat0; });
+  legendEl.classList.toggle("focused", !!id);
+  pins.forEach(p => { p.pin.classList.toggle("hl", p.id === id); p.li.classList.toggle("active", p.id === id); });
+  const p = pins.find(q => q.id === id);
+  if (p) { focusEl.querySelector("strong").textContent = p.title; focusEl.querySelector("p").textContent = p.more; }
+  if (id !== "racks") cut.rackKit.want = -1;
+}
+// the rack that opens: move the door and trays to the hovered rack, close first when switching
+function rackStep(dt) { const k = cut.rackKit;
+  const goal = k.want >= 0 && k.want === k.idx ? 1 : 0;
+  k.amt += (goal - k.amt) * Math.min(1, dt * 3.2);
+  if (k.amt < .01 && k.want !== k.idx) { if (k.idx >= 0) k.faces[k.idx].visible = true;
+    k.idx = k.want; if (k.idx >= 0) { k.g.position.z = -1.6 + k.idx * .6; k.faces[k.idx].visible = false; } }
+  k.g.visible = k.idx >= 0;
+  const e = k.amt * k.amt * (3 - 2 * k.amt);
+  k.door.rotation.y = -1.75 * e;
+  k.trays.forEach(({ t, out, deep, lag }) => { const a = THREE.MathUtils.clamp((k.amt - lag) / (1 - lag), 0, 1); t.userData.go = (t.userData.go == null ? out : t.userData.go) + ((k.full ? deep : out) - (t.userData.go == null ? out : t.userData.go)) * Math.min(1, dt * 3); t.position.x = .16 - t.userData.go * a * a * (3 - 2 * a); });
+}
 let camInit = false, key = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
 const counts = document.getElementById("counts");
 const clock = new THREE.Clock();
@@ -1240,9 +1337,9 @@ function frameInner() {
   if (k !== key) {
     key = k; const P = layout(nG, nM, nB, gs, hall); gpos = P.gp; mpos = P.mp; bpos = P.bp;
     if (modsG.userData.hall !== hall) { if (modOpen) closeModule(true); while (modsG.children.length) modsG.remove(modsG.children[0]); modsG.userData.hall = hall; }
-    isHall = hall; if (openBtn) openBtn.hidden = hall;
+    isHall = hall; if (openBtn && !modOpen) openBtn.textContent = hall ? "Look inside a hall" : "Look inside a module";
     { const h = document.getElementById("hint"); if (h) { h.dataset.base = h.dataset.base || h.textContent;
-        h.textContent = hall ? h.dataset.base.replace(/ · (Click|Tap) a module to open it/, "") + " · Each hall holds up to 12 modules" : h.dataset.base; } }
+        h.textContent = hall ? h.dataset.base.replace(/(Click|Tap) a module to open it/, "$1 a hall to look inside") + " · Each hall holds up to 12 modules" : h.dataset.base; } }
     { const d = document.querySelector("#r-halls + .d"); if (d) { d.dataset.base = d.dataset.base || d.textContent; d.textContent = hall ? "about 1 MW each, in " + nHall + " halls" : d.dataset.base; } }
     sync(gensG, nG, () => protoGen.clone());
     gensG.children.forEach((o, i) => { const sp = i === nG - 1; o.userData.spare = sp; o.userData.s = gs; o.scale.x = o.scale.z = gs; o.children[1].material = sp ? M.genSpare : M.gen; });
@@ -1293,10 +1390,14 @@ function frameInner() {
   // module cutaway: lift the roof, drop the near wall, light the inside
   openAmt += ((modOpen ? 1 : 0) - openAmt) * Math.min(1, rdt * 2.6);
   if (openIdx >= 0) { const m = modsG.children[openIdx];
-    if (!m || (!modOpen && openAmt < .004)) { if (m) m.visible = true; cut.g.visible = false; openIdx = -1; }
+    if (!m || (!modOpen && openAmt < .004)) { if (m) m.visible = true; cut.g.visible = false; openIdx = -1; if (hallOpen) { site.remove(hallOpen); hallOpen = null; } }
     else { const a = openAmt, e3 = a * a * (3 - 2 * a);
-      m.visible = false; cut.g.visible = true; cut.g.position.copy(m.position); cut.g.scale.copy(m.scale);
-      cut.roof.position.y = 4.6 * e3; cut.roof.position.x = 2.6 * e3; cut.near.scale.y = 1 - .86 * e3; cut.glow.intensity = 9 * e3; } }
+      m.visible = false; cut.g.visible = true;
+      if (hallOpen) { hallOpen.position.copy(m.position); cut.g.position.copy(m.position).add(openSlot); cut.g.scale.set(1, 1, 1); }
+      else { cut.g.position.copy(m.position); cut.g.scale.copy(m.scale); }
+      cut.roof.position.y = 4.6 * e3; cut.roof.position.x = 2.6 * e3; cut.near.scale.y = 1 - .86 * e3; cut.glow.intensity = 9 * e3; rackStep(rdt);
+      if (cut.rackKit.g.visible) { drawFlow(t); M.trayFront.emissiveIntensity = .45 + .35 * Math.abs(Math.sin(t * 7.3) * Math.sin(t * 3.1));
+        M.switchFront.emissiveIntensity = .5 + .4 * Math.abs(Math.sin(t * 11.7)); M.trayTop.emissiveIntensity = .07 + .05 * Math.sin(t * 2.2); } } }
   const sunOff = new THREE.Vector3(300, 230, -170).lerp(new THREE.Vector3(-150, 330, 120), openAmt * openAmt * (3 - 2 * openAmt));
   sun.position.copy(controls.target).add(sunOff); sun.target.position.copy(controls.target);
   { const sh = sun.shadow.camera; const e = span * .62 + (16 - span * .62) * openAmt;
@@ -1317,11 +1418,11 @@ function frameInner() {
     const s = 2 + a * 9; p.scale.set(s, s, 1); p.material.opacity = (dark ? .012 : .03) * Math.sin(Math.PI * a); });
 
   renderer.render(scene, camera);
-  if (openIdx >= 0 && cut.g.visible) { const v = new THREE.Vector3(), show = openAmt > .8 && modOpen;
-    pins.forEach(({ a, pin }) => { v.setFromMatrixPosition(a.o.matrixWorld).project(camera);
-      const ok = show && v.z < 1 && Math.abs(v.x) < 1.02 && Math.abs(v.y) < 1.02; pin.classList.toggle("on", ok); if (!ok) return;
-      pin.style.transform = "translate(" + ((v.x * .5 + .5) * VW).toFixed(1) + "px," + ((-v.y * .5 + .5) * VH).toFixed(1) + "px)"; });
-  } else pins.forEach(({ pin }) => pin.classList.remove("on"));
+  { const v = new THREE.Vector3(), on = openIdx >= 0 && cut.g.visible && openAmt > .8 && modOpen;
+    const put = (o, pin, show) => { if (show) { v.setFromMatrixPosition(o.matrixWorld).project(camera); show = v.z < 1 && Math.abs(v.x) < 1.02 && Math.abs(v.y) < 1.02; }
+      pin.classList.toggle("on", show); if (show) pin.style.transform = "translate(" + ((v.x * .5 + .5) * VW).toFixed(1) + "px," + ((-v.y * .5 + .5) * VH).toFixed(1) + "px)"; };
+    pins.forEach(({ a, pin }) => put(a.o, pin, on && !rackView));
+    rpins.forEach(({ o, pin }) => put(o, pin, on && rackView && cut.rackKit.amt > .85)); }
   if (!SC.mode3d) { SC.mode3d = true; const iso = document.getElementById("iso"); if (iso) iso.style.display = "none"; window.__gl3d = true;
     const c = document.getElementById("ctrls"), h = document.getElementById("hint"); if (c) c.hidden = false; if (h) { if (matchMedia("(pointer:coarse)").matches) h.textContent = "Two fingers to move or zoom · Tap a module to open it"; h.hidden = false; } ready = true; updateDock(); }
 }
@@ -1329,39 +1430,143 @@ function frameInner() {
 function tellHost(on) { if (parent !== window) try { parent.postMessage({ acc: "mod", open: on }, location.origin); } catch (e) {} }
 function pickModule() { let best = -1, bx = Infinity, bz = -Infinity;
   mpos.forEach((p, i) => { if (p[0] < bx - .1 || (Math.abs(p[0] - bx) < .1 && p[1] > bz)) { best = i; bx = p[0]; bz = p[1]; } }); return best; }
-function openModule(i) {
-  if (i < 0 || !mpos[i]) return;
-  if (openIdx >= 0 && openIdx !== i) { const old = modsG.children[openIdx]; if (old) old.visible = true; openAmt = 0; }
-  openIdx = i; modOpen = true; userCam = true; controls.autoRotate = false;
-  hero.classList.add("open"); openBtn.textContent = "Close module";
-  tellHost(true);
-  const c = new THREE.Vector3(mpos[i][0] + .2, 1.7, mpos[i][1] + .4), narrow = VW < 700;
+// Inside a hall: the building opens to a floor of modules, and the one nearest the viewer is cut open
+let hallOpen = null; const openSlot = new THREE.Vector3();
+function hallSlots(n) { const cols = Math.ceil(n / 2), W = cols * 4.2 + 2.4, out = [];
+  for (let j = 0; j < n; j++) out.push(new THREE.Vector3(-W / 2 + 1.2 + Math.floor(j / 2) * 4.2 + 2.1, 0, (j % 2 ? 1 : -1) * 7)); return { W, out }; }
+function makeHallOpen(n, skip) { const g = new THREE.Group(), { W, out } = hallSlots(n), D = 30;
+  B(W + 2, .34, D + 2, M.pad, 0, .17, 0, g);
+  for (const sz of [-1, 1]) B(W, 1.1, .25, M.mod, 0, .34 + .55, sz * (D / 2 - .125), g);
+  for (const sx of [-1, 1]) B(.25, 1.1, D, M.mod, sx * (W / 2 - .125), .34 + .55, 0, g);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) B(.5, 7.5, .5, M.galv, sx * (W / 2 - .25), .34 + 3.75, sz * (D / 2 - .25), g);
+  out.forEach((p, j) => { if (j === skip) return; const m = protoMod.clone(); m.position.copy(p); g.add(m); });
+  return g; }
+function modCam() { const c = cut.g.position.clone().add(new THREE.Vector3(.2, 1.7, .4)), narrow = VW < 700;
   const dir = narrow ? new THREE.Vector3(-.5, .74, .45).normalize() : new THREE.Vector3(-.8, .5, .33).normalize();
   if (narrow) { c.y += 2.5; c.z -= 1.5; } else { c.y += 1.2; c.z += 1.1; }
-  tweenTo(c, c.clone().add(dir.multiplyScalar(narrow ? 30 : 20)), 1.5);
+  tweenTo(c, c.clone().add(dir.multiplyScalar(narrow ? 30 : 20)), 1.5); }
+const eyebrowEl = legendEl.querySelector(".eyebrow");
+function openModule(i) {
+  if (i < 0 || !mpos[i]) return;
+  if (rackView) exitRack(false);
+  if (openIdx >= 0 && openIdx !== i) { const old = modsG.children[openIdx]; if (old) old.visible = true; openAmt = 0; if (hallOpen) { site.remove(hallOpen); hallOpen = null; } }
+  const m = modsG.children[i];
+  if (isHall && m) { const n = m.userData.n || PER_HALL, { out } = hallSlots(n); let j = 0, bd = Infinity;
+    out.forEach((p, k) => { const d = p.clone().add(m.position).distanceTo(camera.position); if (d < bd) { bd = d; j = k; } });
+    openSlot.copy(out[j]); if (hallOpen) site.remove(hallOpen); hallOpen = makeHallOpen(n, j); hallOpen.position.copy(m.position); site.add(hallOpen);
+    cut.g.position.copy(m.position).add(openSlot); eyebrowEl.textContent = "Inside a hall: one of its " + n + " modules"; }
+  else { cut.g.position.set(mpos[i][0], 0, mpos[i][1]); eyebrowEl.textContent = "Inside a compute module"; }
+  openIdx = i; modOpen = true; userCam = true; controls.autoRotate = false; controls.minDistance = 2;
+  hero.classList.add("open"); openBtn.textContent = isHall ? "Close hall" : "Close module"; rackBtn.hidden = false;
+  tellHost(true);
+  modCam();
 }
 function closeModule(instant) {
-  modOpen = false; hero.classList.remove("open"); openBtn.textContent = "Look inside a module";
+  if (rackView) exitRack(false);
+  hlLock = null; setPart(null); cut.rackKit.want = -1; rackBtn.hidden = true; controls.minDistance = 5;
+  modOpen = false; hero.classList.remove("open"); openBtn.textContent = isHall ? "Look inside a hall" : "Look inside a module";
   tellHost(false);
   userCam = false; if (instant) openAmt = 0;
   else tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.6);
 }
+
+/* ---------- third level: one rack, up close, with what a tenant would want to know ---------- */
+const RACK_INFO = [
+  ["compute", "18 compute trays", "Each holds four GPUs and two CPUs with high-bandwidth memory. Two trays are pulled out here so you can see the boards."],
+  ["switch", "9 switch trays", "Link all 72 GPUs into one system, so a large model can run across the whole rack as if it were one very large GPU."],
+  ["power", "Power shelves", "Take power from the busway overhead, about 120 kW for the rack, and feed every tray. On-site engines supply it, with a battery to absorb fast swings in load."],
+  ["cooling", "Direct-to-chip cooling", "Coolant runs to a cold plate on every GPU and CPU and back, through quick disconnects, so a tray can be pulled for service without draining the rack."],
+];
+const rackPanel = document.createElement("div"); rackPanel.className = "legend rackp"; rackPanel.setAttribute("aria-live", "polite");
+rackPanel.innerHTML = '<div class="eyebrow">Inside a rack</div><h3>One liquid-cooled AI rack: 72 GPUs, about 120 kW</h3><ol></ol><div class="focus"><strong></strong><p></p></div>' +
+  '<div class="tenant"><div class="eyebrow">For AI tenants</div><ul>' +
+  '<li>Hardware sourced to your platform: the GPU generation, memory and network you choose</li>' +
+  '<li>Power made on site and sized to the racks, with no wait for a grid connection</li>' +
+  '<li>Liquid cooling built for dense racks, in a sealed loop with no evaporative water use</li>' +
+  '<li>Room to grow about 1 MW at a time, one module of 8 racks after another</li></ul></div>' +
+  '<p class="note">Typical rack, for illustration. Final hardware is chosen with each tenant.</p>';
+legendEl.after(rackPanel);
+const rFocus = rackPanel.querySelector(".focus"); let subHl = null, subLock = null;
+const rpins = RACK_INFO.map(([id, title, more], i) => {
+  const pin = document.createElement("div"); pin.className = "pin"; pin.textContent = i + 1; pin.setAttribute("aria-hidden", "true"); labelsEl.appendChild(pin);
+  const li = document.createElement("li"); li.innerHTML = "<b></b><div><strong></strong></div>"; li.tabIndex = 0; li.querySelector("b").textContent = i + 1; li.querySelector("strong").textContent = title;
+  rackPanel.querySelector("ol").appendChild(li);
+  li.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") setSub(id); }); li.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") setSub(subLock); });
+  li.addEventListener("click", () => { subLock = subLock === id ? null : id; setSub(subLock); });
+  li.addEventListener("focus", () => setSub(id)); li.addEventListener("blur", () => setSub(subLock));
+  return { id, o: cut.rackKit.anchors[id], pin, li, title, more };
+});
+const kitMeshes = []; cut.rackKit.g.traverse(o => { if (o.isMesh && o.userData.sub) kitMeshes.push(o); });
+function setSub(id) {
+  if (id === subHl) return; subHl = id;
+  kitMeshes.forEach(o => { o.material = o.userData.sub === id && id !== "cooling" ? hiMat(o.userData.mat0) : o.userData.mat0; });
+  M.flow.opacity = id === "cooling" || !id ? 1 : .35;
+  rackPanel.classList.toggle("focused", !!id);
+  rpins.forEach(p => { p.pin.classList.toggle("hl", p.id === id); p.li.classList.toggle("active", p.id === id); });
+  const p = rpins.find(q => q.id === id); if (p) { rFocus.querySelector("strong").textContent = p.title; rFocus.querySelector("p").textContent = p.more; }
+}
+let rackView = false;
+const rackBtn = document.createElement("button"); rackBtn.type = "button"; rackBtn.className = "open-btn"; rackBtn.id = "openrack"; rackBtn.hidden = true; rackBtn.textContent = "Look inside a rack";
+openBtn.after(rackBtn);
+function enterRack(i) {
+  if (!modOpen) return; if (i == null || i < 0) i = cut.rackKit.idx >= 0 ? cut.rackKit.idx : 3;
+  rackView = true; hlLock = null; setPart(null); subLock = null; setSub(null);
+  const k = cut.rackKit; k.want = i; k.full = true; controls.minDistance = .6;
+  hero.classList.add("rack"); rackBtn.textContent = "Back to module";
+  rackCam(i, 1.4);
+}
+// frame the whole rack, pulled trays included, clear of the panel (left on wide screens, top on phones)
+function rackCam(i, dur) {
+  const narrow = VW < 700, inr = cut.inner; inr.updateWorldMatrix(true, false);
+  const sc = inr.getWorldScale(new THREE.Vector3()).x, dist = (narrow ? 10.5 : 5.6) * sc;
+  const c = inr.localToWorld(new THREE.Vector3(-.55, .35 + 1.15, -1.6 + i * .6));
+  const off = (narrow ? new THREE.Vector3(-1, .42, .5) : new THREE.Vector3(-1, .3, .36)).applyQuaternion(inr.getWorldQuaternion(new THREE.Quaternion())).normalize().multiplyScalar(dist);
+  const right = new THREE.Vector3().crossVectors(off.clone().negate(), new THREE.Vector3(0, 1, 0)).normalize();
+  const at = narrow ? c.clone().add(new THREE.Vector3(0, .3 * sc, 0)) : c.clone().sub(right.multiplyScalar(.15 * sc));
+  tweenTo(at, at.clone().add(off), dur);
+}
+function exitRack(back) {
+  rackView = false; cut.rackKit.full = false; cut.rackKit.want = -1; subLock = null; setSub(null); controls.minDistance = 2;
+  hero.classList.remove("rack"); rackBtn.textContent = "Look inside a rack";
+  if (back) modCam();
+}
+rackBtn.addEventListener("click", () => { if (rackView) exitRack(true); else enterRack(-1); });
 openBtn.addEventListener("click", () => { if (modOpen) closeModule(false); else openModule(pickModule()); });
 document.getElementById("zin").addEventListener("click", () => zoomBy(.7));
 document.getElementById("zout").addEventListener("click", () => zoomBy(1.43));
-document.getElementById("zreset").addEventListener("click", () => { if (modOpen) closeModule(false); else { userCam = false; tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.2); } });
-addEventListener("keydown", e => { if (e.key === "Escape" && modOpen) closeModule(false); });
+document.getElementById("zreset").addEventListener("click", () => { if (rackView) exitRack(true); else if (modOpen) closeModule(false); else { userCam = false; tweenTo(center, center.clone().add(new THREE.Vector3(-.55, .28, .67).normalize().multiplyScalar(fitR)), 1.2); } });
+addEventListener("keydown", e => { if (e.key !== "Escape") return; if (rackView) exitRack(true); else if (modOpen) closeModule(false); });
 
-// click (not drag) on a module opens it; the pointer turns to a hand over modules
+// click (not drag) on a module or hall opens it; the pointer turns to a hand over anything that responds
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let downAt = null, hoverQ = false;
-function modAt(e) { const r = renderer.domElement.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-  ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(modsG.children, true)[0]; if (!hit) return -1;
+const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+function aim(e) { const r = renderer.domElement.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); }
+function modAt(e) { aim(e); const hit = ray.intersectObjects(modsG.children, true).find(h => shown(h.object)); if (!hit) return -1;
   let o = hit.object; while (o && o.parent !== modsG) o = o.parent; return o ? modsG.children.indexOf(o) : -1; }
 renderer.domElement.addEventListener("pointerdown", e => { downAt = { x: e.clientX, y: e.clientY, t: performance.now() }; });
+// inside an open module: which part is under the pointer, and which rack; at the rack level, which kind of tray
+function partAt(e) { if (!modOpen || openAmt < .8 || !cut.g.visible) return null;
+  aim(e);
+  if (rackView) { const hit = ray.intersectObject(cut.rackKit.g, true).find(h => shown(h.object)); return hit && hit.object.userData.sub ? { sub: hit.object.userData.sub } : null; }
+  const hit = ray.intersectObject(cut.g, true).find(h => shown(h.object)); if (!hit) return null;
+  const u = hit.object.userData; if (!u.part) return null;
+  let o = hit.object, inKit = false; while (o) { if (o === cut.rackKit.g) inKit = true; o = o.parent; }
+  return { id: u.part, rack: u.part === "racks" ? (inKit ? cut.rackKit.idx : u.rack) : -1 }; }
+function hoverPart(h) {
+  if (rackView) { setSub(h ? h.sub : subLock); return; }
+  setPart(h ? h.id : hlLock); cut.rackKit.want = h && h.id === "racks" ? h.rack : hlLock === "racks" ? cut.rackKit.want : -1; }
 renderer.domElement.addEventListener("pointerup", e => { if (!downAt) return; const d = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y), q = performance.now() - downAt.t; downAt = null;
-  if (d < 6 && q < 400 && !isHall) { const i = modAt(e); if (i >= 0 && i !== openIdx) openModule(i); } });
+  if (d >= 6 || q >= 400) return;
+  const h = partAt(e);
+  if (rackView) { subLock = h ? h.sub : null; setSub(subLock); return; }
+  if (h && h.id === "racks" && h.rack >= 0) { enterRack(h.rack); return; }
+  if (h) { hlLock = h.id; setPart(h.id); cut.rackKit.want = -1; return; }
+  if (modOpen && e.pointerType !== "mouse") { hlLock = null; setPart(null); }
+  const i = modAt(e); if (i >= 0 && i !== openIdx) openModule(i); });
+renderer.domElement.addEventListener("pointerleave", () => { if (modOpen) hoverPart(null); });
 renderer.domElement.addEventListener("pointermove", e => { if (e.buttons || hoverQ || e.pointerType !== "mouse") return; hoverQ = true;
-  requestAnimationFrame(() => { hoverQ = false; renderer.domElement.classList.toggle("pick", !isHall && modAt(e) >= 0); }); });
+  requestAnimationFrame(() => { hoverQ = false; const h = partAt(e); if (modOpen) hoverPart(h);
+    const mi = rackView ? -1 : modAt(e); renderer.domElement.classList.toggle("pick", !!h || (mi >= 0 && mi !== openIdx)); }); });
 
 frame();
 
