@@ -1211,3 +1211,6 @@ h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; 
     mask-image: linear-gradient(to bottom, transparent 0, transparent 30px, rgba(0,0,0,.15) 90px, rgba(0,0,0,.5) 150px, rgba(0,0,0,.85) 210px, #000 260px);
   }
 }
+
+/* Big titles: thinner strokes at large sizes so they stay fine and sharp (Saira 150 on wide screens, where titles are 52px and up) */
+@media (min-width: 900px) { h1 { font-weight: 150; } }

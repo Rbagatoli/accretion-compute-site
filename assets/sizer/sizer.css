@@ -258,6 +258,8 @@ html.embed.docked :is(#badge,#hint,#counts,#ctrls,#glnote,.legend){display:none!
 .sizer h3{background:var(--metal-soft);-webkit-background-clip:text;background-clip:text}
 .sizer h1,.sizer h2,.sizer h3{background-size:100% 1lh;background-repeat:repeat-y}
 .sizer{--txt-satin:linear-gradient(180deg,color-mix(in srgb,currentColor,#fff 60%) 0%,color-mix(in srgb,currentColor,#fff 30%) 40%,color-mix(in srgb,currentColor,#6f757e 16%) 100%);--txt-fill:transparent}
-.page-site-model .sizer .copy{width:min(560px,44%)}
+.page-site-model .sizer .copy{width:min(560px,44%);grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.page-site-model .sizer h1{width:min(780px,58vw);max-width:none;position:relative}}
 .page-site-model .sizer h1{font-size:clamp(36px,4.6vw,62px);line-height:1.1}
 @media (max-width:899.98px){.page-site-model .sizer .copy{width:auto}}
+@media (min-width:900px){.page-site-model .sizer h1{font-weight:150}}
