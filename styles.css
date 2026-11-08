@@ -1193,3 +1193,21 @@ h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) and (color: color-mix(in srgb, red, blue)) {
   :is(p, li, .oc small, .oc > span) { background-image: var(--txt-satin); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--txt-fill); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 }
+
+/* Home story section: the faint white layer at its top eases in from nothing at the seam, so no line shows where "What we do" ends;
+   on phones and tablets the stars fade in under the seam too (wide screens already mask them under a curve). */
+@media (prefers-reduced-motion: no-preference) {
+  .js .ps-alt[data-seam].seam-on .mz-stage::before {
+    -webkit-mask-image: var(--sa-mask), linear-gradient(to bottom, transparent 15px, #000 calc(15px + var(--sa-down) * .6));
+    mask-image: var(--sa-mask), linear-gradient(to bottom, transparent 15px, #000 calc(15px + var(--sa-down) * .6));
+    -webkit-mask-size: 100% var(--sa-total), 100% var(--sa-total), 100% 100%; mask-size: 100% var(--sa-total), 100% var(--sa-total), 100% 100%;
+    -webkit-mask-position: 0 calc(-1 * var(--sa-up) + 15px), 0 calc(-1 * var(--sa-up) + 15px), 0 0; mask-position: 0 calc(-1 * var(--sa-up) + 15px), 0 calc(-1 * var(--sa-up) + 15px), 0 0;
+    -webkit-mask-composite: source-in, source-in; mask-composite: intersect, intersect;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
+  .js .ps-alt .cb-dust {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 30px, rgba(0,0,0,.15) 90px, rgba(0,0,0,.5) 150px, rgba(0,0,0,.85) 210px, #000 260px);
+    mask-image: linear-gradient(to bottom, transparent 0, transparent 30px, rgba(0,0,0,.15) 90px, rgba(0,0,0,.5) 150px, rgba(0,0,0,.85) 210px, #000 260px);
+  }
+}
