@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Knott Landfill, Bend, Oregon: first sizing | Accretion Compute</title>
+  <meta name="description" content="What the gas the site now flares could power, how much land it would take, and what it could earn each year.">
+  <link rel="canonical" href="https://accretioncompute.com/sizings/knott-landfill-or">
+  <meta name="theme-color" content="#050506">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Knott Landfill, Bend, Oregon: first sizing | Accretion Compute">
+  <meta property="og:description" content="What the gas the site now flares could power, how much land it would take, and what it could earn each year.">
+  <meta property="og:url" content="https://accretioncompute.com/sizings/knott-landfill-or">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=1a889c2d">
+  <script src="../site.js?v=1a889c2d" defer></script>
+</head>
+<body class="page-sizing-knott-landfill-or">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/sizer/sizer.css?v=1a889c2d">
+<style>
+/* Hero: the live model fills the first screen, text over its left side (same layout as the Site model page) */
+.szp-root .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.szp-root .copy h1{font-size:clamp(24px,2.9vw,36px)}
+/* Dock: once the hero scrolls away, the same live model sits in a corner window (as on the Site model page) */
+.szp-dock{display:none;pointer-events:none}
+.szp-root .stage.docked :is(iframe,.szp-dock){position:fixed;inset:auto 16px 16px auto;width:min(500px,42vw);height:min(310px,38vh);animation:szpIn .35s var(--ease)}
+.szp-root .stage.docked iframe{z-index:40;border:1px solid var(--line);background:var(--bg);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.szp-root .stage.docked .szp-dock{display:block;z-index:41}
+.szp-root .stage .szp-dock>button{pointer-events:auto}
+.szp-dock .mini-cap{cursor:default;pointer-events:none!important;max-width:calc(100% - 50px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.szp-dock .mini-cap::before{content:none}
+@keyframes szpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){.szp-root .stage.docked :is(iframe,.szp-dock){inset:auto 10px 10px auto;width:min(46vw,220px);height:calc(min(46vw,220px) * .6875)}}
+.szp-root .copy .szp-links{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px}
+.szp-root .copy .szp-links a{color:var(--fg-strong)}
+.szp-tog{display:flex;pointer-events:auto}
+.szp-tog button{font:inherit;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;background:transparent;color:var(--fg);border:1px solid var(--line);cursor:pointer}
+.szp-tog button+button{border-left:0}
+.szp-tog button[aria-pressed=true]{background:var(--fg-strong);color:var(--bg)}
+/* Below the hero */
+.sizer .szp{padding-top:clamp(40px,5vw,64px)}
+.szp-kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.szp-kpis>div{padding:18px 20px;border-right:1px solid var(--line-soft)}
+.szp-kpis>div:last-child{border-right:0}
+.szp .v{font:200 clamp(22px,2.6vw,32px)/1.1 var(--display);font-stretch:125%;color:var(--fg-strong)}
+.szp .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-top:6px}
+.szp-earn{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:16px;border:1px solid var(--line);border-top:0;padding:20px}
+.szp-earn .tot .v{font-size:clamp(26px,3.2vw,40px)}
+.szp-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px)}
+.szp-cols>*{min-width:0}
+.szp .eyebrow{margin-bottom:12px}
+.szp table{width:100%;min-width:0;border-collapse:collapse;font-size:16px}
+.szp td{padding:9px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--fg)}
+.szp td.r{text-align:right;white-space:nowrap;padding-left:14px;color:var(--fg-strong)}
+.szp ul{margin:0;padding-left:18px;color:var(--fg)} .szp li{margin:0 0 8px}
+.szp .box{border:1px solid var(--line);padding:18px 20px;margin-top:24px}
+.szp .small{font-size:14px;color:var(--fg-dim);line-height:1.6}
+.sizer .szp-end{padding-bottom:clamp(56px,7vw,96px)}
+.szp-end .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.szp-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid var(--fg-strong);background:var(--fg-strong);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+.szp-btn.ghost{background:transparent;color:var(--fg-strong);border-color:var(--line)}
+.szp-btn:hover{background:transparent;color:var(--fg-strong)}
+@media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
+ .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
+</style>
+<div class="sizer szp-root">
+<div class="sz-hero">
+ <div class="stage"><iframe id="szp-frame" src="../site-model?src=lfg&amp;flow=852&amp;ch4=50.2&amp;embed=1&amp;copy=1" title="Live 3D model of Knott Landfill, Bend, Oregon" allow="fullscreen"></iframe>
+  <div class="szp-dock"><div class="mini-cap">Live model &middot; Knott Landfill, Bend, Oregon</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
+ <div class="scrim" aria-hidden="true"></div>
+ <div class="copy">
+  <p class="crumbs">First sizing &middot; November 2026</p>
+  <div class="eyebrow">Landfill gas</div>
+  <h1>Knott Landfill, Bend, Oregon</h1>
+  <p class="lede">What the gas the site now flares could power, how much land it would take, and what it could earn each year.</p>
+  <div class="hero-stats"><div><div class="num">2.4</div><div class="k">MW on site</div></div><div><div class="num">3</div><div class="k">Compute modules</div></div><div><div class="num">$8–177k</div><div class="k">To the owner, per year</div></div></div>
+  <p class="szp-links"><a href="../sizings/knott-landfill-or.pdf" download>Download the PDF</a><a id="szp-full" href="../site-model?src=lfg&amp;flow=852&amp;ch4=50.2">Open the full model &rarr;</a></p>
+ </div>
+</div>
+<div class="wrap szp">
+ <div class="szp-kpis">
+  <div><div class="v">2.4 MW</div><div class="k">Power from the gas</div></div>
+  <div><div class="v">3</div><div class="k">Compute modules</div></div>
+  <div><div class="v">8 acres</div><div class="k">Land needed</div></div>
+  <div><div class="v">215k</div><div class="k">MMBtu bought a year</div></div>
+ </div>
+ <div class="szp-earn">
+  <div><div class="k">Gas sale, per year</div><div class="v">up to $161k</div></div>
+  <div><div class="k">Land lease, per year</div><div class="v">$8k to $16k</div></div>
+  <div class="tot"><div class="k">Total to the owner, per year</div><div class="v">$8k to $177k</div></div>
+ </div>
+</div>
+<div class="wrap szp"><div class="szp-cols">
+ <div><div class="eyebrow">The math</div><table><tr><td>Landfill gas collected and flared (2023)</td><td class='r'>852 scfm</td></tr><tr><td>Methane content (2023)</td><td class='r'>50.2%</td></tr><tr><td>Energy in the gas</td><td class='r'>25.9 MMBtu per hour</td></tr><tr><td>Power at a heat rate of 11,000 Btu/kWh</td><td class='r'>about 2.4 MW</td></tr><tr><td>Compute (power less cooling and losses, /1.2)</td><td class='r'>about 2.0 MW</td></tr><tr><td>Compute modules (about 1 MW each)</td><td class='r'>3</td></tr><tr><td>Gas engines (running plus one spare)</td><td class='r'>3 at 1.6 MW</td></tr><tr><td>Land: 5 acres plus 1.2 acres per MW</td><td class='r'>about 8 acres</td></tr><tr><td>Gas bought per year (95% run time)</td><td class='r'>215k MMBtu</td></tr><tr><td>Gas payment at up to $0.75 per MMBtu (under 1¢ per kWh)</td><td class='r'>up to $161k</td></tr><tr><td>Land lease at $1,000 to $2,000 per acre per year</td><td class='r'>$8k to $16k</td></tr></table><p class="small" style="margin-top:10px">Landfill gas: about 1,012 Btu per cubic foot of methane. Prices in US dollars; the price band is the one shown on our Site model page.</p></div>
+ <div><div class="eyebrow">What it would look like</div><ul><li>Gas engines on a small parcel near the gas, a battery to smooth the load, and factory-built compute modules leased to an AI company.</li><li>No grid connection and no export: all of the power is used on site.</li><li>We build and run the site. The owner puts in no capital.</li><li>Multi-year gas and land agreements, matched to the tenant&#x27;s lease, at a fixed price.</li></ul>
+  <div class='box'><div class='eyebrow'>Worth checking</div><ul class='small'><li>Latest flow and methane since 2023</li><li>Oregon DEQ Air Contaminant Discharge Permit for the engines (OAR 340-216)</li><li>Deschutes County land use and site plan approval, with care for nearby homes</li><li>Space for a fenced parcel near the flare</li></ul></div>
+ </div>
+</div></div>
+<div class="wrap szp szp-end">
+ <p class="small"><strong>Source:</strong> EPA Greenhouse Gas Reporting Program, 2023 (facility 1003232). Cascade Natural Gas said on October 22, 2026 that it will not build the RNG plant; the gas is flared. This is a first read from public data, not an offer: no cost and no obligation. The real price and terms are set in the gas and land agreements after a site review.</p>
+ <div class="actions">
+  <a class="szp-btn" href="../contact">Talk to us about your site &rarr;</a>
+  <a class="szp-btn ghost" href="../sizings/knott-landfill-or.pdf" download>Download the one-page PDF</a>
+ </div>
+</div>
+</div>
+
+<script>
+(function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
+ var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}
+ function check(){var r=hero.getBoundingClientRect(),away=r.bottom<r.height*.5;if(!away)dismissed=false;var want=away&&!dismissed;if(want!==on){on=want;stage.classList.toggle("docked",on);send()}}
+ addEventListener("scroll",check,{passive:true});addEventListener("resize",check);f.addEventListener("load",send);check();
+ document.getElementById("szp-dock-x").addEventListener("click",function(){dismissed=true;on=false;stage.classList.remove("docked");send()});
+ document.getElementById("szp-dock-up").addEventListener("click",function(){hero.scrollIntoView({behavior:"smooth",block:"start"})});})();
+</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>
