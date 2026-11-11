@@ -20,8 +20,8 @@
   };
   let mode = "gas";
   const st = {flow:2000, ch4:50};
-  // Gas price band for the payment range: up to $0.75 per MMBtu (under 1 cent per kWh); the real price is set in the gas agreement.
-  const BANDS = {lfg:[0,0.75], gas:[0,0.75], plant:[0,0.75]}, LEASE = [1000,2000];
+  // Gas price band for the payment range: up to $3.00 per MMBtu (about 3 cents per kWh); raised from $0.75 on 2026-11-11; the real price is set in the gas agreement.
+  const BANDS = {lfg:[0,3], gas:[0,3], plant:[0,3]}, LEASE = [1000,2000];
   const range = (lo, hi) => { const u = hi >= 1e6 ? 1e6 : 1e3, d = u === 1e6 && hi < 1e7 ? 1 : 0, s = u === 1e6 ? "M" : "k";
     return "$" + fmt(lo/u, d) + "&ndash;" + fmt(hi/u, d) + s; };
 
@@ -1495,7 +1495,7 @@ function frameInner() {
   if (userCam && !tw) { const tg = controls.target; tg.x = THREE.MathUtils.clamp(tg.x, -110, L.padW + 40); tg.z = THREE.MathUtils.clamp(tg.z, -L.depth / 2 - 80, L.depth / 2 + 80); tg.y = THREE.MathUtils.clamp(tg.y, 0, 25); }
   controls.update();
   shiftGoal = panelPx / 2; if (Math.abs(shiftGoal - shiftCur) > .3) { shiftCur += (shiftGoal - shiftCur) * Math.min(1, rdt * 4); applyShift(); }
-  const dist = camera.position.distanceTo(controls.target), nr = THREE.MathUtils.clamp(dist * .012, .15, 2);
+  const dist = camera.position.distanceTo(controls.target), nr = THREE.MathUtils.clamp(dist * .012, HD.kit && rackView ? .01 : .15, 2);
   if (Math.abs(nr - camera.near) / camera.near > .08) { camera.near = nr; applyShift(); }
 
   // module cutaway: lift the roof, drop the near wall, light the inside
@@ -1506,8 +1506,8 @@ function frameInner() {
       m.visible = false; cut.g.visible = true;
       if (hallOpen) { hallOpen.position.copy(m.position); cut.g.position.copy(m.position).add(openSlot); cut.g.scale.set(1, 1, 1); }
       else { cut.g.position.copy(m.position); cut.g.scale.copy(m.scale); }
-      cut.roof.position.y = 4.6 * e3; cut.roof.position.x = 2.6 * e3; cut.near.scale.y = 1 - .86 * e3; cut.glow.intensity = 9 * e3; rackStep(rdt);
-      if (cut.rackKit.g.visible) { drawFlow(t); M.trayFront.emissiveIntensity = .45 + .35 * Math.abs(Math.sin(t * 7.3) * Math.sin(t * 3.1));
+      cut.roof.position.y = 4.6 * e3; cut.roof.position.x = 2.6 * e3; cut.near.scale.y = 1 - .86 * e3; cut.glow.intensity = 9 * e3; (HD.on && !HD.rackFail ? hdRackStep : rackStep)(rdt); hdStep(rdt);
+      if (cut.rackKit.g.visible && !(HD.on && !HD.rackFail)) { drawFlow(t); M.trayFront.emissiveIntensity = .45 + .35 * Math.abs(Math.sin(t * 7.3) * Math.sin(t * 3.1));
         M.switchFront.emissiveIntensity = .5 + .4 * Math.abs(Math.sin(t * 11.7)); M.trayTop.emissiveIntensity = .07 + .05 * Math.sin(t * 2.2); } } }
   const sunOff = new THREE.Vector3(300, 230, -170).lerp(new THREE.Vector3(-150, 330, 120), openAmt * openAmt * (3 - 2 * openAmt));
   sun.position.copy(controls.target).add(sunOff); sun.target.position.copy(controls.target);
@@ -1554,8 +1554,8 @@ function makeHallOpen(n, skip) { const g = new THREE.Group(), { W, out } = hallS
   return g; }
 function modCam() { const c = cut.g.position.clone().add(new THREE.Vector3(.2, 1.7, .4)), narrow = VW < 700;
   const dir = narrow ? new THREE.Vector3(-.5, .74, .45).normalize() : new THREE.Vector3(-.8, .5, .33).normalize();
-  if (narrow) { c.y += 2.5; c.z -= 1.5; } else { c.y += 1.2; c.z += 1.1; }
-  tweenTo(c, c.clone().add(dir.multiplyScalar(narrow ? 30 : 20)), 1.5); }
+  if (narrow) { c.y += 3.9; c.z -= 2.1; } else { c.y += 3.1; c.z += 1.1; }
+  tweenTo(c, c.clone().add(dir.multiplyScalar(narrow ? 47 : 29)), 1.5); }
 const eyebrowEl = legendEl.querySelector(".eyebrow");
 function openModule(i) {
   if (i < 0 || !mpos[i]) return;
@@ -1571,6 +1571,7 @@ function openModule(i) {
   hero.classList.add("open"); openBtn.textContent = isHall ? "Close hall" : "Close module"; rackBtn.hidden = false;
   tellHost(true);
   modCam();
+  hdModule();
 }
 function closeModule(instant) {
   if (rackView) exitRack(false);
@@ -1611,7 +1612,7 @@ const rpins = RACK_INFO.map(([id, title, more], i) => {
 const kitMeshes = []; cut.rackKit.g.traverse(o => { if (o.isMesh && o.userData.sub) kitMeshes.push(o); });
 function setSub(id) {
   if (id === subHl) return; subHl = id;
-  kitMeshes.forEach(o => { o.material = o.userData.sub === id && id !== "cooling" ? hiMat(o.userData.mat0) : o.userData.mat0; });
+  kitMeshes.forEach(o => { o.material = o.userData.sub === id && (id !== "cooling" || o.userData.hd) ? hiMat(o.userData.mat0) : o.userData.mat0; });
   M.flow.opacity = id === "cooling" || !id ? 1 : .35;
   rackPanel.classList.toggle("focused", !!id);
   rpins.forEach(p => { p.pin.classList.toggle("hl", p.id === id); p.li.classList.toggle("active", p.id === id); });
@@ -1659,6 +1660,8 @@ renderer.domElement.addEventListener("pointerdown", e => { downAt = { x: e.clien
 // inside an open module: which part is under the pointer, and which rack; at the rack level, which kind of tray
 function partAt(e) { if (!modOpen || openAmt < .8 || !cut.g.visible) return null;
   aim(e);
+  if (HD.on && !HD.rackFail) { if (rackView) { const h = HD.kit ? ray.intersectObjects(HD.kitPick, false)[0] : null; return h ? { sub: h.object.userData.sub } : null; }
+    const h = ray.intersectObjects(HD.pick, false)[0]; if (!h) return null; const u = h.object.userData; return { id: u.part, rack: u.part === "racks" ? u.rack : -1 }; }
   if (rackView) { const hit = ray.intersectObject(cut.rackKit.g, true).find(h => shown(h.object)); return hit && hit.object.userData.sub ? { sub: hit.object.userData.sub } : null; }
   const hit = ray.intersectObject(cut.g, true).find(h => shown(h.object)); if (!hit) return null;
   const u = hit.object.userData; if (!u.part) return null;
@@ -1679,6 +1682,111 @@ renderer.domElement.addEventListener("pointerleave", () => { if (modOpen) hoverP
 renderer.domElement.addEventListener("pointermove", e => { if (e.buttons || hoverQ || e.pointerType !== "mouse") return; hoverQ = true;
   requestAnimationFrame(() => { hoverQ = false; const h = partAt(e); if (modOpen) hoverPart(h);
     const mi = rackView ? -1 : modAt(e); renderer.domElement.classList.toggle("pick", !!h || (mi >= 0 && mi !== openIdx)); }); });
+
+/* ---------- HD test (Gate 1): the open module and one rack come from two GLB files, fetched only when opened.
+   module.glb loads when a module opens; rack.glb when a rack is hovered or entered. Until a file arrives, and if it
+   fails, today's simple shapes stay on screen. Today's shapes also stay as the (invisible) hover and click targets. ---------- */
+const HD = { base: ((document.querySelector('script[src*="assets/sizer/sizer.js"]') || {}).src || "assets/sizer/sizer.js").replace(/[^\/]*$/, "") + "hd/",
+  on: false, modState: 0, rackState: 0, rackFail: false, kit: null, hero: null, heroX: 0, go: 0, out: .16, deep: .78, level: 0,
+  fans: [], mats: [], env: -1, pick: [], kitPick: [], bytes: {}, ms: {} };
+window.__hd = HD;
+function hdScript(src) { return new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => no(new Error("could not load " + src)); document.head.appendChild(s); }); }
+let hdLib = null;
+function hdLoader() { return hdLib || (hdLib = Promise.all([hdScript(HD.base + "GLTFLoader.js"), hdScript(HD.base + "meshopt_decoder.js")])
+  .then(() => window.MeshoptDecoder.ready).then(() => { const l = new THREE.GLTFLoader(); l.setMeshoptDecoder(window.MeshoptDecoder); return l; })); }
+function hdLoad(name) { const t0 = performance.now(); return hdLoader().then(l => new Promise((ok, no) => l.load(HD.base + name, g => { HD.ms[name] = Math.round(performance.now() - t0); ok(g); },
+  e => { if (e && e.total) HD.bytes[name] = e.total; }, no))); }
+const hdNote = document.createElement("div"); hdNote.className = "hint"; hdNote.style.cssText = "top:auto;bottom:64px;right:16px"; hdNote.hidden = true; stage.appendChild(hdNote);
+function hdSay(t) { hdNote.textContent = t || ""; hdNote.hidden = !t; }
+// materials from the files: follow the scene's reflection level, cap the glow of lamps and screens, sharpen textures seen at a slant
+function hdMesh(o, close) { const u = o.userData; u.hd = true; o.receiveShadow = true;
+  o.castShadow = !close && (u.slot === "shell" || u.slot === "near" || u.part === "racks" || u.part === "cdu");   // small overhead parts would only speckle the racks
+  const m = o.material; if (m.name === "w_fronts") o.receiveShadow = false;          // the baked rack fronts carry their own shading
+  if (m.userData.hdSeen) return; m.userData.hdSeen = true; m.userData.envK = close ? 2.2 : 1; HD.mats.push(m);
+  if (m.metalness > .9 && !m.metalnessMap && m.color.r > .25) m.metalness = .72;   // bare light metal: the viewer has no studio lights to mirror, so let some of the light scatter
+  if (m.userData.glow) m.emissiveIntensity = Math.min(2.6, .7 + m.userData.glow * .14);
+  const an = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  [m.map, m.roughnessMap, m.metalnessMap].forEach(t => { if (t && t.anisotropy !== an) { t.anisotropy = an; t.needsUpdate = true; } }); }
+function hdModule() {
+  if (HD.modState) return; HD.modState = 1;
+  hdLoad("module.glb").then(g => {
+    const by = {}; g.scene.children.slice().forEach(n => { by[n.name] = n; });
+    if (!by.shell || !by.inner || !by.near || !by.roof) throw new Error("module.glb: parts missing");
+    const k = cut.rackKit, keep = [cut.inner, cut.near, cut.roof, k.g];
+    // today's shapes: hidden, kept for hover and click
+    [cut.g, cut.inner, cut.near, cut.roof].forEach(p => p.children.forEach(o => { if (keep.indexOf(o) >= 0 || o.isLight || !(o.isMesh || o.children.length)) return;
+      o.visible = false; if (o.isMesh && o.userData.part) HD.pick.push(o); }));
+    k.g.children.forEach(o => { if (o.isMesh || o.children.length) { o.visible = false; o.userData.old = true; } });
+    by.near.position.set(0, 0, 0);
+    cut.g.add(by.shell); cut.near.add(by.near); cut.inner.add(by.inner); cut.roof.add(by.roof);
+    [by.shell, by.near, by.inner, by.roof].forEach(n => n.traverse(o => { if (o.userData.spin) HD.fans.push(o);
+      if (!o.isMesh) return; hdMesh(o, false); if (o.userData.part) { o.userData.mat0 = o.material; partMeshes.push(o); } }));
+    HD.fans.forEach((f, i) => { f.userData.w = 5 + (i * 37 % 10) * .3; });
+    // the eight light racks stand in for today's rack fronts: the rack that opens hides its light copy
+    const racks = []; for (let i = 0; i < 8; i++) racks.push(by.inner.getObjectByName("rack" + i));
+    if (racks.some(r => !r)) throw new Error("module.glb: racks missing");
+    if (k.idx >= 0) { k.idx = -1; k.amt = 0; } k.faces = racks;
+    HD.on = true; HD.modState = 2;
+    if (hlPart) { const id = hlPart; hlPart = null; setPart(id); }
+  }).catch(e => { HD.modState = -1; if (window.console) console.warn("HD module not loaded, keeping the simple model:", e && e.message ? e.message : e); });
+}
+function hdRack() {
+  if (HD.rackState) return; HD.rackState = 1; hdSay("Loading rack detail…");
+  hdLoad("rack.glb").then(g => {
+    const kit = g.scene.getObjectByName("kit"), hero = kit && kit.getObjectByName("hero"); if (!kit || !hero) throw new Error("rack.glb: parts missing");
+    // 36 units drawn from 4 shapes
+    const protos = {}, slots = [], m4 = new THREE.Matrix4();
+    kit.children.slice().forEach(n => { if (/^proto_/.test(n.name)) { protos[n.userData.kind] = n; kit.remove(n); } else if (/^slot\d+/.test(n.name)) { slots.push(n); kit.remove(n); } });
+    const pm = new THREE.MeshBasicMaterial(), boxAt = (p, sx, sy, sz, x, y, z, sub) => { const b = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), pm); b.position.set(x, y, z); b.visible = false; b.userData.sub = sub; p.add(b); HD.kitPick.push(b); };
+    Object.keys(protos).forEach(kind => { const at = slots.filter(s => s.userData.kind === kind); if (!at.length) return;
+      protos[kind].children.forEach(c => { if (!c.isMesh) return; const im = new THREE.InstancedMesh(c.geometry, c.material, at.length);
+        at.forEach((s, j) => im.setMatrixAt(j, m4.makeTranslation(s.position.x, s.position.y, s.position.z)));
+        im.frustumCulled = false; im.userData = { sub: c.userData.sub, kind }; kit.add(im); });
+      const h = kind === "p" ? .13 : .0415; at.forEach(s => boxAt(kit, .79, h, .44, s.position.x + .395, s.position.y + h / 2, 0, s.userData.sub)); });
+    boxAt(hero, .79, .0415, .44, .395, .0207, .22, "compute"); boxAt(hero, .34, .03, .2, .56, .03, .331, "cooling");
+    boxAt(kit, .12, 1.95, .34, slots[0].position.x + .86, 1.47, 0, "cooling");
+    kit.traverse(o => { if (!o.isMesh || !o.material || o.material === pm) return; hdMesh(o, true); o.userData.part = "racks"; if (o.userData.sub) { o.userData.mat0 = o.material; kitMeshes.push(o); } });
+    cut.rackKit.g.add(kit);
+    rpins.forEach(p => { const o = kit.getObjectByName("pin_" + p.id); if (o) p.o = o;
+      if (p.id === "compute") p.more = "Each holds four GPUs and two CPUs with high-bandwidth memory. One tray is pulled out here: two GPUs sit bare on one board, the other board carries its cold plates and hoses."; });
+    HD.kit = kit; HD.hero = hero; HD.heroX = hero.position.x; HD.go = HD.out; HD.rackState = 2; hdSay("");
+    if (subHl) { const id = subHl; subHl = null; setSub(id); }
+  }).catch(e => { HD.rackState = -1; HD.rackFail = true; hdSay(""); cut.rackKit.g.children.forEach(o => { if (o.userData.old) o.visible = true; });
+    if (window.console) console.warn("HD rack not loaded, keeping the simple rack:", e && e.message ? e.message : e); });
+}
+// the rack that opens, HD: the detailed rack takes the place of the light one, its tray slides out toward the aisle
+function hdRackStep(dt) { const k = cut.rackKit;
+  if (k.want >= 0 && !HD.rackState) hdRack();
+  const want = HD.kit ? k.want : -1, goal = want >= 0 && want === k.idx ? 1 : 0;
+  k.amt += (goal - k.amt) * Math.min(1, dt * 3.2);
+  if (k.amt < .01 && want !== k.idx) { if (k.idx >= 0) k.faces[k.idx].visible = true;
+    k.idx = want; if (k.idx >= 0) { k.g.position.z = -1.6 + k.idx * .6; k.faces[k.idx].visible = false; } }
+  k.g.visible = k.idx >= 0;
+  if (HD.kit) { HD.go += ((k.full ? HD.deep : HD.out) - HD.go) * Math.min(1, dt * 3); HD.hero.position.x = HD.heroX - HD.go * k.amt * k.amt * (3 - 2 * k.amt); }
+}
+// closer steps inside the rack view: the pulled tray, then one GPU
+const trayBtn = document.createElement("button"); trayBtn.type = "button"; trayBtn.className = "open-btn"; trayBtn.id = "opentray"; trayBtn.hidden = true; rackBtn.after(trayBtn);
+const hdSteps = () => VW < 700 ? ["Tray", "GPU", "Rack"] : ["Zoom to the tray", "Zoom to a GPU", "Back to the rack"];
+function hdLevel(n) { const k = cut.rackKit, i = k.want >= 0 ? k.want : 3; HD.level = n; trayBtn.textContent = hdSteps()[n];
+  if (!n) { rackCam(i, 1.2); return; }
+  const narrow = VW < 700, inr = cut.inner; inr.updateWorldMatrix(true, false);
+  const aim = HD.kit.getObjectByName(n === 1 ? "aim_tray" : "aim_gpu"), sc = inr.getWorldScale(new THREE.Vector3()).x;
+  const c = aim.position.clone().applyQuaternion(HD.hero.quaternion).add(new THREE.Vector3(HD.heroX - HD.deep, HD.hero.position.y, HD.hero.position.z - 1.6 + i * .6));
+  inr.localToWorld(c);
+  const dir = n === 1 ? (narrow ? new THREE.Vector3(-.5, .8, .42) : new THREE.Vector3(-.62, .72, .36)) : (narrow ? new THREE.Vector3(-.4, .84, .3) : new THREE.Vector3(-.45, .80, .30));
+  const dist = (n === 1 ? (narrow ? 3.4 : 1.62) : (narrow ? 1.05 : .47)) * sc;
+  const off = dir.applyQuaternion(inr.getWorldQuaternion(new THREE.Quaternion())).normalize().multiplyScalar(dist);
+  tweenTo(c, c.clone().add(off), 1.3);
+}
+trayBtn.addEventListener("click", () => { if (rackView && HD.kit) hdLevel((HD.level + 1) % 3); });
+function hdStep(dt) {
+  const show = rackView && !!HD.kit; if (trayBtn.hidden === show) { trayBtn.hidden = !show; trayBtn.textContent = hdSteps()[HD.level]; }
+  if (!rackView && HD.level) HD.level = 0;
+  if (show && controls.minDistance > .12) controls.minDistance = .12;
+  if (HD.rackState === 1) hdNote.hidden = !rackView;
+  HD.fans.forEach(f => { f.rotation.y += f.userData.w * dt; });
+  const env = M.mod.envMapIntensity; if (env !== HD.env || HD.mats.length !== HD.nMats) { HD.env = env; HD.nMats = HD.mats.length; HD.mats.forEach(m => { m.envMapIntensity = env * m.userData.envK; }); hiMats.clear(); const a = hlPart, b = subHl; hlPart = null; subHl = null; setPart(a); setSub(b); }
+}
 
 frame();
 
