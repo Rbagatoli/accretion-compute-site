@@ -1,0 +1,16 @@
+# Cloudflare Pages settings for accretion-compute-site. This file is the source of truth for the
+# project's bindings; the site itself is the prebuilt HTML in this folder (node tools/build.mjs).
+name = "accretion-compute-site"
+pages_build_output_dir = "."
+compatibility_date = "2026-10-28"
+
+# Messages sent through the contact and submit-a-site forms (functions/api/intake.js).
+[[kv_namespaces]]
+binding = "LEADS"
+id = "f9168552f40144d58bfbc8bb425b304e"
+
+# Email notice for each message: turn on once the accretion-intake-mail Worker
+# (workers/intake-mail) is deployed and its sending domain is set up in Cloudflare.
+# [[services]]
+# binding = "MAILER"
+# service = "accretion-intake-mail"

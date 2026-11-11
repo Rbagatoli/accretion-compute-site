@@ -1,0 +1,15 @@
+# Email notices for the website forms. Deploy with: wrangler deploy (from this folder),
+# after the sending domain is set up in Cloudflare Email Service and the address in NOTIFY_TO
+# is a verified destination address in the account.
+name = "accretion-intake-mail"
+main = "index.js"
+compatibility_date = "2026-10-28"
+workers_dev = false
+
+[[send_email]]
+name = "EMAIL"
+allowed_destination_addresses = ["renzo@accretioncompute.com"]
+
+[vars]
+NOTIFY_TO = "renzo@accretioncompute.com"
+NOTIFY_FROM = "forms@accretioncompute.com"

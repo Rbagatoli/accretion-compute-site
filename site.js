@@ -72,28 +72,21 @@
       }
     } catch (err) { visit = null; }
 
-    // Contact form: opens the visitor's email app with the message filled in. Nothing is sent or stored by this site.
+    // Contact form: sent to /api/intake (see acSendForm below). If that fails, the visitor can open
+    // the same message in their own email app instead.
     var form = document.querySelector('[data-mail-form]');
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (!form.reportValidity()) return;
         var data = new FormData(form);
-        var about = data.get('about') || 'General';
-        var lines = [
-          'Name: ' + (data.get('name') || ''),
-          'Organisation: ' + (data.get('org') || ''),
-          'Email: ' + (data.get('email') || ''),
-          'About: ' + about,
-          '',
-          data.get('message') || ''
-        ];
+        var g = function (k) { return String(data.get(k) || '').trim(); };
+        var about = g('about') || 'General';
+        var lines = ['Name: ' + g('name'), 'Company: ' + g('org'), 'Email: ' + g('email'), 'About: ' + about, '', g('message')];
         if (visit) lines.push('', '--', 'How you found us: ' + (visit.from || 'direct') + ', first page ' + visit.page);
-        var to = form.getAttribute('data-mail-to');
-        var subject = 'Accretion Compute enquiry: ' + about;
-        window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-        var note = form.querySelector('[data-mail-note]');
-        if (note) note.hidden = false;
+        acSendForm(form, 'contact', {
+          about: about, name: g('name'), org: g('org'), email: g('email'), message: g('message')
+        }, { subject: 'Accretion Compute inquiry: ' + about, body: lines.join('\n') }, visit);
       });
     }
   });
@@ -1985,70 +1978,66 @@ var acSymbol = (function () {
 
 })();
 
-// Submit a site. Posts to the private intake endpoint in its site_submission format when
-// data-intake-url is set; until then (or for Canada, which the endpoint does not take yet)
-// it opens the visitor's email app with the same details.
+// Sends a form to /api/intake on this site, which keeps the message and replies with a reference.
+// On success the form is cleared and the reference shown. If it fails (offline, blocked, server down),
+// the note offers the same message in the visitor's own email app, so nothing is lost.
+var acFormShown = Date.now();
+function acSendForm(form, name, fields, mail, visit) {
+  var note = form.querySelector('[data-form-note]');
+  var btn = form.querySelector('button[type=submit]');
+  var to = form.getAttribute('data-mail-to');
+  function say(html) { note.textContent = ''; note.insertAdjacentHTML('beforeend', html); note.hidden = false; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fallback() {
+    btn.disabled = false;
+    var href = 'mailto:' + to + '?subject=' + encodeURIComponent(mail.subject) + '&body=' + encodeURIComponent(mail.body);
+    say('That did not go through. You can <a href="' + esc(href) + '">open the same message in your email app</a> instead, or write to <a href="mailto:' + to + '">' + to + '</a>.');
+  }
+  var trap = form.querySelector('[name=website]');
+  var payload = {
+    form: name, fields: fields, website: trap ? trap.value : '', elapsed: Date.now() - acFormShown,
+    page: location.pathname, visit: visit || null
+  };
+  btn.disabled = true;
+  say('Sending…');
+  fetch('/api/intake', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }, function () { return { status: r.status, j: {} }; }); })
+    .then(function (res) {
+      if (res.status === 200 && res.j.received) {
+        form.reset(); btn.disabled = false; acFormShown = Date.now();
+        say('Thank you, it reached us. Your reference is <strong>' + esc(res.j.ref) + '</strong>. We reply by email, usually within a few business days.');
+      } else if (res.status === 400 && res.j.error === 'email') {
+        btn.disabled = false; say('Please check the email address.');
+      } else if (res.status === 429) {
+        btn.disabled = false; say('We have several messages from you this hour. Please write to <a href="mailto:' + to + '">' + to + '</a> instead.');
+      } else fallback();
+    })
+    .catch(fallback);
+}
+
+// Submit a site: sent to /api/intake with acSendForm above; the email fallback carries the same details.
 (function () {
   var form = document.querySelector('[data-site-form]');
   if (!form) return;
-  var note = form.querySelector('[data-site-note]');
-  var SOURCE = { pipeline: 'natural_gas', gathering: 'natural_gas', landfill: 'landfill_gas', flare: 'flare_gas', plant: 'unknown', industrial: 'industrial_surplus', other: 'other' };
   var LABEL = { pipeline: 'Pipeline gas', gathering: 'Gathering-system gas', landfill: 'Landfill gas', flare: 'Flare or stranded gas', plant: 'An existing power plant', industrial: 'An industrial site', other: 'Something else' };
   var CONTRACT = { none: 'not sold today', short: 'sold, ending within 3 years', long: 'sold, for longer than 3 years', unsure: 'not sure' };
-  function say(msg) { note.textContent = ''; note.insertAdjacentHTML('beforeend', msg); note.hidden = false; }
-  function uuid() {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-    var b = crypto.getRandomValues(new Uint8Array(16)); b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
-    var h = Array.prototype.map.call(b, function (x) { return (x + 256).toString(16).slice(1); }).join('');
-    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
-  }
-  var key = null;
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
     var d = new FormData(form);
-    if (d.get('website')) return;
     var g = function (k) { return String(d.get(k) || '').trim(); };
     var size = g('size'), unit = g('unit'), src = g('source');
-    var details = [
-      'Energy: ' + LABEL[src] + (size ? ', about ' + size + ' ' + unit : ''),
-      'Sold today: ' + CONTRACT[g('contract')],
-      'Gas pipeline: ' + g('pipe'),
-      'Fiber: ' + g('fiber'),
-      'Land: ' + (g('acres') ? g('acres') + ' acres' : 'not given'),
-      'Coordinates: ' + (g('coords') || 'not given'),
-      'Role: ' + g('role')
-    ];
     var where = g('place') + ', ' + g('state') + (g('country') === 'CA' ? ', Canada' : '');
-    var url = form.getAttribute('data-intake-url');
-    function mail() {
-      var body = ['Name: ' + g('name'), 'Company: ' + g('org'), 'Email: ' + g('email'), 'Phone: ' + g('phone'), 'Where: ' + where, 'Authority: ' + g('authority'), ''].concat(details, ['', g('notes')]);
-      var to = form.getAttribute('data-mail-to');
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent('Site submission: ' + where) + '&body=' + encodeURIComponent(body.join('\n'));
-      say('Your email app should now be open with the details ready to send. If not, write to <a href="mailto:' + to + '">' + to + '</a>.');
-    }
-    if (!url || g('country') !== 'US') return mail();
-    var payload = {
-      service: 'site_submission',
-      contact: { name: g('name'), email: g('email'), phone: g('phone'), company: g('org') },
-      brief: {
-        country: 'US', geography: where, siteDetails: details.join('\n'), notes: g('notes'),
-        sourceTypes: [SOURCE[src]], authority: g('role') + ': ' + g('authority'),
-        power: { value: size && unit === 'MW' ? Number(size) : null, unit: 'MW' },
-        upfrontBudget: { amount: null, currency: 'unknown' }
-      },
-      attribution: { source: 'accretioncompute.com', medium: 'submit_a_site', campaign: '', referrer: document.referrer || '', landingPath: location.pathname },
-      consent: true, website: ''
-    };
-    key = key || uuid();
-    var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
-    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-      .then(function (res) {
-        if (res.ok && res.j.received) { form.reset(); key = null; say('Thank you. We have your site details and will reply by email, usually within a few business days.'); }
-        else { btn.disabled = false; say('That did not go through. Please try again, or write to <a href="mailto:contact@accretioncompute.com">contact@accretioncompute.com</a>.'); }
-      })
-      .catch(function () { btn.disabled = false; say('That did not go through. Please try again, or write to <a href="mailto:contact@accretioncompute.com">contact@accretioncompute.com</a>.'); });
+    var body = ['Name: ' + g('name'), 'Company: ' + g('org'), 'Email: ' + g('email'), 'Phone: ' + g('phone'), 'Where: ' + where,
+      'Energy: ' + LABEL[src] + (size ? ', about ' + size + ' ' + unit : ''), 'Sold today: ' + CONTRACT[g('contract')],
+      'Gas pipeline: ' + g('pipe'), 'Fiber: ' + g('fiber'), 'Land: ' + (g('acres') ? g('acres') + ' acres' : 'not given'),
+      'Coordinates: ' + (g('coords') || 'not given'), 'Role: ' + g('role'), 'Authority: ' + g('authority'), '', g('notes')];
+    var fields = {};
+    ['country', 'place', 'state', 'coords', 'acres', 'source', 'size', 'unit', 'contract', 'pipe', 'fiber', 'role', 'authority', 'name', 'org', 'email', 'phone', 'notes', 'consent']
+      .forEach(function (k) { fields[k] = g(k); });
+    var visit = null;
+    try { visit = JSON.parse(sessionStorage.getItem('ac-visit') || 'null'); } catch (err) {}
+    acSendForm(form, 'site', fields, { subject: 'Site submission: ' + where, body: body.join('\n') }, visit);
   });
 })();
 

@@ -542,6 +542,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .chips input:focus-visible + span { outline: 1px solid var(--fg-strong); outline-offset: 3px; }
 .form-note { font-size: 14px; color: var(--fg-dim); margin: 0; }
 .form-note a { color: var(--fg-strong); }
+.form .btn:disabled { opacity: .55; cursor: progress; }
 .contact-aside { display: grid; gap: 20px; align-content: start; }
 .contact-aside .card { padding: 28px; }
 .contact-aside a.mail { font-size: 19px; color: var(--fg-strong); overflow-wrap: anywhere; }

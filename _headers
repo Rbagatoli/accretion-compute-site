@@ -6,6 +6,12 @@
   X-Robots-Tag: noindex
 /README.md
   X-Robots-Tag: noindex
+/functions/*
+  X-Robots-Tag: noindex
+/workers/*
+  X-Robots-Tag: noindex
+/wrangler.toml
+  X-Robots-Tag: noindex
 
 # The pages.dev copy of the site stays out of search; accretioncompute.com is the real address.
 https://accretion-compute-site.pages.dev/*

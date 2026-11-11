@@ -24,7 +24,7 @@
         </div>
         <div class="card">
           <h3>Your details</h3>
-          <p>This form does not store anything. It opens your own email app with the message ready to send. See our <a href="privacy.html">privacy notice</a>.</p>
+          <p>We use what you send only to reply and to follow up on what you asked about. See our <a href="privacy.html">privacy notice</a>.</p>
         </div>
       </aside>
       <div>
@@ -45,8 +45,9 @@
           </div>
           <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
           <div class="field"><label for="f-msg">Message</label><textarea id="f-msg" name="message" required placeholder="A few lines about what you are planning or what you have"></textarea></div>
-          <div class="actions"><button class="btn" type="submit">Open in my email app <span class="arrow"></span></button></div>
-          <p class="form-note" data-mail-note hidden>Your email app should now be open with the message ready. If not, write to <a href="mailto:contact@accretioncompute.com">contact@accretioncompute.com</a>.</p>
+          <div class="sr" aria-hidden="true"><label for="f-website">Leave this empty</label><input id="f-website" name="website" tabindex="-1" autocomplete="off"></div>
+          <div class="actions"><button class="btn" type="submit">Send message <span class="arrow"></span></button></div>
+          <p class="form-note" data-form-note aria-live="polite" hidden></p>
         </form>
       </div>
     </div>
