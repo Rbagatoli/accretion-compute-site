@@ -1875,9 +1875,10 @@ var acSymbol = (function () {
   // Reads the answers. A gap that would end a project wins; open questions come next; otherwise it fits.
   function judge() {
     var no = [], ask = [], good = [];
-    if (A.src === "flare") no.push("Flare and stranded gas tend to fall off over time, and AI tenants need power for the full length of a lease. Sites like this are often a better match for Bitcoin mining, which our sister company <a href=\"https://protonminingco.com/\">Proton Mining</a> runs.");
-    else if (A.src === "none") ask.push("There is no energy on the site yet. Land alone can still work if firm gas or an industrial supply is close by, and that is something we would look into together.");
-    else good.push({ pipe: "Pipeline gas is the kind of firm supply we build on.", gather: "Gathering-system gas can work well, especially with a backup supply path.", landfill: "Landfill gas is steady methane that can be turned into power on site.", industrial: "Existing industrial sites often already have power, permits and infrastructure." }[A.src]);
+    if (A.src === "flare") no.push("Flare and stranded gas tend to fall off over time, and AI tenants need power for the full length of a lease. Sites like this are often a better match for Bitcoin mining, which our partner <a href=\"https://protonminingco.com/\">Proton Mining</a> runs.");
+    else if (A.src === "none") ask.push("There is no energy on the site yet. Land alone can still work if firm energy of any kind is close by, and that is something we would look into together.");
+    else if (A.src === "renewable") ask.push("Wind and solar need storage or a backup supply to run around the clock. We would look at how to firm it.");
+    else good.push({ hydro: "Hydro runs around the clock and can supply a site for decades.", nuclear: "Nuclear plants run around the clock, which is what AI needs.", geothermal: "Geothermal runs around the clock with little variation.", pipe: "Pipeline gas is the kind of firm supply we build on.", gather: "Gathering-system gas can work well, especially with a backup supply path.", landfill: "Landfill gas is steady methane that can be turned into power on site.", industrial: "Existing industrial sites often already have power, permits and infrastructure." }[A.src]);
     if (A.steady === "varies") no.push("A supply that varies or declines is hard to plan a multi-year AI lease around.");
     else if (A.steady === "unsure") ask.push("We would need to confirm how steady the supply is, usually from production or delivery records.");
     else if (A.steady === "steady") good.push("The supply is steady. A long-term agreement would be the next thing to put in place.");
@@ -2019,7 +2020,7 @@ function acSendForm(form, name, fields, mail, visit) {
 (function () {
   var form = document.querySelector('[data-site-form]');
   if (!form) return;
-  var LABEL = { pipeline: 'Pipeline gas', gathering: 'Gathering-system gas', landfill: 'Landfill gas', flare: 'Flare or stranded gas', plant: 'An existing power plant', industrial: 'An industrial site', other: 'Something else' };
+  var LABEL = { pipeline: 'Pipeline gas', gathering: 'Gathering-system gas', landfill: 'Landfill gas', flare: 'Flare or stranded gas', hydro: 'Hydro', nuclear: 'Nuclear', geothermal: 'Geothermal', renewable: 'Wind or solar', plant: 'Another power plant', industrial: 'An industrial site', other: 'Something else' };
   var CONTRACT = { none: 'not sold today', short: 'sold, ending within 3 years', long: 'sold, for longer than 3 years', unsure: 'not sure' };
   form.addEventListener('submit', function (e) {
     e.preventDefault();
