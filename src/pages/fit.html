@@ -134,16 +134,14 @@
 
     var v, why = [];
     if (!it) v = 'Enter your servers to see the fit.';
-    else if (site <= 6000 && plan >= 300) v = 'This fits one site.';
     else if (plan < 300) v = 'Smaller than one module, but tell us anyway.';
-    else v = 'Larger than one site. It could be phased or split across sites.';
+    else v = 'We size the site to fit this.';
 
     var cool = dens >= 80 ? 'direct-to-chip liquid cooling' : dens > 40 ? 'rear-door heat exchangers or liquid cooling' : 'air cooling';
     if (it) {
       why.push('At this density, the racks call for ' + cool + '.');
       if (!rack) why.push('About ' + plural(perRack, 'server', 'servers') + ' a rack, from ' + per + ' kW each.');
-      if (site <= 6000 && plan >= 300) why.push('Our sites are planned at about 1 to 6 MW, so this deployment' + (grow > 1 ? ' and its growth' : '') + ' would fit on one.');
-      if (site > 6000) why.push('One site holds up to about 6 MW, so this would take about ' + plural(Math.ceil(site / 6000), 'site', 'sites') + ', or a first phase now and more later.');
+      if (plan >= 300) why.push('There is no set limit on site size. Each site is sized to its energy and to your deployment' + (grow > 1 ? ', with room for the growth' : '') + ': one site, a first phase now and more later, or several sites run as one cluster.');
       if (plan < 300) why.push('A dedicated module is about 1 MW. Smaller deployments are still worth a conversation.');
     }
     $('tf-verdict').textContent = v;

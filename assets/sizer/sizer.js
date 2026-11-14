@@ -277,7 +277,7 @@
     $("f-dens").hidden = p.rack; $("f-kw").hidden = T.type !== "own";
     tween("t-it", p.it, v => kwFmt(v));
     $("t-it-d").textContent = T.grow > 1 ? "planned at " + kwFmt(p.plan).replace(/<\/?small>/g, " ").trim() + " with room to grow" : "the servers you bring";
-    $("t-fit").textContent = p.site > 6000 ? "About " + Math.ceil(p.site / 6000) + " sites" : p.plan < 300 ? "Under one module" : "One site";
+    $("t-fit").textContent = p.plan < 300 ? "Under one module" : "Sized to fit";
     $("t-cool").textContent = p.dens >= 80 ? "Liquid" : p.dens > 40 ? "Rear-door or liquid" : "Air";
     const rkw = p.rack ? p.per : Math.round(Math.min(p.dens, p.perRack * p.per)), rpm = Math.ceil(p.racks / p.mods);
     const cool = p.dens >= 80 ? "direct-to-chip liquid" : p.dens > 40 ? "rear-door or liquid" : "air";
