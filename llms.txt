@@ -1,0 +1,54 @@
+# Accretion Compute
+
+> Accretion Compute builds AI data centers next to firm energy of any kind: natural gas, hydro, nuclear, geothermal, or wind and solar with storage. We build and run the site and lease the capacity to AI companies on multi-year terms. Tenants bring and own their hardware.
+
+Accretion Compute is a capacity provider, not a cloud: it does not rent out GPUs or sell GPU-hours. It is evaluating sites in Canada and the United States. Its energy partner, Proton Mining, runs Bitcoin mining on flare and interruptible gas. Contact is by email or the forms on the site.
+
+## Company
+
+- [Capacity](https://accretioncompute.com/capacity): Dedicated, power-dense AI capacity on multi-year terms. You bring the hardware; Accretion Compute provides energy, power, cooling, space and connectivity.
+- [Energy](https://accretioncompute.com/energy): AI capacity built where firm energy is produced: natural gas, landfill gas, hydro, nuclear, geothermal and firmed wind and solar. No grid queue.
+- [Partners](https://accretioncompute.com/partners): Energy producers, landfill operators, landowners and industrial site owners: turn firm energy and land into a long-term AI tenant, with no capital from you.
+- [Site selection](https://accretioncompute.com/sites): How Accretion Compute chooses sites for AI capacity: firm energy, fiber, distance to population centers, room to expand, a clear regulatory path and access.
+- [About](https://accretioncompute.com/about): Accretion Compute builds AI data center capacity next to firm energy of any kind and leases it to AI companies on multi-year terms. Partner: Proton Mining.
+- [Contact](https://accretioncompute.com/contact): Talk to Accretion Compute about AI capacity, energy and land partnerships, or investment. Email us or use the form; site owners get a free sizing by email.
+
+## Tools
+
+- [Site model](https://accretioncompute.com/site-model): Pick your energy source and flow, and a live 3D model sizes the power plant and AI compute modules that could fit on your site, with planning estimates.
+- [Site check](https://accretioncompute.com/site-check): Five quick questions about your energy, fiber and land, and a straight answer on whether your site could suit Accretion Compute.
+- [Will it fit?](https://accretioncompute.com/fit): Enter your servers and see the power, racks, cooling and compute modules they would need at an Accretion Compute site. Estimates only; nothing is sent anywhere.
+- [Submit a site](https://accretioncompute.com/submit-a-site): Have gas, power or land that could host AI capacity? Send us the basics and get a free site sizing by email: power, land and yearly income, with the math shown.
+
+## Guides: Power
+
+- [The Environmental Impact of AI Data Centers, Impact by Impact](https://accretioncompute.com/guides/ai-data-center-environmental-impact): AI data centers' environmental impact, one by one: electricity and the grid, carbon, air pollution from generators, water, land, noise and hardware waste.
+- [Behind the Meter Data Centers: What It Means and the Trade-offs](https://accretioncompute.com/guides/behind-the-meter-data-centers): What a behind the meter data center is, how it compares with a grid connection and bridge power, and the real trade-offs: fuel, backup, emissions.
+- [The Data Center Interconnection Queue: Steps, Waits and Options](https://accretioncompute.com/guides/data-center-interconnection-queue): What the data center interconnection queue is, the steps a large load goes through, why waits run years, and the real options for faster time to power.
+- [How a Gas Powered Data Center Works, From Fuel to Rack](https://accretioncompute.com/guides/gas-powered-data-centers): How a gas powered data center works: fuel to on-site generation to racks, which gas is usable, why firm supply matters, off-grid designs and the trade-offs.
+- [How Are Data Centers Powered? Grid, Gas, Solar and Nuclear](https://accretioncompute.com/guides/how-are-data-centers-powered): How are data centers powered? The grid, on-site gas, landfill gas, solar with storage and nuclear, compared in one sourced table with honest trade-offs.
+
+## Guides: Land and energy partners
+
+- [Brownfield Data Centers: What an Old Industrial Site Brings](https://accretioncompute.com/guides/brownfield-data-centers): A brownfield data center reuses an old plant or industrial yard. What carries over (gas, grid tie, permits, zoning), what doesn't, and the cleanup risks.
+- [Data Center Site Selection: Criteria and a Checklist for AI Sites](https://accretioncompute.com/guides/data-center-site-selection): Data center site selection for AI loads: the criteria to check, a checklist with red flags, which factors are pass-or-fail, and the order to check them in.
+- [Flare Gas Monetization: A Producer's Decision Table](https://accretioncompute.com/guides/flare-gas-monetization): Flare gas monetization options side by side: tie-in, NGL recovery, CNG, field power, Bitcoin mining, AI data centers, and who carries the risk in each.
+- [How Landfill Gas to Energy Works, and When a Data Center Fits](https://accretioncompute.com/guides/landfill-gas-to-energy): Landfill gas to energy, explained for landfill owners: how the process works, how much power a site makes, how output declines, and which buyer fits.
+- [Gas Purchase Agreement: A Producer's Clause-by-Clause Guide](https://accretioncompute.com/guides/natural-gas-purchase-agreement): A gas purchase agreement, clause by clause, for producers: firm vs interruptible, take-or-pay, price basis, wellhead netback, and what to ask before you sign.
+- [How to Sell or Lease Land to a Data Center Developer](https://accretioncompute.com/guides/sell-or-lease-land-to-a-data-center): How to sell land to a data center or lease it instead: what developers look for, what powered land means, the deal steps and the questions to ask.
+- [What Is Stranded Gas? A Producer's Guide to the Options](https://accretioncompute.com/guides/what-is-stranded-gas): What is stranded gas? A plain definition, how it differs from flared and associated gas, why gas gets stranded, and which uses fit which kind of gas.
+
+## Guides: Cooling and water
+
+- [Data Center Cooling Systems: Every Method, by Rack Density](https://accretioncompute.com/guides/data-center-cooling-systems): Data center cooling systems compared: room air, containment, rear doors, direct-to-chip, immersion, towers and dry coolers, by rack density and water use.
+- [Data Center Water Usage: Cooling, Power Plants and Per-Day Figures](https://accretioncompute.com/guides/data-center-water-usage): Data center water usage with sourced US figures: cooling vs power plant water, what per-day numbers mean, closed loop vs evaporative, and what to ask.
+- [Liquid Cooling for AI Data Centers: Direct-to-Chip vs Immersion](https://accretioncompute.com/guides/liquid-cooling-for-ai-data-centers): Liquid cooling for AI data centers: why dense racks need it, direct-to-chip vs immersion side by side, and what a tenant has to specify before signing.
+
+## Guides: AI tenants
+
+- [Data Center Electricity Costs: How Power Is Priced and Billed](https://accretioncompute.com/guides/data-center-electricity-costs): Data center electricity costs, explained: kW vs kWh, demand charges, energy pass-through, PJM capacity prices and EIA rates, with dated public sources.
+- [GPU Colocation: What It Is and What to Check Before You Sign](https://accretioncompute.com/guides/gpu-colocation): GPU colocation explained: what you own, what the provider supplies, how it compares to cloud GPUs and your own build, and what to check before you sign.
+- [How Long Does It Take to Build a Data Center? Power Sets the Date](https://accretioncompute.com/guides/how-long-does-it-take-to-build-a-data-center): How long does it take to build a data center? Each phase from site to commissioning, why power sets the date, and the ways to shorten it.
+- [How Much Power Does a Data Center Use? Rack, Site and Nation](https://accretioncompute.com/guides/how-much-power-does-a-data-center-use): How much power does a data center use? Sourced figures per rack, per site in MW and for the US, plus MW vs MWh and what cooling adds.
+- [Modular Data Centers: What Gets Faster and What Doesn't](https://accretioncompute.com/guides/modular-data-centers): What a modular data center really is: containers, skids, prefab halls and power blocks. What it speeds up, its limits at AI density, and what drives the cost.
+- [Where Are Data Centers Being Built, and Why Power Decides It](https://accretioncompute.com/guides/where-are-data-centers-being-built): Where are data centers being built in the US and Canada, and why power decides it. Virginia, Texas, the wider PJM region and Alberta, with dated public data.

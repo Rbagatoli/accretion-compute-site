@@ -301,6 +301,9 @@ h3 { font: 400 14px/1.35 var(--head); letter-spacing: 0.14em; text-transform: up
 .pagehead .wrap { position: relative; }
 .pagehead h1 { max-width: 16ch; }
 .pagehead .lede { color: var(--fg-dim); }
+/* "In short": a self-contained answer under the page lede, for readers and answer engines alike */
+.pagehead .in-short { max-width: 64ch; margin-top: 32px; padding-left: 20px; border-left: 1px solid var(--line); font-size: 16px; line-height: 1.65; color: var(--fg-dim); }
+.pagehead .in-short strong { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-strong); }
 .pagehead-disk { position: absolute; right: -12vw; top: 50%; width: min(900px, 100vw); transform: translateY(-50%); z-index: -1; pointer-events: none; }
 @media (max-width: 720px) { .pagehead-disk { right: -55vw; width: 130vw; opacity: 0.5; } }
 .crumbs { margin-bottom: 28px; font-size: 13px; letter-spacing: 0.08em; color: var(--fg-dim); }
@@ -1193,6 +1196,8 @@ h1, h2, h3, .mz-title, .statement, .fit-h, .fit-verdict { padding-right: .08em; 
    On white sections --txt-satin is none and the text is a plain colour. */
 @supports ((-webkit-background-clip: text) or (background-clip: text)) and (color: color-mix(in srgb, red, blue)) {
   :is(p, li, .oc small, .oc > span) { background-image: var(--txt-satin); background-size: 100% 1lh; background-repeat: repeat-y; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--txt-fill); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  /* a button inside a paragraph paints its own solid colors; it must not inherit the paragraph's clipped text fill */
+  p .btn { -webkit-text-fill-color: currentColor; }
 }
 
 /* Home story section: the faint white layer at its top eases in from nothing at the seam, so no line shows where "What we do" ends;
