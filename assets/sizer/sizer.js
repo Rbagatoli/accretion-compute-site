@@ -11,7 +11,7 @@
     lfg:   {label:"Landfill gas collected", unit:"scfm", lo:100, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, sizes:[1.6,3.3,4.5], price:2,
             hint:"Standard cubic feet per minute, as reported to your regulator.",
             chips:[["Small landfill",1200,50],["Mid landfill",2500,48],["Large landfill",7000,46]], src:"flare"},
-    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.5, hi:40, def:4, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:2.5,
+    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.2, hi:40, def:4, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:2.5,
             hint:"Million cubic feet per day at a tap on your plant or gathering line.",
             chips:[["Plant tap",2],["Curtailed gas",5],["Large field",20]], src:"well"},
     plant: {label:"Gas from the existing line", unit:"MMcf/d", lo:2, hi:60, def:5, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:3,
