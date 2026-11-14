@@ -35,6 +35,9 @@ for (const f of readdirSync(from).filter((n) => n.endsWith('.fragment.html')).so
   frag = frag.replaceAll(`"${SITE}/guides/"`, `"${SITE}/guides"`);
   // the byline is the company, so the Article author is an Organization
   frag = frag.replaceAll('"@type": "Person", "name": "Accretion Compute team"', '"@type": "Organization", "name": "Accretion Compute team"');
+  // the Article markup carries the guide's share image (assets/og/<slug>.png)
+  const articleId = `"@id": "${SITE}/guides/${slug}#article", `;
+  if (!frag.includes('"image": "') && frag.includes(articleId)) frag = frag.replace(articleId, `${articleId}"image": "${SITE}/assets/og/${slug}.png", `);
   const [article, ...after] = frag.split('</article>');
 
   const header = { title: meta.title_tag, description: meta.meta_description, ogTitle: meta.og?.['og:title'] || meta.title_tag, nav: 'guides', ogImage: `assets/og/${slug}.png` };
