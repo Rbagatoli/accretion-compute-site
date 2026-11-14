@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Center Power Demand Forecast to 2030 | Accretion</title>
+  <meta name="description" content="A data center power demand forecast depends on who made it and when. The main public 2030 forecasts side by side, why they disagree and how to read one.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/data-center-power-demand-forecast">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Data Center Power Demand Forecast: 2030 Numbers Compared">
+  <meta property="og:description" content="A data center power demand forecast depends on who made it and when. The main public 2030 forecasts side by side, why they disagree and how to read one.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/data-center-power-demand-forecast">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/data-center-power-demand-forecast.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-data-center-power-demand-forecast">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Demand forecasts</p>
+    <p class="eyebrow">Power</p>
+    <h1>Data Center Power Demand Forecast: 2030 Numbers Compared</h1>
+    <p class="lede">For analysts, utilities, investors and site owners: the main public forecasts for 2030 in one dated table, why they disagree, and what they mean for gas and the grid.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-14">November 14, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>The federal data center power demand forecast published by Berkeley Lab in June 2026 puts US data centers at over 640 TWh in 2030, more than 11% of the country's electricity, within a range of over 520 to over 840 TWh. Two other forecasts, as summarized by Berkeley Lab, run from roughly 390 to 800 TWh.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-forecasts-say-for-2030">What forecasts say for 2030</a></li><li><a href="#why-forecasts-disagree">Why forecasts disagree</a></li><li><a href="#real-vs-speculative-demand">Real vs speculative demand</a></li><li><a href="#what-it-means-for-gas-demand">What it means for gas demand</a></li><li><a href="#what-it-means-for-the-grid">What it means for the grid</a></li><li><a href="#how-to-read-a-forecast">How to read a forecast</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Every few months a new number for data center electricity demand makes headlines, and it rarely matches the last one. The forecasts are not measuring the same thing. Some count energy used over a year, some count peak load on one grid, and some count requests that may never be built.</p>
+<p>This page puts the main public forecasts side by side, each with its source and date, then explains why they differ. For what data centers use now, see <a href="/guides/how-much-power-does-a-data-center-use">how much power a data center uses</a>. Odd figures are rounded down and written as "over".</p>
+<h2 id="what-forecasts-say-for-2030">What do data center power demand forecasts say for 2030?</h2>
+<p>The main federal forecast is the Department of Energy's data center energy report, written by Lawrence Berkeley National Laboratory. Its 2025 update, published in June 2026, estimated over 190 TWh of data center electricity use in 2024, or 4.7% of the US total. Its reference case reaches over 640 TWh in 2030.</p>
+<p>Two other research bodies sit in the same range or below it. Berkeley Lab's own comparison describes the February 2026 update from the Electric Power Research Institute (EPRI) as spanning roughly 390 to 800 TWh for 2030, and reads the International Energy Agency's 2025 outlook as approximately 430 TWh for the United States. The IEA's worldwide Base Case is around 945 TWh in 2030.</p>
+<p>Grid planners publish a different kind of number: peak demand in gigawatts. The table keeps the two kinds apart.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Public data center demand forecasts side by side, with publication dates</caption><thead><tr><th scope="col">Forecast</th><th scope="col">Published</th><th scope="col">What it measures</th><th scope="col">Headline number</th><th scope="col">What to know</th></tr></thead><tbody><tr><th scope="row">Berkeley Lab for the Department of Energy, 2025 update</th><td>June 2026</td><td>US data center electricity per year</td><td>Over 640 TWh in 2030; range over 520 to over 840 TWh</td><td>Built from chip and server shipments. Leaves out cryptocurrency mining</td></tr><tr><th scope="row">Berkeley Lab for the Department of Energy, 2024 report</th><td>December 2024</td><td>US data center electricity per year</td><td>325 to 580 TWh by 2028</td><td>The update's 2028 figure, over 460 TWh, falls in the middle of this range</td></tr><tr><th scope="row">EPRI update</th><td>February 2026</td><td>US data center electricity per year</td><td>Roughly 390 to 800 TWh in 2030</td><td>As summarized by Berkeley Lab. A wide range across scenarios</td></tr><tr><th scope="row">IEA, Energy and AI</th><td>April 2025</td><td>Data center electricity per year, world and US</td><td>Around 945 TWh worldwide in 2030; approximately 430 TWh for the US</td><td>US figure as read by Berkeley Lab. Older data than the 2026 studies</td></tr><tr><th scope="row">EIA, Annual Energy Outlook 2026</th><td>April 2026</td><td>All US electricity use to 2050</td><td>Total use grows 0.9% to 1.6% a year to 2050</td><td>A long-range outlook. Names data center servers as a major factor</td></tr><tr><th scope="row">NERC long-term reliability assessment</th><td>January 2026</td><td>Summer peak demand over 10 years, North America</td><td>A rise of over 220 GW</td><td>Counts projects with development commitments, not every request</td></tr><tr><th scope="row">Mid-Atlantic grid operator load forecast</th><td>January 2026</td><td>Summer peak demand in one region</td><td>Over 220 GW by 2036, up over 65 GW in 10 years</td><td>Lower than the previous year's forecast through 2032</td></tr></tbody></table></div>
+<h2 id="why-forecasts-disagree">Why do data center forecasts disagree?</h2>
+<p><strong>Different units.</strong> A TWh figure is energy used over a year. A GW figure is capacity at one moment. Berkeley Lab estimates that data centers use around 50% of the grid connection capacity they hold, so its reference case needs over 140 GW of interconnection capacity in 2030 to deliver over 640 TWh. A data center power consumption forecast in TWh will always look lower than a count of requested gigawatts.</p>
+<p><strong>Different assumptions.</strong> Berkeley Lab's own scenarios show how far one input moves the answer. If chip shipments run 15% lower, 2030 use falls to over 570 TWh. If AI inference takes more energy than expected, it rises to over 780 TWh. Stack the uncertainties together and the range runs from over 520 to over 840 TWh.</p>
+<p><strong>Different scope and dates.</strong> Berkeley Lab leaves out cryptocurrency mining and uses shipment data through the first three quarters of 2025. A study built on 2024 data is describing a different industry. The report also does not model whether the grid can deliver the power, so it is a forecast of demand, not of what gets connected.</p>
+<h2 id="real-vs-speculative-demand">How much is real and how much is speculative?</h2>
+<p>Requests to connect are not demand. In Texas, the grid operator reported over 470 GW of large loads seeking connection as of June 2026, about 90% of them data centers. The January 2026 reliability assessment from the North American Electric Reliability Corporation (NERC) counts far less: Texas large loads totaling 45 GW by 2030, of which 23 GW are data centers.</p>
+<p>The gap comes from how planners filter. NERC says data center projects are counted once they have advanced from speculative and exploratory stages into development commitments, and that new data center projections in Texas are reduced by almost 50% from the requested level to reflect how existing sites consume power. It adds that its forecasts are likely more conservative than predictions from the technology industry.</p>
+<p>The Mid-Atlantic grid operator does something similar. Its January 2026 forecast requires firm commitments for near-term years and derates longer-term, non-firm projects. That forecast came out lower than the previous year's for the years through 2032. NERC notes that some large-load projects there and in Texas have slowed or failed to materialize in the near term, while requests for later years keep growing.</p>
+<p>Lawmakers are filtering too. A 2025 Texas law requires a large load customer to disclose whether it is pursuing a substantially similar request elsewhere in the state. The mechanics are in our guide to the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a>.</p>
+<h2 id="what-it-means-for-gas-demand">What do the forecasts mean for natural gas demand?</h2>
+<p>Natural gas supplied 40% of US electricity in 2025, according to the Energy Information Administration (EIA), so more electricity demand usually means more gas burned. In a March 2026 analysis, EIA tested faster data center growth. Its base forecast had gas generation rising 1.7% between 2025 and 2027. In the higher demand case the rise was 7.3%.</p>
+<p>Longer term, EIA's 2026 outlook has the power sector using over 38 to over 50 billion cubic feet of gas a day in 2050 in most cases, up from over 35 in 2025. NERC counts 13 of 23 assessment areas adding gas-fired capacity over the next 10 years.</p>
+<p>The agency sources on this page give no 2030 gas figure for data centers alone, so treat any single number for data center natural gas demand with care. Gas is not the only answer either. Hydro, nuclear, geothermal, and wind and solar with storage can all serve a data center, as our guide to <a href="/guides/how-are-data-centers-powered">how data centers are powered</a> explains.</p>
+<h2 id="what-it-means-for-the-grid">What do the forecasts mean for the grid and the queue?</h2>
+<p>Berkeley Lab attributes 33% of total US load growth between 2024 and 2030 to data centers. NERC expects summer peak demand across North America to rise by over 220 GW in 10 years, 69% more growth than it projected a year earlier, and says new data centers account for most of the increase. It finds 13 of 23 assessment areas facing resource adequacy challenges.</p>
+<p>When demand grows faster than wires and power plants, the wait moves to the connection line. Berkeley Lab notes that some data centers may forgo grid interconnection altogether and build their own generation capacity. That is the case for <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a>: the schedule depends on the energy at the site, not on the grid's build-out.</p>
+<h2 id="how-to-read-a-forecast">How to read a new data center demand forecast</h2>
+<ol><li><strong>Check the unit.</strong> TWh is energy over a year. GW is capacity. Don't compare one with the other.</li><li><strong>Check the geography.</strong> The world, the United States or one grid region.</li><li><strong>Check the date of the data,</strong> not the date of the press release.</li><li><strong>Check what is counted.</strong> All data centers or AI only, with or without cryptocurrency mining, requests or committed projects.</li><li><strong>Look for the range.</strong> A forecast with a single number is hiding its uncertainty.</li><li><strong>Compare it with estimated use today.</strong> Berkeley Lab estimates US data center electricity use rose 14% from 2023 to 2024.</li></ol>
+<p>The data center energy consumption forecast that matters for a site decision is the local one: what the utility or grid operator has committed to serve, and by when.</p>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data center capacity at the source of energy, with on-site, behind-the-meter power, and leases it to AI companies on multi-year terms. Every site is designed around firm energy of any kind (natural gas, landfill gas, hydro, nuclear, geothermal, or wind and solar with storage) with backup designed in, so no grid connection is needed. Whichever forecast proves right, capacity that doesn't wait on a grid connection is not tied to the queue. We are evaluating sites in Canada and the United States. AI companies and investors can <a href="/contact">talk to us</a>. Energy and land owners can send a site through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email. It is an estimate, not an offer, with no cost and no obligation.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an AI company that needs dedicated, power-dense capacity on multi-year terms without waiting for a grid connection</li><li>You own firm energy or land near it, and want a long-term buyer and lease income without putting in capital</li><li>You are an investor interested in contracted infrastructure on low-cost energy</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You need capacity right away; existing colocation or cloud capacity fits better</li><li>You want GPU-hours or cloud instances; we lease capacity, and tenants bring their own hardware</li><li>Your energy is interruptible or declining; a load that can switch off suits it better</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=data-center-power-demand-forecast&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>How much electricity will US data centers use in 2030?</h3><p>Berkeley Lab's June 2026 reference case is over 640 TWh, more than 11% of forecast US electricity use, with a range from 9.5% to over 15%. Its comparison puts EPRI's February 2026 range at roughly 390 to 800 TWh. The outcome depends on chip shipments, efficiency and how fast sites get power.</p>
+<h3>Why do data center demand forecasts differ so much?</h3><p>They measure different things. Some report energy in TWh and others peak load in GW. Some cover the world, others one grid region. Some count every connection request and others only committed projects. Dates matter too: a forecast built on 2024 data will miss the AI hardware shipped since.</p>
+<h3>Are data center load forecasts overstated?</h3><p>Raw connection requests are, and planners discount them. NERC reports that new data center projections in Texas are reduced by almost 50% from the requested level, and one regional forecast fell year over year for the near term. Estimated use is still rising: Berkeley Lab puts the increase from 2023 to 2024 at 14%.</p>
+<h3>How much natural gas will data centers need?</h3><p>The agency sources on this page give no figure for data centers alone. EIA's March 2026 analysis found that faster data center growth would lift US gas-fired generation by 7.3% between 2025 and 2027, against 1.7% in its base forecast. How much of that becomes real depends on which sites get built and what energy they run on.</p>
+<h3>What is the difference between TWh and GW in a demand forecast?</h3><p>GW measures capacity: how much power a site can draw at once. TWh measures energy: how much it uses over a year. A data center rarely runs at its full connection capacity. Berkeley Lab estimates average use at around 50% of interconnection capacity, which is why capacity forecasts look larger than energy forecasts.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, United States Data Center Energy Usage Report: 2025 Update, June 18, 2026, hosted by DOE (checked 2026-11-14)</a></li><li><a href="https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers" rel="noopener" target="_blank">U.S. Department of Energy, DOE Releases New Report Evaluating Increase in Electricity Demand from Data Centers, December 20, 2024 (checked 2026-11-14)</a></li><li><a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" rel="noopener" target="_blank">International Energy Agency, Energy and AI: Energy demand from AI, April 2025 (iea.org blocks automated fetching; worldwide figure as cited in our data center power use guide, U.S. figure taken from Berkeley Lab&#x27;s comparison; checked 2026-11-14)</a></li><li><a href="https://www.eia.gov/outlooks/aeo/narrative/index.php" rel="noopener" target="_blank">U.S. Energy Information Administration, Annual Energy Outlook 2026, narrative, released April 8, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.eia.gov/todayinenergy/detail.php?id=67344" rel="noopener" target="_blank">U.S. Energy Information Administration, Today in Energy: Fossil generation could rise with faster-than-expected growth in data center power demand, March 12, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.nerc.com/pa/RAPA/ra/Reliability%20Assessments%20DL/NERC_LTRA_2025.pdf" rel="noopener" target="_blank">North American Electric Reliability Corporation, 2025 Long-Term Reliability Assessment, January 2026 (checked 2026-11-14)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/library/reports-notices/load-forecast/2026-load-report.pdf" rel="noopener" target="_blank">PJM Interconnection, 2026 Load Forecast Report, January 14, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.ercot.com/files/docs/2026/07/29/ERCOT-Senate-July-29-Panel-1-Assessing-The-Grid.pdf" rel="noopener" target="_blank">ERCOT, Senate Committee on Business and Commerce testimony, July 29, 2026 (checked 2026-11-14)</a></li><li><a href="https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm" rel="noopener" target="_blank">Texas Legislature, Senate Bill 6, 89th Regular Session (2025), enrolled text (checked 2026-11-14)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/contact">Talk to us about capacity</a></li><li><a href="/guides/how-much-power-does-a-data-center-use">How much power a data center uses</a></li><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/gas-powered-data-centers">Gas-powered data centers explained</a></li><li><a href="/guides/where-are-data-centers-being-built">Where data centers are being built</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/data-center-power-demand-forecast#article", "image": "https://accretioncompute.com/assets/og/data-center-power-demand-forecast.png", "headline": "Data Center Power Demand Forecast: 2030 Numbers Compared", "description": "A data center power demand forecast depends on who made it and when. The main public 2030 forecasts side by side, why they disagree and how to read one.", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/data-center-power-demand-forecast"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Data Center Power Demand Forecast: 2030 Numbers Compared", "item": "https://accretioncompute.com/guides/data-center-power-demand-forecast"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much electricity will US data centers use in 2030?", "acceptedAnswer": {"@type": "Answer", "text": "Berkeley Lab's June 2026 reference case is over 640 TWh, more than 11% of forecast US electricity use, with a range from 9.5% to over 15%. Its comparison puts EPRI's February 2026 range at roughly 390 to 800 TWh. The outcome depends on chip shipments, efficiency and how fast sites get power."}}, {"@type": "Question", "name": "Why do data center demand forecasts differ so much?", "acceptedAnswer": {"@type": "Answer", "text": "They measure different things. Some report energy in TWh and others peak load in GW. Some cover the world, others one grid region. Some count every connection request and others only committed projects. Dates matter too: a forecast built on 2024 data will miss the AI hardware shipped since."}}, {"@type": "Question", "name": "Are data center load forecasts overstated?", "acceptedAnswer": {"@type": "Answer", "text": "Raw connection requests are, and planners discount them. NERC reports that new data center projections in Texas are reduced by almost 50% from the requested level, and one regional forecast fell year over year for the near term. Estimated use is still rising: Berkeley Lab puts the increase from 2023 to 2024 at 14%."}}, {"@type": "Question", "name": "How much natural gas will data centers need?", "acceptedAnswer": {"@type": "Answer", "text": "The agency sources on this page give no figure for data centers alone. EIA's March 2026 analysis found that faster data center growth would lift US gas-fired generation by 7.3% between 2025 and 2027, against 1.7% in its base forecast. How much of that becomes real depends on which sites get built and what energy they run on."}}, {"@type": "Question", "name": "What is the difference between TWh and GW in a demand forecast?", "acceptedAnswer": {"@type": "Answer", "text": "GW measures capacity: how much power a site can draw at once. TWh measures energy: how much it uses over a year. A data center rarely runs at its full connection capacity. Berkeley Lab estimates average use at around 50% of interconnection capacity, which is why capacity forecasts look larger than energy forecasts."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>

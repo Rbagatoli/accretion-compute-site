@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Much Does It Cost to Bring Power to Land? | Accretion</title>
+  <meta name="description" content="What it costs to bring power to land, from a home line extension to a substation for a large load: a real tariff example, who pays and how long it takes.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/how-much-does-it-cost-to-bring-power-to-land">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="How Much Does It Cost to Bring Power to Land, and Who Pays?">
+  <meta property="og:description" content="What it costs to bring power to land, from a home line extension to a substation for a large load: a real tariff example, who pays and how long it takes.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/how-much-does-it-cost-to-bring-power-to-land">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/how-much-does-it-cost-to-bring-power-to-land.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-how-much-does-it-cost-to-bring-power-to-land">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Cost to bring power to land</p>
+    <p class="eyebrow">Land and energy partners</p>
+    <h1>How Much Does It Cost to Bring Power to Land, and Who Pays?</h1>
+    <p class="lede">For landowners: what a utility charges to extend a line, what a substation costs for a large load, who pays for each, and when energy already on the land is the shorter route.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-14">November 14, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>The cost to bring power to land depends on distance and load. For a home or farm, one 2026 utility tariff prices a single-phase overhead line at over $12 per foot plus fixed charges. For a large load, a new substation alone runs into the millions of dollars, and policy is moving toward the large customer paying.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#what-sets-the-cost">What sets the cost</a></li><li><a href="#home-and-farm-line-extension">Home and farm line extension</a></li><li><a href="#substations-and-upgrades">Substations and upgrades</a></li><li><a href="#who-pays">Who pays</a></li><li><a href="#how-long-it-takes">How long it takes</a></li><li><a href="#when-on-site-energy-wins">When on-site energy wins</a></li><li><a href="#get-a-real-number">Get a real number</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>People who ask how much does it cost to get power to land fall into two groups. Most want service for a house, a shop or a farm. A growing share own acreage that a data center or a factory might use, and want to know what a large connection costs and who pays for it.</p>
+<p>This guide covers both, with figures from a published utility tariff and a grid operator's planning guide. Each figure is a dated example, not a quote. Your own utility's tariff sets your price. For what makes a site count as powered, see <a href="/guides/what-is-powered-land">what powered land means</a>.</p>
+<h2 id="what-sets-the-cost">What sets the cost to get power to land?</h2>
+<p>Five things drive the bill:</p>
+<ul><li><strong>Distance.</strong> How far the land is from the nearest line that can serve it. The example tariff below prices the line by the foot.</li><li><strong>Load.</strong> A house needs a single-phase line and one transformer. A load in the tens of megawatts usually needs its own substation and often a transmission line.</li><li><strong>Overhead or underground.</strong> The rates differ, and so does the digging.</li><li><strong>Ground and access.</strong> Road crossings, pavement, tree clearing, rights of way and permits are charged on top of the standard rates in the example tariff.</li><li><strong>The utility's allowance.</strong> The example tariff credits part of the cost to a new customer.</li></ul>
+<h2 id="home-and-farm-line-extension">Home and farm service: what does a power line extension cost?</h2>
+<p>Here is one published example. An investor-owned electric utility in Idaho files its line extension charges with the state utility commission. The rate sheets effective May 15, 2026 price a single-phase overhead primary line at a fixed charge of over $5,900 per customer plus over $12 per foot. The underground version is over $2,700 fixed plus over $14 per foot.</p>
+<p>The line is only part of the job. The same schedule charges over $5,200 for an overhead transformer or over $9,100 for a pad-mounted one. The service line to the meter is over $5 per foot overhead or over $10 per foot underground. Extra work such as boring under a road, replacing pavement, permits and tree removal is billed on top as an exceptional cost.</p>
+<p>On those rates, 1,000 feet of overhead line, an overhead transformer and a 100-foot service line add up to over $23,000 before any credit. The schedule then gives an individual home an allowance capped at over $2,700. That is our arithmetic from the published rates, shown to make the structure clear. It is not a quote, and other utilities' rates and allowances differ.</p>
+<h2 id="substations-and-upgrades">Large loads: what do substations and grid upgrades cost?</h2>
+<p>A data center, a factory or any load in the tens of megawatts is a different project. It usually needs a substation, often a new transmission line to reach it, and sometimes upgrades elsewhere on the grid.</p>
+<p>One public yardstick for the cost of a substation is the guide a Midwest grid operator uses for transmission planning. Its May 2024 edition puts a new four-position ring bus substation, the lowest-cost layout in the guide, at over $7 million at 69 kV, over $9 million at 138 kV and over $15 million at 345 kV. A new single-circuit transmission line runs from $1.6 million to $2 million per mile at 69 kV, and from $3.2 million to $4.1 million per mile at 345 kV, depending on the state. The guide calls these exploratory estimates, and they include a contingency. They are not bids.</p>
+<p>Before any of that is built, there are fees and deposits. In Texas, a 2025 law and the state commission rule that took effect in October 2026 set a study fee of $100,000 for a large load, defined there as 75 megawatts or more, and financial security of $50,000 per megawatt of requested peak demand. The Idaho tariff charges a $1,000 application fee for requests of 3 MVA or more, and the customer pays the actual cost of any system impact study.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Four ways power reaches land, from a farm line to on-site energy</caption><thead><tr><th scope="col">Scale</th><th scope="col">What gets built</th><th scope="col">Public cost example</th><th scope="col">Who usually pays</th><th scope="col">What sets the timing</th></tr></thead><tbody><tr><th scope="row">Home, shop or farm</th><td>A single-phase line, a transformer and a service line</td><td>Over $12 per foot overhead plus fixed charges, in one 2026 Idaho tariff</td><td>The customer, less the utility's allowance</td><td>Design, easements and crew schedule</td></tr><tr><th scope="row">Commercial or light industrial</th><td>A three-phase line and a larger transformer</td><td>Estimated job by job in the example tariff</td><td>The customer, less an allowance based on expected energy use</td><td>Design and equipment delivery</td></tr><tr><th scope="row">Large load, tens of megawatts and up</th><td>A substation, often a transmission line, sometimes grid upgrades</td><td>Over $7 million at 69 kV to over $15 million at 345 kV for a new four-position ring bus substation, in a 2024 planning guide</td><td>The large customer or its developer, through fees, deposits and upgrade charges</td><td>Studies, the queue and transformer delivery</td></tr><tr><th scope="row">On-site energy</th><td>Generation at the site and a direct line to the load</td><td>No public tariff; depends on the energy source</td><td>The operator that builds and runs the plant</td><td>The energy agreement and equipment delivery</td></tr></tbody></table></div>
+<h2 id="who-pays">Who pays: the owner, the utility or the developer?</h2>
+<p>For ordinary service, the person asking for the line pays, and the utility credits some of it back. In the Idaho example the allowance for a home is capped, and for a business it is based on the energy the customer is expected to use. If a neighbor connects to your line within five years, the neighbor pays a share of it and the utility refunds that share to you.</p>
+<p>For large loads, the direction of policy is that the large customer pays. The Texas rule makes a large load customer pay all direct connection costs, with no allowance to offset them. A federal proposal sent to the energy regulator in October 2025 said loads above 20 megawatts should be responsible for 100% of the network upgrades assigned to them.</p>
+<p>For a landowner, the point to hold on to is who the utility's customer is. When a data center developer leases or buys your land, the developer is the one applying for power, so those costs sit with the developer unless your contract says otherwise. Our guide to <a href="/guides/sell-or-lease-land-to-a-data-center">selling or leasing land to a data center</a> covers what else to check.</p>
+<h2 id="how-long-it-takes">How long does it take?</h2>
+<p>For a home line, the calendar is set by the utility's design work, easements and crew schedule. Ask for a date in writing with the estimate.</p>
+<p>For a large load, equipment and studies set the pace. A Department of Energy report to Congress in July 2024 found 36-month lead times commonly quoted for large power transformers, with some reaching 60 months. Connection studies add their own wait, which our guide to the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a> explains.</p>
+<h2 id="when-on-site-energy-wins">When does on-site energy beat running a line?</h2>
+<p>The third route skips the long line. If firm energy is already on the land or next to it, a data center can be built where the energy is and take its power directly. That energy can be natural gas, landfill gas, a hydro, nuclear or geothermal plant, or wind and solar with storage.</p>
+<p>Federal sources describe the same pattern. EPA's January 2026 guidance on redeveloping sites as AI data centers notes that data centers are often built directly next to substations or power plants. Berkeley Lab's June 2026 report for the Department of Energy says some data centers may forgo grid interconnection altogether and build their own generation capacity.</p>
+<p>On-site energy is not free. Someone has to build the generation, secure the fuel or energy supply for years and provide backup. The difference for a landowner is who carries that cost and how long the wait is. For how these sites work, see <a href="/guides/behind-the-meter-data-centers">behind-the-meter data centers</a>.</p>
+<h2 id="get-a-real-number">How to get a real number from your utility</h2>
+<ol><li>Find out which utility serves the parcel.</li><li>Ask for its line extension tariff or schedule of charges. Where rates are filed with a state commission, it is a public document.</li><li>Request a written estimate. Give the location, the load you expect, single or three phase, and overhead or underground.</li><li>Ask what allowance applies, and whether a later customer on the line triggers a refund to you.</li><li>Ask what you can do yourself. The example tariff reduces the charge when the utility lets the customer do some of the work.</li><li>For a large load, ask for the application, the study fee and the deposit rules before you talk to buyers.</li></ol>
+<aside class="callout"><p>Figures on this page are dated examples from public documents, not quotes or offers. This is general information, not legal, tax or investment advice.</p></aside>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data center capacity at the source of energy, with on-site, behind-the-meter power, and leases it to AI companies on multi-year terms. Every site is designed around firm energy of any kind (natural gas, landfill gas, hydro, nuclear, geothermal, or wind and solar with storage) with backup designed in, so no grid connection is needed. For a landowner with energy on or next to the land, that is the third route on this page: we build and run the generation, and you put in no capital. We are evaluating sites in Canada and the United States. Partners get lease income for land and a long-term buyer for their energy. A site needs about 5 acres plus 1.2 acres per MW. Start with the <a href="/site-check">site check</a>, or send your details through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email. It is an estimate, not an offer, with no cost and no obligation.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You own land with firm energy on it or next to it: steady gas, a landfill, a hydro, nuclear or geothermal plant, or wind and solar with storage</li><li>Fiber is within reach and you have flat, buildable acres</li><li>You would rather lease to an operator that builds the power than pay to bring a line in</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You need power for a home, a shop or a farm; your local utility's line extension is the right route</li><li>The only power path is a utility grid connection, with no energy on or near the land; a grid-connected developer fits better</li><li>Your gas is interruptible or declining; a load that can switch off suits it better</li></ul>
+<p class="cta-row"><a class="cta-button" href="/site-check?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=how-much-does-it-cost-to-bring-power-to-land&amp;utm_content=product_section">Run the site check</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>How much does it cost to run power to property per foot?</h3><p>It depends on the utility. One Idaho tariff effective May 15, 2026 charges over $12 per foot for a single-phase overhead primary line and over $14 per foot underground, plus fixed charges, a transformer and the service line. Ask your utility for its line extension schedule to see its own rates.</p>
+<h3>Will the utility pay to bring power to my land?</h3><p>Some of it, where the tariff gives an allowance. In the Idaho example, an individual home gets an allowance capped at over $2,700, and a business gets one based on the energy it is expected to use. Anything above the allowance is the customer's to pay before construction starts.</p>
+<h3>How much does a substation cost?</h3><p>A Midwest grid operator's May 2024 planning guide puts a new four-position ring bus substation, its lowest-cost layout, at over $7 million at 69 kV and over $15 million at 345 kV, including a contingency. Real projects vary with voltage, layout and land, so treat these as planning figures only.</p>
+<h3>Does a landowner pay for the substation when a data center leases the land?</h3><p>The party requesting the power is the utility's customer, and that is the developer or operator, not the landowner. Texas rules make large load customers pay their direct connection costs, and a 2025 federal proposal said large loads should be responsible for 100% of the network upgrades assigned to them. Check that your contract leaves those costs with the developer.</p>
+<h3>How long does it take to get power to vacant land?</h3><p>For a home line, it depends on the utility's design work, easements and crews, so ask for a date with the estimate. A large load can take years. A July 2024 Department of Energy report found 36-month lead times commonly quoted for large power transformers, before any wait for connection studies.</p>
+<h3>Is underground power cheaper than overhead?</h3><p>It depends on the tariff and the ground. In the Idaho example the underground rate per foot is higher than the overhead rate, its fixed charge is lower, and the pad-mounted transformer costs more than the overhead one. Trenching beyond a plain dirt trench is billed as an extra. Ask the utility to price both.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.myavista.com/-/media/myavista/content-documents/our-rates-and-tariffs/id/id_051.pdf" rel="noopener" target="_blank">Line Extension, Conversion and Relocation Schedule (Schedule 51) of an investor-owned electric utility in Idaho, tariff I.P.U.C. No. 28, rate sheets effective May 15, 2026 (checked 2026-11-14)</a></li><li><a href="https://cdn.misoenergy.org/20240501%20PSC%20Item%2004%20MISO%20Transmission%20Cost%20Estimation%20Guide%20for%20MTEP24632680.pdf" rel="noopener" target="_blank">MISO, Transmission Cost Estimation Guide for MTEP24, May 1, 2024; exploratory cost estimates, including 30% contingency (the MTEP26 edition keeps its cost tables in a separate workbook; checked 2026-11-14)</a></li><li><a href="https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm" rel="noopener" target="_blank">Texas Legislature, Senate Bill 6, 89th Regular Session (2025), enrolled text (checked 2026-11-14)</a></li><li><a href="https://www.puc.texas.gov/agency/rulesnlaws/subrules/electric/25.194/25.194.pdf" rel="noopener" target="_blank">Public Utility Commission of Texas, 16 TAC 25.194, Large Load Interconnection Standards, effective October 8, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.energy.gov/sites/default/files/2025-10/403%20Large%20Loads%20Letter.pdf" rel="noopener" target="_blank">U.S. Department of Energy, Secretary&#x27;s letter and advance notice of proposed rulemaking on large load interconnection, October 23, 2025 (checked 2026-11-14)</a></li><li><a href="https://www.energy.gov/sites/default/files/2024-10/EXEC-2022-001242%20-%20Large%20Power%20Transformer%20Resilience%20Report%20signed%20by%20Secretary%20Granholm%20on%207-10-24.pdf" rel="noopener" target="_blank">U.S. Department of Energy, Large Power Transformer Resilience Report to Congress, July 2024 (checked 2026-11-14)</a></li><li><a href="https://www.epa.gov/system/files/documents/2026-01/guidance-on-the-redevelopment-of-superfund-and-brownfield-sites-as-ai-data-centers.pdf" rel="noopener" target="_blank">U.S. EPA, Guidance on the Redevelopment of Superfund and Brownfield Sites as AI Data Centers, EPA-540-S-26-001, January 2026 (checked 2026-11-14)</a></li><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, United States Data Center Energy Usage Report: 2025 Update, June 18, 2026, hosted by DOE (checked 2026-11-14)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/submit-a-site">Submit a site for a free sizing</a></li><li><a href="/guides/what-is-powered-land">What is powered land?</a></li><li><a href="/guides/sell-or-lease-land-to-a-data-center">Selling or leasing land to a data center</a></li><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/guides/data-center-site-selection">Data center site selection: what developers look for</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/how-much-does-it-cost-to-bring-power-to-land#article", "image": "https://accretioncompute.com/assets/og/how-much-does-it-cost-to-bring-power-to-land.png", "headline": "How Much Does It Cost to Bring Power to Land, and Who Pays?", "description": "What it costs to bring power to land, from a home line extension to a substation for a large load: a real tariff example, who pays and how long it takes.", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/how-much-does-it-cost-to-bring-power-to-land"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "How Much Does It Cost to Bring Power to Land, and Who Pays?", "item": "https://accretioncompute.com/guides/how-much-does-it-cost-to-bring-power-to-land"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does it cost to run power to property per foot?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the utility. One Idaho tariff effective May 15, 2026 charges over $12 per foot for a single-phase overhead primary line and over $14 per foot underground, plus fixed charges, a transformer and the service line. Ask your utility for its line extension schedule to see its own rates."}}, {"@type": "Question", "name": "Will the utility pay to bring power to my land?", "acceptedAnswer": {"@type": "Answer", "text": "Some of it, where the tariff gives an allowance. In the Idaho example, an individual home gets an allowance capped at over $2,700, and a business gets one based on the energy it is expected to use. Anything above the allowance is the customer's to pay before construction starts."}}, {"@type": "Question", "name": "How much does a substation cost?", "acceptedAnswer": {"@type": "Answer", "text": "A Midwest grid operator's May 2024 planning guide puts a new four-position ring bus substation, its lowest-cost layout, at over $7 million at 69 kV and over $15 million at 345 kV, including a contingency. Real projects vary with voltage, layout and land, so treat these as planning figures only."}}, {"@type": "Question", "name": "Does a landowner pay for the substation when a data center leases the land?", "acceptedAnswer": {"@type": "Answer", "text": "The party requesting the power is the utility's customer, and that is the developer or operator, not the landowner. Texas rules make large load customers pay their direct connection costs, and a 2025 federal proposal said large loads should be responsible for 100% of the network upgrades assigned to them. Check that your contract leaves those costs with the developer."}}, {"@type": "Question", "name": "How long does it take to get power to vacant land?", "acceptedAnswer": {"@type": "Answer", "text": "For a home line, it depends on the utility's design work, easements and crews, so ask for a date with the estimate. A large load can take years. A July 2024 Department of Energy report found 36-month lead times commonly quoted for large power transformers, before any wait for connection studies."}}, {"@type": "Question", "name": "Is underground power cheaper than overhead?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the tariff and the ground. In the Idaho example the underground rate per foot is higher than the overhead rate, its fixed charge is lower, and the pad-mounted transformer costs more than the overhead one. Trenching beyond a plain dirt trench is billed as an extra. Ask the utility to price both."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>
