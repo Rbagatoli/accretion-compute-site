@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Are Data Centers Profitable? How They Make Money | Accretion</title>
+  <meta name="description" content="Are data centers profitable? Often, but not always. How a data center makes money, what it costs to set up and run, and what one is worth, with sources.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/are-data-centers-profitable">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Are Data Centers Profitable? How a Data Center Makes Money">
+  <meta property="og:description" content="Are data centers profitable? Often, but not always. How a data center makes money, what it costs to set up and run, and what one is worth, with sources.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/are-data-centers-profitable">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/are-data-centers-profitable.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-are-data-centers-profitable">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Data center profitability</p>
+    <p class="eyebrow">Land and energy partners</p>
+    <h1>Are Data Centers Profitable? How a Data Center Makes Money</h1>
+    <p class="lede">For investors and landowners: the revenue lines, the cost lines, and what decides whether a data center earns its keep, from public and dated sources.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-14">November 14, 2026</time> · By <a href="/about">Accretion Compute team</a> · 6 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Data centers can be profitable, but it is not automatic. A data center makes money by leasing space and power on multi-year contracts, plus fees for connections and services. Profit depends on how full the building is, what power costs, how the build was financed, and whether the leases outlast the equipment.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#how-data-centers-make-money">How they make money</a></li><li><a href="#running-costs">Running costs</a></li><li><a href="#cost-to-set-up">Cost to set up</a></li><li><a href="#what-a-data-center-is-worth">What one is worth</a></li><li><a href="#what-drives-profit">What drives profit</a></li><li><a href="#ai-data-centers">AI data centers</a></li><li><a href="#what-it-means-for-owners">If you own land or energy</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>The question comes from two directions. Investors ask it because spending on data center construction has nearly doubled in a year. Landowners and energy owners ask it because the company across the table wants a long lease, and they want to know whether it will still be paying in year ten.</p>
+<p>This guide explains the revenue lines and the cost lines in general terms, using federal statistics and the public annual reports of listed data center operators, each dated. It contains no Accretion Compute prices, margins or returns, and it is general information, not investment advice.</p>
+<h2 id="how-data-centers-make-money">How do data centers make money?</h2>
+<p>A data center sells capacity: space, power and cooling for someone else's computers, or for its owner's. The usual unit of sale is the kilowatt per month, because power, not floor area, is what runs out first.</p>
+<p>The revenue lines are:</p>
+<ul><li><strong>Recurring fees.</strong> Monthly charges for space and power capacity under a contract. This is the core of the business.</li><li><strong>Power.</strong> Electricity is either included in the fee, or metered and billed on top. See <a href="/guides/data-center-electricity-costs">data center electricity costs</a>.</li><li><strong>Interconnection.</strong> Fees for cross-connects and network links between tenants and carriers.</li><li><strong>One-time and service fees.</strong> Installation, remote hands and custom work.</li></ul>
+<p>Public filings show how steady the recurring part is. One listed global colocation operator reports that recurring revenue made up more than 90% of its total in each of the past three years. Its contracts generally run one to five years and then renew a year at a time. A listed data center real estate trust reports contracts of generally two to five years for deployments up to 1 MW, and five to ten years or more above that.</p>
+<p>Two other models work differently. A company that builds a data center for its own use earns nothing from the building itself; the return comes from the products that run in it. A GPU cloud owns the chips and rents computing time, which is a different business from <a href="/guides/gpu-colocation">GPU colocation</a>, where the tenant owns the hardware.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Five data center business models: what each sells, earns and risks</caption><thead><tr><th scope="col">Model</th><th scope="col">What it sells</th><th scope="col">Main revenue line</th><th scope="col">Largest costs</th><th scope="col">Main risk</th></tr></thead><tbody><tr><th scope="row">Retail colocation</th><td>Cabinets and cages with power, to many tenants</td><td>Monthly recurring fees plus interconnection</td><td>Depreciation, power, rent, staff</td><td>Empty space; many short contracts to renew</td></tr><tr><th scope="row">Wholesale or build-to-suit lease</th><td>Whole halls or buildings, to one tenant each</td><td>A long lease priced per kW</td><td>Construction cost and debt</td><td>Reliance on a few large tenants</td></tr><tr><th scope="row">Powered shell lease</th><td>A building with power and fiber; the tenant fits it out</td><td>Rent on the shell</td><td>Land, shell and power delivery</td><td>Less income per kW; the tenant controls the fit-out</td></tr><tr><th scope="row">GPU cloud or compute rental</th><td>Computing time on chips it owns</td><td>Usage or reserved-capacity fees</td><td>Chips, power, capacity rent</td><td>Hardware loses value faster than buildings</td></tr><tr><th scope="row">Company-owned (self-build)</th><td>Nothing directly; it serves the owner's products</td><td>None from the building</td><td>The full build and running cost</td><td>Demand for the owner's own services</td></tr></tbody></table></div>
+<h2 id="running-costs">What does it cost to run a data center?</h2>
+<p>Most of the cost is committed before the first tenant arrives. One listed colocation operator names the largest parts of its cost of revenue as depreciation, rent on leased data centers, utilities including electricity, bandwidth, staff, repairs and security. It adds that a majority of that cost is fixed.</p>
+<p>That is the key fact about the business. A building that is half full still carries most of the cost of a full one, so profit moves sharply with occupancy.</p>
+<p>Electricity is the largest cost that moves with use. Federal data put the 2025 U.S. average price at over 8 cents per kWh for industrial customers and over 13 cents for commercial customers, and the bill depends on which rate a site gets and where it is. Cooling and power losses add to it: Lawrence Berkeley National Laboratory puts the 2024 national average at over 1.4 units of total energy for every unit that reaches the computers.</p>
+<p>The last large cost is money itself. Data centers are built with debt, and one listed operator's annual report names its substantial debt as a risk to its cash flow.</p>
+<h2 id="cost-to-set-up">What does it cost to set up a data center?</h2>
+<p>Searches for the "cost to setup a data center" usually want one number. There is no reliable public figure for the cost to set up a data center per megawatt. Builders rarely publish it, and it swings with the design, the power density, the cooling method, the location and how much electrical equipment has to be bought.</p>
+<p>What public data does show is the total. The U.S. Census Bureau reported private data center construction running at an annual rate of over $96 billion in September 2026, against over $50 billion a year earlier, a rise of over 90%. Those figures cover the buildings. By the Bureau's definition they leave out the racks and servers that go inside, which the tenant or owner buys separately.</p>
+<p>The main cost lines in a build are land and site work, the building shell, the electrical plant (substation, switchgear, backup power), the cooling plant, fiber, and the cost of bringing power to the site or generating it there. Time is a cost too, because money is spent long before rent starts. See <a href="/guides/how-long-does-it-take-to-build-a-data-center">how long it takes to build a data center</a> and <a href="/guides/modular-data-centers">modular data centers</a> for how the schedule changes.</p>
+<h2 id="what-a-data-center-is-worth">How much is a data center worth?</h2>
+<p>A data center is worth what its leases are expected to earn, not what it cost to build. Buyers value it as an income property: the yearly income after running costs, judged against how safe that income looks.</p>
+<p>The things that raise or lower the figure:</p>
+<ul><li>how much of the capacity is leased, and for how many years</li><li>the credit of the tenants, and how much of the income rests on a few of them</li><li>whether power costs pass through to tenants</li><li>the power the site has secured, and room to add more</li><li>the age of the electrical and cooling plant, and what it will cost to refit</li></ul>
+<p>There is no reliable public figure for value per megawatt or per square foot. Sale prices are mostly private, and the ones that reach the news come from buildings with different leases, power and locations. The value on an owner's books is cost less depreciation, which is an accounting figure and not a market price.</p>
+<p>The same logic reaches down to the ground. Land with a secured power path is valued for the megawatts, as our guide to <a href="/guides/what-is-powered-land">what powered land means</a> explains, and <a href="/guides/sell-or-lease-land-to-a-data-center">selling or leasing land to a data center</a> covers what that means for an owner.</p>
+<h2 id="what-drives-profit">What makes a data center profitable, or not?</h2>
+<p>Five things decide it.</p>
+<ul><li><strong>Occupancy.</strong> Fixed costs make empty space expensive. One listed colocation operator reported cabinet utilization of about 77% at the end of 2025. A listed data center real estate trust reported its portfolio over 84% leased.</li><li><strong>Power cost and who carries it.</strong> Operators try to pass power through. One annual report describes negotiating pass-through provisions for operating expenses, including power costs.</li><li><strong>Financing.</strong> The interest rate on the debt, and whether it is fixed for as long as the leases run.</li><li><strong>Lease length and tenant mix.</strong> Long leases give certainty, but a few tenants can carry much of the income. One listed trust reports that its 20 largest customers made up over half of its annualized recurring revenue, and its top three over a quarter.</li><li><strong>Time to power.</strong> A finished building without power earns nothing. See the <a href="/guides/data-center-interconnection-queue">data center interconnection queue</a>.</li></ul>
+<p>Supply matters as well. The same trust warns in its annual report that if the supply of data center space keeps growing, rental rates may fall.</p>
+<h2 id="ai-data-centers">Are AI data centers profitable?</h2>
+<p>It depends on which business you mean. Two different things get called an AI data center.</p>
+<p>The first is capacity: a building, power and cooling leased to a tenant that brings its own chips. Its income is a lease, so it behaves like the wholesale model in the table above. The risk is whether the tenant stays for the life of the lease.</p>
+<p>The second is compute: a company that owns the chips and rents out their time. Its largest asset wears out fastest. Berkeley Lab's 2025 report assumes an average life of five years for AI servers in its reference case, and notes reports of both shorter and longer service. A lease or loan that runs longer than the hardware stays useful is the central risk.</p>
+<p>Whether AI compute earns back its cost across a full hardware cycle is an open question. Public data cannot settle it yet, so read any firm return figure with care.</p>
+<h2 id="what-it-means-for-owners">What does this mean if a data center wants your land or energy?</h2>
+<p>Your rent is as safe as the operator's income. Before you sign, ask how the project earns its money.</p>
+<ul><li>Who is the tenant, and how long is its lease?</li><li>Does your lease run as long as the tenant's, and what happens to it if the tenant leaves?</li><li>Who pays for power, and is the energy price fixed or indexed? If you are the seller, see our guide to a <a href="/guides/natural-gas-purchase-agreement">natural gas purchase agreement</a>.</li><li>Who funds the build, and is any of it secured against your land?</li><li>Who removes the equipment at the end?</li></ul>
+<p>A landowner usually earns in one of three ways: a sale, ground rent under a long lease, or rent plus income from selling energy to the site. None of them needs you to take the operator's business risk, as long as the lease says so. To see whether your site is a candidate at all, run our <a href="/site-check">site check</a>.</p>
+<aside class="callout"><p>This guide is general information, not legal, tax or investment advice. Read the operator's own filings or contracts, and take professional advice, before you invest or sign.</p></aside>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute is a capacity provider. We build AI data center capacity at the source of energy, with on-site, behind-the-meter power from firm energy of any kind (natural gas, landfill gas, hydro, nuclear, geothermal, or wind and solar with storage), and lease it to AI companies on multi-year terms. Tenants bring and own their hardware. Capacity is priced per kW per month, and energy is billed separately and transparently. Leases are sized to the life of the hardware, typically several years, with long-term energy supply agreements matched to the lease. We do not publish prices, margins or returns, and this guide contains none. Investors interested in contracted infrastructure on low-cost energy can <a href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=are-data-centers-profitable&amp;utm_content=inline">contact us</a>. Land and energy owners can run the <a href="/site-check">site check</a> or <a href="/submit-a-site">submit a site</a> for a free site sizing by email. AI companies can check <a href="/fit">whether their servers fit</a>.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You are an investor interested in contracted infrastructure on low-cost energy</li><li>You own firm energy of any kind, or land near energy and fiber, and want lease income without putting in capital</li><li>You are an AI company that needs dedicated, power-dense capacity and brings its own hardware</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>You want published prices, margins or return figures; we don't publish them</li><li>You want to rent GPU-hours or invest in a GPU cloud; we lease capacity and tenants own the hardware</li><li>You need capacity live today; existing colocation or cloud fits better</li><li>Your gas is interruptible, declining or flared; a load that can switch off suits it better</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=are-data-centers-profitable&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>What is the profit margin of a data center?</h3><p>There is no single figure. Margins differ by model, occupancy, power cost and financing, and private operators don't report them. Listed operators publish their results each year, and those show a business where most costs are fixed, so margin rises and falls with how full the buildings are. Treat any margin quoted without a source and a date as a guess.</p>
+<h3>How much does it cost to set up a data center?</h3><p>There is no reliable public per-megawatt figure, because builders rarely publish costs and designs differ. Census Bureau data show the scale: private data center construction ran at an annual rate of over $96 billion in September 2026. That covers buildings only and leaves out the racks and servers inside.</p>
+<h3>Is a data center worth more than it cost to build?</h3><p>It can be, if it is leased. Buyers pay for income, so a full building on long leases with secured power can be valued above its cost, and an empty one below. Book value is cost less depreciation and says little about market price.</p>
+<h3>How does a landowner make money from a data center?</h3><p>Through a sale, ground rent under a long lease, or rent plus income from selling energy to the site. The owner does not need to share the operator's business risk if the lease is written that way. What the land is worth depends mostly on the power available to it.</p>
+<h3>Are AI data centers profitable yet?</h3><p>For capacity leased on multi-year terms, the income is contracted and behaves like other data center leases. For companies that own the chips and rent out computing time, it is an open question, because the hardware has a short working life; Berkeley Lab assumes five years for AI servers in its reference case. Public data cannot settle it yet.</p>
+<h3>How long does it take a data center to pay for itself?</h3><p>There is no reliable public figure. It depends on the cost to build, how quickly the space leases, the rent, the power cost and the interest on the debt. The building lasts far longer than the equipment inside it, so the answer differs for each layer of the investment.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.sec.gov/Archives/edgar/data/1101239/000110123926000032/eqix-20251231.htm" rel="noopener" target="_blank">Annual report (Form 10-K) of a listed global colocation operator, fiscal year 2025, filed with the U.S. Securities and Exchange Commission February 11, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.sec.gov/Archives/edgar/data/1297996/000110465926015365/dlr-20251231x10k.htm" rel="noopener" target="_blank">Annual report (Form 10-K) of a listed data center real estate investment trust, fiscal year 2025, filed with the U.S. Securities and Exchange Commission February 13, 2026 (checked 2026-11-14)</a></li><li><a href="https://www.census.gov/construction/c30/pdf/privsa.pdf" rel="noopener" target="_blank">U.S. Census Bureau, Value of Private Construction Put in Place, Seasonally Adjusted Annual Rate, September 2026, released November 2, 2026; table is replaced monthly (checked 2026-11-14)</a></li><li><a href="https://www.census.gov/construction/c30/definitions.html" rel="noopener" target="_blank">U.S. Census Bureau, Construction Spending definitions (checked 2026-11-14)</a></li><li><a href="https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_3" rel="noopener" target="_blank">U.S. Energy Information Administration, Electric Power Monthly, Table 5.3, data through August 2026 (checked 2026-11-14)</a></li><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, United States Data Center Energy Usage Report: 2025 Update, June 18, 2026, hosted by DOE (checked 2026-11-14)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/data-center-electricity-costs">Data center electricity costs</a></li><li><a href="/guides/how-long-does-it-take-to-build-a-data-center">How long it takes to build a data center</a></li><li><a href="/guides/what-is-powered-land">What powered land means, and how to check a site</a></li><li><a href="/guides/gpu-colocation">GPU colocation explained</a></li><li><a href="/site-check">Run a site check on your land or energy</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/are-data-centers-profitable#article", "image": "https://accretioncompute.com/assets/og/are-data-centers-profitable.png", "headline": "Are Data Centers Profitable? How a Data Center Makes Money", "description": "Are data centers profitable? Often, but not always. How a data center makes money, what it costs to set up and run, and what one is worth, with sources.", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/are-data-centers-profitable"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Are Data Centers Profitable? How a Data Center Makes Money", "item": "https://accretioncompute.com/guides/are-data-centers-profitable"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the profit margin of a data center?", "acceptedAnswer": {"@type": "Answer", "text": "There is no single figure. Margins differ by model, occupancy, power cost and financing, and private operators don't report them. Listed operators publish their results each year, and those show a business where most costs are fixed, so margin rises and falls with how full the buildings are. Treat any margin quoted without a source and a date as a guess."}}, {"@type": "Question", "name": "How much does it cost to set up a data center?", "acceptedAnswer": {"@type": "Answer", "text": "There is no reliable public per-megawatt figure, because builders rarely publish costs and designs differ. Census Bureau data show the scale: private data center construction ran at an annual rate of over $96 billion in September 2026. That covers buildings only and leaves out the racks and servers inside."}}, {"@type": "Question", "name": "Is a data center worth more than it cost to build?", "acceptedAnswer": {"@type": "Answer", "text": "It can be, if it is leased. Buyers pay for income, so a full building on long leases with secured power can be valued above its cost, and an empty one below. Book value is cost less depreciation and says little about market price."}}, {"@type": "Question", "name": "How does a landowner make money from a data center?", "acceptedAnswer": {"@type": "Answer", "text": "Through a sale, ground rent under a long lease, or rent plus income from selling energy to the site. The owner does not need to share the operator's business risk if the lease is written that way. What the land is worth depends mostly on the power available to it."}}, {"@type": "Question", "name": "Are AI data centers profitable yet?", "acceptedAnswer": {"@type": "Answer", "text": "For capacity leased on multi-year terms, the income is contracted and behaves like other data center leases. For companies that own the chips and rent out computing time, it is an open question, because the hardware has a short working life; Berkeley Lab assumes five years for AI servers in its reference case. Public data cannot settle it yet."}}, {"@type": "Question", "name": "How long does it take a data center to pay for itself?", "acceptedAnswer": {"@type": "Answer", "text": "There is no reliable public figure. It depends on the cost to build, how quickly the space leases, the rent, the power cost and the interest on the debt. The building lasts far longer than the equipment inside it, so the answer differs for each layer of the investment."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>

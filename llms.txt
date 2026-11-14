@@ -30,12 +30,14 @@ Accretion Compute is a capacity provider, not a cloud: it does not rent out GPUs
 
 ## Guides: Land and energy partners
 
+- [Are Data Centers Profitable? How a Data Center Makes Money](https://accretioncompute.com/guides/are-data-centers-profitable): Are data centers profitable? Often, but not always. How a data center makes money, what it costs to set up and run, and what one is worth, with sources.
 - [Brownfield Data Centers: What an Old Industrial Site Brings](https://accretioncompute.com/guides/brownfield-data-centers): A brownfield data center reuses an old plant or industrial yard. What carries over (gas, grid tie, permits, zoning), what doesn't, and the cleanup risks.
 - [Data Center Site Selection: Criteria and a Checklist for AI Sites](https://accretioncompute.com/guides/data-center-site-selection): Data center site selection for AI loads: the criteria to check, a checklist with red flags, which factors are pass-or-fail, and the order to check them in.
 - [Flare Gas Monetization: A Producer's Decision Table](https://accretioncompute.com/guides/flare-gas-monetization): Flare gas monetization options side by side: tie-in, NGL recovery, CNG, field power, Bitcoin mining, AI data centers, and who carries the risk in each.
 - [How Landfill Gas to Energy Works, and When a Data Center Fits](https://accretioncompute.com/guides/landfill-gas-to-energy): Landfill gas to energy, explained for landfill owners: how the process works, how much power a site makes, how output declines, and which buyer fits.
 - [Gas Purchase Agreement: A Producer's Clause-by-Clause Guide](https://accretioncompute.com/guides/natural-gas-purchase-agreement): A gas purchase agreement, clause by clause, for producers: firm vs interruptible, take-or-pay, price basis, wellhead netback, and what to ask before you sign.
 - [How to Sell or Lease Land to a Data Center Developer](https://accretioncompute.com/guides/sell-or-lease-land-to-a-data-center): How to sell land to a data center or lease it instead: what developers look for, what powered land means, the deal steps and the questions to ask.
+- [What Is Powered Land? Meaning, Value and How to Check a Site](https://accretioncompute.com/guides/what-is-powered-land): Powered land is a site with a secured path to large amounts of electricity. What the term means, what makes it real, and how to check your own site.
 - [What Is Stranded Gas? A Producer's Guide to the Options](https://accretioncompute.com/guides/what-is-stranded-gas): What is stranded gas? A plain definition, how it differs from flared and associated gas, why gas gets stranded, and which uses fit which kind of gas.
 
 ## Guides: Cooling and water
