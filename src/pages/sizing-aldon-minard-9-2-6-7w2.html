@@ -1,0 +1,99 @@
+<!--{"title": "Aldon Oils Minard 9-2-6-7W2 battery, near Lampman, Saskatchewan: site sizing | Accretion Compute", "description": "What this gas could power, how much land it would take, and what it could earn each year.", "out": "sizings/aldon-minard-9-2-6-7w2.html", "noindex": true}-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/sizer/sizer.css?v={{version}}">
+<style>
+/* Hero: the live model fills the first screen, text over its left side (same layout as the Site model page) */
+.szp-root .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.szp-root .copy h1{font-size:clamp(24px,2.9vw,36px)}
+/* Dock: once the hero scrolls away, the same live model sits in a corner window (as on the Site model page) */
+.szp-dock{display:none;pointer-events:none}
+.szp-root .stage.docked :is(iframe,.szp-dock){position:fixed;inset:auto 16px 16px auto;width:min(500px,42vw);height:min(310px,38vh);animation:szpIn .35s var(--ease)}
+.szp-root .stage.docked iframe{z-index:40;border:1px solid var(--line);background:var(--bg);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.szp-root .stage.docked .szp-dock{display:block;z-index:41}
+.szp-root .stage .szp-dock>button{pointer-events:auto}
+.szp-dock .mini-cap{cursor:default;pointer-events:none!important;max-width:calc(100% - 50px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.szp-dock .mini-cap::before{content:none}
+@keyframes szpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){.szp-root .stage.docked :is(iframe,.szp-dock){inset:auto 10px 10px auto;width:min(46vw,220px);height:calc(min(46vw,220px) * .6875)}}
+.szp-root .copy .szp-links{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px}
+.szp-root .copy .szp-links a{color:var(--fg-strong)}
+.szp-tog{display:flex;pointer-events:auto}
+.szp-tog button{font:inherit;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;background:transparent;color:var(--fg);border:1px solid var(--line);cursor:pointer}
+.szp-tog button+button{border-left:0}
+.szp-tog button[aria-pressed=true]{background:var(--fg-strong);color:var(--bg)}
+/* Below the hero */
+.sizer .szp{padding-top:clamp(40px,5vw,64px)}
+.szp-kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.szp-kpis>div{padding:18px 20px;border-right:1px solid var(--line-soft)}
+.szp-kpis>div:last-child{border-right:0}
+.szp .v{font:200 clamp(22px,2.6vw,32px)/1.1 var(--display);font-stretch:125%;color:var(--fg-strong)}
+.szp .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-top:6px}
+.szp-earn{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:16px;border:1px solid var(--line);border-top:0;padding:20px}
+.szp-earn .tot .v{font-size:clamp(26px,3.2vw,40px)}
+.szp-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px)}
+.szp-cols>*{min-width:0}
+.szp .eyebrow{margin-bottom:12px}
+.szp table{width:100%;min-width:0;border-collapse:collapse;font-size:16px}
+.szp td{padding:9px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--fg)}
+.szp td.r{text-align:right;white-space:nowrap;padding-left:14px;color:var(--fg-strong)}
+.szp ul{margin:0;padding-left:18px;color:var(--fg)} .szp li{margin:0 0 8px}
+.szp .box{border:1px solid var(--line);padding:18px 20px;margin-top:24px}
+.szp .small{font-size:14px;color:var(--fg-dim);line-height:1.6;overflow-wrap:anywhere}
+.sizer .szp-end{padding-bottom:clamp(56px,7vw,96px)}
+.szp-end .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.szp-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid var(--fg-strong);background:var(--fg-strong);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+.szp-btn.ghost{background:transparent;color:var(--fg-strong);border-color:var(--line)}
+.szp-btn:hover{background:transparent;color:var(--fg-strong)}
+@media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
+ .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
+</style>
+<div class="sizer szp-root">
+<div class="sz-hero">
+ <div class="stage"><iframe id="szp-frame" src="site-model?src=gas&amp;flow=0.63&amp;embed=1&amp;copy=1" title="Live 3D model of Aldon Oils Minard 9-2-6-7W2 battery, near Lampman, Saskatchewan" allow="fullscreen"></iframe>
+  <div class="szp-dock"><div class="mini-cap">Live model &middot; Aldon Oils Minard 9-2-6-7W2 battery, near Lampman, Saskatchewan</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
+ <div class="scrim" aria-hidden="true"></div>
+ <div class="copy">
+  <p class="crumbs">Site sizing &middot; November 2026</p>
+  <div class="eyebrow">Field gas</div>
+  <h1>Aldon Oils Minard 9-2-6-7W2 battery, near Lampman, Saskatchewan</h1>
+  <p class="lede">What this gas could power, how much land it would take, and what it could earn each year.</p>
+  <div class="hero-stats"><div><div class="num">3.0</div><div class="k">MW on site</div></div><div><div class="num">3</div><div class="k">Compute modules</div></div><div><div class="num">$9–697k</div><div class="k">To the owner, per year</div></div></div>
+  <p class="szp-links"><a href="sizings/aldon-minard-9-2-6-7w2.pdf" download>Download the PDF</a><a id="szp-full" href="site-model?src=gas&amp;flow=0.63">Open the full model &rarr;</a></p>
+ </div>
+</div>
+<div class="wrap szp">
+ <div class="szp-kpis">
+  <div><div class="v">3.0 MW</div><div class="k">Power from the gas</div></div>
+  <div><div class="v">3</div><div class="k">Compute modules</div></div>
+  <div><div class="v">9 acres</div><div class="k">Land needed</div></div>
+  <div><div class="v">227k</div><div class="k">MMBtu bought a year</div></div>
+ </div>
+ <div class="szp-earn">
+  <div><div class="k">Gas sale, per year</div><div class="v">up to $680k</div></div>
+  <div><div class="k">Land lease, per year</div><div class="v">$9k to $17k</div></div>
+  <div class="tot"><div class="k">Total to the owner, per year</div><div class="v">$9k to $697k</div></div>
+ </div>
+</div>
+<div class="wrap szp"><div class="szp-cols">
+ <div><div class="eyebrow">The math</div><table><tr><td>Methane in 0.86 MMcf/d of flared and vented gas, as pipeline-quality gas</td><td class='r'>0.63 MMcf/d</td></tr><tr><td>Energy in the gas</td><td class='r'>27.2 MMBtu per hour</td></tr><tr><td>Power at a heat rate of 9,000 Btu/kWh</td><td class='r'>about 3.0 MW</td></tr><tr><td>Compute (power less cooling and losses, /1.2)</td><td class='r'>about 2.5 MW</td></tr><tr><td>Compute modules (about 1 MW each)</td><td class='r'>3</td></tr><tr><td>Gas engines (running plus one spare)</td><td class='r'>3 at 2.5 MW</td></tr><tr><td>Land: 5 acres plus 1.2 acres per MW</td><td class='r'>about 9 acres</td></tr><tr><td>Gas bought per year (95% run time)</td><td class='r'>227k MMBtu</td></tr><tr><td>Gas payment at up to $3.00 per MMBtu (about 3¢ per kWh)</td><td class='r'>up to $680k</td></tr><tr><td>Land lease at $1,000 to $2,000 per acre per year</td><td class='r'>$9k to $17k</td></tr></table><p class="small" style="margin-top:10px">Sized on the methane only: 0.86 MMcf/d (24.3 e3m3/d) at about 75% methane and 1,012 Btu per cubic foot, shown as 0.63 MMcf/d of pipeline-quality gas at 1,037 Btu. Heavier gases would add energy and are not counted. Prices in US dollars; the price band is the one shown on our Site model page.</p></div>
+ <div><div class="eyebrow">What it would look like</div><ul><li>Our own gas engines on a fenced parcel near the gas, a battery to smooth the load, and factory-built compute modules leased to an AI company.</li><li>No grid connection and no export: all of the power is used on site.</li><li>We build and run the site. The owner puts in no capital.</li><li>Multi-year gas and land agreements, matched to the tenant&#x27;s lease, at a fixed price.</li></ul>
+  <div class='box'><div class='eyebrow'>Worth checking</div><ul class='small'><li>Gas analysis (methane, H2S) at the battery</li><li>Saskatchewan rules for a third-party gas sale</li><li>Flare trend: down from 30 e3m3/d in Oct 2025 to 22 in Sep 2026</li><li>Road and fiber access</li></ul></div>
+ </div>
+</div></div>
+<div class="wrap szp szp-end">
+ <p class="small"><strong>Source:</strong> Petrinex public Saskatchewan volumetric data, Oct 2025-Sep 2026 (read Nov 12, 2026): the battery flared and vented 24.3 e3m3/d (0.86 MMcf/d) on average in Oct 2025-Sep 2026 (22.2 in Jul-Sep 2026). Methane share of 75% is an estimate; the sizing counts the methane only. This is an estimate from public data, not an offer: no cost and no obligation. The real price and terms are set in the gas and land agreements after a site review.</p>
+ <div class="actions">
+  <a class="szp-btn" href="contact">Talk to us about your site &rarr;</a>
+  <a class="szp-btn ghost" href="sizings/aldon-minard-9-2-6-7w2.pdf" download>Download the one-page PDF</a>
+ </div>
+</div>
+</div>
+
+<script>
+(function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
+ var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}
+ function check(){var r=hero.getBoundingClientRect(),away=r.bottom<r.height*.5;if(!away)dismissed=false;var want=away&&!dismissed;if(want!==on){on=want;stage.classList.toggle("docked",on);send()}}
+ addEventListener("scroll",check,{passive:true});addEventListener("resize",check);f.addEventListener("load",send);check();
+ document.getElementById("szp-dock-x").addEventListener("click",function(){dismissed=true;on=false;stage.classList.remove("docked");send()});
+ document.getElementById("szp-dock-up").addEventListener("click",function(){hero.scrollIntoView({behavior:"smooth",block:"start"})});})();
+</script>
