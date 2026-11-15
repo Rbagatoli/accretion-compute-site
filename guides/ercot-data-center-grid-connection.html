@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERCOT Data Center Grid Connection: 2026 Rules | Accretion</title>
+  <meta name="description" content="How an ERCOT data center grid connection works in 2026: SB 6, the PUCT large-load rule, fees, Batch Zero, the August pause and what on-site power can do.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/ercot-data-center-grid-connection">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="ERCOT Data Center Grid Connection: Rules, Fees and the Pause">
+  <meta property="og:description" content="How an ERCOT data center grid connection works in 2026: SB 6, the PUCT large-load rule, fees, Batch Zero, the August pause and what on-site power can do.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/ercot-data-center-grid-connection">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/ercot-data-center-grid-connection.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-ercot-data-center-grid-connection">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / ERCOT grid connection</p>
+    <p class="eyebrow">Power</p>
+    <h1>ERCOT Data Center Grid Connection: Rules, Fees and the Pause</h1>
+    <p class="lede">For Texas landowners, energy owners and developers: the steps, the costs and the dates that decide whether a large data center can connect to the Texas grid.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-15">November 15, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>An ERCOT data center grid connection for 75 MW or more goes through the local utility under SB 6 and the PUCT's large-load rule. The customer pays a $100,000 study fee, posts $50,000 per MW in security and joins ERCOT's batch study. Since August 3, 2026, energizing new data centers that size is paused pending an audit.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#how-it-connects">How it connects</a></li><li><a href="#sb6-and-rule-25-194">SB 6 and rule 25.194</a></li><li><a href="#batch-zero">Batch Zero</a></li><li><a href="#the-2026-pause">The 2026 pause</a></li><li><a href="#on-site-power">On-site power</a></li><li><a href="#what-to-do-now">What to do now</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Texas runs its own grid. ERCOT manages it, the Public Utility Commission of Texas (PUCT) writes the rules, and the local transmission utility builds the connection. In 2025 the legislature passed SB 6 to set new terms for very large loads, and the PUCT's rule took effect on October 8, 2026.</p>
+<p>Demand outran the process. By June 2026 ERCOT had more than 438,000 MW of large-load requests, and in August the state paused energizing new large data centers while it audits them. This guide puts the law, the rule, the batch study, both pauses and the on-site route in one place, with dates. For queues in other regions, see <a href="/guides/data-center-interconnection-queue">the data center interconnection queue</a>.</p>
+<h2 id="how-it-connects">How does a data center connect to the ERCOT grid?</h2>
+<p>A large load does not apply to ERCOT directly. It applies to the transmission service provider that owns the lines near the site, which runs a large load interconnection study and passes the request to ERCOT. ERCOT then checks whether the grid can serve the load reliably and what upgrades it needs.</p>
+<p>Under the rule, the request has to come with paperwork that earlier requests often lacked:</p>
+<ol><li>Proof of site control for the land, or a plan to get it.</li><li>The study fee and financial security, paid before the study goes ahead.</li><li>Disclosure of any substantially similar request the same customer has made elsewhere in Texas.</li><li>Disclosure of any on-site backup generation, and whether the load will share a site with an existing power plant.</li></ol>
+<p>Once the study is done, the customer signs an interconnection agreement, pays the direct connection costs and waits for the utility to build. Energization, the day power flows, comes last.</p>
+<h2 id="sb6-and-rule-25-194">What SB 6 and rule 25.194 require</h2>
+<p>SB 6 sets the policy and the PUCT's rule at 16 TAC 25.194 fills in the details. The rule applies to loads of 75 MW or more at one site, including loads that plan to share a site with a generation resource. Its main terms:</p>
+<ul><li><strong>Study fee.</strong> $100,000 per request, adjusted for inflation from 2032.</li><li><strong>Financial security.</strong> $50,000 per MW of requested peak demand, held while the request moves forward.</li><li><strong>Connection costs.</strong> All direct interconnection costs are paid up front as cash, with no standard allowance from the utility, and the payment is not refundable.</li><li><strong>Duplicate requests.</strong> The customer must disclose similar requests elsewhere in Texas that could make it materially change this one, which includes a 20% or greater change in requested peak demand or a delay of a year or more.</li><li><strong>Backup generation.</strong> On-site backup that cannot export and can serve at least 50% of the site's demand must be disclosed. In a grid emergency, ERCOT may direct the load to switch to that backup or to curtail.</li></ul>
+<p>SB 6 adds a separate check for co-location. Before a power company sets up a net metering arrangement between an existing stand-alone plant and a new large load, it must notify ERCOT, and the local utility may object for reasonable cause. The law also creates a demand-reduction service that ERCOT buys from loads of 75 MW or more.</p>
+<h2 id="batch-zero">What is ERCOT Batch Zero?</h2>
+<p>ERCOT Batch Zero is the first batch study of large loads under the new process. The PUCT approved it in June 2026. Instead of studying each request one at a time, ERCOT studies them as a group and plans transmission for the whole batch, with a final transmission plan expected in fall 2027.</p>
+<p>The scale explains why. When the PUCT approved the batch, ERCOT counted more than 438,000 MW of large-load requests, and nearly 89% came from data centers. For comparison, ERCOT's peak demand in July 2026 was over 91,000 MW, so the requests add up to several times the grid's highest use.</p>
+<p>In September 2026, ERCOT reported a conditional classification of the batch: 204 projects totaling over 66 GW as base load, and 158 projects totaling over 127 GW as studied load. It said the effect on the timeline was still to be determined.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Texas large-load requirements under SB 6 and 16 TAC 25.194, effective October 8, 2026</caption><thead><tr><th scope="col">Requirement</th><th scope="col">Threshold or amount</th><th scope="col">Where it comes from</th><th scope="col">What it means for a site</th></tr></thead><tbody><tr><th scope="row">Size threshold</th><td>75 MW or more at one site</td><td>SB 6; 16 TAC 25.194</td><td>Smaller loads stay under ordinary utility rules</td></tr><tr><th scope="row">Study fee</th><td>$100,000 per request</td><td>SB 6; 16 TAC 25.194</td><td>Paid before the study, so only serious requests file</td></tr><tr><th scope="row">Financial security</th><td>$50,000 per MW of requested peak</td><td>16 TAC 25.194</td><td>A 100 MW request ties up $5 million</td></tr><tr><th scope="row">Interconnection costs</th><td>All direct costs, paid in cash, not refundable</td><td>16 TAC 25.194</td><td>No utility allowance; the customer funds the connection</td></tr><tr><th scope="row">Site control</th><td>Proof of control of the land</td><td>16 TAC 25.194</td><td>Speculative requests without land are screened out</td></tr><tr><th scope="row">Backup generation</th><td>Disclose backup that can serve at least 50% of demand</td><td>16 TAC 25.194</td><td>ERCOT may call on it in a grid emergency</td></tr><tr><th scope="row">Co-location with an existing plant</th><td>Notice to ERCOT; local utility may object</td><td>SB 6</td><td>Sharing a plant's output is possible, with review</td></tr></tbody></table></div>
+<h2 id="the-2026-pause">Why Texas paused data center connections in 2026</h2>
+<p>On August 3, 2026, the governor directed a full audit of large-load requests, citing over 474 GW of requests, about 90% of them data centers. The same day ERCOT paused the Batch Zero study, delayed the final classification and paused energization approvals for data centers and crypto mining sites of 75 MW or more. The directive also requires on-site generation to be reported.</p>
+<p>ERCOT plans to file two reports by December 10, 2026: an eligibility check of every large load in Batch Zero, and a community impact review that also covers medium loads of 25 to 75 MW. Until the audit and review are done, a new large data center in Texas can file, pay and wait, but it cannot be energized.</p>
+<p>A second pause followed. On September 21, 2026, the governor directed the Texas Commission on Environmental Quality (TCEQ) to halt permits for data centers. In an October 19 letter, TCEQ confirmed it had paused all permits for building or developing infrastructure that directly supports data centers, and was suspending claimed authorizations for data center activities where it could.</p>
+<h2 id="on-site-power">Can on-site power get around the pause?</h2>
+<p>Not yet, in most cases. A campus with its own generation behind the meter needs no grid energization, so the ERCOT pause does not stop it on paper. But new generation usually needs state permits, starting with an air authorization for anything that burns fuel, and TCEQ has paused all permits for infrastructure that directly supports data centers. Federal rules have moved in the other direction: EPA said in July 2026 that some islanded generation falls outside one federal program, a point covered in <a href="/guides/epa-off-grid-data-center-power">the EPA off-grid power guide</a>. State permits still apply.</p>
+<p>Some routes may still be open, and each needs a lawyer's reading of the TCEQ letter for the specific site:</p>
+<ul><li>Using an existing plant's output through a direct tie, where no new combustion permit is needed. SB 6's notice and objection rules still apply.</li><li>Wind or solar with storage, which need no air authorization, though other TCEQ permits may still be caught by the pause.</li><li>Sites that already hold their permits, subject to TCEQ's review of claimed authorizations.</li></ul>
+<p>We do not count on the pause lifting by a set date, and neither should a landowner or developer. <a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers</a> explains the setup in general.</p>
+<h2 id="what-to-do-now">What to do now if you own land or energy in Texas</h2>
+<p>The pause slows building. It does not stop planning, and the sites that move first once the rules settle will be the ones with their homework done.</p>
+<ol><li>Document site control: deeds, leases or options, and the acreage that could hold a campus.</li><li>Gather what you know about the energy: what kind, how much, how firm, and any existing permits or grid agreements.</li><li>Note distance to transmission lines, fiber and water.</li><li>Watch for ERCOT's December 10, 2026 report and any TCEQ update, and read them before signing anything new.</li><li>Talk to buyers who bring their own power and say plainly how the pauses affect their plans.</li></ol>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data centers next to firm energy of any kind: natural gas, hydro, nuclear, geothermal, or wind and solar with storage. We build and run the generation ourselves, on site or through a direct tie to the plant next door, behind the meter, so no grid connection is needed. In Texas, that keeps a site out of the ERCOT energization queue, but any new fuel-burning generation still waits on the TCEQ pause, and we tell partners that before anything is signed. Energy and land partners put in no capital and get lease income and a long-term buyer for their energy. Send a Texas site through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email; it is an estimate, not an offer.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You own Texas land with firm energy on it or next to it, of any kind</li><li>You own a plant or a gas, landfill gas or renewable resource that could supply a campus directly</li><li>You want lease income without putting in capital, and can plan past the 2026 pauses</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>The site needs grid power to start; ERCOT energization for large data centers is paused</li><li>There is no firm energy on the site or next to it</li><li>You need a signed deal with a fixed start date before the pauses lift</li></ul>
+<p class="cta-row"><a class="cta-button" href="/submit-a-site?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=ercot-data-center-grid-connection&amp;utm_content=product_section">Submit a site</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>Is ERCOT pausing data center connections?</h3><p>Yes, for large ones. On August 3, 2026, ERCOT paused the Batch Zero study and paused energization approvals for data centers of 75 MW or more, after the governor ordered an audit of large-load requests. ERCOT's audit report is due December 10, 2026. The pause also covers crypto mining sites of that size; data centers under 75 MW are not covered by it.</p>
+<h3>How much does a large load interconnection cost to apply for in Texas?</h3><p>Under the PUCT rule in force since October 8, 2026, a load of 75 MW or more pays a $100,000 study fee and posts financial security of $50,000 per MW of requested peak demand. For a 100 MW request, that is $5 million in security. The customer also pays all direct interconnection costs in cash, with no utility allowance, and that payment is not refundable.</p>
+<h3>Does a Texas data center have to report its backup generators?</h3><p>Yes, if they are large enough. The rule requires a large load to disclose on-site backup generation that cannot export to the grid and can serve at least 50% of the site's demand. In a grid emergency, ERCOT may direct that load to run on its backup or to curtail. The governor's August 2026 directive also requires on-site generation to be reported.</p>
+<h3>Can a data center co-locate with a power plant in Texas?</h3><p>Yes, with review. SB 6 requires a power generation company to notify ERCOT before it sets up a net metering arrangement between an existing stand-alone plant and a new large load, and the local utility may object for reasonable cause. The rule also covers loads of 75 MW or more that plan to share a site with a generation resource, so the same fees and disclosures apply.</p>
+<h3>When will the Texas data center pause end?</h3><p>No end date has been set. ERCOT's audit report is due December 10, 2026, and its September update said the effect on the Batch Zero timeline was still to be determined. TCEQ's pause on permits for infrastructure that directly supports data centers, confirmed on October 19, 2026, also has no published end date. Anyone planning a site should check both agencies before relying on a date.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm" rel="noopener" target="_blank">Texas Legislature, Senate Bill 6, 89th Regular Session (2025), enrolled text (checked 2026-11-15)</a></li><li><a href="https://www.puc.texas.gov/agency/rulesnlaws/subrules/electric/25.194/25.194.pdf" rel="noopener" target="_blank">Public Utility Commission of Texas, 16 TAC 25.194, Large Load Interconnection Standards, effective October 8, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ercot.com/news/release/06182026-puct-approves-ercots" rel="noopener" target="_blank">ERCOT news release, PUCT approves ERCOT&#x27;s Batch Zero, June 18, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ercot.com/files/docs/2026/09/11/14-Batch-Zero-Update.pdf" rel="noopener" target="_blank">ERCOT Board of Directors, item 14, Batch Zero Update, September 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ercot.com/files/docs/2026/08/20/Batch-Zero-Verification-and-Audit-PUCT-Presentation.pdf" rel="noopener" target="_blank">ERCOT, Batch Zero verification and audit, presentation to the PUCT, August 20, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ercot.com/files/docs/2026/08/17/ERCOT-Monthly-Operational-Overview-July-2026.pdf" rel="noopener" target="_blank">ERCOT, Monthly Operational Overview, July 2026 (checked 2026-11-15)</a></li><li><a href="https://gov.texas.gov/news/post/governor-abbott-directs-comprehensive-data-center-audit" rel="noopener" target="_blank">Office of the Texas Governor, directive for a comprehensive data center audit, August 3, 2026 (checked 2026-11-15)</a></li><li><a href="https://gov.texas.gov/news/post/governor-abbott-directs-tceq-to-halt-data-center-permits" rel="noopener" target="_blank">Office of the Texas Governor, directive to TCEQ on data center permits, September 21, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.tceq.texas.gov/downloads/response/tceq-response-gov-abbott-dc-directive.pdf" rel="noopener" target="_blank">Texas Commission on Environmental Quality, response to the governor&#x27;s data center directive, October 19, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.epa.gov/newsreleases/epa-issues-permitting-guidance-further-president-trumps-agenda-promoting-data-centers" rel="noopener" target="_blank">U.S. EPA news release, EPA issues permitting guidance on islanded power generation, July 26, 2026 (checked 2026-11-15)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/where-are-data-centers-being-built">Where data centers are being built</a></li><li><a href="/guides/data-center-electricity-cost-impact">Who pays when a data center joins the grid</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/submit-a-site">Submit a Texas site</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/ercot-data-center-grid-connection#article", "image": "https://accretioncompute.com/assets/og/ercot-data-center-grid-connection.png", "headline": "ERCOT Data Center Grid Connection: Rules, Fees and the Pause", "description": "How an ERCOT data center grid connection works in 2026: SB 6, the PUCT large-load rule, fees, Batch Zero, the August pause and what on-site power can do.", "datePublished": "2026-11-15", "dateModified": "2026-11-15", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/ercot-data-center-grid-connection"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "ERCOT Data Center Grid Connection: Rules, Fees and the Pause", "item": "https://accretioncompute.com/guides/ercot-data-center-grid-connection"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is ERCOT pausing data center connections?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, for large ones. On August 3, 2026, ERCOT paused the Batch Zero study and paused energization approvals for data centers of 75 MW or more, after the governor ordered an audit of large-load requests. ERCOT's audit report is due December 10, 2026. The pause also covers crypto mining sites of that size; data centers under 75 MW are not covered by it."}}, {"@type": "Question", "name": "How much does a large load interconnection cost to apply for in Texas?", "acceptedAnswer": {"@type": "Answer", "text": "Under the PUCT rule in force since October 8, 2026, a load of 75 MW or more pays a $100,000 study fee and posts financial security of $50,000 per MW of requested peak demand. For a 100 MW request, that is $5 million in security. The customer also pays all direct interconnection costs in cash, with no utility allowance, and that payment is not refundable."}}, {"@type": "Question", "name": "Does a Texas data center have to report its backup generators?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, if they are large enough. The rule requires a large load to disclose on-site backup generation that cannot export to the grid and can serve at least 50% of the site's demand. In a grid emergency, ERCOT may direct that load to run on its backup or to curtail. The governor's August 2026 directive also requires on-site generation to be reported."}}, {"@type": "Question", "name": "Can a data center co-locate with a power plant in Texas?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with review. SB 6 requires a power generation company to notify ERCOT before it sets up a net metering arrangement between an existing stand-alone plant and a new large load, and the local utility may object for reasonable cause. The rule also covers loads of 75 MW or more that plan to share a site with a generation resource, so the same fees and disclosures apply."}}, {"@type": "Question", "name": "When will the Texas data center pause end?", "acceptedAnswer": {"@type": "Answer", "text": "No end date has been set. ERCOT's audit report is due December 10, 2026, and its September update said the effect on the Batch Zero timeline was still to be determined. TCEQ's pause on permits for infrastructure that directly supports data centers, confirmed on October 19, 2026, also has no published end date. Anyone planning a site should check both agencies before relying on a date."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>

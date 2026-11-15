@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PJM Data Center Grid Connection and Co-Location | Accretion</title>
+  <meta name="description" content="How data centers get a grid connection in PJM: network service, FERC's three services for co-located load, behind-the-meter rules and interim capacity.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/pjm-data-center-grid-connection">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="PJM Data Center Grid Connection: Routes, Rules and What's Open">
+  <meta property="og:description" content="How data centers get a grid connection in PJM: network service, FERC's three services for co-located load, behind-the-meter rules and interim capacity.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/pjm-data-center-grid-connection">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/pjm-data-center-grid-connection.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-pjm-data-center-grid-connection">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / PJM grid connection</p>
+    <p class="eyebrow">Power</p>
+    <h1>PJM Data Center Grid Connection: Routes, Rules and What's Open</h1>
+    <p class="lede">For plant owners, landowners and developers in the PJM states: the ways a data center can connect, what FERC changed in 2025 and 2026, and what is still being decided.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-15">November 15, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Data centers get a grid connection in PJM through the local utility as network load, or by co-locating at a power plant and taking one of three transmission services FERC ordered in December 2025. From June 1, 2027, new large loads that do not bring enough capacity may get interim service that is cut first in an emergency.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#how-it-connects">How it connects</a></li><li><a href="#fercs-order">FERC&#x27;s order</a></li><li><a href="#three-services">Three services</a></li><li><a href="#behind-the-meter">Behind the meter</a></li><li><a href="#capacity-shortfall">Capacity shortfall</a></li><li><a href="#questions-to-ask">Questions to ask</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>PJM runs the grid and wholesale markets for 13 states and the District of Columbia, including Virginia, which EIA says has the largest concentration of data centers in the world. It is also where the rules for data center connections are changing fastest. FERC found PJM's tariff unclear on co-located load in December 2025, set new terms in June 2026, and PJM is still filing the details.</p>
+<p>This guide maps the routes in, says which are firm and which are not, and lists what is still open as of November 15, 2026. Queues in general are covered in <a href="/guides/data-center-interconnection-queue">the data center interconnection queue</a>.</p>
+<h2 id="how-it-connects">How does a data center connect to the grid in PJM?</h2>
+<p>The default route is through the local utility. The data center becomes a retail customer, the utility asks PJM for network service to serve the new load, and the transmission owner plans and builds any upgrades. The load is then counted in PJM's forecast and in the capacity the region must buy for future years.</p>
+<p>Large loads are arriving faster than that process was built for. PJM's 2026 load forecast expects summer peak demand to reach over 222,000 MW by 2036, with 14 zones adjusted for data center growth. Two other routes have drawn attention as a result:</p>
+<ul><li><strong>Co-location.</strong> The data center sits at or next to an existing plant and takes power from it, with or without drawing on the grid.</li><li><strong>Behind-the-meter generation.</strong> The load is served by generation on the customer's side of the meter, netted against what it draws from the grid.</li></ul>
+<p>FERC has now set rules for both, and that is where most of the change is.</p>
+<h2 id="fercs-order">What FERC's co-location order changed</h2>
+<p>On December 18, 2025, FERC found PJM's tariff unjust and unreasonable because it did not say with enough clarity or consistency which rates, terms and conditions apply when generators serve co-located load. It directed PJM to write specific terms for co-location arrangements, to require one of three transmission services for co-located load, and to revise the rules for behind-the-meter generation.</p>
+<p>PJM filed its compliance in February 2026. On June 18, 2026, FERC accepted it in part and rejected it in part, set rates, terms and conditions for the new services after a paper hearing, and gave PJM and the transmission owners 60 days to file further tariff changes.</p>
+<p>The same day, FERC issued show-cause orders to six grid operators on speeding up large-load connections. PJM asked for a 90-day abeyance in that separate docket and said it expected to file in the first half of November 2026. Those filings, and FERC's orders on them, will settle much of what is still open.</p>
+<h2 id="three-services">The three transmission services for co-located load</h2>
+<p>Under FERC's orders, a customer taking transmission service for co-located load in PJM must pick one of three services:</p>
+<ol><li><strong>Network service (NITS).</strong> Full network service, like any other load. Where upgrades are needed first, the customer can take Interim NITS, a non-firm service available until all the network upgrades are built.</li><li><strong>Firm Contract Demand.</strong> A new firm service charged on a contract demand basis: a set amount of grid power rather than the site's full load, with the plant covering the rest.</li><li><strong>Non-Firm Contract Demand.</strong> A new non-firm service, also on a contract demand basis, which PJM can curtail under procedures set in the June 2026 order.</li></ol>
+<p>The choice comes down to how much firm grid service the site wants to pay for. A data center on Interim NITS or Non-Firm Contract Demand needs its own plant, or a way to shed load, for the hours when the grid curtails it. For an AI campus, which needs firm power around the clock, the plant on site has to carry the load in those hours. Our <a href="/guides/data-center-vs-nuclear-power-plant">data center vs nuclear power plant guide</a> covers why so much of this debate centers on reactors.</p>
+<h2 id="behind-the-meter">Behind-the-meter generation in PJM now</h2>
+<p>PJM's behind-the-meter generation rules let a customer net the output of generation on its side of the meter against the load it draws, which cuts the transmission and capacity charges it pays. FERC found those netting rules no longer just and reasonable and directed PJM to revise them, with a transition process for existing participants.</p>
+<p>For a new data center, that means generation behind the meter while staying tied to the PJM grid no longer brings the same automatic savings. The details sit in the compliance filings still being worked out, so anyone planning a project should read the current tariff, not a 2025 summary.</p>
+<p>A campus with no physical tie to the grid at all is a different case. It takes no transmission service and pays no PJM charges, though its generation still needs state air permits, and federal rules may apply too, as <a href="/guides/epa-off-grid-data-center-power">the EPA off-grid power guide</a> explains.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Routes for a data center to get power in PJM, as of November 15, 2026</caption><thead><tr><th scope="col">Route</th><th scope="col">What the data center gets</th><th scope="col">Firm or not</th><th scope="col">What is still open</th></tr></thead><tbody><tr><th scope="row">Network service through the utility</th><td>Full grid service as ordinary load</td><td>Firm once upgrades are built</td><td>Upgrade timing and cost; capacity rules for new large loads</td></tr><tr><th scope="row">Interim network service</th><td>Grid service before upgrades are complete</td><td>Non-firm until upgrades are built</td><td>Curtailment terms in PJM's compliance filings</td></tr><tr><th scope="row">Firm Contract Demand</th><td>A set amount of firm grid power at a plant site</td><td>Firm up to the contract amount</td><td>Final tariff language after the June 2026 order</td></tr><tr><th scope="row">Non-Firm Contract Demand</th><td>A set amount of grid power, when the grid can carry it</td><td>Non-firm; can be curtailed</td><td>Final tariff language after the June 2026 order</td></tr><tr><th scope="row">Interim Resource Adequacy Service</th><td>Service for new large loads without enough capacity</td><td>Cut before other emergency steps</td><td>Filing expected in the first half of November 2026</td></tr><tr><th scope="row">Fully off-grid</th><td>Power only from its own generation</td><td>As firm as the plant on site</td><td>State air permits; no PJM service needed</td></tr></tbody></table></div>
+<h2 id="capacity-shortfall">Why the capacity shortfall matters for new data centers</h2>
+<p>PJM buys capacity three years ahead to make sure it can meet peak demand. The last three auctions all cleared at the price cap. The 2027/2028 auction fell over 6,600 MW short of the reliability target, and PJM said nearly 5,100 MW of an increase of about 5,250 MW in forecast peak load came from data centers. The 2028/2029 auction fell over 6,800 MW short.</p>
+<p>PJM's board responded in July 2026 with an Interim Resource Adequacy Service. It applies to new large loads that do not bring enough capacity as of June 1, 2027. In an emergency, load reductions under this service come before other emergency steps. In plain terms, a new data center that connects without its own capacity may be the first to lose power when supply is tight.</p>
+<p>That cost does not stay with the data center alone. <a href="/guides/data-center-electricity-cost-impact">Data center electricity cost impact</a> covers how capacity prices reach other customers' bills in PJM states.</p>
+<h2 id="questions-to-ask">What a plant owner or landowner should ask</h2>
+<ol><li>Is the plant's output already committed to the grid through capacity obligations or contracts, and when do those end?</li><li>Would the data center take network, firm contract demand or non-firm contract demand service, and what happens on the days it is curtailed?</li><li>Does the arrangement depend on behind-the-meter netting that FERC has ordered PJM to revise?</li><li>Will the load bring its own capacity, or fall under interim service from June 1, 2027?</li><li>Has the buyer read PJM's November 2026 filings, and how does it plan if FERC changes them?</li><li>If there is no grid tie at all, which state air permits does the generation need?</li></ol>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data centers next to firm energy of any kind: natural gas, hydro, nuclear, geothermal, or wind and solar with storage. We build and run the generation ourselves, on site or through a direct tie to the plant next door, behind the meter, so no grid connection is needed. With no grid tie, none of PJM's transmission services, netting rules or interim capacity terms apply to the campus. Energy and land partners in the PJM states put in no capital and get lease income and a long-term buyer for their energy. Send a site through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email; it is an estimate, not an offer.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You own land in a PJM state with firm energy on it or next to it, of any kind</li><li>You own a plant or energy resource with output that is not locked into grid commitments</li><li>You want lease income without putting in capital, and a buyer that does not wait on PJM</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>The plant's output is fully committed to the grid for years to come</li><li>You want a grid-connected tenant that takes PJM network service</li><li>There is no firm energy on the site or next to it</li></ul>
+<p class="cta-row"><a class="cta-button" href="/submit-a-site?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=pjm-data-center-grid-connection&amp;utm_content=product_section">Submit a site</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>What is co-located load in PJM?</h3><p>Co-located load is a large customer, such as a data center, that sits at or next to a power plant and takes power from it. FERC's December 2025 order requires a customer serving co-located load in PJM to take one of three transmission services: network service, including an interim non-firm version, Firm Contract Demand, or Non-Firm Contract Demand. The plant and the load still need a co-location arrangement under PJM's tariff.</p>
+<h3>What happened to behind-the-meter generation rules in PJM?</h3><p>FERC found PJM's behind-the-meter generation rules no longer just and reasonable. Those rules let a customer net on-site generation against its load and so pay less for transmission and capacity. FERC directed PJM to revise the retail netting rules and to set a transition process for existing participants. The revised terms are part of compliance filings PJM was still making in late 2026.</p>
+<h3>What is PJM&#x27;s Interim Resource Adequacy Service?</h3><p>It is a service PJM's board approved in July 2026, first discussed as connect and manage. It applies to new large loads that, as of June 1, 2027, do not bring enough capacity to cover themselves. In a grid emergency, PJM cuts load under this service before it takes other emergency steps. A data center that brings its own capacity avoids being in that group.</p>
+<h3>When will PJM&#x27;s co-location rules be final?</h3><p>Not yet. FERC set rates, terms and conditions for the three new services on June 18, 2026 and gave PJM and the transmission owners 60 days to file tariff changes. In a separate docket on large loads, PJM said it expected to file in the first half of November 2026. FERC will then rule on those filings, so the tariff language may change again.</p>
+<h3>Does an off-grid data center need PJM approval?</h3><p>A campus with no physical connection to the grid takes no transmission service from PJM, so the co-location services, netting rules and interim capacity service do not apply to it. It still needs state and local permits, including air permits for any generation that burns fuel, and EPA's July 2026 memo addresses how one federal program treats islanded generation.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.ferc.gov/sites/default/files/2026-06/EL25-49-002_0.pdf" rel="noopener" target="_blank">FERC, Order on Rehearing, Clarification, Compliance Filing, and Paper Hearing, Docket No. EL25-49-002 et al., June 18, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ferc.gov/news-events/news/ferc-launches-aggressive-targeted-action-speed-large-load-integration" rel="noopener" target="_blank">FERC news, FERC launches targeted action to speed large load integration, June 18, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/documents/other-fed-state/20260728-el26-67-000.pdf" rel="noopener" target="_blank">PJM, Motion for Abeyance, FERC Docket No. EL26-67-000, July 28, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/who-we-are/public-disclosures/2026/20260727-board-decisional-letter-on-cifp-reliability-backstop-procurement-and-connect-and-manage.pdf" rel="noopener" target="_blank">PJM Board of Managers, decisional letter on CIFP: reliability backstop procurement and connect and manage, July 27, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2025-releases/20251217-pjm-auction-procures-134479-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, 2027/2028 Base Residual Auction results, December 17, 2025 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2026-releases/20260714-pjm-capacity-auction-procures-138318-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, 2028/2029 Base Residual Auction results, July 14, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/library/reports-notices/load-forecast/2026-load-report.pdf" rel="noopener" target="_blank">PJM, 2026 Load Forecast Report, January 14, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.eia.gov/todayinenergy/detail.php?id=67664" rel="noopener" target="_blank">U.S. Energy Information Administration, Today in Energy, Commercial electricity sales have soared in Virginia, driven by data centers, May 5, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.epa.gov/system/files/documents/2026-07/epa-issues-clarification-on-islanded-power-generators-and-acid-rain-program-provisions.pdf" rel="noopener" target="_blank">U.S. EPA, Office of Air and Radiation, Clarification on Islanded Power Generators and Acid Rain Program Provisions, July 16, 2026 (checked 2026-11-15)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/data-center-electricity-costs">What a data center pays for electricity</a></li><li><a href="/guides/data-center-vs-nuclear-power-plant">Data center vs nuclear power plant</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/submit-a-site">Submit a site in a PJM state</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/pjm-data-center-grid-connection#article", "image": "https://accretioncompute.com/assets/og/pjm-data-center-grid-connection.png", "headline": "PJM Data Center Grid Connection: Routes, Rules and What's Open", "description": "How data centers get a grid connection in PJM: network service, FERC's three services for co-located load, behind-the-meter rules and interim capacity.", "datePublished": "2026-11-15", "dateModified": "2026-11-15", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/pjm-data-center-grid-connection"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "PJM Data Center Grid Connection: Routes, Rules and What's Open", "item": "https://accretioncompute.com/guides/pjm-data-center-grid-connection"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is co-located load in PJM?", "acceptedAnswer": {"@type": "Answer", "text": "Co-located load is a large customer, such as a data center, that sits at or next to a power plant and takes power from it. FERC's December 2025 order requires a customer serving co-located load in PJM to take one of three transmission services: network service, including an interim non-firm version, Firm Contract Demand, or Non-Firm Contract Demand. The plant and the load still need a co-location arrangement under PJM's tariff."}}, {"@type": "Question", "name": "What happened to behind-the-meter generation rules in PJM?", "acceptedAnswer": {"@type": "Answer", "text": "FERC found PJM's behind-the-meter generation rules no longer just and reasonable. Those rules let a customer net on-site generation against its load and so pay less for transmission and capacity. FERC directed PJM to revise the retail netting rules and to set a transition process for existing participants. The revised terms are part of compliance filings PJM was still making in late 2026."}}, {"@type": "Question", "name": "What is PJM's Interim Resource Adequacy Service?", "acceptedAnswer": {"@type": "Answer", "text": "It is a service PJM's board approved in July 2026, first discussed as connect and manage. It applies to new large loads that, as of June 1, 2027, do not bring enough capacity to cover themselves. In a grid emergency, PJM cuts load under this service before it takes other emergency steps. A data center that brings its own capacity avoids being in that group."}}, {"@type": "Question", "name": "When will PJM's co-location rules be final?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. FERC set rates, terms and conditions for the three new services on June 18, 2026 and gave PJM and the transmission owners 60 days to file tariff changes. In a separate docket on large loads, PJM said it expected to file in the first half of November 2026. FERC will then rule on those filings, so the tariff language may change again."}}, {"@type": "Question", "name": "Does an off-grid data center need PJM approval?", "acceptedAnswer": {"@type": "Answer", "text": "A campus with no physical connection to the grid takes no transmission service from PJM, so the co-location services, netting rules and interim capacity service do not apply to it. It still needs state and local permits, including air permits for any generation that burns fuel, and EPA's July 2026 memo addresses how one federal program treats islanded generation."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>

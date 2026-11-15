@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Center vs Nuclear Power Plant, Side by Side | Accretion</title>
+  <meta name="description" content="A data center vs nuclear power plant comparison: size, running hours, water and timing side by side, plus the three ways a data center draws on nuclear power.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/data-center-vs-nuclear-power-plant">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Data Center vs Nuclear Power Plant: Scale, Water and Timing">
+  <meta property="og:description" content="A data center vs nuclear power plant comparison: size, running hours, water and timing side by side, plus the three ways a data center draws on nuclear power.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/data-center-vs-nuclear-power-plant">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/data-center-vs-nuclear-power-plant.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-data-center-vs-nuclear-power-plant">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Data center vs nuclear power plant</p>
+    <p class="eyebrow">Power</p>
+    <h1>Data Center vs Nuclear Power Plant: Scale, Water and Timing</h1>
+    <p class="lede">One uses power and the other makes it. Here are the two next to each other, with public figures, and the ways an AI campus can actually run on nuclear energy.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-15">November 15, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>Compare a data center vs nuclear power plant and the gap in scale is wide. A hyperscale AI campus draws 100 MW or more; an average US reactor makes about 1,000 MW and ran at a 91% capacity factor in 2025. One reactor could feed several campuses, through a grid contract, a site beside the plant, or a restart.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#how-they-compare">How they compare</a></li><li><a href="#how-many-per-reactor">How many per reactor</a></li><li><a href="#water-use">Water use</a></li><li><a href="#three-ways-to-use-nuclear">Three ways to use nuclear</a></li><li><a href="#restarts-and-uprates">Restarts and uprates</a></li><li><a href="#for-plant-owners">For plant owners</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>People search this comparison for two reasons. Some want to picture the scale: is a data center as big as a power plant, and which one uses more water? Others own a plant, or land beside one, and want to know whether nuclear powered data centers make sense next door.</p>
+<p>This guide answers both with dated public figures from the U.S. Energy Information Administration, the Department of Energy, the International Energy Agency and the National Renewable Energy Laboratory. No plant, owner or buyer is named. For every other energy source, see <a href="/guides/how-are-data-centers-powered">how data centers are powered</a>.</p>
+<h2 id="how-they-compare">How does a data center compare with a nuclear power plant?</h2>
+<p>A data center consumes electricity. A nuclear plant produces it. The useful comparison is how many of one the other can serve, and what each needs from the land and water around it.</p>
+<p>On the plant side, EIA counts 94 commercial reactors at 54 plants in 28 states as of March 2026, with over 98,000 MW of net summer capacity. Single reactors range from about 520 MW to about 1,400 MW. The fleet is old, at about 44 years on average, and EIA credits uprates, upgrades that add capacity to existing reactors, with keeping its output high even as the number of reactors fell.</p>
+<p>On the data center side, the International Energy Agency puts a hyperscale AI-focused campus at 100 MW or more. Berkeley Lab's 2025 report to the Department of Energy found that US data centers used 4.7% of the country's electricity in 2024. The two industries are now big enough to matter to each other.</p>
+<h2 id="how-many-per-reactor">How many data centers can one reactor run?</h2>
+<p>Divide the fleet's capacity by its reactor count and the average US reactor is about 1,000 MW (our arithmetic from EIA's figures). On paper that covers ten AI campuses of 100 MW each. Three things shrink that number in practice:</p>
+<ul><li><strong>The output is already sold.</strong> A running reactor already feeds the grid. Power for a new campus has to come from its current buyers, from an uprate, or from a restart.</li><li><strong>Running hours.</strong> EIA reports a 91% average capacity factor for nuclear plants in 2025, higher than any other kind of plant. That is excellent, but an AI campus needs power in the other hours too, so it needs a second source or the grid behind it.</li><li><strong>Grid rules.</strong> Moving a reactor's output from the grid to a campus beside it raises questions about who pays for the transmission system both still lean on. Regulators are settling those questions now.</li></ul>
+<p>A plant with two reactors can often support more than one large campus. The binding limit is usually contracts and grid rules, not physics.</p>
+<div class="table-wrap"><table class="compare-table"><caption>A large AI data center and a nuclear plant, side by side (public figures, checked 2026-11-15)</caption><thead><tr><th scope="col">Measure</th><th scope="col">Large AI data center</th><th scope="col">Nuclear plant</th><th scope="col">Source</th></tr></thead><tbody><tr><th scope="row">Size</th><td>100 MW or more for a hyperscale AI campus</td><td>About 520 MW to about 1,400 MW per reactor; about 1,000 MW on average</td><td>IEA; EIA (average is our arithmetic)</td></tr><tr><th scope="row">US fleet</th><td>4.7% of US electricity used by data centers in 2024</td><td>94 reactors at 54 plants in 28 states, over 98,000 MW</td><td>Berkeley Lab for DOE; EIA, March 2026</td></tr><tr><th scope="row">Running hours</th><td>Needs power every hour, with backup</td><td>91% average capacity factor in 2025</td><td>EIA</td></tr><tr><th scope="row">Water for a year of 100 MW</th><td>None on site with air cooling; more with evaporative cooling</td><td>Over 580 million gallons consumed with cooling towers (our arithmetic)</td><td>NREL review; Berkeley Lab</td></tr><tr><th scope="row">What sets the timeline</th><td>Power, equipment and permits</td><td>Licensing approvals for restarts; uprate goal of 5 GW by 2029</td><td>DOE, September and October 2026</td></tr></tbody></table></div>
+<h2 id="water-use">Which uses more water: the data center or the plant?</h2>
+<p>On data center vs nuclear power plant water consumption, the plant usually uses more. A National Renewable Energy Laboratory review of power plant water use puts a nuclear plant with cooling towers at a median of 672 gallons consumed per MWh. A gas combined-cycle plant with cooling towers uses 198 gallons per MWh, a dry-cooled one about 2, and wind uses none.</p>
+<p>Run that through a 100 MW campus that uses full power every hour of the year, 876,000 MWh (our arithmetic), and the water used to make its electricity comes to over 580 million gallons a year on nuclear with cooling towers, over 170 million on a tower-cooled combined-cycle plant, and about 1.7 million on a dry-cooled one.</p>
+<p>Not every nuclear plant has cooling towers. EIA notes that some draw water from lakes, rivers or the ocean instead. The NREL review finds those once-through systems withdraw far more water than towers but consume less of it. The data center's own cooling is a separate figure, and air-cooled designs use no water on site. The <a href="/guides/data-center-water-usage">data center water usage guide</a> has both sides in full.</p>
+<h2 id="three-ways-to-use-nuclear">Three ways data centers use nuclear power</h2>
+<ol><li><strong>A contract over the grid.</strong> The data center signs a power purchase agreement with a plant owner and takes the power through its normal utility connection. It gets a nuclear-backed supply on paper, but it still needs a grid connection and still waits for one.</li><li><strong>Co-location at the plant.</strong> The campus is built next to the reactor and takes power across a short tie. In the largest US grid region, FERC's December 2025 order requires a co-located load to pick one of three transmission services. Its June 18, 2026 order set the rates and terms, and the <a href="/guides/pjm-data-center-grid-connection">PJM grid connection guide</a> explains each option.</li><li><strong>New nuclear megawatts.</strong> Restarts of closed plants and uprates at running ones add capacity that is not yet promised to anyone. That makes them the easiest nuclear megawatts for a new buyer to contract.</li></ol>
+<p>Small modular reactors appear in most headlines about nuclear and AI. This guide sticks to plants that run today and to restarts and uprates with public dates, because those are the nuclear megawatts a campus can plan around now.</p>
+<h2 id="restarts-and-uprates">Restarts and uprates: where new nuclear supply comes from</h2>
+<p>The Department of Energy is backing three restarts of closed plants: about 800 MW in Michigan, the first US restart of a reactor that had entered decommissioning; 835 MW in Pennsylvania; and 615 MW in Iowa. For the Iowa plant, which stopped running in 2020, DOE closed a loan of up to $1.9 billion in September 2026, with the restart still pending Nuclear Regulatory Commission approvals.</p>
+<p>Uprates add more. DOE's Project UPRISE fact sheet of October 27, 2026 says the program has identified about 4.7 GW of added nuclear capacity, 95% of its 5 GW goal by 2029, with conditional loan commitments of up to $5 billion and up to $4.2 billion announced in October 2026.</p>
+<p>The pool of restart candidates is limited. EIA, citing the Nuclear Regulatory Commission, lists 19 reactors at 15 sites in some stage of decommissioning, and most of those will never run again.</p>
+<h2 id="for-plant-owners">What a plant owner should weigh</h2>
+<p>For the owner of a nuclear, hydro or other firm plant, a data center next door is a new kind of customer: one that wants power every hour for years and will pay to be close. Before talking terms, settle these points:</p>
+<ul><li><strong>Land near the switchyard.</strong> A campus needs flat, buildable acres close to the plant, outside any area the plant's licensing and security rules keep clear.</li><li><strong>Output that is free to sell.</strong> Check what existing contracts and grid obligations already claim, and whether an uprate could add capacity for the new buyer.</li><li><strong>The grid operator's rules.</strong> In some regions a co-located load must take transmission service even if it rarely uses the grid. Know which service applies before pricing the deal.</li><li><strong>Who builds and runs what.</strong> Decide who owns the tie line, the substation and any backup supply, and who pays if the plant is offline.</li></ul>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Nuclear is one of the firm energy sources we build next to. Accretion Compute builds AI data centers next to firm energy of any kind: natural gas, hydro, nuclear, geothermal, or wind and solar with storage. At a plant we take power through a direct tie to the plant next door, behind the meter, and deliver capacity in factory-built compute modules of about 1 MW, so a site can start with a few megawatts and grow. The plant owner keeps the plant, puts in no capital and gets lease income for the land plus a long-term buyer for its power. A site needs about 5 acres plus 1.2 acres per MW. Send a site through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email. It is an estimate, not an offer.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You own or operate a nuclear, hydro or geothermal plant with land near the switchyard</li><li>Some of your output is free to sell, or an uprate could add some</li><li>You want a long-term, around-the-clock buyer without building anything yourself</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>All of your output is committed to the grid for years ahead</li><li>There is no buildable land near the plant for about 5 acres plus 1.2 acres per MW</li><li>You only want to sell power over the grid; a utility power purchase agreement fits better</li></ul>
+<p class="cta-row"><a class="cta-button" href="/submit-a-site?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=data-center-vs-nuclear-power-plant&amp;utm_content=product_section">Submit a site</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>Can one nuclear plant power a data center?</h3><p>Yes. One average US reactor of about 1,000 MW could in principle supply several 100 MW AI campuses. In practice most of its output is already sold, the plant does not run every hour, and grid operators set rules for loads built beside a plant. The usual answer is a share of one plant's output, with a second source or the grid covering the hours when the reactor is offline.</p>
+<h3>Does a nuclear-powered data center use more water?</h3><p>The power plant does, if it uses cooling towers. NREL's review puts a nuclear plant with cooling towers at a median of 672 gallons consumed per MWh, against 198 for a tower-cooled gas combined-cycle plant and about 2 for a dry-cooled one. For a 100 MW campus running all year, that is over 580 million gallons on nuclear. The data center's own cooling is separate, and air-cooled designs use no water on site.</p>
+<h3>Why are data centers buying nuclear power?</h3><p>Because it runs almost all the time. EIA reports a 91% average capacity factor for US nuclear plants in 2025, higher than any other kind of plant, and nuclear reactors do not produce air pollution or carbon dioxide while operating. An AI campus needs power around the clock for years, and many buyers also want power that emits no carbon dioxide. The catch is that the output of running plants is already sold to someone.</p>
+<h3>Are closed nuclear plants being restarted?</h3><p>Three are, with Department of Energy financing: about 800 MW in Michigan, 835 MW in Pennsylvania and 615 MW in Iowa. The Michigan plant is the first US reactor to restart after entering decommissioning. The Iowa plant closed in 2020 and its restart still needs Nuclear Regulatory Commission approvals. EIA lists 19 reactors at 15 sites in decommissioning, so few other candidates remain.</p>
+<h3>What is co-location at a nuclear plant?</h3><p>Co-location means building a data center next to the plant and feeding it across a short tie instead of through the wider grid. Grid operators treat it in different ways. In the largest US grid region, FERC ordered in December 2025 that a co-located load take one of three transmission services, from full network service to a new non-firm option, and set the rates and terms in June 2026.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://www.eia.gov/energyexplained/nuclear/us-nuclear-industry.php" rel="noopener" target="_blank">U.S. Energy Information Administration, Nuclear explained: U.S. nuclear industry (checked 2026-11-15)</a></li><li><a href="https://www.eia.gov/energyexplained/nuclear/nuclear-power-and-the-environment.php" rel="noopener" target="_blank">U.S. Energy Information Administration, Nuclear explained: Nuclear power and the environment (checked 2026-11-15)</a></li><li><a href="https://www.osti.gov/biblio/1009674" rel="noopener" target="_blank">National Renewable Energy Laboratory, Macknick et al., A Review of Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies (2011; via OSTI; checked 2026-11-15)</a></li><li><a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" rel="noopener" target="_blank">International Energy Agency, Energy and AI: Energy demand from AI (April 2025; checked 2026-11-15)</a></li><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, United States Data Center Energy Usage Report: 2025 Update (June 2026; hosted by DOE; checked 2026-11-15)</a></li><li><a href="https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report_1.pdf" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, 2024 United States Data Center Energy Usage Report (December 2024; checked 2026-11-15)</a></li><li><a href="https://www.energy.gov/articles/energy-department-closes-19-billion-loan-restart-duane-arnold-nuclear-plant" rel="noopener" target="_blank">U.S. Department of Energy, Energy Department closes loan to restart an Iowa nuclear plant, September 8, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.energy.gov/articles/fact-sheet-project-uprise-delivering-president-trumps-agenda-unleash-american-nuclear" rel="noopener" target="_blank">U.S. Department of Energy, Fact sheet: Project UPRISE, October 27, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.ferc.gov/sites/default/files/2026-06/EL25-49-002_0.pdf" rel="noopener" target="_blank">FERC, Order on Rehearing, Clarification, Compliance Filing, and Paper Hearing, Docket No. EL25-49-002, June 18, 2026 (checked 2026-11-15)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/how-are-data-centers-powered">How data centers are powered</a></li><li><a href="/guides/data-center-water-usage">How much water data centers use</a></li><li><a href="/guides/pjm-data-center-grid-connection">Connecting a data center in PJM</a></li><li><a href="/guides/data-center-power-companies">The companies that power data centers</a></li><li><a href="/submit-a-site">Submit a site for a free sizing</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/data-center-vs-nuclear-power-plant#article", "image": "https://accretioncompute.com/assets/og/data-center-vs-nuclear-power-plant.png", "headline": "Data Center vs Nuclear Power Plant: Scale, Water and Timing", "description": "A data center vs nuclear power plant comparison: size, running hours, water and timing side by side, plus the three ways a data center draws on nuclear power.", "datePublished": "2026-11-15", "dateModified": "2026-11-15", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/data-center-vs-nuclear-power-plant"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Data Center vs Nuclear Power Plant: Scale, Water and Timing", "item": "https://accretioncompute.com/guides/data-center-vs-nuclear-power-plant"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can one nuclear plant power a data center?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. One average US reactor of about 1,000 MW could in principle supply several 100 MW AI campuses. In practice most of its output is already sold, the plant does not run every hour, and grid operators set rules for loads built beside a plant. The usual answer is a share of one plant's output, with a second source or the grid covering the hours when the reactor is offline."}}, {"@type": "Question", "name": "Does a nuclear-powered data center use more water?", "acceptedAnswer": {"@type": "Answer", "text": "The power plant does, if it uses cooling towers. NREL's review puts a nuclear plant with cooling towers at a median of 672 gallons consumed per MWh, against 198 for a tower-cooled gas combined-cycle plant and about 2 for a dry-cooled one. For a 100 MW campus running all year, that is over 580 million gallons on nuclear. The data center's own cooling is separate, and air-cooled designs use no water on site."}}, {"@type": "Question", "name": "Why are data centers buying nuclear power?", "acceptedAnswer": {"@type": "Answer", "text": "Because it runs almost all the time. EIA reports a 91% average capacity factor for US nuclear plants in 2025, higher than any other kind of plant, and nuclear reactors do not produce air pollution or carbon dioxide while operating. An AI campus needs power around the clock for years, and many buyers also want power that emits no carbon dioxide. The catch is that the output of running plants is already sold to someone."}}, {"@type": "Question", "name": "Are closed nuclear plants being restarted?", "acceptedAnswer": {"@type": "Answer", "text": "Three are, with Department of Energy financing: about 800 MW in Michigan, 835 MW in Pennsylvania and 615 MW in Iowa. The Michigan plant is the first US reactor to restart after entering decommissioning. The Iowa plant closed in 2020 and its restart still needs Nuclear Regulatory Commission approvals. EIA lists 19 reactors at 15 sites in decommissioning, so few other candidates remain."}}, {"@type": "Question", "name": "What is co-location at a nuclear plant?", "acceptedAnswer": {"@type": "Answer", "text": "Co-location means building a data center next to the plant and feeding it across a short tie instead of through the wider grid. Grid operators treat it in different ways. In the largest US grid region, FERC ordered in December 2025 that a co-located load take one of three transmission services, from full network service to a new non-firm option, and set the rates and terms in June 2026."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>

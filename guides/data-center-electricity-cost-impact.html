@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <script>/* the old github.io copy forwards to the same page on the real domain */(function(){var l=location;if(/\.github\.io$/.test(l.hostname)){var p=l.pathname.replace(/^\/accretion-compute-site\/?/,"").replace(/\.html$/,"").replace(/^index$/,"");l.replace("https://accretioncompute.com/"+p+l.search+l.hash)}})()</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Center Electricity Cost Impact on Bills | Accretion</title>
+  <meta name="description" content="The data center electricity cost impact on other customers can go either way. When new load lowers bills, when it raises them, and what large-load tariffs do.">
+  <link rel="canonical" href="https://accretioncompute.com/guides/data-center-electricity-cost-impact">
+  <meta name="theme-color" content="#050506">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Accretion Compute">
+  <meta property="og:title" content="Data Center Electricity Cost Impact: Who Pays for New Load?">
+  <meta property="og:description" content="The data center electricity cost impact on other customers can go either way. When new load lowers bills, when it raises them, and what large-load tariffs do.">
+  <meta property="og:url" content="https://accretioncompute.com/guides/data-center-electricity-cost-impact">
+  <meta property="og:image" content="https://accretioncompute.com/assets/og/data-center-electricity-cost-impact.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Michroma&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@125,100..300&display=block">
+  <script>(function(){var t;try{t=localStorage.getItem("ac-theme")}catch(e){}t=t==="light"?"light":"dark";var d=document.documentElement;d.setAttribute("data-theme",t);d.classList.add("js");var m=document.querySelector("meta[name=theme-color]");if(m)m.content=t==="dark"?"#050506":"#ffffff"})()</script>
+  <link rel="stylesheet" href="../styles.css?v=2e0b219f">
+  <script src="../site.js?v=2e0b219f" defer></script>
+</head>
+<body class="page-data-center-electricity-cost-impact">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" data-bar>
+    <div class="bar-in">
+      <a class="bar-mark" href="../" aria-label="Accretion Compute home">
+        <img class="for-light" src="../assets/logos/accretion-compute-wordmark-black.svg" alt="" width="1320" height="122">
+        <img class="for-dark" src="../assets/logos/accretion-compute-wordmark-white.svg" alt="" width="1320" height="122">
+      </a>
+      <div class="mode" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="light" aria-label="White theme" aria-pressed="false"><i></i></button>
+        <button type="button" data-theme-set="dark" aria-label="Black theme" aria-pressed="true"><i></i></button>
+      </div>
+      <button class="bar-toggle" type="button" aria-expanded="false" aria-controls="nav" data-nav-toggle>
+        <span class="sr">Menu</span><i></i><i></i>
+      </button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="../capacity">Capacity</a>
+        <a href="../energy">Energy</a>
+        <a href="../sites">Site selection</a>
+        <a href="../partners">Partners</a>
+        <a href="../site-model">Site model</a>
+        <a href="../about">About</a>
+        <a href="../guides" aria-current="page">Guides</a>
+        <a class="nav-cta" href="../contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="pagehead guidehead dark">
+  <div class="pagehead-disk"><svg viewBox="-500 -500 1000 1000" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="dk-glow">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0.22"/>
+      <stop offset="0.18" stop-color="currentColor" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="currentColor" stop-opacity="0.025"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dk-h" x1="0" x2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="dk-v" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="currentColor"/>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <circle r="500" fill="url(#dk-glow)"/>
+  <g transform="rotate(-8) scale(1 0.26)" fill="none" stroke="currentColor">
+    <circle class="spin" r="470" stroke-opacity="0.07" stroke-width="3" stroke-dasharray="2 22"/>
+    <circle class="spin rev" r="400" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="120 60 8 60"/>
+    <circle class="spin fast" r="330" stroke-opacity="0.16" stroke-width="2.5" stroke-dasharray="3 14"/>
+    <circle class="spin" r="265" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="180 40 20 40"/>
+    <circle class="spin rev fast" r="205" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 9"/>
+    <circle class="spin fast" r="150" stroke-opacity="0.38" stroke-width="2" stroke-dasharray="90 30"/>
+    <circle r="470" stroke-opacity="0.05"/>
+    <circle r="330" stroke-opacity="0.07"/>
+    <circle r="205" stroke-opacity="0.1"/>
+  </g>
+  <g class="pulse">
+    <rect x="-150" y="-0.8" width="300" height="1.6" fill="url(#dk-h)" opacity="0.9"/>
+    <rect x="-0.8" y="-46" width="1.6" height="92" fill="url(#dk-v)" opacity="0.8"/>
+    <circle r="9" fill="currentColor" opacity="0.2"/>
+    <circle r="3.2" fill="currentColor"/>
+  </g>
+</svg></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="../">Home</a> / <a href="../guides">Guides</a> / Electricity cost impact</p>
+    <p class="eyebrow">Power</p>
+    <h1>Data Center Electricity Cost Impact: Who Pays for New Load?</h1>
+    <p class="lede">For utilities, counties, landowners and households: when a data center lowers other customers' prices, when it raises them, and the rules that decide who pays.</p>
+    <p class="meta-row">Updated <time datetime="2026-11-15">November 15, 2026</time> · By <a href="/about">Accretion Compute team</a> · 5 min read</p>
+  </div>
+</section>
+
+<section class="band tight guide-band">
+  <div class="wrap">
+<article class="seo-guide" data-page-type="guide">
+
+
+<section class="quick-answer" id="quick-answer"><p class="label">Quick answer</p><p>The data center electricity cost impact on other customers can run either way. A campus that fills spare grid capacity and pays its share of fixed costs can lower prices. One that forces new plants and lines faster than supply can follow, as in PJM's capacity market, pushes them up. The tariff decides who pays.</p></section>
+<nav class="toc" aria-label="On this page"><p class="label">On this page</p><ol><li><a href="#do-data-centers-raise-bills">Do they raise bills?</a></li><li><a href="#when-prices-fall">When prices fall</a></li><li><a href="#the-pjm-case">The PJM case</a></li><li><a href="#large-load-tariffs">Large-load tariffs</a></li><li><a href="#bring-your-own-power">Bring your own power</a></li><li><a href="#questions-to-ask">Questions to ask</a></li><li><a href="#product-fit">Where Accretion fits</a></li><li><a href="#faq">FAQ</a></li></ol></nav>
+<p>Do data centers raise electricity bills? News stories point to rising bills near data center clusters. Utilities point to new revenue spread across more customers. Both can be true, and which one wins depends on the grid a campus joins and the rules that set who pays for what.</p>
+<p>This guide works from primary sources: Lawrence Berkeley National Laboratory and Brattle's 2026 review of retail prices, PJM's auction results, Texas law and federal proposals. It covers what everyone else pays. What a data center itself pays is in <a href="/guides/data-center-electricity-costs">the data center electricity costs guide</a>.</p>
+<h2 id="do-data-centers-raise-bills">Do data centers raise electricity bills?</h2>
+<p>Not by default. Much of a power bill pays for wires, substations and plants that already exist. The Berkeley Lab review explains that, all else equal, prices tend to fall when those fixed costs are spread over more sales. A large customer that uses the existing system well, running steadily at a high load factor, can bring average costs down.</p>
+<p>Growth also brings new costs, and the review names three factors that decide which way prices move:</p>
+<ol><li><strong>System utilization.</strong> How much spare capacity the grid has, and how well the new load uses it.</li><li><strong>System costs.</strong> Whether the new plants and lines the load needs cost more or less than the average cost of the existing system.</li><li><strong>Cost allocation.</strong> How regulators split new costs and savings among customer classes.</li></ol>
+<p>Data centers used 4.7% of US electricity in 2024, according to Berkeley Lab's 2025 report to the Department of Energy. At that size, the question reaches rate cases and statehouses.</p>
+<h2 id="when-prices-fall">When new load lowers prices</h2>
+<p>From 2019 to 2025, the states with the highest load growth generally saw average retail prices fall in real terms, by over 1 cent per kWh across all sectors, based on earlier statistical work cited in the 2026 review. States where load shrank often saw increases. The authors note that the presence of large data center loads does not appear to change that pattern.</p>
+<p>Households are less clear-cut. The review finds a weaker link between load growth and residential prices, though residential customers in some states appear to have benefited, or at least not been hurt. Its case study of North Dakota, New Mexico and Nebraska credits two conditions: large commercial and industrial growth to spread fixed costs, and abundant low-cost energy to serve the new load cheaply.</p>
+<p>The same review warns that the past need not be prelude, and points to PJM as the counterexample.</p>
+<h2 id="the-pjm-case">When it raises them: the PJM capacity case</h2>
+<p>PJM runs the grid and a capacity market for 13 states and the District of Columbia. Its auctions pay power plants to be available years ahead, and the cost lands on customers' bills. The price for 2025/2026 cleared at over $269 per MW-day, up from over $28 per MW-day the year before, and the three auctions since have all cleared at the cap.</p>
+<p>For the 2027/2028 auction, PJM said nearly 5,100 MW of an increase of about 5,250 MW in forecast peak load came from data center demand, and the auction fell over 6,600 MW short of its reliability target.</p>
+<p>Capacity is one part of a retail bill, and PJM notes that load hedged through utility-owned plants or contracts is not exposed to the clearing price. The Berkeley Lab review makes the same point: states with vertically integrated utilities are shielded to some extent because their utilities can supply their own capacity. Even so, its map shows average nominal price increases of 15-25% from December 2024 to December 2025 in some PJM states, with capacity one contributor among several. The <a href="/guides/pjm-data-center-grid-connection">PJM grid connection guide</a> covers how PJM now treats new large loads.</p>
+<div class="table-wrap"><table class="compare-table"><caption>Where a data center can move other customers' costs, and what keeps them down</caption><thead><tr><th scope="col">Cost channel</th><th scope="col">How a data center can push it up</th><th scope="col">What keeps it down</th><th scope="col">Who decides</th></tr></thead><tbody><tr><th scope="row">Energy</th><td>Adds demand in hours when supply is tight</td><td>Steady use, flexibility at peak, its own generation</td><td>Wholesale markets or the utility</td></tr><tr><th scope="row">Generation capacity</th><td>Adds peak demand the market must buy capacity for</td><td>Bringing its own capacity, or agreeing to be curtailed</td><td>Grid operator rules and state regulators</td></tr><tr><th scope="row">Transmission and substations</th><td>Needs new lines and substations sized for it</td><td>Tariffs that charge upgrades to the customer that causes them</td><td>Utility tariffs, state law and FERC</td></tr><tr><th scope="row">Distribution and other fixed costs</th><td>Little, if it pays its share</td><td>Spreading existing fixed costs over more sales</td><td>The state regulator, in rate cases</td></tr><tr><th scope="row">Stranded assets</th><td>Leaves before the assets built for it are paid off</td><td>Minimum terms, exit fees and collateral</td><td>The large-load tariff or contract</td></tr></tbody></table></div>
+<h2 id="large-load-tariffs">What do large-load tariffs do?</h2>
+<p>A large load tariff is a separate set of rules and rates for very large customers. The Berkeley Lab review groups their aims into four themes: allocate costs to the customers that cause them, cut financial risk for the utility and other customers, manage reliability risk, and still accommodate the large customer. Common provisions include:</p>
+<ul><li>Minimum contract terms and minimum demand or payment, so the customer pays even if it uses less.</li><li>Exit fees and rules for reassigning the contract.</li><li>Up-front commitments, collateral and credit requirements.</li><li>Terms on size, ramp times, load factor and behind-the-meter resources.</li></ul>
+<p>States are writing the same ideas into law. Texas's SB 6 and the Public Utility Commission rule in force since October 8, 2026 apply to loads of 75 MW or more. They require a $100,000 study fee and security of $50,000 per MW, and the customer pays all direct interconnection costs in cash, with no allowance. At the federal level, the Department of Energy's October 2025 proposal said loads over 20 MW should be responsible for 100% of the network upgrades assigned to them.</p>
+<p>The review lists approved large-load deals that regulators expect to lower other customers' bills, then adds that positive outcomes are not assured and require monitoring.</p>
+<h2 id="bring-your-own-power">What bringing your own power changes</h2>
+<p>The surest way to keep a data center off other customers' bills is to keep it off the shared system. Berkeley Lab and Brattle list three options for adding large loads with less impact: flexibility, on-site generation or storage at the new load; letting data centers bring their own off-site generation; and wider use of flexibility, efficiency, storage and existing lines.</p>
+<p>Federal policy points the same way. EPA's July 2026 release on permits for off-grid power cites the Ratepayer Protection Pledge, under which signing companies commit to build, bring or buy all the energy their facilities need and to pay its full cost, including the supporting infrastructure. A campus with its own firm generation behind the meter and no grid tie adds no peak to a capacity market and no network upgrades to shared rates.</p>
+<p>It does raise other questions for the community: air permits for any generation that burns fuel, water, noise and land use. Those are local matters, and a developer should answer them in public. <a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers</a> explains the setup.</p>
+<h2 id="questions-to-ask">Questions to ask a utility or county</h2>
+<ol><li>How much spare capacity does the local grid have, and in which hours?</li><li>Which new lines, substations or plants does this load need, and who pays for each one?</li><li>Is there a large-load tariff, and does it set minimum terms, exit fees and collateral?</li><li>What happens to those costs if the data center shrinks, delays or leaves?</li><li>Will the campus bring its own generation, and is that generation tied to the grid or islanded?</li><li>How will the utility report the effect on other customers' rates once the campus runs?</li></ol>
+<section class="product-fit" id="product-fit"><h2>Where Accretion Compute fits</h2>
+<p>Accretion Compute builds AI data centers next to firm energy of any kind: natural gas, hydro, nuclear, geothermal, or wind and solar with storage. We build and run the generation ourselves, on site or through a direct tie to the plant next door, behind the meter, so no grid connection is needed. Where a site has no grid tie, the campus asks the local utility for no new capacity and no network upgrades paid through shared rates. Energy and land partners put in no capital and get lease income and a long-term buyer for their energy. Utilities, counties and landowners with questions can <a href="/contact">talk to us</a>. Owners of land with firm energy can send it through <a href="/submit-a-site">Submit a site</a> for a free site sizing by email; it is an estimate, not an offer.</p>
+<p class="fit-head">Good fit if</p><ul class="fits"><li>You own land with firm energy on it or next to it and want a buyer that brings its own power</li><li>You are a county or utility that wants new load without new grid costs on other customers</li><li>You want lease income without putting in capital</li></ul>
+<p class="fit-head">Probably not a fit if</p><ul class="not-a-fit"><li>Your community wants the new load on the grid to spread existing fixed costs; a grid-connected developer fits better</li><li>The only energy nearby is interruptible; an AI campus needs firm power</li><li>Local air rules rule out new on-site combustion and no other firm source is nearby</li></ul>
+<p class="cta-row"><a class="cta-button" href="/contact?utm_source=seo&amp;utm_medium=organic&amp;utm_campaign=data-center-electricity-cost-impact&amp;utm_content=product_section">Talk to us</a></p></section>
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>
+<h3>Do data centers make electricity more expensive for homes?</h3><p>Sometimes. Berkeley Lab and Brattle found that from 2019 to 2025, residential customers in some fast-growing states appear to have benefited, or at least not been hurt, and that large data center loads did not appear to change that. Where new load outruns supply, as in PJM's capacity market, prices rise for everyone. The tariff, and whether the data center brings its own power, decide how much reaches household bills.</p>
+<h3>Can a data center lower electricity prices?</h3><p>Yes, under the right conditions. Much of the grid's cost is fixed, so a large customer that runs steadily and pays its share spreads those costs over more sales. The 2026 Berkeley Lab review found that the highest-growth states saw real all-sector prices fall by over 1 cent per kWh from 2019 to 2025. It also warns that good outcomes are not assured and need monitoring.</p>
+<h3>What is a large load tariff?</h3><p>It is a set of utility rules and rates written for very large customers, such as loads of 75 MW or more under the Texas rule. Typical terms include minimum contract lengths and minimum demand charges, exit fees, collateral and credit requirements, and limits on size, ramp times and behind-the-meter resources. The aim is that the customer causing new costs pays them, and that others are not left with stranded assets if it leaves.</p>
+<h3>What is the Ratepayer Protection Pledge?</h3><p>It is a federal pledge cited in EPA's July 2026 release on permits for off-grid power. Companies that sign it commit to build, bring or buy all the energy needed to power their facilities and to pay the full cost of that energy and its supporting infrastructure. EPA's release said the pledge had been expanded the week before. It is a commitment by the signer, not a tariff, so the local rate rules still apply.</p>
+<h3>Who pays if a data center leaves before its contract ends?</h3><p>That depends on the tariff and the contract. The large-load tariffs reviewed by Berkeley Lab and Brattle use minimum terms, exit fees, reassignment rules, collateral and credit requirements so that the departing customer, not other ratepayers, covers the assets built for it. The Texas rule makes large loads pay direct interconnection costs in cash before the work starts, and that payment is not refundable.</p>
+</section>
+<section class="sources"><h2>Sources</h2><ul><li><a href="https://eta-publications.lbl.gov/sites/default/files/2026-03/retail_price_trends_2026_edition.pdf" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory and Brattle, Retail Electricity Price Trends and Drivers: Data Update, 2026 Edition (April 2026), slides 46-54 (checked 2026-11-15)</a></li><li><a href="https://www.energy.gov/documents/united-states-data-center-energy-usage-report-2025-update" rel="noopener" target="_blank">Lawrence Berkeley National Laboratory, United States Data Center Energy Usage Report: 2025 Update (June 2026; hosted by DOE; checked 2026-11-15)</a></li><li><a href="https://insidelines.pjm.com/pjm-capacity-auction-procures-sufficient-resources-to-meet-rto-reliability-requirement/" rel="noopener" target="_blank">PJM Inside Lines, PJM Capacity Auction Procures Sufficient Resources To Meet RTO Reliability Requirement, July 30, 2024 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2025-releases/20251217-pjm-auction-procures-134479-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, 2027/2028 Base Residual Auction results, December 17, 2025 (checked 2026-11-15)</a></li><li><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2026-releases/20260714-pjm-capacity-auction-procures-138318-mw-of-generation-resources.pdf" rel="noopener" target="_blank">PJM news release, 2028/2029 Base Residual Auction results, July 14, 2026 (checked 2026-11-15)</a></li><li><a href="https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm" rel="noopener" target="_blank">Texas Legislature, Senate Bill 6, 89th Regular Session (2025), enrolled text (checked 2026-11-15)</a></li><li><a href="https://www.puc.texas.gov/agency/rulesnlaws/subrules/electric/25.194/25.194.pdf" rel="noopener" target="_blank">Public Utility Commission of Texas, 16 TAC 25.194, Large Load Interconnection Standards, effective October 8, 2026 (checked 2026-11-15)</a></li><li><a href="https://www.energy.gov/sites/default/files/2025-10/403%20Large%20Loads%20Letter.pdf" rel="noopener" target="_blank">U.S. Department of Energy, Secretary&#x27;s letter and advance notice of proposed rulemaking on large load interconnection, October 23, 2025 (checked 2026-11-15)</a></li><li><a href="https://www.epa.gov/newsreleases/epa-issues-permitting-guidance-further-president-trumps-agenda-promoting-data-centers" rel="noopener" target="_blank">U.S. EPA news release, EPA issues permitting guidance on islanded power generation, July 26, 2026 (checked 2026-11-15)</a></li></ul></section>
+<nav class="keep-reading" aria-label="Keep reading"><h2>Keep reading</h2><ul><li><a href="/guides/data-center-electricity-costs">What a data center pays for electricity</a></li><li><a href="/guides/data-center-interconnection-queue">Why the data center interconnection queue is so long</a></li><li><a href="/guides/ercot-data-center-grid-connection">Connecting a data center to the ERCOT grid</a></li><li><a href="/guides/behind-the-meter-data-centers">Behind-the-meter data centers explained</a></li><li><a href="/contact">Talk to Accretion Compute</a></li></ul></nav>
+</article>
+  </div>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://accretioncompute.com/guides/data-center-electricity-cost-impact#article", "image": "https://accretioncompute.com/assets/og/data-center-electricity-cost-impact.png", "headline": "Data Center Electricity Cost Impact: Who Pays for New Load?", "description": "The data center electricity cost impact on other customers can go either way. When new load lowers bills, when it raises them, and what large-load tariffs do.", "datePublished": "2026-11-15", "dateModified": "2026-11-15", "author": {"@type": "Organization", "name": "Accretion Compute team", "url": "https://accretioncompute.com/about"}, "publisher": {"@type": "Organization", "name": "Accretion Compute", "url": "https://accretioncompute.com/", "logo": {"@type": "ImageObject", "url": "https://accretioncompute.com/icon-512.png"}}, "mainEntityOfPage": "https://accretioncompute.com/guides/data-center-electricity-cost-impact"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://accretioncompute.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://accretioncompute.com/guides"}, {"@type": "ListItem", "position": 3, "name": "Data Center Electricity Cost Impact: Who Pays for New Load?", "item": "https://accretioncompute.com/guides/data-center-electricity-cost-impact"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do data centers make electricity more expensive for homes?", "acceptedAnswer": {"@type": "Answer", "text": "Sometimes. Berkeley Lab and Brattle found that from 2019 to 2025, residential customers in some fast-growing states appear to have benefited, or at least not been hurt, and that large data center loads did not appear to change that. Where new load outruns supply, as in PJM's capacity market, prices rise for everyone. The tariff, and whether the data center brings its own power, decide how much reaches household bills."}}, {"@type": "Question", "name": "Can a data center lower electricity prices?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, under the right conditions. Much of the grid's cost is fixed, so a large customer that runs steadily and pays its share spreads those costs over more sales. The 2026 Berkeley Lab review found that the highest-growth states saw real all-sector prices fall by over 1 cent per kWh from 2019 to 2025. It also warns that good outcomes are not assured and need monitoring."}}, {"@type": "Question", "name": "What is a large load tariff?", "acceptedAnswer": {"@type": "Answer", "text": "It is a set of utility rules and rates written for very large customers, such as loads of 75 MW or more under the Texas rule. Typical terms include minimum contract lengths and minimum demand charges, exit fees, collateral and credit requirements, and limits on size, ramp times and behind-the-meter resources. The aim is that the customer causing new costs pays them, and that others are not left with stranded assets if it leaves."}}, {"@type": "Question", "name": "What is the Ratepayer Protection Pledge?", "acceptedAnswer": {"@type": "Answer", "text": "It is a federal pledge cited in EPA's July 2026 release on permits for off-grid power. Companies that sign it commit to build, bring or buy all the energy needed to power their facilities and to pay the full cost of that energy and its supporting infrastructure. EPA's release said the pledge had been expanded the week before. It is a commitment by the signer, not a tariff, so the local rate rules still apply."}}, {"@type": "Question", "name": "Who pays if a data center leaves before its contract ends?", "acceptedAnswer": {"@type": "Answer", "text": "That depends on the tariff and the contract. The large-load tariffs reviewed by Berkeley Lab and Brattle use minimum terms, exit fees, reassignment rules, collateral and credit requirements so that the departing customer, not other ratepayers, covers the assets built for it. The Texas rule makes large loads pay direct interconnection costs in cash before the work starts, and that payment is not refundable."}}]}]}</script>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img class="for-light" src="../assets/logos/accretion-compute-horizontal-black.svg" alt="Accretion Compute" width="1430" height="300">
+        <img class="for-dark" src="../assets/logos/accretion-compute-horizontal-white.svg" alt="Accretion Compute" width="1430" height="300">
+        <p>AI compute, built at the source of energy.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <div>
+          <h2>Company</h2>
+          <a href="../about">About</a>
+          <a href="../partners">Partners</a>
+          <a href="../contact">Contact</a>
+          <a href="https://www.linkedin.com/company/accretion-compute" rel="noopener">LinkedIn</a>
+          <a href="https://www.crunchbase.com/organization/accretion-compute" rel="noopener">Crunchbase</a>
+        </div>
+        <div>
+          <h2>Platform</h2>
+          <a href="../capacity">Capacity</a>
+          <a href="../energy">Energy</a>
+          <a href="../sites">Site selection</a>
+          <a href="../guides">Guides</a>
+        </div>
+        <div>
+          <h2>More</h2>
+          <a href="https://protonminingco.com/" rel="noopener">Proton Mining</a>
+          <a href="../privacy">Privacy</a>
+        </div>
+      </nav>
+    </div>
+    <p class="foot-legal">&copy; 2026 Accretion Compute.</p>
+  </footer>
+</body>
+</html>
