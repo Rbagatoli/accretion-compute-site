@@ -8,13 +8,13 @@
 
   // Source modes. Slider 0-100 maps onto a log scale between lo and hi.
   const MODES = {
-    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:100, hi:12000, def:2000, ch4:true, hr:11000, gen:1.6, sizes:[1.6,3.3,4.5], price:2,
+    lfg:   {label:"Landfill gas collected", unit:"scfm", lo:100, hi:12000, def:2000, ch4:true, hr:11000, gen:0.4, sizes:[0.4,0.8,1.2,1.56,2.0,3.3,4.5], price:2, // Cat CG132-8, CG132-16, CG170-12, CG170-16, CG170-20, Jenbacher J620, J624
             hint:"Standard cubic feet per minute, as reported to your regulator.",
             chips:[["Small landfill",1200,50],["Mid landfill",2500,48],["Large landfill",7000,46]], src:"flare"},
-    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.2, hi:40, def:4, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:2.5,
+    gas:   {label:"Gas available", unit:"MMcf/d", lo:0.2, hi:40, def:4, ch4:false, hr:9000, gen:0.4, sizes:[0.4,0.8,1.2,1.56,2.5,4.5,10,18], price:2.5, // Cat CG132-8, CG132-16, CG170-12, CG170-16, Cat G3520H, Jenbacher J624, Wartsila 34SG, 50SG
             hint:"Million cubic feet per day at a tap on your plant or gathering line.",
             chips:[["Plant tap",2],["Curtailed gas",5],["Large field",20]], src:"well"},
-    plant: {label:"Gas from the existing line", unit:"MMcf/d", lo:2, hi:60, def:5, ch4:false, hr:9000, gen:2.5, sizes:[2.5,4.5,10,18], price:3,
+    plant: {label:"Gas from the existing line", unit:"MMcf/d", lo:2, hi:60, def:5, ch4:false, hr:9000, gen:0.4, sizes:[0.4,0.8,1.2,1.56,2.5,4.5,10,18], price:3, // same field/pipeline gas units as gas
             hint:"Gas taken from the plant's existing supply, for a site beside a working or retired plant.",
             chips:[["First phase",5],["Second phase",12],["Campus",40]], src:"stack"}
   };
@@ -35,9 +35,14 @@
     if (m.unit === "scfm") btuh = st.flow * (st.ch4/100) * 1012 * 60;
     else btuh = st.flow * 1e6 * 1037 / 24; // MMcf/d -> scf/h * Btu/scf
     const mw = btuh / m.hr / 1000;         // kW -> MW
-    // Bigger sites use bigger engines, not more of them: the smallest unit that keeps eight or fewer running.
-    const genMW = m.sizes.find(u => mw / u <= 8) || m.sizes[m.sizes.length - 1];
-    const run = Math.max(1, Math.ceil(mw / genMW));
+    // N+1 (owner rule, 2026-11-16): several smaller engines share the load plus ONE spare, never one big
+    // engine running plus one big spare. Aim for 4-5 running; ties go to the lowest installed MW, then the
+    // larger unit. Same chooser as pick_unit() in the sizing sheets (make_sizings.py).
+    let genMW = m.sizes[0], run = 0, bestKey = null;
+    for (const u of m.sizes) {
+      const r = Math.max(1, Math.ceil(mw / u)), dist = r < 4 ? 4 - r : r > 5 ? r - 5 : 0, inst = (r + 1) * u;
+      if (!bestKey || dist < bestKey[0] || (dist === bestKey[0] && (inst < bestKey[1] || (inst === bestKey[1] && u > genMW)))) { bestKey = [dist, inst]; genMW = u; run = r; }
+    }
     const gens = run + 1;
     const it = mw / 1.2;
     const racks = Math.floor(it * 1000 / 120);
@@ -149,12 +154,12 @@
   }
   function line(a,b,stroke,lw=1,dash){ ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.setLineDash(dash||[]); ctx.stroke(); ctx.setLineDash([]); }
 
-  function layout(nG, nH, gs){
+  function layout(nG, nH, gs, dk=1){
     // World units: 1 = about 10 m. Source and gas yard on the left, generator block, battery, then hall block.
     const gPer = Math.max(3, Math.min(10, Math.ceil(Math.sqrt(nG*1.5))));
     const hPer = Math.max(2, Math.min(8, Math.ceil(Math.sqrt(nH*1.2))));
     const gCols = Math.ceil(nG/gPer), hCols = Math.ceil(nH/hPer);
-    const gw = 1.3*gs, gd = 2.2*gs, gGap = 0.5*gs, hw = 2.6, hd = 4.2, hGap = 0.8;
+    const gw = 1.3*gs, gd = 2.2*gs*dk, gGap = 0.5*gs, hw = 2.6, hd = 4.2, hGap = 0.8;
     const gBlockD = Math.min(nG,gPer)*(gd+gGap) - gGap, hBlockD = Math.min(nH,hPer)*(hd+hGap) - hGap;
     const depth = Math.max(gBlockD, hBlockD, 8) + 2;
     const gx0 = 7.5, gy0 = (depth - gBlockD)/2;
@@ -170,7 +175,7 @@
     const sh = scene.shown, ease = 0.12;
     sh.gens += (R.gens - sh.gens)*ease; sh.halls += (R.halls - sh.halls)*ease;
     const nG = Math.max(2, Math.round(Math.min(sh.gens, 80))), nH = Math.max(1, Math.round(Math.min(sh.halls, 64)));
-    const L = layout(nG, nH, Math.max(1, Math.cbrt(R.genMW / 2.5)));
+    const L = layout(nG, nH, R.genMW > 2 ? Math.cbrt(R.genMW / 2) : 1, R.genMW < .6 ? .55 : 1); // 400 kW: 20-ft box
     const wx = L.width + 1, wy = L.depth + 1;
     const sx = W / ((wx + wy) * C30 * 0.98), sy = H / ((wx + wy) * S30 * 1.02 + 6.5);
     S += ((Math.min(sx, sy)*DPR) - S) * 0.15;
@@ -457,22 +462,23 @@ function seams(w, h, d, y0, step, mat, p) { const gs = [];
   for (let z = -d / 2 + step; z < d / 2 - .1; z += step) for (const s of [-1, 1]) { const g = new THREE.BoxGeometry(.05, h, .05); g.translate(s * (w / 2 + .02), y0 + h / 2, z); gs.push(g); }
   if (gs.length) mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(gs), mat, 0, 0, 0, p, false); }
 
-// Gas genset in a 40-ft acoustic enclosure (long axis along z)
-function makeGen(spare) {
-  const g = new THREE.Group(); const L = 12.2, W = 2.5, H = 2.9;
+// Gas genset in an acoustic enclosure (long axis along z): 40-ft (12.2 m) by default, 20-ft (6.1 m) for
+// the 400 kW Cat CG132-8; units over 2 MW are drawn larger (see genLook)
+function makeGen(spare, L = 12.2) {
+  const g = new THREE.Group(); const W = 2.5, H = 2.9, k = L / 12.2, small = k < .7;
   B(W + .3, .25, L + .4, M.dark, 0, .125, 0, g);
   B(W, H, L, spare ? M.genSpare : M.gen, 0, .25 + H / 2, 0, g);
   seams(W, H - .2, L, .35, 2.4, M.dark, g);
   B(W - .3, 1.6, .06, M.louvre, 0, 1.6, L / 2 + .03, g, false);
   B(W - .3, 1.6, .06, M.louvre, 0, 1.6, -L / 2 - .03, g, false);
-  for (const z of [-2.4, 0, 2.4]) B(.04, 2.1, 1.0, M.dark, W / 2 + .02, 1.35, z, g, false);
-  B(W - .1, 1.0, 4.4, M.galv, 0, H + .25 + .5, -3.6, g);
-  for (const z of [-4.7, -2.5]) fan(.9, 0, H + .25 + 1.02, z, g);
-  const sil = C(.48, .48, 3.6, M.steel, 0, H + .25 + .55, 2.6, g); sil.rotation.x = Math.PI / 2;
-  C(.24, .24, 3.2, M.steel, 0, H + .25 + 1.9, 4.2, g);
-  C(.34, .24, .25, M.dark, 0, H + .25 + 3.55, 4.2, g);
+  for (const z of small ? [-1.1, 1.1] : [-2.4, 0, 2.4]) B(.04, 2.1, small ? .8 : 1.0, M.dark, W / 2 + .02, 1.35, z, g, false);
+  B(W - .1, 1.0, 4.4 * k, M.galv, 0, H + .25 + .5, -3.6 * k, g);
+  for (const z of small ? [-3.6 * k] : [-4.7, -2.5]) fan(small ? .8 : .9, 0, H + .25 + 1.02, z, g);
+  const sil = C(small ? .36 : .48, small ? .36 : .48, 3.6 * k, M.steel, 0, H + .25 + .55, 2.6 * k, g); sil.rotation.x = Math.PI / 2;
+  C(.24, .24, 3.2, M.steel, 0, H + .25 + 1.9, 4.2 * k, g);
+  C(.34, .24, .25, M.dark, 0, H + .25 + 3.55, 4.2 * k, g);
   B(.12, .12, .3, M.lamp, W / 2 + .07, 2.75, 0, g, false);
-  g.userData.stack = new THREE.Vector3(0, H + .25 + 3.7, 4.2); g.userData.spare = spare;
+  g.userData.stack = new THREE.Vector3(0, H + .25 + 3.7, 4.2 * k); g.userData.spare = spare;
   return g;
 }
 // AI compute module: container-sized, dark cladding, dry coolers on the roof (long axis along z)
@@ -1175,7 +1181,10 @@ const ground = mesh(new THREE.PlaneGeometry(4000, 4000), M.ground, 0, 0, 0, scen
 const gensG = new THREE.Group(), modsG = new THREE.Group(), batsG = new THREE.Group(), fixed = new THREE.Group();
 site.add(gensG, modsG, batsG, fixed);
 let srcG = null, curSrc = "", padG = null;
-const protoGen = makeGen(false), protoMod = makeMod(), protoBat = makeBat();
+const protoGen = makeGen(false), protoGen20 = makeGen(false, 6.1), protoMod = makeMod(), protoBat = makeBat();
+// How a unit of u MW is drawn: 400 kW in a 20-ft enclosure, 0.8-2 MW in a 40-ft one, larger units scaled up.
+// s scales the whole box; d is the footprint length factor used for the row pitch.
+function genLook(u) { const s = u > 2 ? Math.cbrt(u / 2) : 1, small = u < .6; return { small, s, d: small ? .55 : 1 }; }
 
 // fixed kit on the pad: gas conditioning skid and main transformer
 (function () {
@@ -1189,9 +1198,9 @@ const protoGen = makeGen(false), protoMod = makeMod(), protoBat = makeBat();
 })();
 
 const L = {};
-function layout(nG, nM, nB, gs, hall) {
-  const gRow = Math.max(4, Math.min(12, Math.ceil(Math.sqrt(nG * 2.2))));
-  const gRows = Math.ceil(nG / gRow), gx0 = 32, gpx = 4.4 * gs, gpz = 16 * gs;
+function layout(nG, nM, nB, gs, hall, gd = 1) {
+  const gRow = Math.max(4, Math.min(12, Math.ceil(Math.sqrt(nG * 2.2 * gd))));
+  const gRows = Math.ceil(nG / gRow), gx0 = 32, gpx = 4.4 * gs, gpz = 16 * gs * gd;
   const gW = Math.min(nG, gRow) * gpx;
   const tx = gx0 + gW + 6;
   const bx0 = tx + 10, bRow = Math.min(nB, 4), bW = Math.max(1, bRow) * 3.4;
@@ -1432,16 +1441,17 @@ function frameInner() {
   // up to 40 modules stand in the open; past that they are housed in halls of 12 (the last hall holds the rest)
   const hall = R.halls > HALL_AT, nHall = Math.ceil(R.halls / PER_HALL), lastN = R.halls - (nHall - 1) * PER_HALL;
   const nG = Math.min(R.gens, MAX_G), nM = hall ? nHall : Math.min(R.halls, MAX_M), nB = Math.max(1, Math.min(12, Math.ceil(R.mw / 4)));
-  const gs = Math.max(1, Math.cbrt(R.genMW / 2.5)); // a larger engine is drawn larger
-  const k = nG + "|" + nM + "|" + nB + "|" + gs + "|" + (hall ? "h" + lastN : "m");
+  const GL = genLook(R.genMW), gs = GL.s; // a 400 kW unit sits in a 20-ft box; a larger engine is drawn larger
+  const k = nG + "|" + nM + "|" + nB + "|" + gs + "|" + GL.small + "|" + (hall ? "h" + lastN : "m");
   if (k !== key) {
-    key = k; const P = layout(nG, nM, nB, gs, hall); gpos = P.gp; mpos = P.mp; bpos = P.bp;
+    key = k; const P = layout(nG, nM, nB, gs, hall, GL.d); gpos = P.gp; mpos = P.mp; bpos = P.bp;
     if (modsG.userData.hall !== hall) { if (modOpen) closeModule(true); while (modsG.children.length) modsG.remove(modsG.children[0]); modsG.userData.hall = hall; }
     isHall = hall; if (openBtn && !modOpen) openBtn.textContent = hall ? "Look inside a hall" : "Look inside a module";
     { const h = document.getElementById("hint"); if (h) { h.dataset.base = h.dataset.base || h.textContent;
         h.textContent = hall ? h.dataset.base.replace(/(Click|Tap) a module to open it/, "$1 a hall to look inside") + " · Each hall holds up to 12 modules" : h.dataset.base; } }
     { const d = document.querySelector("#r-halls + .d"); if (d) { d.dataset.base = d.dataset.base || d.textContent; d.textContent = hall ? "about 1 MW each, in " + nHall + " halls" : d.dataset.base; } }
-    sync(gensG, nG, () => protoGen.clone());
+    if (gensG.userData.small !== GL.small) { while (gensG.children.length) gensG.remove(gensG.children[0]); gensG.userData.small = GL.small; }
+    sync(gensG, nG, () => (GL.small ? protoGen20 : protoGen).clone());
     gensG.children.forEach((o, i) => { const sp = i === nG - 1; o.userData.spare = sp; o.userData.s = gs; o.scale.x = o.scale.z = gs; o.children[1].material = sp ? M.genSpare : M.gen; });
     sync(modsG, nM, i => hall ? hallOf(i === nM - 1 ? lastN : PER_HALL) : protoMod.clone()); sync(batsG, nB, () => protoBat.clone());
     if (hall) modsG.children.forEach((o, i) => { const want = i === nM - 1 ? lastN : PER_HALL; if (o.userData.n !== want) {
