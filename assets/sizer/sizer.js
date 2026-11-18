@@ -31,8 +31,8 @@
   if (RULES2) MODES.lfg.hr = 9700;
   // the main transformer: none while the engines connected stay at 4,000 kWe or less on one 480 V bus
   const NO_XFMR_KWE = 4000;
-  // Gas price band for the payment range: up to $3.00 per MMBtu (about 3 cents per kWh); raised from $0.75 on 2026-11-11; the real price is set in the gas agreement.
-  const BANDS = {lfg:[0,3], gas:[0,3], plant:[0,3]}, LEASE = [1000,2000];
+  // Gas price band for the payment range: $2.00 to $3.00 per MMBtu (owner 2026-11-18; was $0-3.00, raised from $0.75 on 2026-11-11); the real price is set in the gas agreement.
+  const BANDS = {lfg:[2,3], gas:[2,3], plant:[2,3]}, LEASE = [1000,2000];
   const range = (lo, hi) => { const u = hi >= 1e6 ? 1e6 : 1e3, d = u === 1e6 && hi < 1e7 ? 1 : 0, s = u === 1e6 ? "M" : "k";
     return "$" + fmt(lo/u, d) + "&ndash;" + fmt(hi/u, d) + s; };
 
