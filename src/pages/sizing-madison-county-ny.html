@@ -1,100 +1,103 @@
-<!--{"title": "Madison County Landfill, Canastota, New York: revised sizing | Accretion Compute", "description": "What the landfill gas could power today and at the County's target gas quality, how much land it would take, and what it could earn each year.", "out": "sizings/madison-county-ny.html", "noindex": true}-->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/sizer/sizer.css?v={{version}}">
-<style>
-/* Hero: the live model fills the first screen, text over its left side (same layout as the Site model page) */
-.szp-root .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
-.szp-root .copy h1{font-size:clamp(24px,2.9vw,36px)}
-/* Dock: once the hero scrolls away, the same live model sits in a corner window (as on the Site model page) */
-.szp-dock{display:none;pointer-events:none}
-.szp-root .stage.docked :is(iframe,.szp-dock){position:fixed;inset:auto 16px 16px auto;width:min(500px,42vw);height:min(310px,38vh);animation:szpIn .35s var(--ease)}
-.szp-root .stage.docked iframe{z-index:40;border:1px solid var(--line);background:var(--bg);box-shadow:0 12px 40px rgba(0,0,0,.6)}
-.szp-root .stage.docked .szp-dock{display:block;z-index:41}
-.szp-root .stage .szp-dock>button{pointer-events:auto}
-.szp-dock .mini-cap{cursor:default;pointer-events:none!important;max-width:calc(100% - 50px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.szp-dock .mini-cap::before{content:none}
-@keyframes szpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@media (max-width:600px){.szp-root .stage.docked :is(iframe,.szp-dock){inset:auto 10px 10px auto;width:min(46vw,220px);height:calc(min(46vw,220px) * .6875)}}
-.szp-root .copy .szp-links{pointer-events:auto;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px}
-.szp-root .copy .szp-links a{color:var(--fg-strong)}
-.szp-tog{display:flex;pointer-events:auto}
-.szp-tog button{font:inherit;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;background:transparent;color:var(--fg);border:1px solid var(--line);cursor:pointer}
-.szp-tog button+button{border-left:0}
-.szp-tog button[aria-pressed=true]{background:var(--fg-strong);color:var(--bg)}
-/* Below the hero */
-.sizer .szp{padding-top:clamp(40px,5vw,64px)}
-.szp-kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
-.szp-kpis>div{padding:18px 20px;border-right:1px solid var(--line-soft)}
-.szp-kpis>div:last-child{border-right:0}
-.szp .v{font:200 clamp(22px,2.6vw,32px)/1.1 var(--display);font-stretch:125%;color:var(--fg-strong)}
-.szp .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);margin-top:6px}
-.szp-earn{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:16px;border:1px solid var(--line);border-top:0;padding:20px}
-.szp-earn .tot .v{font-size:clamp(26px,3.2vw,40px)}
-.szp-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px)}
-.szp-cols>*{min-width:0}
-.szp .eyebrow{margin-bottom:12px}
-.szp table{width:100%;min-width:0;border-collapse:collapse;font-size:16px}
-.szp td{padding:9px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--fg)}
-.szp td.r{text-align:right;white-space:nowrap;padding-left:14px;color:var(--fg-strong)}
-.szp ul{margin:0;padding-left:18px;color:var(--fg)} .szp li{margin:0 0 8px}
-.szp .box{border:1px solid var(--line);padding:18px 20px;margin-top:24px}
-.szp .small{font-size:14px;color:var(--fg-dim);line-height:1.6}
-.sizer .szp-end{padding-bottom:clamp(56px,7vw,96px)}
-.szp-end .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
-.szp-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid var(--fg-strong);background:var(--fg-strong);color:var(--bg);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
-.szp-btn.ghost{background:transparent;color:var(--fg-strong);border-color:var(--line)}
-.szp-btn:hover{background:transparent;color:var(--fg-strong)}
-@media (max-width:760px){.szp-kpis{grid-template-columns:1fr 1fr}.szp-kpis>div:nth-child(2){border-right:0}.szp-kpis>div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
- .szp-earn{grid-template-columns:1fr 1fr}.szp-earn .tot{grid-column:1/-1}.szp-cols{grid-template-columns:minmax(0,1fr)!important}.szp td.r{white-space:normal}}
-</style>
-
-<style>.szp td.h{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim)} .szp tr:last-child td{color:var(--fg-strong)} .sizer .szp td.r{font-family:inherit;font-size:inherit;white-space:normal} .sizer .szp td.r.h{font-family:var(--mono);font-size:11px}</style>
-<div class="sizer szp-root">
-<div class="sz-hero">
- <div class="stage"><iframe id="szp-frame" src="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;embed=1&amp;copy=1" title="Live 3D model of Madison County Landfill, Canastota, New York" allow="fullscreen"></iframe>
-  <div class="szp-dock"><div class="mini-cap">Live model &middot; Madison County Landfill, Canastota, New York</div><button type="button" class="mini-x" id="szp-dock-x" aria-label="Hide the docked model">&times;</button><button type="button" class="mini-up" id="szp-dock-up">Full view &uarr;</button></div></div>
- <div class="scrim" aria-hidden="true"></div>
- <div class="copy">
-  <p class="crumbs">Revised sizing &middot; November 2026</p>
-  <div class="eyebrow">Landfill gas</div>
-  <h1>Madison County Landfill, Canastota, New York</h1>
-  <p class="lede">What the landfill gas could power today and at the County&#x27;s target gas quality, how much land it would take, and what it could earn each year.</p>
-  <div class="hero-stats"><div><div class="num">1.0</div><div class="k">MW on site</div></div><div><div class="num">1</div><div class="k">Compute module</div></div><div><div class="num">$6–187k</div><div class="k">To the County, per year</div></div></div>
-  <div class="szp-tog" role="group" aria-label="Gas case"><button type="button" aria-pressed="false" data-q="src=lfg&amp;flow=350&amp;ch4=30" data-s="0.6|1|$6–64k">Today</button><button type="button" aria-pressed="true" data-q="src=lfg&amp;flow=360&amp;ch4=48" data-s="1.0|1|$6–187k">At target</button></div><p class="szp-links"><a href="sizings/madison-county-ny.pdf" download>Download the PDF</a><a id="szp-full" href="site-model?src=lfg&amp;flow=360&amp;ch4=48">Open the full model &rarr;</a></p>
+<!--{"title":"Madison County Landfill, Canastota, New York: site sizing | Accretion Compute","description":"What the gas at this site could run: site power, computers, engines and land, and the permits we've mapped.","out":"sizings/madison-county-ny.html","noindex":true}-->
+<link rel="stylesheet" href="assets/sizings/sizing.css?v=a58fab5c">
+<div class="szg">
+<section class="dark szg-hero" aria-labelledby="szg-h1">
+ <div class="szg-in">
+  <div class="szg-headline">
+   <p class="crumbs">Site sizing &middot; November 2026</p>
+   <div class="eyebrow">Landfill gas &middot; sized from the County&#x27;s readings</div>
+   <span id="szg-h1" hidden></span><h1>Madison County Landfill, Canastota, New York</h1>
+  </div>
+  <div class="szg-text">
+   <p class="szg-verdict">At its target gas quality, the County&#x27;s landfill gas can run an AI data center of <strong>1&nbsp;MW</strong>.</p>
+   <p class="szg-sub">Today&#x27;s gas supports about 660 kW.</p>
+   <div class="szg-kpis" role="list"><div class="szg-kpi" role="listitem"><span class="n">1<small>MW</small></span><span class="l">site power</span></div><div class="szg-kpi" role="listitem"><span class="n">708<small>kW</small></span><span class="l">for the computers</span></div><div class="szg-kpi" role="listitem"><span class="n">5</span><span class="l">gas engines: 4 running, 1 spare</span></div></div>
+   <div class="szg-acts">
+    <a class="btn" href="sizings/madison-county-ny.pdf" download>Get the one-page sheet (PDF)</a>
+    <a class="btn ghost" href="mailto:contact@accretioncompute.com?subject=Sizing%3A%20Madison%20County%20Landfill%2C%20Canastota%2C%20New%20York">Write to us about your site</a>
+   </div>
+  </div>
+  <figure class="szg-model szg-wide" data-src="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000&amp;embed=1" data-href="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000"><button type="button" class="szg-poster" aria-label="Load the live 3D model of this site"><img src="assets/sizings/madison-county-ny.webp?v=96de0473" width="1280" height="800" alt="Site model: 1 compute module, 5 gas engines and a battery on about 6 acres near the flare" loading="lazy" decoding="async"><span class="szg-cap">Tap for the live 3D model</span></button></figure>
  </div>
-</div>
-<div class="wrap szp">
- <div class="szp-earn" style="border-top:1px solid var(--line)">
-  <div><div class="k">To the County today, per year</div><div class="v">$6k to $64k</div></div>
-  <div><div class="k">At target, per year</div><div class="v">$6k to $187k</div></div>
-  <div class="tot"><div class="k">What better gas adds, per year</div><div class="v">up to $122k</div></div>
+</section>
+<section class="szg-s " aria-labelledby="szg-get">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-get">What the County gets</h2></div>
+  <div class="szg-body">
+   <ul class="szg-ticks"><li>The County keeps every environmental credit it holds today; new credits the project creates are shared on terms we agree.</li><li>Revenue on gas the flare now burns for nothing.</li><li>A land lease for about 6 acres near the flare.</li><li>No capital from the County for the engines or the data center. The County&#x27;s collection system stays as it is; the only compliance changes are the permit updates mapped below.</li></ul>
+   <p class="szg-pay"><b>How the gas is paid for:</b> a floor price plus a share of what the power from the gas is worth, higher for gas at the County&#x27;s target quality, set once we&#x27;ve looked at the site together.</p>
+  </div>
  </div>
-</div>
-<div class="wrap szp"><div class="szp-cols">
- <div><div class="eyebrow">The math</div><table><tr><td></td><td class='r h'>Today</td><td class='r h'>At target</td></tr><tr><td>Landfill gas collected</td><td class='r'>350 scfm</td><td class='r'>360 scfm</td></tr><tr><td>Methane content</td><td class='r'>30%</td><td class='r'>48%</td></tr><tr><td>Power at 11,000 Btu/kWh</td><td class='r'>about 0.6 MW</td><td class='r'>about 1.0 MW</td></tr><tr><td>Compute (after cooling and losses)</td><td class='r'>about 0.5 MW</td><td class='r'>about 0.8 MW</td></tr><tr><td>Gas engines (incl. one spare)</td><td class='r'>3 at 0.4 MW</td><td class='r'>4 at 0.4 MW</td></tr><tr><td>Land (5 ac + 1.2 ac per MW)</td><td class='r'>about 6 acres</td><td class='r'>about 6 acres</td></tr><tr><td>Gas bought a year (95% run)</td><td class='r'>53k MMBtu</td><td class='r'>87k MMBtu</td></tr><tr><td>Gas price, per MMBtu</td><td class='r'>up to $1.00</td><td class='r'>up to $2.00</td></tr><tr><td>Gas payment, per year</td><td class='r'>up to $53k</td><td class='r'>up to $175k</td></tr><tr><td>Land, $1,000–2,000 per acre</td><td class='r'>$6k to $11k</td><td class='r'>$6k to $12k</td></tr><tr><td>Total to the County, per year</td><td class='r'>$6k to $64k</td><td class='r'>$6k to $187k</td></tr></table><p class="small" style="margin-top:10px">Landfill gas: about 1,012 Btu per cubic foot of methane. Prices in US dollars.</p></div>
- <div><div class="eyebrow">What it would look like</div><ul><li>Gas engines, a battery to smooth the load, and factory-built compute modules leased to an AI company, on a fenced parcel near the gas.</li><li>The County keeps running the wellfield and delivers gas to our meter. Gas at the target quality is paid twice the price.</li><li>Runs on its own engines. If the earlier project&#x27;s grid connection is still in place, it could serve as backup.</li><li>We build and run the site; the County puts in no capital. Engine heat is available for the ARE Park.</li></ul>
-  <div class='box'><div class='eyebrow'>To firm up the numbers</div><ul class='small'><li>12 to 24 months of flow, methane and oxygen readings</li><li>Equipment still in place from the earlier project</li><li>Whether the earlier grid connection is still in place, and its size</li><li>ARE Park utilities and acres; gas quality (siloxanes, H2S)</li></ul></div>
+</section>
+<section class="szg-s " aria-labelledby="szg-permits">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-permits">Permits we&#x27;ve mapped</h2></div>
+  <div class="szg-body">
+   <ul class="szg-ticks"><li><b>Air permit for the engines:</b> a NYSDEC Air State Facility permit (6 NYCRR 201-5) with a 201-7 cap, a limit written into the permit that keeps the plant under major-source levels. Under the Uniform Procedures Act, New York&#x27;s permit-review law, the cap makes it a “major project” review, with a decision due in 90 days. <span class="szg-tag">Worth confirming</span></li><li><b>Local step:</b> a Town of Lincoln Planning Board special permit in the I-C zoning district, with site plan review and SEQR (the state environmental review), and a Town Board special use permit for the battery that smooths the load on the engines (Tier 3 under Local Law 1 of 2024, at 500 kWh or more).</li><li><b>The landfill&#x27;s own permit:</b> a tie-in with the County&#x27;s Title V permit for the landfill. The lease would follow County Law 215 or General Municipal Law 120-w. <span class="szg-tag">Worth confirming</span></li><li>No data center moratorium found in the Town of Lincoln (as of November 17, 2026).</li></ul>
+   <p class="szg-note">As of November 17, 2026. Lines marked “Worth confirming” are our reading, to check with the agency.</p>
+  </div>
  </div>
-</div></div>
-<div class="wrap szp szp-end">
- <p class="small"><strong>Source:</strong> Madison County gas readings shared in November 2026: today about 350 scfm at 30% methane; the County&#x27;s target is 350 to 375 scfm at 45 to 50% methane (the target column uses 360 scfm at 48%). These are estimates from the County&#x27;s readings, not an offer: no cost and no obligation. Twelve to 24 months of readings will firm them up; the real price and terms are set in the gas and land agreements.</p>
- <div class="actions">
-  <a class="szp-btn" href="contact">Talk to us about your site &rarr;</a>
-  <a class="szp-btn ghost" href="sizings/madison-county-ny.pdf" download>Download the one-page PDF</a>
+</section>
+<section class="szg-s szg-look" aria-labelledby="szg-look">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-look">What it would look like</h2></div>
+  <div class="szg-body">
+   <figure class="szg-model szg-narrow" data-src="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000&amp;embed=1" data-href="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000"><button type="button" class="szg-poster" aria-label="Load the live 3D model of this site"><img src="assets/sizings/madison-county-ny.webp?v=96de0473" width="1280" height="800" alt="Site model: 1 compute module, 5 gas engines and a battery on about 6 acres near the flare" loading="lazy" decoding="async"><span class="szg-cap">Tap for the live 3D model</span></button></figure>
+   <ul class="szg-ticks"><li>Our own gas engines, a battery to smooth the load, and factory-built compute modules on a fenced parcel near the flare.</li><li>Engines and computers share one 480-volt system on site: no substation, no grid tie.</li><li>We build and run the site and lease the compute modules to an AI company.</li></ul>
+   <p class="szg-note"><a class="szg-link" href="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000">Open the full site model &rarr;</a></p>
+  </div>
  </div>
+</section>
+<section class="szg-s " aria-labelledby="szg-whatif">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-whatif">What if</h2></div>
+  <div class="szg-body">
+   <div class="szg-whatif"><div><b>About 660 kW</b>If the gas stays as it is today (350 scfm at 30% methane): about 470 kW for the computers.</div></div>
+   <p class="szg-note"><a href="site-model?src=lfg&amp;flow=360&amp;ch4=48&amp;rules=2&amp;eng=4x250&amp;kw=1000">Try your own numbers in the site model</a></p>
+  </div>
+ </div>
+</section>
+<section class="szg-s " aria-labelledby="szg-math">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-math">The math</h2></div>
+  <div class="szg-body">
+   <table class="szg-math"><tr><td>Landfill gas at the County&#x27;s target<span class="g">scfm: standard cubic feet per minute, how much gas flows</span></td><td class='r'>360&nbsp;scfm</td></tr><tr><td>Methane at the County&#x27;s target</td><td class='r'>48%</td></tr><tr><td>Heat in the gas<span class="g">MMBtu: million Btu, a unit of heat</span></td><td class='r'>10.5 MMBtu per hour</td></tr><tr><td>Power for the site, set for this sizing<span class="g">set at 1 MW; the gas at the County&#x27;s target carries a little more, kept as margin</span></td><td class='r'>1&nbsp;MW</td></tr><tr><td>Compute (power left for the computers)<span class="g">after cooling and a margin for gas swings and engine downtime: 708 kW per 1,000 kW</span></td><td class='r'>708&nbsp;kW</td></tr><tr><td>Compute modules<span class="g">factory-built hall sections, about 1,000 kW of computers each</span></td><td class='r'>1</td></tr><tr><td>Gas engines, 4 running plus 1 spare<span class="g">the spare lets one engine stop for service without cutting power</span></td><td class='r'>5 of 250&nbsp;kW</td></tr><tr><td>Land: 5 acres plus 1.2 acres per MW</td><td class='r'>about 6&nbsp;acres</td></tr><tr><td>Gas bought per year, at 95% run time</td><td class='r'>about 87,300 MMBtu</td></tr></table>
+  </div>
+ </div>
+</section>
+<section class="szg-s" aria-label="Worth checking">
+ <div class="szg-in">
+  <div class="szg-head"><div class="h2" role="heading" aria-level="2">Worth checking</div></div>
+  <div class="szg-body"><div hidden>Worth checking</div><ul class="szg-ticks"><li>12 to 24 months of flow, methane and oxygen readings</li><li>Which equipment from the earlier engine project is still on site</li><li>Gas quality for the engines (siloxanes and H2S)</li><li>A state bill (S10642/A11560) that would define a data center from 1 MW: passed in June 2026, not yet signed</li><li>Which parcel: near the flare, or the ARE Park beside the landfill, and its utilities and acres</li></ul></div>
+ </div>
+</section>
+<section class="szg-s " aria-labelledby="szg-src">
+ <div class="szg-in">
+  <div class="szg-head"><h2 id="szg-src">Sources</h2></div>
+  <div class="szg-body">
+   <p class="szg-src"><strong>Source:</strong> The County&#x27;s gas readings, shared in November 2026: today about 350 scfm at 30% methane; the County&#x27;s target is 350 to 375 scfm at 45 to 50% methane. This sizing uses 360 scfm at 48%.</p>
+   <ul class="szg-srcs"><li>The County&#x27;s gas readings, November 2026 (shared with us by the County). (seen Nov 13, 2026)</li><li>NYSDEC Title V permit for the landfill (725380001100007). <a href="https://extapps.dec.ny.gov/data/dar/afs/permits/725380001100007_r2.pdf" rel="noopener">extapps.dec.ny.gov</a> (seen Nov 7, 2026)</li><li>Town of Lincoln Local Law 1 of 2024, battery energy storage. <a href="https://www.lincolnny.gov/DocumentCenter/View/259/Local-Law-1-24-Battery-Energy-Storage-System-Law-PDF" rel="noopener">lincolnny.gov</a> (seen Nov 7, 2026)</li><li>Town of Lincoln Land Management Law. <a href="https://www.lincolnny.gov/DocumentCenter/View/256/Land-Management-Law-PDF" rel="noopener">lincolnny.gov</a> (seen Nov 7, 2026)</li><li>New York Senate bill S10642. <a href="https://www.nysenate.gov/legislation/bills/2025/S10642" rel="noopener">nysenate.gov</a> (seen Nov 17, 2026)</li></ul>
+  </div>
+ </div>
+</section>
+<section class="dark szg-end" aria-label="About this sizing">
+ <div class="szg-in">
+  <p class="szg-offer">This is an estimate from the County&#x27;s readings and public data, not an offer: no cost and no obligation.</p>
+  <p class="dim">We build AI data centers next to energy that runs around the clock: landfill gas, natural gas, hydro, nuclear, geothermal, and wind and solar with storage.</p>
+  <div class="szg-acts"><a class="btn" href="mailto:contact@accretioncompute.com?subject=Sizing%3A%20Madison%20County%20Landfill%2C%20Canastota%2C%20New%20York">Write to us about your site</a><a class="btn ghost" href="sizings/madison-county-ny.pdf" download>Get the one-page sheet (PDF)</a></div>
+ </div>
+</section>
 </div>
-</div>
+<script type="application/json" id="sizing-data">{"schema":"sizing-public/1","slug":"madison-county-ny","energy":"lfg","scfm":360,"ch4Pct":48,"heatMMBtuH":10.5,"heatRate":9700,"siteKW":1000,"itKW":708,"modules":1,"engines":{"unitKW":250,"running":4,"spare":1},"acres":6,"pinned":true,"specHash":"8ad13287","engineVersion":"1.0.0"}</script>
 <script>
-document.querySelectorAll(".szp-tog button").forEach(function(b){b.addEventListener("click",function(){
-  document.querySelectorAll(".szp-tog button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});
-  var q=b.getAttribute("data-q");document.getElementById("szp-frame").src="../site-model?"+q+"&embed=1&copy=1";
-  var v=b.getAttribute("data-s").split("|");document.querySelectorAll(".hero-stats .num").forEach(function(n,i){n.textContent=v[i]});document.getElementById("szp-full").href="../site-model?"+q;});});
-</script>
-<script>
-(function(){var hero=document.querySelector(".sz-hero"),stage=hero&&hero.querySelector(".stage"),f=document.getElementById("szp-frame");if(!stage||!f)return;
- var on=false,dismissed=false;function send(){try{f.contentWindow.postMessage({acc:"dock",on:on},location.origin)}catch(e){}}
- function check(){var r=hero.getBoundingClientRect(),away=r.bottom<r.height*.5;if(!away)dismissed=false;var want=away&&!dismissed;if(want!==on){on=want;stage.classList.toggle("docked",on);send()}}
- addEventListener("scroll",check,{passive:true});addEventListener("resize",check);f.addEventListener("load",send);check();
- document.getElementById("szp-dock-x").addEventListener("click",function(){dismissed=true;on=false;stage.classList.remove("docked");send()});
- document.getElementById("szp-dock-up").addEventListener("click",function(){hero.scrollIntoView({behavior:"smooth",block:"start"})});})();
+/* the live 3D model loads only on tap (spec 09, 7.4); on a phone it opens full screen, where its controls fit */
+document.querySelectorAll(".szg-model[data-src] .szg-poster").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var f = b.parentNode;
+    if (window.matchMedia("(max-width: 700px)").matches && f.getAttribute("data-href")) { location.href = f.getAttribute("data-href"); return; }
+    var i = document.createElement("iframe");
+    i.src = f.getAttribute("data-src"); i.title = "Live 3D model of this site"; i.allow = "fullscreen";
+    f.replaceChild(i, b);
+  });
+});
 </script>

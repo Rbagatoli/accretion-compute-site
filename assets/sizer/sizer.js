@@ -20,6 +20,17 @@
   };
   let mode = "gas";
   const st = {flow:2000, ch4:50};
+  // ?rules=2 (Nov 17, 2026): landfill gas at 9,700 Btu per kWh, computers = site x 0.85 / 1.2, compute modules of
+  // 1,000 kW, engine classes in kW. A sizing page can pin the site power (kw=1000) and its engines (eng=4x800);
+  // the pin holds until the visitor moves a slider. Links without rules=2 keep the old math.
+  const Q0 = new URLSearchParams(location.search), RULES2 = Q0.get("rules") === "2";
+  const PIN = { kw: RULES2 && +Q0.get("kw") > 0 ? +Q0.get("kw") : null, eng: null };
+  { const e = RULES2 && /^(\d+)x(\d+)$/.exec(Q0.get("eng") || ""); if (e) PIN.eng = { run: +e[1], unitKW: +e[2] }; }
+  let pinOn = RULES2;
+  const KW_SIZES = { lfg: [0.25, 0.335, 0.4, 0.8, 1.2, 1.56, 2.0, 3.3, 4.5], gas: [0.25, 0.335, 0.4, 0.8, 1.2, 1.56, 2.5, 4.5, 10, 18] };
+  if (RULES2) MODES.lfg.hr = 9700;
+  // the main transformer: none while the engines connected stay at 4,000 kWe or less on one 480 V bus
+  const NO_XFMR_KWE = 4000;
   // Gas price band for the payment range: up to $3.00 per MMBtu (about 3 cents per kWh); raised from $0.75 on 2026-11-11; the real price is set in the gas agreement.
   const BANDS = {lfg:[0,3], gas:[0,3], plant:[0,3]}, LEASE = [1000,2000];
   const range = (lo, hi) => { const u = hi >= 1e6 ? 1e6 : 1e3, d = u === 1e6 && hi < 1e7 ? 1 : 0, s = u === 1e6 ? "M" : "k";
@@ -34,24 +45,27 @@
     let btuh; // Btu per hour of fuel
     if (m.unit === "scfm") btuh = st.flow * (st.ch4/100) * 1012 * 60;
     else btuh = st.flow * 1e6 * 1037 / 24; // MMcf/d -> scf/h * Btu/scf
-    const mw = btuh / m.hr / 1000;         // kW -> MW
+    const mw = pinOn && PIN.kw ? PIN.kw / 1000 : btuh / m.hr / 1000;         // kW -> MW
     // N+1 (owner rule, 2026-11-16): several smaller engines share the load plus ONE spare, never one big
     // engine running plus one big spare. Aim for 4-5 running; ties go to the lowest installed MW, then the
     // larger unit. Same chooser as pick_unit() in the sizing sheets (make_sizings.py).
-    let genMW = m.sizes[0], run = 0, bestKey = null;
-    for (const u of m.sizes) {
+    const sizes = RULES2 ? KW_SIZES[mode === "lfg" ? "lfg" : "gas"] : m.sizes;
+    let genMW = sizes[0], run = 0, bestKey = null;
+    for (const u of sizes) {
       const r = Math.max(1, Math.ceil(mw / u)), dist = r < 4 ? 4 - r : r > 5 ? r - 5 : 0, inst = (r + 1) * u;
       if (!bestKey || dist < bestKey[0] || (dist === bestKey[0] && (inst < bestKey[1] || (inst === bestKey[1] && u > genMW)))) { bestKey = [dist, inst]; genMW = u; run = r; }
     }
+    if (pinOn && PIN.eng) { run = PIN.eng.run; genMW = PIN.eng.unitKW / 1000; }
     const gens = run + 1;
-    const it = mw / 1.2;
+    const xfmr = gens * genMW * 1000 > NO_XFMR_KWE + 1e-6;
+    const it = RULES2 ? mw * 0.85 / 1.2 : mw / 1.2;
     const racks = Math.floor(it * 1000 / 120);
-    const halls = Math.max(1, Math.ceil(it / 0.96));
+    const halls = Math.max(1, RULES2 ? Math.ceil(it - 1e-9) : Math.ceil(it / 0.96));
     const acres = 5 + 1.2 * mw;
     const mmbtu = btuh * 8760 * 0.95 / 1e6;
     const b = BANDS[mode];
     const payLo = mmbtu * b[0] + acres * LEASE[0], payHi = mmbtu * b[1] + acres * LEASE[1];
-    return {mw, gens, run, genMW, it, racks, gpus:racks*72, halls, acres, mmbtu, payLo, payHi, pay:(payLo+payHi)/2};
+    return {mw, gens, run, genMW, xfmr, it, racks, gpus:racks*72, halls, acres, mmbtu, payLo, payHi, pay:(payLo+payHi)/2};
   }
 
   // Smoothly animated numbers
@@ -76,7 +90,7 @@
     if (tenant) tenantApply(R);
     $("flow-out").textContent = $("hflow-out").textContent = (m.unit==="scfm" ? fmt(st.flow) : fmt(st.flow, st.flow<10?2:0)) + " " + m.unit;
     $("hflow").value = $("flow").value;
-    $("ch4-out").textContent = st.ch4 + "%";
+    $("ch4-out").textContent = fmt(st.ch4, st.ch4 % 1 ? 1 : 0) + "%";
     const mwd = R.mw < 10 ? 1 : 0;
     tween("hs-mw", R.mw, v => fmt(v, mwd));
     tween("hs-racks", R.racks, v => fmt(Math.round(v)));
@@ -86,7 +100,7 @@
     tween("r-ten", R.payLo*10, v => range(v, v*k));
     tween("r-mw", R.mw, v => fmt(v,1) + "<small>MW</small>");
     tween("r-gens", R.gens, v => fmt(Math.round(v)));
-    $("r-gens-d").textContent = R.run + " running at " + R.genMW + " MW, plus one spare";
+    $("r-gens-d").textContent = R.run + " running at " + (RULES2 && R.genMW < 1 ? Math.round(R.genMW * 1000) + " kW" : R.genMW + " MW") + ", plus one spare";
     tween("r-it", R.it, v => fmt(v,1) + "<small>MW</small>");
     tween("r-racks", R.racks, v => fmt(Math.round(v)));
     tween("r-gpus", R.gpus, v => fmt(Math.round(v)));
@@ -110,16 +124,16 @@
     m.chips.forEach(c => {
       const b = document.createElement("button"); b.type="button"; b.className="chip";
       b.textContent = c[0] + " · " + (m.unit==="scfm" ? fmt(c[1]) : c[1]) + " " + m.unit;
-      b.addEventListener("click", () => { st.flow = c[1]; if(c[2]) { st.ch4 = c[2]; $("ch4").value = c[2]; } $("flow").value = toSlider(st.flow,m); update(); });
+      b.addEventListener("click", () => { pinOn = false; st.flow = c[1]; if(c[2]) { st.ch4 = c[2]; $("ch4").value = c[2]; } $("flow").value = toSlider(st.flow,m); update(); });
       chips.appendChild(b);
     });
     scene.src = m.src;
     update();
   }
 
-  ["flow","hflow"].forEach(id => $(id).addEventListener("input", e => { const m = MODES[mode]; $("flow").value = e.target.value; st.flow = roundFlow(fromSlider(+e.target.value, m), m); update(); }));
-  $("ch4").addEventListener("input", e => { st.ch4 = +e.target.value; update(); });
-  ["lfg","gas","plant"].forEach(k => $("src-"+k).addEventListener("click", () => setMode(k)));
+  ["flow","hflow"].forEach(id => $(id).addEventListener("input", e => { pinOn = false; const m = MODES[mode]; $("flow").value = e.target.value; st.flow = roundFlow(fromSlider(+e.target.value, m), m); update(); }));
+  $("ch4").addEventListener("input", e => { pinOn = false; st.ch4 = +e.target.value; update(); });
+  ["lfg","gas","plant"].forEach(k => $("src-"+k).addEventListener("click", () => { pinOn = false; setMode(k); }));
 
   /* ---------- Isometric site model ---------- */
   const cv = $("iso"), ctx = cv.getContext("2d");
@@ -353,7 +367,7 @@
   (function(){
     const q = new URLSearchParams(location.search), k = MODES[q.get("src")] ? q.get("src") : "gas", m = MODES[k];
     const f = parseFloat(q.get("flow")), c = parseFloat(q.get("ch4"));
-    if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = Math.round(c); $("ch4").value = st.ch4; }
+    if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = RULES2 ? Math.round(c * 10) / 10 : Math.round(c); $("ch4").value = st.ch4; }
     if (f >= m.lo && f <= m.hi) { st.flow = f; setMode(k, true); } else setMode(k);
     if (q.get("mode") === "tenant") setAud(true);
   })();
@@ -1186,7 +1200,8 @@ const protoGen = makeGen(false), protoGen20 = makeGen(false, 6.1), protoMod = ma
 // s scales the whole box; d is the footprint length factor used for the row pitch.
 function genLook(u) { const s = u > 2 ? Math.cbrt(u / 2) : 1, small = u < .6; return { small, s, d: small ? .55 : 1 }; }
 
-// fixed kit on the pad: gas conditioning skid and main transformer
+// fixed kit on the pad: the gas conditioning skid and its pipe rack (the main transformer, when a site needs one,
+// is drawn in rebuildPad)
 (function () {
   B(16, .3, 14, M.pad, 14, .15, -6, fixed, false);
   vessel(fixed, 9, -10, 1.1, 5, false); vessel(fixed, 12.5, -10, 1.1, 5, false);
@@ -1240,7 +1255,7 @@ function rebuildPad() {
     B(1.2, .06, .4, M.lamp, x, 9.88, z - s * .5, padG, false);
     const pl = mesh(new THREE.PlaneGeometry(26, 26), M.pool, x, .06, z - s * 6, padG, false); pl.rotation.x = -Math.PI / 2; pl.userData.pool = true;
   }
-  makeTransformer(padG, L.tx + 3, 8);
+  if (padXfmr) makeTransformer(padG, L.tx + 3, 8); // only over 4,000 kWe of engines connected
   const hdr = L.gx0 - 2;
   pipeRun(padG, [[22, -6], [hdr, -6], [hdr, -L.depth / 2 + 4], [hdr, L.depth / 2 - 4]], .3, 1.1);
 }
@@ -1423,7 +1438,7 @@ function rackStep(dt) { const k = cut.rackKit;
   k.door.rotation.y = -1.75 * e;
   k.trays.forEach(({ t, out, deep, lag }) => { const a = THREE.MathUtils.clamp((k.amt - lag) / (1 - lag), 0, 1); t.userData.go = (t.userData.go == null ? out : t.userData.go) + ((k.full ? deep : out) - (t.userData.go == null ? out : t.userData.go)) * Math.min(1, dt * 3); t.position.x = .16 - t.userData.go * a * a * (3 - 2 * a); });
 }
-let legendKey = "", camInit = false, key = "", eCounts = "", eMini = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
+let padXfmr = true, legendKey = "", camInit = false, key = "", eCounts = "", eMini = "", center = new THREE.Vector3(), fans = [], gpos = [], mpos = [], bpos = [];
 const counts = document.getElementById("counts");
 const clock = new THREE.Clock();
 let dead = false;
@@ -1442,7 +1457,8 @@ function frameInner() {
   const hall = R.halls > HALL_AT, nHall = Math.ceil(R.halls / PER_HALL), lastN = R.halls - (nHall - 1) * PER_HALL;
   const nG = Math.min(R.gens, MAX_G), nM = hall ? nHall : Math.min(R.halls, MAX_M), nB = Math.max(1, Math.min(12, Math.ceil(R.mw / 4)));
   const GL = genLook(R.genMW), gs = GL.s; // a 400 kW unit sits in a 20-ft box; a larger engine is drawn larger
-  const k = nG + "|" + nM + "|" + nB + "|" + gs + "|" + GL.small + "|" + (hall ? "h" + lastN : "m");
+  padXfmr = R.xfmr !== false;
+  const k = nG + "|" + nM + "|" + nB + "|" + gs + "|" + GL.small + "|" + (hall ? "h" + lastN : "m") + "|" + (padXfmr ? "x" : "-");
   if (k !== key) {
     key = k; const P = layout(nG, nM, nB, gs, hall, GL.d); gpos = P.gp; mpos = P.mp; bpos = P.bp;
     if (modsG.userData.hall !== hall) { if (modOpen) closeModule(true); while (modsG.children.length) modsG.remove(modsG.children[0]); modsG.userData.hall = hall; }
