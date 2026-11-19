@@ -23,10 +23,12 @@
   // ?rules=2 (Nov 17, 2026): landfill gas at 9,700 Btu per kWh, computers = site x 0.85 / 1.2, compute modules of
   // 1,000 kW, engine classes in kW. A sizing page can pin the site power (kw=1000) and its engines (eng=4x800);
   // the pin holds until the visitor moves a slider. Links without rules=2 keep the old math.
+  // An older sizing page (no rules=2) can pin its engines too (eng=5x250): its sheet chooses them the way the
+  // sizing generator does, which the old ladder below cannot always draw (2026-11-19).
   const Q0 = new URLSearchParams(location.search), RULES2 = Q0.get("rules") === "2";
   const PIN = { kw: RULES2 && +Q0.get("kw") > 0 ? +Q0.get("kw") : null, eng: null };
-  { const e = RULES2 && /^(\d+)x(\d+)$/.exec(Q0.get("eng") || ""); if (e) PIN.eng = { run: +e[1], unitKW: +e[2] }; }
-  let pinOn = RULES2;
+  { const e = /^(\d+)x(\d+)$/.exec(Q0.get("eng") || ""); if (e) PIN.eng = { run: +e[1], unitKW: +e[2] }; }
+  let pinOn = RULES2 || !!PIN.eng;
   const KW_SIZES = { lfg: [0.25, 0.335, 0.4, 0.8, 1.2, 1.56, 2.0, 3.3, 4.5], gas: [0.25, 0.335, 0.4, 0.8, 1.2, 1.56, 2.5, 4.5, 10, 18] };
   if (RULES2) MODES.lfg.hr = 9700;
   // the main transformer: none while the engines connected stay at 4,000 kWe or less on one 480 V bus
@@ -367,7 +369,8 @@
   (function(){
     const q = new URLSearchParams(location.search), k = MODES[q.get("src")] ? q.get("src") : "gas", m = MODES[k];
     const f = parseFloat(q.get("flow")), c = parseFloat(q.get("ch4"));
-    if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = RULES2 ? Math.round(c * 10) / 10 : Math.round(c); $("ch4").value = st.ch4; }
+    // methane keeps one decimal on every link, so a sizing page's model opens at the page's own numbers (2026-11-19)
+    if (m.ch4 && c >= 25 && c <= 60) { st.ch4 = Math.round(c * 10) / 10; $("ch4").value = st.ch4; }
     if (f >= m.lo && f <= m.hi) { st.flow = f; setMode(k, true); } else setMode(k);
     if (q.get("mode") === "tenant") setAud(true);
   })();
